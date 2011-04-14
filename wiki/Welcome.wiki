@@ -1,5 +1,5 @@
-= Hands on Tutorials = 
+== Hands on Tutorials ==
 
-= Theoretical background =
+== Theoretical background == 
 
-= Development = 
+== Development ==
