@@ -33,3 +33,5 @@ You can specify the groups of groups of addressees of you API documentation via 
 *Please note:* iDocIt! uses the stakeholders of interface documentation identified and published by Clements et al. as default-addressees. For further information on them see the great book [http://www.amazon.com/Documenting-Software-Architectures-p-Clements-F-Bachmann-L-Bass-D-Garlan-J-Ivers-R-Little/dp/B003WEPPOC/ref=sr_1_6?ie=UTF8&s=books&qid=1303241275&sr=8-6 Documenting Software Architectures], pages 237 - 239.
 
 == Thematic Roles ==
+
+The available thematic roles could also be defined via the corresponding Preference Page. It's handling is likely the same as the addreessee-page. The only difference is, that there are no "Default" thematic roles.
