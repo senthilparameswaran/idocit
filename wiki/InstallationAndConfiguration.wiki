@@ -4,7 +4,7 @@
 
 *Prerequisites:*
  * Eclipse 3.6 (Helios) [http://www.eclipse.org/downloads/packages/eclipse-classic-362/heliossr2 Download]
- * WordNet Dictionary 3.0 for UNIX-like systems (*you can use this also for Windows!*) [http://wordnet.princeton.edu/wordnet/download/ Download]
+ * Wordnet Dictionary 3.0 for UNIX-like systems (*you can use this also for Windows!*) [http://wordnet.princeton.edu/wordnet/download/ Download]
  * Stanford PoS-Tagger-Models Basic Version 3.0.1 [http://nlp.stanford.edu/software/tagger.shtml Download]
 
 *Installation:*
@@ -17,7 +17,7 @@
 
 == Basic Setup ==
 Open the "iDocIt!"-Preference Page.
- * As *WordNet Path* enter the path to the subdirectory "dict" of your WordNet-installation, e.g. "/home/myusername/wordnet/dict"
+ * As *Wordnet Path* enter the path to the subdirectory "dict" of your Wordnet-installation, e.g. "/home/myusername/wordnet/dict"
  * We have achieved the best PoS-tagging results for english identifiers by using the model "left3words-distsim-wsj-0-18.tagger" as *PoS-Tagger Model*. Enter the complete path with the filename of the model here, e.g. "/home/myusername/tagger/left3words-distsim-wsj-0-18.tagger".
 
 == Addressees ==
