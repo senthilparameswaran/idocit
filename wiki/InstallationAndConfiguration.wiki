@@ -13,7 +13,7 @@
  # Extract the Wordnet and PoS-Tagger into a special folder on your disk drive.
  # Start you Eclipse installation and open a workspace.
  # Open the "iDocIt!"-Preference Page.
-* As *WordNet Path* fill the path to the subdirectory "dict" of your WordNet-installation, e.g. "/home/myusername/wordnet/dict"
-* We have achieved the best PoS-tagging results for english identifiers by using the model "left3words-distsim-wsj-0-18.tagger" as *PoS-Tagger Model*.
+ * As *WordNet Path* enter the path to the subdirectory "dict" of your WordNet-installation, e.g. "/home/myusername/wordnet/dict"
+ * We have achieved the best PoS-tagging results for english identifiers by using the model "left3words-distsim-wsj-0-18.tagger" as *PoS-Tagger Model*. Enter the complete path with the filename of the model here, e.g. "/home/myusername/tagger/left3words-distsim-wsj-0-18.tagger".
 
 = Configuration =
