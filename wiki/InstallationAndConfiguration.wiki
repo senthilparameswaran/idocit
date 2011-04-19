@@ -12,8 +12,22 @@
  # Copy the downloaded JAR-files into the „plugins“-folder of your Eclipse installation folder.
  # Extract the Wordnet and PoS-Tagger into a special folder on your disk drive.
  # Start you Eclipse installation and open a workspace.
- # Open the "iDocIt!"-Preference Page.
+
+= Configuration =
+
+== Basic Setup ==
+Open the "iDocIt!"-Preference Page.
  * As *WordNet Path* enter the path to the subdirectory "dict" of your WordNet-installation, e.g. "/home/myusername/wordnet/dict"
  * We have achieved the best PoS-tagging results for english identifiers by using the model "left3words-distsim-wsj-0-18.tagger" as *PoS-Tagger Model*. Enter the complete path with the filename of the model here, e.g. "/home/myusername/tagger/left3words-distsim-wsj-0-18.tagger".
 
-= Configuration =
+== Addressees ==
+
+You can specify the groups of groups of addressees of you API documentation via the corresponding Preference Page.
+
+* On the left hand side you can see a list of configured addressee-groups. By clicking the buttons below this list, you can add new addressee-groups or delete the selected ones.
+
+* On the right hand side you edit the name of the selected group and enter a description text. The group-name is be used as label for the tab in the docpart-editing component. The description text is the tooltip of the corresponding addressee-tab.
+
+* If the checkbox "Default" for an addressee-group is activated, a tab for this group is created with every newly added docpart.
+
+== Thematic Roles ==
