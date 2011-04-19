@@ -30,6 +30,6 @@ You can specify the groups of groups of addressees of you API documentation via 
 
  * If the checkbox "Default" for an addressee-group is activated, a tab for this group is created with every newly added docpart.
 
-*Please note:* iDocIt! uses the stakeholders of interface documentation identified and published by Clements et al. as default-addressees. For further information on them see great book [http://www.amazon.com/Documenting-Software-Architectures-p-Clements-F-Bachmann-L-Bass-D-Garlan-J-Ivers-R-Little/dp/B003WEPPOC/ref=sr_1_6?ie=UTF8&s=books&qid=1303241275&sr=8-6 Documenting Software Architectures], pages 237 - 239.
+*Please note:* iDocIt! uses the stakeholders of interface documentation identified and published by Clements et al. as default-addressees. For further information on them see the great book [http://www.amazon.com/Documenting-Software-Architectures-p-Clements-F-Bachmann-L-Bass-D-Garlan-J-Ivers-R-Little/dp/B003WEPPOC/ref=sr_1_6?ie=UTF8&s=books&qid=1303241275&sr=8-6 Documenting Software Architectures], pages 237 - 239.
 
 == Thematic Roles ==
