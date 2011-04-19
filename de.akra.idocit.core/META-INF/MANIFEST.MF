@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: iDocIt! Platform
+Bundle-SymbolicName: de.akra.idocit;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit4;bundle-version="4.8.1",
+ org.eclipse.ui;bundle-version="3.6.0",
+ org.eclipse.core.resources;bundle-version="3.6.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: de.akra.idocit.constants,
+ de.akra.idocit.extensions;uses:="org.eclipse.core.resources,de.akra.idocit.structure",
+ de.akra.idocit,
+ de.akra.idocit.services,
+ de.akra.idocit.structure,
+ de.akra.idocit.structure.impl;uses:="de.akra.idocit.structure",
+ de.akra.idocit.utils;uses:="de.akra.idocit.structure"
+Bundle-ClassPath: 
+ .,
+ lib/wsdl-common-0.0.1-SNAPSHOT.jar,
+ lib/xstream-1.3.jar,
+ lib/jaws-1.3.jar,
+ lib/stanfordtagger-0.0.1-SNAPSHOT.jar,
+ lib/idocit.wsdl.wsdl4j.jar,
+ lib/xpp3_min-1.1.4c.jar
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: de.akra.idocit.IDocItActivator
+Bundle-Vendor: AKRA GmbH

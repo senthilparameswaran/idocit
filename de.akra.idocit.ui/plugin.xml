@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="de.akra.idocit.ui.components.DocumentationEditor"
+            default="false"
+            extensions="wsdl"
+            id="de.akra.idocit.ui.components.DocumentationEditor"
+            name="iDocIt!">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="de.akra.idocit.ui.components.IDocItPreferencePage"
+            class="de.akra.idocit.ui.components.AddresseePreferencePage"
+            id="de.akra.idocit.ui.components.AddresseePreferencePage"
+            name="Addressees">
+      </page>
+      <page
+            category="de.akra.idocit.ui.components.IDocItPreferencePage"
+            class="de.akra.idocit.ui.components.ThematicRolePreferencePage"
+            id="de.akra.idocit.ui.components.ThematicRolePreferencePage"
+            name="Thematic Roles">
+      </page>
+      <page
+            class="de.akra.idocit.ui.components.IDocItPreferencePage"
+            id="de.akra.idocit.ui.components.IDocItPreferencePage"
+            name="iDocIt!">
+      </page>
+      <page
+            category="de.akra.idocit.ui.components.IDocItPreferencePage"
+            class="de.akra.idocit.ui.components.ThematicGridPreferencePage"
+            id="de.akra.idocit.ui.components.ThematicGridPreferencePage"
+            name="Thematic Grids">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="de.akra.idocit.ui.contribution.IDocIt"
+            objectClass="org.eclipse.core.resources.IFile">
+	     
+	     <!--
+	     <filter name="extension" value="wsdl" />
+	     -->
+            
+         <action
+               class="de.akra.idocit.ui.actions.OpenEditorAction"
+               enablesFor="1"
+               id="de.akra.idocit.ui.actions.OpenEditorAction"
+               label="iDocIt!"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         id="de.akra.idocit"
+         name="iDocIt!"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+      </application>
+   </extension>
+
+</plugin>
