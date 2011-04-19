@@ -1,0 +1,162 @@
+package de.akra.idocit.ui.composites;
+
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.pocui.core.actions.EmptyActionConfiguration;
+import org.pocui.core.composites.CompositeInitializationException;
+import org.pocui.core.resources.EmptyResourceConfiguration;
+import org.pocui.swt.composites.AbsComposite;
+
+import de.akra.idocit.structure.DescribedItem;
+import de.akra.idocit.structure.ThematicRole;
+
+/**
+ * Composite to edit a {@link DescribedItem}.
+ * 
+ * @author Dirk Meier-Eickhoff
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+public class EditThematicRoleComposite
+		extends
+		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditThematicRoleCompositeSelection>
+{
+
+	// Widgets
+	private Text txtName;
+
+	private Text txtDescription;
+
+	// Listeners
+	private FocusListener textFieldListener;
+
+	private ModifyListener txtNameListener;
+
+	private ModifyListener txtDescriptionListener;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent Composite.
+	 */
+	public EditThematicRoleComposite(Composite parent)
+	{
+		super(parent, SWT.NONE, EmptyActionConfiguration.getInstance(),
+				EmptyResourceConfiguration.getInstance());
+	}
+
+	@Override
+	protected void initGUI(Composite pvParent) throws CompositeInitializationException
+	{
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(this);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
+
+		Label lblName = new Label(this, SWT.NONE);
+		lblName.setText("Name:");
+
+		txtName = new Text(this, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(txtName);
+
+		Label lblDescription = new Label(this, SWT.NONE);
+		lblDescription.setText("Description:");
+
+		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
+				| SWT.V_SCROLL);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(txtDescription);
+	}
+
+	@Override
+	protected void initListener() throws CompositeInitializationException
+	{
+		textFieldListener = new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent e)
+			{
+				fireChangeEvent();
+			}
+
+			@Override
+			public void focusGained(FocusEvent e)
+			{}
+		};
+
+		txtNameListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e)
+			{
+				EditThematicRoleCompositeSelection selection = getSelection();
+				ThematicRole item = selection.getModifiedItem();
+
+				item.setName(txtName.getText());
+
+				selection.setModifiedItem(item);
+				setSelection(selection);
+			}
+		};
+
+		txtDescriptionListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e)
+			{
+				EditThematicRoleCompositeSelection selection = getSelection();
+				ThematicRole item = selection.getModifiedItem();
+
+				item.setDescription(txtDescription.getText());
+
+				selection.setModifiedItem(item);
+				setSelection(selection);
+			}
+		};
+	}
+
+	@Override
+	protected void doSetSelection(EditThematicRoleCompositeSelection oldInSelection,
+			EditThematicRoleCompositeSelection newInSelection)
+	{
+		if (!newInSelection.equals(oldInSelection))
+		{
+			DescribedItem item = newInSelection.getModifiedItem();
+
+			if (item != null)
+			{
+				txtName.setText(item.getName());
+				txtDescription.setText(item.getDescription());
+			}
+		}
+	}
+
+	@Override
+	protected void addAllListener()
+	{
+		txtName.addModifyListener(txtNameListener);
+		txtDescription.addModifyListener(txtDescriptionListener);
+		txtDescription.addFocusListener(textFieldListener);
+		txtName.addFocusListener(textFieldListener);
+	}
+
+	@Override
+	protected void removeAllListener()
+	{
+		txtName.removeModifyListener(txtNameListener);
+		txtDescription.removeModifyListener(txtDescriptionListener);
+		txtDescription.removeFocusListener(textFieldListener);
+		txtName.removeFocusListener(textFieldListener);
+	}
+
+	@Override
+	protected void doCleanUp()
+	{
+		// Nothing to do!
+
+	}
+}

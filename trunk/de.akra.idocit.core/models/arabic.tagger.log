@@ -1,0 +1,645 @@
+## tagger training invoked at Tue Jun 03 10:30:44 PDT 2008 with arguments:
+                   model = arabic.tagger
+                    trainFile = /u/nlp/data/gale/arabic/corpora/train-final-bies-det.tagged
+               delimiter = #
+        tokenizerFactory = edu.stanford.nlp.process.WhitespaceTokenizer
+                  search = cg
+            sigmaSquared = 0.5
+              iterations = 100
+                    lang = arabic
+           openClassTags = 
+         closedClassTags = 
+    learnClosedClassTags = false
+ closedClassTagThreshold = 40
+                    arch = left3words
+                   debug = false
+             debugPrefix = 
+                encoding = UTF-8
+                tokenize = false
+          rareWordThresh = 5
+        minFeatureThresh = 3
+ curWordMinFeatureThresh = 1
+rareWordMinFeatureThresh = 3
+    veryCommonWordThresh = 250
+              useDistSim = false
+             distSimPath = /u/nlp/data/pos_tags_are_useless/egw.bnc.200.pruned
+Tags are: edu.stanford.nlp.tagger.maxent.TTags@31d520c4
+TaggerExperiments: adding word/tags
+Read 593480 words from /u/nlp/data/gale/arabic/corpora/train-final-bies-det.tagged [done].
+Read 18911 sentences, min 1 words, max 384 words.
+Featurizing tagged data tokens...
+10000 20000 30000 40000 50000 60000 70000 80000 90000 100000 
+110000 120000 130000 140000 150000 160000 170000 180000 190000 200000 
+210000 220000 230000 240000 250000 260000 270000 280000 290000 300000 
+310000 320000 330000 340000 350000 360000 370000 380000 390000 400000 
+410000 420000 430000 440000 450000 460000 470000 480000 490000 500000 
+510000 520000 530000 540000 550000 560000 570000 580000 590000 600000 
+610000 
+Featurized 612391 data tokens [done].
+xSize [num Phi templates] = 484234; ySize [num classes] = 31
+Hashing histories ...
+10000 20000 30000 40000 50000 60000 70000 80000 90000 100000 
+110000 120000 130000 140000 150000 160000 170000 180000 190000 200000 
+210000 220000 230000 240000 250000 260000 270000 280000 290000 300000 
+310000 320000 330000 340000 350000 360000 370000 380000 390000 400000 
+410000 420000 430000 440000 450000 460000 470000 480000 
+Hashed 484234 histories.
+Hashing populated histories ...
+10000 20000 30000 40000 50000 60000 70000 80000 90000 100000 
+110000 120000 130000 140000 150000 160000 170000 180000 190000 200000 
+210000 220000 230000 240000 250000 260000 270000 280000 290000 300000 
+310000 320000 330000 340000 350000 360000 370000 380000 390000 400000 
+410000 420000 430000 440000 450000 460000 470000 480000 
+Hashed populated histories.
+TaggerExperiments.getFeaturesNew: initializing fnumArr.
+  length of GlobalHolder.sTemplates keys: 409787
+getFeaturesNew adding features ...
+
+  total feats: 409787, populated: 212496
+  Max features per x,y pair: 28
+  Max non-zero y values for an x: 31
+  Number of non-zero feature x,y pairs: 13515370
+  Number of zero feature x,y pairs: 1495884
+end getFeaturesNew.
+Samples from /u/nlp/data/gale/arabic/corpora/train-final-bies-det.tagged
+Number of features: 212496
+ pcond initialized 
+ zlambda initialized 
+ ftildeArr initialized 
+Saving dictionary of 38391 words ...
+Extractors[Extractor(0,word), Extractor(-1,word), Extractor(1,word), Extractor(-1,tag), ExtractorPrevTwoTags(0,word)]
+rareExtractors[ExtractorUCase(0,word), ExtractorCNumber(0,word), ExtractorDash(0,word), ExtractorCWordSuff(0,word) size 1, ExtractorCWordSuff(0,word) size 2, ExtractorCWordSuff(0,word) size 3, ExtractorCWordSuff(0,word) size 4, ExtractorAllCap(0,word), ExtractorMidSentenceCap(0,word), ExtractorStartSentenceCap(0,word), ExtractorMidSentenceCapC(0,word), ExtractorCWordPref(0,word) size 1, ExtractorCWordPref(0,word) size 2, ExtractorCWordPref(0,word) size 3, ExtractorCWordPref(0,word) size 4, ExtractorCWordPref(0,word) size 5, ExtractorCWordPref(0,word) size 6, ExtractorCWordPref(0,word) size 7, ExtractorCWordPref(0,word) size 8, ExtractorCWordPref(0,word) size 9, ExtractorCWordPref(0,word) size 10, ExtractorCWordSuff(0,word) size 5, ExtractorCWordSuff(0,word) size 6, ExtractorCWordSuff(0,word) size 7, ExtractorCWordSuff(0,word) size 8, ExtractorCWordSuff(0,word) size 9, ExtractorCWordSuff(0,word) size 10, ExtractorLetterDigitDash(0,word), CompanyNameDetector(0,word), ExtractorAllCapitalized(0,word), ExtractorUpperDigitDash(0,word)]
+QNMinimizer called on double function of 212496 variables; using M = 10.
+Iter. 0: neg. log cond. likelihood = 2102942.8581293738 [1 calls to valueAt]
+          An explanation of the output:               
+Iter:           The number of iterations
+evals-          The number of function evaluations
+SCALING:        <D> Diagonal scaling was used
+                <I> Scaled Identity
+LINESEARCH      [## M steplength]  Minpack linesearch
+                   1-Function value was too high
+                   2-Value ok, gradient positive, positive curvature
+                   3-Value ok, gradient negative, positive curvature
+                   4-Value ok, gradient negative, negative curvature
+                [.. B]  Backtracking
+VALUE           The current function value
+TIME            Total elapsed time
+|GNORM|         The current norm of the gradient
+{RELNORM}       The ratio of the current to initial gradient norms
+AVEIMPROVE      The average improvement / current value
+
+Iter:##  evals-##  <SCALING> [LINESEARCH] VALUE  TIME |GNORM|  {RELNORM}  AVEIMPROVE
+
+Iter: 1  evals-1  <D> [lambda 497 too big: 1512.1612903225528
+lambda 3027 too big: 967.2967741930581
+lambda 3480 too big: 329.6903225807759
+lambda 3889 too big: 201.4935483871428
+lambda 4006 too big: 235.39354838714576
+lambda 4018 too big: 222.68387096779426
+lambda 4293 too big: 238.54193548390933
+lambda 5449 too big: 1803.6516129086945
+lambda 5591 too big: -318.14838709657465
+lambda 5656 too big: -244.2483870966347
+lambda 5720 too big: 1726.6225806507177
+lambda 5815 too big: -236.27741935471028
+lambda 5867 too big: -306.7774193546459
+lambda 7171 too big: 690.1612903227206
+lambda 7267 too big: 301.50322580650004
+lambda 7308 too big: 291.21935483879605
+lambda 7397 too big: 450.8193548388123
+lambda 8299 too big: 644.1903225808082
+lambda 8322 too big: 280.99032258077983
+lambda 9552 too big: 214.9129032258184
+lambda 9657 too big: 453.4709677420604
+lambda 9991 too big: 1044.1032258057642
+lambda 10631 too big: 1291.2516129023916
+lambda 10682 too big: 3516.7612903220916
+lambda 11443 too big: 207.6709677420414
+lambda 11449 too big: 392.7709677420564
+lambda 11664 too big: 353.5548387098365
+lambda 15110 too big: 269.85806451617555
+lambda 15184 too big: 516.7580645161923
+lambda 20639 too big: 625.6709677420741
+lambda 20671 too big: 244.1709677420446
+lambda 21993 too big: 543.9903225807996
+lambda 23962 too big: 204.29032258077387
+lambda 23971 too big: 404.7903225807898
+lambda 24187 too big: 335.0838709678933
+lambda 24512 too big: 563.0032258065147
+lambda 25196 too big: 268.75161290326236
+lambda 25236 too big: 493.05161290329136
+lambda 25284 too big: 497.8612903227141
+lambda 25327 too big: 259.66129032269185
+lambda 25504 too big: 456.55161290327874
+lambda 27442 too big: 753.8935483872042
+lambda 27484 too big: -288.3483870965998
+lambda 27486 too big: -269.04838709662266
+lambda 27507 too big: -318.6483870965737
+lambda 27519 too big: -228.04838709664278
+lambda 27604 too big: -314.4483870965775
+lambda 27613 too big: -317.74838709657524
+lambda 27656 too big: -229.64838709664232
+lambda 27697 too big: 3409.5516129085536
+lambda 28129 too big: -291.8774193546548
+lambda 28130 too big: -264.3774193546831
+lambda 28152 too big: -262.77741935468515
+lambda 28172 too big: -306.3774193546462
+lambda 28176 too big: 560.9225806447338
+lambda 28190 too big: 754.9225806403415
+lambda 28202 too big: 1459.8225806429807
+lambda 28275 too big: -302.07741935464776
+lambda 28371 too big: 967.2967741930581
+lambda 28564 too big: 1830.0967741936195
+lambda 28799 too big: 314.3903225807731
+lambda 28810 too big: 312.62258064520574
+lambda 28820 too big: 530.4903225807919
+lambda 29106 too big: 592.3580645162467
+lambda 29882 too big: 367.3419354839193
+lambda 30863 too big: 288.5870967742285
+lambda 31050 too big: 397.01612903231046
+lambda 35096 too big: 596.4838709679121
+lambda 36651 too big: 636.0548387098581
+lambda 36682 too big: 286.254838709831
+lambda 38322 too big: 1830.0967741936195
+lambda 38364 too big: -206.30322580634467
+lambda 38711 too big: 224.7612903226069
+lambda 39069 too big: 285.05483870971585
+lambda 39081 too big: 466.7548387097314
+lambda 39813 too big: 750.5935483871654
+lambda 40042 too big: 276.7903225807801
+lambda 40250 too big: 400.8838709678984
+lambda 40476 too big: -298.17741935465057
+lambda 40512 too big: 308.41935483873056
+lambda 40852 too big: -222.77741935471838
+lambda 41512 too big: 209.11612903226856
+lambda 41622 too big: -317.64838709657533
+lambda 42063 too big: 460.0516129035524
+lambda 42139 too big: 285.54516129035625
+lambda 42140 too big: 302.5451612903569
+lambda 42897 too big: -297.1774193546512
+lambda 42966 too big: 304.86774193551855
+lambda 43100 too big: 294.4516129035432
+lambda 43269 too big: 288.77419354840396
+lambda 43397 too big: -287.97741935465893
+lambda 43398 too big: -215.97741935472231
+lambda 43408 too big: -216.9774193547217
+lambda 43563 too big: 669.3516129033695
+lambda 43571 too big: -308.34838709657964
+lambda 44638 too big: -305.3774193546465
+lambda 44991 too big: 967.2967741930581
+lambda 45033 too big: -296.8483870965884
+lambda 46130 too big: 722.3903225803733
+lambda 47097 too big: 307.97741935490336
+lambda 47164 too big: 201.60000000002196
+lambda 47180 too big: 452.27741935491485
+lambda 47446 too big: 621.6548387098551
+lambda 48918 too big: 639.4838709679167
+lambda 48934 too big: 284.7838709678892
+lambda 49624 too big: 311.16129032269816
+lambda 49645 too big: 365.65161290327956
+lambda 51354 too big: 233.21935483879253
+lambda 51718 too big: 316.3935483871333
+lambda 51865 too big: 255.29032258066633
+lambda 52130 too big: 394.75483870983953
+lambda 53010 too big: 255.06774193551394
+lambda 53265 too big: 307.8806451613468
+lambda 54179 too big: 298.0096774194027
+lambda 61340 too big: 1583.1580645156594
+lambda 61613 too big: 400.8838709678984
+lambda 62626 too big: -318.6483870965737
+lambda 64203 too big: -306.87741935464584
+lambda 65635 too big: 636.0548387098581
+lambda 65672 too big: 286.254838709831
+lambda 67101 too big: 596.4838709679121
+lambda 67447 too big: 218.25161290333796
+lambda 67521 too big: 406.45161290335557
+lambda 71790 too big: -306.27741935464616
+lambda 72905 too big: 518.5193548388107
+lambda 73578 too big: -317.9483870965749
+lambda 75734 too big: 394.75483870983953
+lambda 76051 too big: -317.8483870965751
+lambda 76663 too big: 826.2225806387837
+lambda 76669 too big: 403.1838709678041
+lambda 77019 too big: 292.6580645162465
+lambda 77023 too big: 454.1580645162653
+lambda 77096 too big: 503.0580645162634
+lambda 77224 too big: 313.02258064520385
+lambda 78018 too big: 322.32258064546244
+lambda 79009 too big: 295.89354838716935
+lambda 79593 too big: 639.4838709679167
+lambda 79645 too big: 284.7838709678892
+lambda 80257 too big: 831.2516129009177
+lambda 81294 too big: 621.6548387098551
+lambda 83081 too big: 663.6451612903795
+lambda 87931 too big: 1718.2967741940038
+lambda 88856 too big: 575.0806451613674
+lambda 89875 too big: 443.80967741941487
+lambda 92457 too big: 380.2032258064921
+lambda 93235 too big: 353.5548387098365
+lambda 96201 too big: 362.241935483916
+lambda 96670 too big: 330.9000000000401
+lambda 96877 too big: 514.974193548487
+lambda 98708 too big: 244.34516129034944
+lambda 101178 too big: 388.37096774198585
+lambda 102321 too big: 510.2516129032833
+lambda 102848 too big: 204.44193548388978
+lambda 107123 too big: 335.0838709678933
+lambda 107391 too big: 316.3741935484716
+lambda 107981 too big: 1627.0612903225135
+lambda 107991 too big: 232.83870967742897
+lambda 108002 too big: 1411.258064515324
+lambda 108010 too big: 1628.703225806942
+lambda 109138 too big: 331.3741935484724
+lambda 109533 too big: 206.65483870972204
+lambda 109545 too big: 250.5548387097251
+lambda 110691 too big: 256.27419354842993
+lambda 113112 too big: 514.974193548487
+lambda 116088 too big: 276.7903225807801
+lambda 116134 too big: -213.2032258063378
+lambda 120389 too big: 441.53870967751436
+lambda 120423 too big: 573.5387096775232
+lambda 120582 too big: 663.4032258065554
+lambda 120629 too big: 379.00322580653403
+lambda 121045 too big: 223.83548387097878
+lambda 121483 too big: 1910.900000001161
+lambda 121671 too big: 422.96451612904
+lambda 121962 too big: 224.1290322580762
+lambda 122178 too big: 984.7677419348344
+lambda 124191 too big: 287.6096774194219
+lambda 124349 too big: 256.20967741941877
+lambda 125236 too big: -284.94838709660365
+lambda 126574 too big: 256.27419354842993
+lambda 126673 too big: -261.8774193546863
+lambda 127396 too big: 679.7741935485342
+lambda 127493 too big: 1008.816129031619
+lambda 127974 too big: 331.3741935484724
+lambda 129359 too big: 268.8387096774361
+lambda 129793 too big: 655.0967741929923
+lambda 129830 too big: 316.3741935484716
+lambda 133126 too big: 420.5806451613355
+lambda 133280 too big: 214.58064516131864
+lambda 133992 too big: 359.8677419355306
+lambda 134918 too big: 757.8000000000711
+lambda 136412 too big: 659.4967741936458
+lambda 136759 too big: 687.0354838710697
+lambda 138720 too big: 453.4709677420604
+lambda 140067 too big: 280.99032258077983
+lambda 140093 too big: 644.1903225808082
+lambda 143132 too big: 392.7709677420564
+lambda 143139 too big: 207.6709677420414
+lambda 143199 too big: 341.2322580646449
+lambda 145083 too big: 344.79032258068537
+lambda 145106 too big: 257.59032258067754
+lambda 149548 too big: 290.0387096775018
+lambda 150945 too big: 543.9903225807996
+lambda 152330 too big: 244.1709677420446
+lambda 152352 too big: 625.6709677420741
+lambda 153617 too big: 551.429032258113
+lambda 155162 too big: 321.95161290327775
+lambda 155274 too big: 466.25161290328924
+lambda 155452 too big: 404.7903225807898
+lambda 155458 too big: 204.29032258077387
+lambda 155783 too big: 397.13548387105004
+lambda 158034 too big: 364.19677419362586
+lambda 159580 too big: 390.20000000007667
+lambda 160044 too big: 682.2741935484902
+lambda 161406 too big: 212.2967741936122
+lambda 162166 too big: 233.63870967745308
+lambda 164212 too big: 216.53548387103476
+lambda 165829 too big: 377.0741935484648
+lambda 168056 too big: 1948.1967741970668
+lambda 168113 too big: -212.7032258063383
+lambda 172257 too big: 287.0709677420927
+lambda 172278 too big: 631.7709677421194
+lambda 173708 too big: 226.5741935485022
+lambda 181030 too big: 391.17096774210086
+lambda 181874 too big: 201.4225806451816
+lambda 185523 too big: 638.9709677421179
+lambda 186164 too big: 217.82258064518464
+lambda 186242 too big: 688.4322580646718
+lambda 186847 too big: 212.80322580650665
+lambda 187944 too big: 229.48387096775377
+lambda 188830 too big: 264.88709677420565
+lambda 194364 too big: 275.0741935485057
+lambda 194418 too big: 1174.9741935460634
+lambda 195848 too big: 356.9709677420983
+lambda 196030 too big: 212.7709677420868
+lambda 198683 too big: -212.3032258063387
+lambda 198716 too big: 1306.2967741892262
+lambda 198779 too big: 362.59677419377
+lambda 198784 too big: -205.40322580634543
+lambda 202262 too big: 397.08064516133527
+lambda 203737 too big: 287.7096774193692
+lambda 206623 too big: 789.4322580627927
+lambda 207653 too big: 349.3032258065173
+lambda 208084 too big: -207.10322580634366
+lambda 208633 too big: -201.60322580634931
+lambda 212172 too big: -207.5032258063432
+1lambda 497 too big: 296.27110172740475
+lambda 5449 too big: 353.38151684526014
+lambda 5720 too big: 338.2895578074788
+lambda 9991 too big: 204.5665465756153
+lambda 10631 too big: 252.98924156448783
+lambda 10682 too big: 689.0235510352002
+lambda 27697 too big: 668.0184311141808
+lambda 28202 too big: 286.0166088508876
+lambda 28564 too big: 358.5628008256036
+lambda 38322 too big: 358.5628008256036
+lambda 61340 too big: 310.1811870099058
+lambda 87931 too big: 336.6583192170678
+lambda 107981 too big: 318.7829526829374
+lambda 108002 too big: 276.50157709463224
+lambda 108010 too big: 319.1046498709623
+lambda 121483 too big: 374.39422098318613
+lambda 168056 too big: 381.7016136883269
+lambda 194418 too big: 230.20751890091503
+lambda 198716 too big: 255.93697375327184
+1 M  4.025E-5 ]  1.680E6   68.307sIter. 1: neg. log cond. likelihood = 1679818.545965275 [4 calls to valueAt]
+ |8.611E4| {7.862E-1}  0.000E0  
+Iter: 2  evals-4  <D> [ M  1.000E0 ]  1.671E6   98.901sIter. 2: neg. log cond. likelihood = 1670981.08217655 [5 calls to valueAt]
+ |1.025E5| {9.355E-1}  2.644E-3  
+Iter: 3  evals-5  <D> [ M  1.000E0 ]  1.349E6   129.5sIter. 3: neg. log cond. likelihood = 1349064.2279102092 [6 calls to valueAt]
+ |9.774E4| {8.923E-1}  8.172E-2  
+Iter: 4  evals-6  <D> [ M  1.000E0 ]  1.052E6   159.843sIter. 4: neg. log cond. likelihood = 1052465.4830376 [7 calls to valueAt]
+ |7.612E4| {6.950E-1}  1.490E-1  
+Iter: 5  evals-7  <D> [ M  1.000E0 ]  9.543E5   190.187sIter. 5: neg. log cond. likelihood = 954293.9257252045 [8 calls to valueAt]
+ |6.018E4| {5.494E-1}  1.521E-1  
+Iter: 6  evals-8  <D> [ M  1.000E0 ]  9.085E5   220.761sIter. 6: neg. log cond. likelihood = 908518.1107184456 [9 calls to valueAt]
+ |4.800E4| {4.383E-1}  1.415E-1  
+Iter: 7  evals-9  <D> [ M  1.000E0 ]  8.426E5   249.774sIter. 7: neg. log cond. likelihood = 842593.4068307129 [10 calls to valueAt]
+ |3.494E4| {3.190E-1}  1.419E-1  
+Iter: 8  evals-10  <D> [1 M  3.222E-1 ]  8.071E5   297.448sIter. 8: neg. log cond. likelihood = 807079.0544390165 [12 calls to valueAt]
+ |2.237E4| {2.042E-1}  1.352E-1  
+Iter: 9  evals-12  <D> [ M  1.000E0 ]  7.812E5   326.469sIter. 9: neg. log cond. likelihood = 781160.2563483805 [13 calls to valueAt]
+ |2.541E4| {2.320E-1}  1.278E-1  
+Iter: 10  evals-13  <D> [ M  1.000E0 ]  6.820E5   355.496sIter. 10: neg. log cond. likelihood = 682032.3442479694 [14 calls to valueAt]
+ |2.404E4| {2.195E-1}  1.463E-1  
+Iter: 11  evals-14  <D> [ M  1.000E0 ]  6.390E5   384.526sIter. 11: neg. log cond. likelihood = 639035.0889358369 [15 calls to valueAt]
+ |2.196E4| {2.005E-1}  1.468E-1  
+Iter: 12  evals-15  <D> [ M  1.000E0 ]  5.970E5   413.567sIter. 12: neg. log cond. likelihood = 597042.8147037514 [16 calls to valueAt]
+ |2.169E4| {1.980E-1}  1.145E-1  
+Iter: 13  evals-16  <D> [ M  1.000E0 ]  5.736E5   442.599sIter. 13: neg. log cond. likelihood = 573623.6816770141 [17 calls to valueAt]
+ |2.462E4| {2.247E-1}  7.589E-2  
+Iter: 14  evals-17  <D> [ M  1.000E0 ]  5.444E5   471.631sIter. 14: neg. log cond. likelihood = 544353.5467952922 [18 calls to valueAt]
+ |1.449E4| {1.323E-1}  6.846E-2  
+Iter: 15  evals-18  <D> [1 M  4.603E-1 ]  5.208E5   519.363sIter. 15: neg. log cond. likelihood = 520829.22066471685 [20 calls to valueAt]
+ |1.812E4| {1.655E-1}  6.767E-2  
+Iter: 16  evals-20  <D> [ M  1.000E0 ]  4.908E5   549.512sIter. 16: neg. log cond. likelihood = 490834.7657601266 [21 calls to valueAt]
+ |1.265E4| {1.155E-1}  6.515E-2  
+Iter: 17  evals-21  <D> [ M  1.000E0 ]  4.668E5   579.831sIter. 17: neg. log cond. likelihood = 466819.5106308857 [22 calls to valueAt]
+ |1.243E4| {1.134E-1}  6.626E-2  
+Iter: 18  evals-22  <D> [ M  1.000E0 ]  4.465E5   610.134sIter. 18: neg. log cond. likelihood = 446466.53519308695 [23 calls to valueAt]
+ |1.107E4| {1.010E-1}  6.815E-2  
+Iter: 19  evals-23  <D> [ M  1.000E0 ]  4.290E5   640.411sIter. 19: neg. log cond. likelihood = 428991.32082773815 [24 calls to valueAt]
+ |2.027E4| {1.850E-1}  5.362E-2  
+Iter: 20  evals-24  <D> [ M  1.000E0 ]  4.086E5   670.686sIter. 20: neg. log cond. likelihood = 408585.5047575341 [25 calls to valueAt]
+ |1.825E4| {1.666E-1}  5.127E-2  
+Iter: 21  evals-25  <D> [1 M  4.137E-1 ]  3.983E5   719.744sIter. 21: neg. log cond. likelihood = 398272.5322344595 [27 calls to valueAt]
+ |1.439E4| {1.313E-1}  4.537E-2  
+Iter: 22  evals-27  <D> [ M  1.000E0 ]  3.861E5   750.02sIter. 22: neg. log cond. likelihood = 386120.35888103605 [28 calls to valueAt]
+ |8.673E3| {7.918E-2}  4.415E-2  
+Iter: 23  evals-28  <D> [ M  1.000E0 ]  3.765E5   780.288sIter. 23: neg. log cond. likelihood = 376462.27142132807 [29 calls to valueAt]
+ |7.572E3| {6.913E-2}  4.054E-2  
+Iter: 24  evals-29  <D> [ M  1.000E0 ]  3.654E5   810.542sIter. 24: neg. log cond. likelihood = 365427.9240836802 [30 calls to valueAt]
+ |1.898E4| {1.733E-1}  3.866E-2  
+Iter: 25  evals-30  <D> [ M  1.000E0 ]  3.520E5   840.798sIter. 25: neg. log cond. likelihood = 352035.49406229047 [31 calls to valueAt]
+ |8.187E3| {7.474E-2}  3.584E-2  
+Iter: 26  evals-31  <D> [ M  1.000E0 ]  3.425E5   871.049sIter. 26: neg. log cond. likelihood = 342491.1855307671 [32 calls to valueAt]
+ |6.170E3| {5.633E-2}  3.300E-2  
+Iter: 27  evals-32  <D> [ M  1.000E0 ]  3.263E5   901.293sIter. 27: neg. log cond. likelihood = 326284.73900937894 [33 calls to valueAt]
+ |6.828E3| {6.234E-2}  3.348E-2  
+Iter: 28  evals-33  <D> [ M  1.000E0 ]  3.236E5   931.525sIter. 28: neg. log cond. likelihood = 323649.718022819 [34 calls to valueAt]
+ |1.788E4| {1.632E-1}  2.959E-2  
+Iter: 29  evals-34  <D> [ M  1.000E0 ]  3.096E5   961.756sIter. 29: neg. log cond. likelihood = 309616.94553020434 [35 calls to valueAt]
+ |6.097E3| {5.566E-2}  2.906E-2  
+Iter: 30  evals-35  <D> [ M  1.000E0 ]  3.044E5   992.12sIter. 30: neg. log cond. likelihood = 304383.6202110761 [36 calls to valueAt]
+Checking model correctness; x size 484234 , ysize 31
+Constraint 5449 not satisfied emp 0.0347 exp 0.0329 diff 0.0018 lambda 5.7891
+Constraint 7171 not satisfied emp 0.0132 exp 0.0155 diff 0.0023 lambda 2.5542
+Constraint 11443 not satisfied emp 0.0051 exp 0.007 diff 0.0019 lambda 1.5284
+Constraint 11449 not satisfied emp 0.0081 exp 0.0071 diff 0.001 lambda 0.1876
+Constraint 23962 not satisfied emp 0.0054 exp 0.0073 diff 0.0019 lambda 1.0234
+Constraint 23971 not satisfied emp 0.0087 exp 0.0076 diff 0.001 lambda 0.493
+Constraint 25284 not satisfied emp 0.01 exp 0.0078 diff 0.0022 lambda 3.1558
+Constraint 27697 not satisfied emp 0.0609 exp 0.0628 diff 0.002 lambda 6.6906
+Constraint 28202 not satisfied emp 0.0289 exp 0.0277 diff 0.0011 lambda 5.5931
+Constraint 28820 not satisfied emp 0.0107 exp 0.0084 diff 0.0023 lambda 3.264
+Constraint 40250 not satisfied emp 0.0088 exp 0.0078 diff 0.0011 lambda 0.4502
+Constraint 40260 not satisfied emp 0.0055 exp 0.0074 diff 0.0019 lambda 0.1696
+Constraint 46130 not satisfied emp 0.0139 exp 0.0164 diff 0.0026 lambda 4.0173
+Constraint 52130 not satisfied emp 0.0088 exp 0.0078 diff 0.0011 lambda 0.1558
+Constraint 52137 not satisfied emp 0.0055 exp 0.0074 diff 0.0019 lambda -0.2319
+Constraint 61599 not satisfied emp 0.0055 exp 0.0074 diff 0.0019 lambda 0.1696
+Constraint 61613 not satisfied emp 0.0088 exp 0.0078 diff 0.0011 lambda 0.4502
+Constraint 75720 not satisfied emp 0.0055 exp 0.0074 diff 0.0019 lambda -0.2319
+Constraint 75734 not satisfied emp 0.0088 exp 0.0078 diff 0.0011 lambda 0.1558
+Constraint 93515 not satisfied emp 0.0022 exp 0.0035 diff 0.0012 lambda 0.745
+Constraint 107392 not satisfied emp 0.004 exp 0.0057 diff 0.0017 lambda 0.8097
+Constraint 115925 not satisfied emp 0.0022 exp 0.0035 diff 0.0012 lambda 0.745
+Constraint 129823 not satisfied emp 0.004 exp 0.0057 diff 0.0017 lambda 0.8097
+Constraint 143132 not satisfied emp 0.0081 exp 0.0071 diff 0.001 lambda 0.1876
+Constraint 143139 not satisfied emp 0.0051 exp 0.007 diff 0.0019 lambda 1.5284
+Constraint 155452 not satisfied emp 0.0087 exp 0.0076 diff 0.001 lambda 0.493
+Constraint 155458 not satisfied emp 0.0054 exp 0.0073 diff 0.0019 lambda 1.0234
+Constraint 181030 not satisfied emp 0.0088 exp 0.0078 diff 0.0011 lambda -0.1041
+Constraint 181033 not satisfied emp 0.0055 exp 0.0074 diff 0.0019 lambda -0.4736
+ |7.240E3| {6.610E-2}  2.804E-2  
+Iter: 31  evals-36  <D> [ M  1.000E0 ]  2.975E5   1028.485sIter. 31: neg. log cond. likelihood = 297472.5524498844 [37 calls to valueAt]
+ |5.034E3| {4.596E-2}  2.709E-2  
+Iter: 32  evals-37  <D> [ M  1.000E0 ]  2.895E5   1058.536sIter. 32: neg. log cond. likelihood = 289450.89690547116 [38 calls to valueAt]
+ |8.367E3| {7.639E-2}  2.733E-2  
+Iter: 33  evals-38  <D> [1 M  4.237E-1 ]  2.863E5   1107.872sIter. 33: neg. log cond. likelihood = 286319.18349109136 [40 calls to valueAt]
+ |7.885E3| {7.199E-2}  2.512E-2  
+Iter: 34  evals-40  <D> [ M  1.000E0 ]  2.814E5   1137.921sIter. 34: neg. log cond. likelihood = 281363.187613753 [41 calls to valueAt]
+ |5.027E3| {4.590E-2}  2.283E-2  
+Iter: 35  evals-41  <D> [ M  1.000E0 ]  2.754E5   1167.974sIter. 35: neg. log cond. likelihood = 275374.79550658795 [42 calls to valueAt]
+ |5.955E3| {5.437E-2}  2.216E-2  
+Iter: 36  evals-42  <D> [ M  1.000E0 ]  2.702E5   1198.031sIter. 36: neg. log cond. likelihood = 270204.54987273697 [43 calls to valueAt]
+ |6.045E3| {5.519E-2}  1.887E-2  
+Iter: 37  evals-43  <D> [ M  1.000E0 ]  2.654E5   1228.087sIter. 37: neg. log cond. likelihood = 265374.64138389454 [44 calls to valueAt]
+ |4.991E3| {4.557E-2}  1.996E-2  
+Iter: 38  evals-44  <D> [ M  1.000E0 ]  2.623E5   1258.151sIter. 38: neg. log cond. likelihood = 262263.8340885739 [45 calls to valueAt]
+ |8.453E3| {7.717E-2}  1.641E-2  
+Iter: 39  evals-45  <D> [ M  1.000E0 ]  2.572E5   1288.311sIter. 39: neg. log cond. likelihood = 257243.57047246164 [46 calls to valueAt]
+ |5.094E3| {4.651E-2}  1.666E-2  
+Iter: 40  evals-46  <D> [2 M  4.333E-1 ]  2.537E5   1337.682sIter. 40: neg. log cond. likelihood = 253740.66695006719 [48 calls to valueAt]
+ |3.719E3| {3.396E-2}  1.567E-2  
+Iter: 41  evals-48  <D> [ M  1.000E0 ]  2.499E5   1367.75sIter. 41: neg. log cond. likelihood = 249929.25152893286 [49 calls to valueAt]
+ |4.217E3| {3.851E-2}  1.438E-2  
+Iter: 42  evals-49  <D> [ M  1.000E0 ]  2.455E5   1397.825sIter. 42: neg. log cond. likelihood = 245477.17595162697 [50 calls to valueAt]
+ |8.677E3| {7.922E-2}  1.513E-2  
+Iter: 43  evals-50  <D> [ M  1.000E0 ]  2.434E5   1427.911sIter. 43: neg. log cond. likelihood = 243398.770810752 [51 calls to valueAt]
+ |7.888E3| {7.201E-2}  1.418E-2  
+Iter: 44  evals-51  <D> [ M  1.000E0 ]  2.391E5   1458.24sIter. 44: neg. log cond. likelihood = 239087.33005383448 [52 calls to valueAt]
+ |3.897E3| {3.558E-2}  1.380E-2  
+Iter: 45  evals-52  <D> [ M  1.000E0 ]  2.371E5   1488.446sIter. 45: neg. log cond. likelihood = 237101.2737258361 [53 calls to valueAt]
+ |6.921E3| {6.319E-2}  1.269E-2  
+Iter: 46  evals-53  <D> [ M  1.000E0 ]  2.345E5   1518.657sIter. 46: neg. log cond. likelihood = 234500.26296968386 [54 calls to valueAt]
+ |9.244E3| {8.440E-2}  1.197E-2  
+Iter: 47  evals-54  <D> [ M  1.000E0 ]  2.310E5   1548.872sIter. 47: neg. log cond. likelihood = 231040.54733651408 [55 calls to valueAt]
+ |4.304E3| {3.929E-2}  1.229E-2  
+Iter: 48  evals-55  <D> [ M  1.000E0 ]  2.277E5   1579.086sIter. 48: neg. log cond. likelihood = 227744.32993523416 [56 calls to valueAt]
+ |4.401E3| {4.018E-2}  1.178E-2  
+Iter: 49  evals-56  <D> [ M  1.000E0 ]  2.246E5   1609.315sIter. 49: neg. log cond. likelihood = 224581.10442721896 [57 calls to valueAt]
+ |7.078E3| {6.462E-2}  1.180E-2  
+Iter: 50  evals-57  <D> [ M  1.000E0 ]  2.211E5   1639.532sIter. 50: neg. log cond. likelihood = 221130.55398373056 [58 calls to valueAt]
+ |4.262E3| {3.891E-2}  1.184E-2  
+Iter: 51  evals-58  <D> [ M  1.000E0 ]  2.189E5   1669.751sIter. 51: neg. log cond. likelihood = 218888.80275854742 [59 calls to valueAt]
+ |9.677E3| {8.835E-2}  1.104E-2  
+Iter: 52  evals-59  <D> [ M  1.000E0 ]  2.163E5   1699.975sIter. 52: neg. log cond. likelihood = 216316.1214843254 [60 calls to valueAt]
+ |8.145E3| {7.437E-2}  1.138E-2  
+Iter: 53  evals-60  <D> [ M  1.000E0 ]  2.127E5   1730.201sIter. 53: neg. log cond. likelihood = 212664.47453463773 [61 calls to valueAt]
+ |2.686E3| {2.452E-2}  1.130E-2  
+Iter: 54  evals-61  <D> [ M  1.000E0 ]  2.106E5   1760.424sIter. 54: neg. log cond. likelihood = 210587.84166494905 [62 calls to valueAt]
+ |2.897E3| {2.645E-2}  1.145E-2  
+Iter: 55  evals-62  <D> [ M  1.000E0 ]  2.079E5   1790.649sIter. 55: neg. log cond. likelihood = 207869.7087936919 [63 calls to valueAt]
+ |3.448E3| {3.148E-2}  1.165E-2  
+Iter: 56  evals-63  <D> [ M  1.000E0 ]  2.066E5   1820.878sIter. 56: neg. log cond. likelihood = 206633.4532412386 [64 calls to valueAt]
+ |8.950E3| {8.171E-2}  1.074E-2  
+Iter: 57  evals-64  <D> [ M  1.000E0 ]  2.035E5   1851.11sIter. 57: neg. log cond. likelihood = 203512.08717480322 [65 calls to valueAt]
+ |3.205E3| {2.926E-2}  1.082E-2  
+Iter: 58  evals-65  <D> [ M  1.000E0 ]  2.018E5   1881.342sIter. 58: neg. log cond. likelihood = 201808.63625931457 [66 calls to valueAt]
+ |3.029E3| {2.766E-2}  1.026E-2  
+Iter: 59  evals-66  <D> [ M  1.000E0 ]  2.000E5   1911.578sIter. 59: neg. log cond. likelihood = 199964.80921561792 [67 calls to valueAt]
+ |4.206E3| {3.840E-2}  9.622E-3  
+Iter: 60  evals-67  <D> [1 M  4.157E-1 ]  1.984E5   1960.628sIter. 60: neg. log cond. likelihood = 198415.5230854342 [69 calls to valueAt]
+Checking model correctness; x size 484234 , ysize 31
+Constraint 8299 not satisfied emp 0.0126 exp 0.0114 diff 0.0012 lambda -0.6956
+Constraint 20639 not satisfied emp 0.0119 exp 0.0108 diff 0.0011 lambda 0.4556
+Constraint 36651 not satisfied emp 0.0128 exp 0.0117 diff 0.0011 lambda 1.2718
+Constraint 48918 not satisfied emp 0.0127 exp 0.0116 diff 0.0011 lambda 0.2355
+Constraint 65635 not satisfied emp 0.0128 exp 0.0117 diff 0.0011 lambda 1.2718
+Constraint 79593 not satisfied emp 0.0127 exp 0.0116 diff 0.0011 lambda 0.2355
+Constraint 140093 not satisfied emp 0.0126 exp 0.0114 diff 0.0012 lambda -0.6956
+Constraint 152352 not satisfied emp 0.0119 exp 0.0108 diff 0.0011 lambda 0.4556
+Constraint 172278 not satisfied emp 0.0128 exp 0.0117 diff 0.0011 lambda 1.1732
+ |3.704E3| {3.382E-2}  9.380E-3  
+Iter: 61  evals-69  <D> [ M  1.000E0 ]  1.972E5   1996.86sIter. 61: neg. log cond. likelihood = 197190.69932746975 [70 calls to valueAt]
+ |1.851E3| {1.690E-2}  8.817E-3  
+Iter: 62  evals-70  <D> [ M  1.000E0 ]  1.959E5   2026.967sIter. 62: neg. log cond. likelihood = 195899.04126466994 [71 calls to valueAt]
+ |2.174E3| {1.985E-2}  7.780E-3  
+Iter: 63  evals-71  <D> [ M  1.000E0 ]  1.945E5   2057.087sIter. 63: neg. log cond. likelihood = 194493.9453801467 [72 calls to valueAt]
+ |5.812E3| {5.306E-2}  7.523E-3  
+Iter: 64  evals-72  <D> [ M  1.000E0 ]  1.925E5   2087.208sIter. 64: neg. log cond. likelihood = 192476.87410959473 [73 calls to valueAt]
+ |3.074E3| {2.807E-2}  7.270E-3  
+Iter: 65  evals-73  <D> [ M  1.000E0 ]  1.913E5   2117.33sIter. 65: neg. log cond. likelihood = 191324.10435598044 [74 calls to valueAt]
+ |3.205E3| {2.926E-2}  7.274E-3  
+Iter: 66  evals-74  <D> [ M  1.000E0 ]  1.898E5   2147.449sIter. 66: neg. log cond. likelihood = 189783.14480245218 [75 calls to valueAt]
+ |3.787E3| {3.458E-2}  6.576E-3  
+Iter: 67  evals-75  <D> [ M  1.000E0 ]  1.888E5   2177.576sIter. 67: neg. log cond. likelihood = 188783.9476383752 [76 calls to valueAt]
+ |3.742E3| {3.416E-2}  6.272E-3  
+Iter: 68  evals-76  <D> [ M  1.000E0 ]  1.876E5   2207.703sIter. 68: neg. log cond. likelihood = 187630.7486609163 [77 calls to valueAt]
+ |1.790E3| {1.634E-2}  5.976E-3  
+Iter: 69  evals-77  <D> [ M  1.000E0 ]  1.867E5   2237.823sIter. 69: neg. log cond. likelihood = 186695.89057348287 [78 calls to valueAt]
+ |2.258E3| {2.062E-2}  5.707E-3  
+Iter: 70  evals-78  <D> [ M  1.000E0 ]  1.860E5   2267.952sIter. 70: neg. log cond. likelihood = 185964.77179990525 [79 calls to valueAt]
+ |3.710E3| {3.387E-2}  5.488E-3  
+Iter: 71  evals-79  <D> [ M  1.000E0 ]  1.849E5   2298.078sIter. 71: neg. log cond. likelihood = 184865.60144682328 [80 calls to valueAt]
+ |1.454E3| {1.328E-2}  5.426E-3  
+Iter: 72  evals-80  <D> [ M  1.000E0 ]  1.843E5   2328.197sIter. 72: neg. log cond. likelihood = 184305.83049818373 [81 calls to valueAt]
+ |2.467E3| {2.253E-2}  5.025E-3  
+Iter: 73  evals-81  <D> [ M  1.000E0 ]  1.835E5   2358.325sIter. 73: neg. log cond. likelihood = 183530.79659457214 [82 calls to valueAt]
+ |1.548E3| {1.413E-2}  4.431E-3  
+Iter: 74  evals-82  <D> [1 M  4.921E-1 ]  1.829E5   2407.728sIter. 74: neg. log cond. likelihood = 182877.33340211678 [84 calls to valueAt]
+ |3.246E3| {2.964E-2}  4.199E-3  
+Iter: 75  evals-84  <D> [ M  1.000E0 ]  1.823E5   2438.177sIter. 75: neg. log cond. likelihood = 182258.95253431986 [85 calls to valueAt]
+ |3.332E3| {3.042E-2}  3.753E-3  
+Iter: 76  evals-85  <D> [ M  1.000E0 ]  1.817E5   2468.54sIter. 76: neg. log cond. likelihood = 181652.60109453608 [86 calls to valueAt]
+ |1.299E3| {1.186E-2}  3.569E-3  
+Iter: 77  evals-86  <D> [ M  1.000E0 ]  1.812E5   2498.902sIter. 77: neg. log cond. likelihood = 181193.00211785233 [87 calls to valueAt]
+ |1.086E3| {9.914E-3}  3.230E-3  
+Iter: 78  evals-87  <D> [ M  1.000E0 ]  1.809E5   2529.259sIter. 78: neg. log cond. likelihood = 180877.31070111308 [88 calls to valueAt]
+ |4.639E3| {4.236E-2}  2.924E-3  
+Iter: 79  evals-88  <D> [ M  1.000E0 ]  1.802E5   2559.619sIter. 79: neg. log cond. likelihood = 180175.52376598862 [89 calls to valueAt]
+ |1.773E3| {1.619E-2}  2.921E-3  
+Iter: 80  evals-89  <D> [ M  1.000E0 ]  1.798E5   2589.974sIter. 80: neg. log cond. likelihood = 179828.71574269736 [90 calls to valueAt]
+ |1.209E3| {1.104E-2}  2.546E-3  
+Iter: 81  evals-90  <D> [ M  1.000E0 ]  1.795E5   2620.326sIter. 81: neg. log cond. likelihood = 179507.00005733097 [91 calls to valueAt]
+ |8.124E2| {7.417E-3}  2.430E-3  
+Iter: 82  evals-91  <D> [1 M  4.636E-1 ]  1.791E5   2670.215sIter. 82: neg. log cond. likelihood = 179144.92975483337 [93 calls to valueAt]
+ |1.745E3| {1.593E-2}  2.226E-3  
+Iter: 83  evals-93  <D> [ M  1.000E0 ]  1.787E5   2700.572sIter. 83: neg. log cond. likelihood = 178717.8139466934 [94 calls to valueAt]
+ |1.211E3| {1.105E-2}  2.116E-3  
+Iter: 84  evals-94  <D> [ M  1.000E0 ]  1.784E5   2730.928sIter. 84: neg. log cond. likelihood = 178425.63753031215 [95 calls to valueAt]
+ |9.650E2| {8.810E-3}  1.953E-3  
+Iter: 85  evals-95  <D> [ M  1.000E0 ]  1.780E5   2761.284sIter. 85: neg. log cond. likelihood = 178031.4495766744 [96 calls to valueAt]
+ |1.526E3| {1.393E-2}  1.849E-3  
+Iter: 86  evals-96  <D> [ M  1.000E0 ]  1.779E5   2791.642sIter. 86: neg. log cond. likelihood = 177893.3333245356 [97 calls to valueAt]
+ |1.744E3| {1.592E-2}  1.686E-3  
+Iter: 87  evals-97  <D> [ M  1.000E0 ]  1.776E5   2822.012sIter. 87: neg. log cond. likelihood = 177626.05393095937 [98 calls to valueAt]
+ |8.107E2| {7.401E-3}  1.664E-3  
+Iter: 88  evals-98  <D> [ M  1.000E0 ]  1.774E5   2852.371sIter. 88: neg. log cond. likelihood = 177445.78853924925 [99 calls to valueAt]
+ |1.213E3| {1.107E-2}  1.398E-3  
+Iter: 89  evals-99  <D> [ M  1.000E0 ]  1.772E5   2882.727sIter. 89: neg. log cond. likelihood = 177206.64009684173 [100 calls to valueAt]
+ |1.264E3| {1.154E-2}  1.345E-3  
+Iter: 90  evals-100  <D> [ M  1.000E0 ]  1.771E5   2913.214sIter. 90: neg. log cond. likelihood = 177076.54506780056 [101 calls to valueAt]
+Checking model correctness; x size 484234 , ysize 31
+ |1.745E3| {1.593E-2}  1.248E-3  
+Iter: 91  evals-101  <D> [ M  1.000E0 ]  1.769E5   2949.376sIter. 91: neg. log cond. likelihood = 176865.54872689905 [102 calls to valueAt]
+ |6.766E2| {6.177E-3}  1.172E-3  
+Iter: 92  evals-102  <D> [ M  1.000E0 ]  1.767E5   2979.453sIter. 92: neg. log cond. likelihood = 176712.2366675674 [103 calls to valueAt]
+ |1.076E3| {9.828E-3}  1.032E-3  
+Iter: 93  evals-103  <D> [ M  1.000E0 ]  1.765E5   3009.53sIter. 93: neg. log cond. likelihood = 176519.64236798653 [104 calls to valueAt]
+ |8.634E2| {7.883E-3}  9.816E-4  
+Iter: 94  evals-104  <D> [ M  1.000E0 ]  1.764E5   3039.607sIter. 94: neg. log cond. likelihood = 176362.70887953986 [105 calls to valueAt]
+ |1.392E3| {1.271E-2}  8.602E-4  
+Iter: 95  evals-105  <D> [ M  1.000E0 ]  1.762E5   3069.69sIter. 95: neg. log cond. likelihood = 176191.5180730255 [106 calls to valueAt]
+ |9.646E2| {8.807E-3}  8.781E-4  
+Iter: 96  evals-106  <D> [ M  1.000E0 ]  1.761E5   3099.092sIter. 96: neg. log cond. likelihood = 176089.81748270508 [107 calls to valueAt]
+ |9.917E2| {9.054E-3}  7.931E-4  
+Iter: 97  evals-107  <D> [ M  1.000E0 ]  1.760E5   3129.17sIter. 97: neg. log cond. likelihood = 175959.8620680665 [108 calls to valueAt]
+ |4.572E2| {4.174E-3}  7.677E-4  
+Iter: 98  evals-108  <D> [ M  1.000E0 ]  1.759E5   3159.249sIter. 98: neg. log cond. likelihood = 175904.2681672248 [109 calls to valueAt]
+ |1.667E3| {1.522E-2}  6.731E-4  
+Iter: 99  evals-109  <D> [ M  1.000E0 ]  1.757E5   3189.356sIter. 99: neg. log cond. likelihood = 175736.13862028724 [110 calls to valueAt]
+ |7.149E2| {6.527E-3}  6.934E-4  
+Iter: 100  evals-110  <D> [ M  1.000E0 ]  1.757E5   3219.435sIter. 100: neg. log cond. likelihood = 175673.9337656142 [111 calls to valueAt]
+ |5.830E2| {5.323E-3}  6.166E-4  
+Iter: 101  evals-111  <D> [ M  1.000E0 ]  1.756E5   3249.513sIter. 101: neg. log cond. likelihood = 175594.27083775273 [112 calls to valueAt]
+ |6.777E2| {6.187E-3}  5.788E-4  
+Iter: 102  evals-112  <D> [ M  1.000E0 ]  1.755E5   3279.591sIter. 102: neg. log cond. likelihood = 175532.29660406132 [113 calls to valueAt]
+ |1.332E3| {1.216E-2}  5.114E-4  
+Iter: 103  evals-113  <D> [ M  1.000E0 ]  1.755E5   3309.668sIter. 103: neg. log cond. likelihood = 175463.32906394868 [114 calls to valueAt]
+ |6.846E2| {6.250E-3}  4.660E-4  
+Iter: 104  evals-114  <D> [ M  1.000E0 ]  1.754E5   3339.747sIter. 104: neg. log cond. likelihood = 175416.0937219291 [115 calls to valueAt]
+ |4.936E2| {4.507E-3}  4.019E-4  
+Iter: 105  evals-115  <D> [ M  1.000E0 ]  1.754E5   3369.861sIter. 105: neg. log cond. likelihood = 175364.68897833492 [116 calls to valueAt]
+ |3.463E2| {3.161E-3}  3.759E-4  
+Iter: 106  evals-116  <D> [ M  1.000E0 ]  1.753E5   3399.95sIter. 106: neg. log cond. likelihood = 175339.81434138943 [117 calls to valueAt]
+ |1.134E3| {1.035E-2}  3.215E-4  
+Iter: 107  evals-117  <D> [ M  1.000E0 ]  1.753E5   3430.442sIter. 107: neg. log cond. likelihood = 175253.48801830513 [118 calls to valueAt]
+ |7.804E2| {7.125E-3}  3.376E-4  
+Iter: 108  evals-118  <D> [ M  1.000E0 ]  1.752E5   3460.809sIter. 108: neg. log cond. likelihood = 175233.9494811704 [119 calls to valueAt]
+ |7.609E2| {6.947E-3}  2.605E-4  
+Iter: 109  evals-119  <D> [ M  1.000E0 ]  1.752E5   3491.174sIter. 109: neg. log cond. likelihood = 175193.49775368147 [120 calls to valueAt]
+ |1.535E2| {1.401E-3}  2.493E-4  
+Iter: 110  evals-120  <D> [ M  1.000E0 ]  1.752E5   3521.54sIter. 110: neg. log cond. likelihood = 175171.1980363938 [121 calls to valueAt]
+ |1.601E2| {1.462E-3}  2.196E-4  
+Iter: 111  evals-121  <D> [2 M  5.167E-1 ]  1.751E5   3571.44sIter. 111: neg. log cond. likelihood = 175139.27703901325 [123 calls to valueAt]
+ |6.585E2| {6.012E-3}  2.040E-4  
+Iter: 112  evals-123  <D> [ M  1.000E0 ]  1.751E5   3601.805sIter. 112: neg. log cond. likelihood = 175099.31106002047 [124 calls to valueAt]
+ |3.612E2| {3.298E-3}  1.890E-4  
+Iter: 113  evals-124  <D> [ M  1.000E0 ]  1.751E5   3632.17sIter. 113: neg. log cond. likelihood = 175077.27675921997 [125 calls to valueAt]
+ |3.583E2| {3.271E-3}  1.759E-4  
+Iter: 114  evals-125  <D> [ M  1.000E0 ]  1.750E5   3662.541sIter. 114: neg. log cond. likelihood = 175047.47227875344 [126 calls to valueAt]
+ |4.083E2| {3.728E-3}  1.647E-4  
+Iter: 115  evals-126  <D> [ M  1.000E0 ]  1.750E5   3692.906sIter. 115: neg. log cond. likelihood = 175038.17729040826 [127 calls to valueAt]
+ |7.975E2| {7.281E-3}  1.567E-4  
+Iter: 116  evals-127  <D> [ M  1.000E0 ]  1.750E5   3723.271sIter. 116: neg. log cond. likelihood = 175003.956916837 [128 calls to valueAt]
+ |3.520E2| {3.214E-3}  1.296E-4  
+Iter: 117  evals-128  <D> [ M  1.000E0 ]  1.750E5   3753.639sIter. 117: neg. log cond. likelihood = 174990.98709769297 [129 calls to valueAt]
+ |3.770E2| {3.442E-3}  1.262E-4  
+Iter: 118  evals-129  <D> [ M  1.000E0 ]  1.750E5   3784.004sIter. 118: neg. log cond. likelihood = 174973.44819604355 [130 calls to valueAt]
+ |2.085E2| {1.904E-3}  1.143E-4  
+Iter: 119  evals-130  <D> [ M  1.000E0 ]  1.750E5   3814.369sIter. 119: neg. log cond. likelihood = 174956.12901450903 [131 calls to valueAt]
+ |4.226E2| {3.858E-3}  1.118E-4  
+Iter: 120  evals-131  <D> [ M  1.000E0 ]  1.749E5   3844.739sIter. 120: neg. log cond. likelihood = 174935.07905018583 [132 calls to valueAt]
+Checking model correctness; x size 484234 , ysize 31
+ |2.302E2| {2.101E-3}  1.061E-4  
+Iter: 121  evals-132  <D> [ M  1.000E0 ]  1.749E5   3881.474sIter. 121: neg. log cond. likelihood = 174921.80810346556 [133 calls to valueAt]
+QNMinimizer terminated due to average improvement  ---- | newest_val - previous_val | / |newestVal| < TOL 
+Total time spent in optimization: 3.881E3
+after optimization value is 174921.80810346556
+Checking model correctness; x size 484234 , ysize 31
+Model is correct [empirical expec = model expec]
+Training POS tagger done [4021.4 sec].

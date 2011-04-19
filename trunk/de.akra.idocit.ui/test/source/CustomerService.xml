@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:comp="http://www.company.de"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CustomerService"
+	targetNamespace="http://www.company.de">
+
+	<!-- TYPES -->
+
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.company.de"
+			xmlns:tns="http://www.example.org/CompanySchema">
+			<xsd:import schemaLocation="CompanySchema.xsd"
+				namespace="http://www.example.org/CompanySchema"></xsd:import>
+			<xsd:element name="findCustomerByIdResponse" type="comp:findCustomerByIdResponse1" />
+			<xsd:element name="findCustomerByIdRequest" type="comp:findCustomerByIdRequest1" />
+			<xsd:complexType name="findCustomerByIdRequest1">
+				<xsd:sequence>
+					<xsd:element name="id" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="findCustomerByIdResponse1">
+				<xsd:sequence>
+					<xsd:element name="customer" type="tns:Customer" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="Customer">
+				<xsd:sequence>
+					<xsd:element name="id" type="int" />
+					<xsd:element name="firstname" type="string" />
+					<xsd:element name="lastname" type="string" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- MESSAGES -->
+
+	<wsdl:message name="findCustomerByIdRequest">
+		<wsdl:part element="comp:findCustomerByIdRequest" name="parameters">
+			<wsdl:documentation>
+
+			</wsdl:documentation>
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="findCustomerByIdResponse">
+		<wsdl:part element="comp:findCustomerByIdResponse" name="result">
+			<wsdl:documentation>
+
+			</wsdl:documentation>
+		</wsdl:part>
+	</wsdl:message>
+
+	<!-- PORTTYPE -->
+
+	<wsdl:portType name="CustomerService">
+		<wsdl:documentation scope="explicit" role="agent">
+			<docpart scope="explicit" role="agent">
+				<addressee group="builder"></addressee>
+				<addressee group="tester"></addressee>
+				<addressee group="developer">This
+					service provides operations offered
+					by the customer-care department.</addressee>
+				<addressee group="analyst"></addressee>
+				<addressee group="systembuilder"></addressee>
+				<addressee group="integrator"></addressee>
+				<addressee group="architect"></addressee>
+				<addressee group="manager"></addressee>
+			</docpart>
+			<docpart scope="implicit" role="source">
+				<addressee group="builder"></addressee>
+				<addressee group="tester"></addressee>
+				<addressee group="developer">This service provides
+					operations offered
+					by the customer-care department.</addressee>
+				<addressee group="analyst"></addressee>
+				<addressee group="systembuilder"></addressee>
+				<addressee group="integrator"></addressee>
+				<addressee group="architect"></addressee>
+				<addressee group="manager"></addressee>
+			</docpart>
+		</wsdl:documentation>
+		<wsdl:operation name="find">
+			<wsdl:documentation>
+				<docpart scope="explicit" role="action">
+					<addressee group="builder">Returns the customer for the given id.
+						If the id is unknown, the result will be null.</addressee>
+					<addressee group="tester"></addressee>
+					<addressee group="developer"></addressee>
+					<addressee group="analyst"></addressee>
+					<addressee group="systembuilder"></addressee>
+					<addressee group="integrator"></addressee>
+					<addressee group="architect"></addressee>
+					<addressee group="manager"></addressee>
+				</docpart>
+				<docpart scope="implicit" role="source">
+					<addressee group="builder">The configured SAP CRM is used as
+						database
+						where to search the customer.</addressee>
+					<addressee group="tester"></addressee>
+					<addressee group="developer"></addressee>
+					<addressee group="analyst"></addressee>
+					<addressee group="systembuilder"></addressee>
+					<addressee group="integrator"></addressee>
+					<addressee group="architect"></addressee>
+					<addressee group="manager"></addressee>
+				</docpart>
+			</wsdl:documentation>
+			<wsdl:input message="comp:findCustomerByIdRequest">
+				<wsdl:documentation>
+					<docpart scope="explicit"
+						signatureElement="findCustomerByIdRequest.parameters(findCustomerByIdRequest).findCustomerByIdRequest(findCustomerByIdRequest1).id(int)"
+						role="criterion">
+						<addressee group="builder"></addressee>
+						<addressee group="tester"></addressee>
+						<addressee group="developer">This service provides operations
+							offered
+							by the customer-care department.</addressee>
+						<addressee group="analyst"></addressee>
+						<addressee group="systembuilder"></addressee>
+						<addressee group="integrator"></addressee>
+						<addressee group="architect"></addressee>
+						<addressee group="manager"></addressee>
+						<bla>Nur ein Test</bla>
+					</docpart>
+				</wsdl:documentation>
+			</wsdl:input>
+			<wsdl:output message="comp:findCustomerByIdResponse">
+				<wsdl:documentation>
+					<docpart scope="explicit"
+						signatureElement="findCustomerByIdResponse"
+						role="object">
+						<addressee group="builder"></addressee>
+						<addressee group="tester"></addressee>
+						<addressee group="developer">The webservice response message with the found customer.</addressee>
+						<addressee group="analyst"></addressee>
+						<addressee group="systembuilder"></addressee>
+						<addressee group="integrator"></addressee>
+						<addressee group="architect"></addressee>
+						<addressee group="manager"></addressee>
+					</docpart>
+					<docpart scope="explicit"
+						signatureElement="findCustomerByIdResponse.result(findCustomerByIdResponse).findCustomerByIdResponse(findCustomerByIdResponse1).customer(Customer)"
+						role="object">
+						<addressee group="builder"></addressee>
+						<addressee group="tester"></addressee>
+						<addressee group="developer">The found Customer.</addressee>
+						<addressee group="analyst"></addressee>
+						<addressee group="systembuilder"></addressee>
+						<addressee group="integrator"></addressee>
+						<addressee group="architect"></addressee>
+						<addressee group="manager"></addressee>
+					</docpart>
+					<docpart scope="explicit"
+						signatureElement="findCustomerByIdResponse.result(findCustomerByIdResponse).findCustomerByIdResponse(findCustomerByIdResponse1).customer(Customer).id(int)"
+						role="object">
+						<addressee group="builder"></addressee>
+						<addressee group="tester"></addressee>
+						<addressee group="developer">The ID of the found Customer.</addressee>
+						<addressee group="analyst"></addressee>
+						<addressee group="systembuilder"></addressee>
+						<addressee group="integrator"></addressee>
+						<addressee group="architect"></addressee>
+						<addressee group="manager"></addressee>
+					</docpart>
+				</wsdl:documentation>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- BINDING -->
+
+	<wsdl:binding name="CustomerServiceSOAP" type="comp:CustomerService">
+		<wsdl:documentation>
+			Dies ist eine tolle Doku!
+		</wsdl:documentation>
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="find">
+			<soap:operation soapAction="http://www.company.de/NewOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<!-- SERVICE -->
+
+	<wsdl:service name="CustomerService">
+		<wsdl:port binding="comp:CustomerServiceSOAP" name="CustomerServiceSOAP">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
