@@ -1,0 +1,17 @@
+#summary This page describes how to install and configure iDocIt!.
+
+= Installation =
+
+*Prerequisites:*
+ * Eclipse 3.6 (Helios) (Download)
+ * WordNet Dictionary 3.0 for UNIX-like systems (also for Windows!)([http://wordnet.princeton.edu/wordnet/download/ WordNet])
+ * Stanford PoS-Tagger-Models 3.1 (Download)
+
+*Installation:*
+ # Download the Plugin-JARs from the Download-Section of this website. In any case you need de.akra.idocit.jar (iDocIt-Core) and de.akra.idocit.ui.jar (iDocIt-GUI). Depending on your requirements you may need also de.akra.idocit.wsdl (Plugin with WSDL Support) or de.akra.idocit.java (Plugin with Java Support).
+ # Copy the downloaded JAR-files into the „plugins“-folder of your Eclipse installation folder.
+ # Extract the Wordnet and PoS-Tagger into a special folder on your disk drive.
+ # Start you Eclipse installation and open a workspace.
+ # Enter the paths to Wordnet and the PoS-Tagger-model on the "iDocIt!"-Preference Page.
+
+= Configuration =
