@@ -3,9 +3,9 @@
 = Installation =
 
 *Prerequisites:*
- * Eclipse 3.6 (Helios) (Download)
+ * Eclipse 3.6 (Helios) [http://www.eclipse.org/downloads/packages/eclipse-classic-362/heliossr2 Download]
  * WordNet Dictionary 3.0 for UNIX-like systems (also for Windows!)[http://wordnet.princeton.edu/wordnet/download/ Download]
- * Stanford PoS-Tagger-Models 3.1 [http://nlp.stanford.edu/software/tagger.shtml Download]
+ * Stanford PoS-Tagger-Models Basic Version 3.0.1 [http://nlp.stanford.edu/software/tagger.shtml Download]
 
 *Installation:*
  # Download the Plugin-JARs from the Download-Section of this website. In any case you need de.akra.idocit.jar (iDocIt-Core) and de.akra.idocit.ui.jar (iDocIt-GUI). Depending on your requirements you may need also de.akra.idocit.wsdl (Plugin with WSDL Support) or de.akra.idocit.java (Plugin with Java Support).
