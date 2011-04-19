@@ -4,7 +4,7 @@
 
 *Prerequisites:*
  * Eclipse 3.6 (Helios) [http://www.eclipse.org/downloads/packages/eclipse-classic-362/heliossr2 Download]
- * WordNet Dictionary 3.0 for UNIX-like systems (also for Windows!) [http://wordnet.princeton.edu/wordnet/download/ Download]
+ * WordNet Dictionary 3.0 for UNIX-like systems (*you can use this also for Windows!*) [http://wordnet.princeton.edu/wordnet/download/ Download]
  * Stanford PoS-Tagger-Models Basic Version 3.0.1 [http://nlp.stanford.edu/software/tagger.shtml Download]
 
 *Installation:*
