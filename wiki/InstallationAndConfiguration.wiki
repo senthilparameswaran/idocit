@@ -24,10 +24,10 @@ Open the "iDocIt!"-Preference Page.
 
 You can specify the groups of groups of addressees of you API documentation via the corresponding Preference Page.
 
-* On the left hand side you can see a list of configured addressee-groups. By clicking the buttons below this list, you can add new addressee-groups or delete the selected ones.
+ * On the left hand side you can see a list of configured addressee-groups. By clicking the buttons below this list, you can add new addressee-groups or delete the selected ones.
 
-* On the right hand side you edit the name of the selected group and enter a description text. The group-name is be used as label for the tab in the docpart-editing component. The description text is the tooltip of the corresponding addressee-tab.
+ * On the right hand side you edit the name of the selected group and enter a description text. The group-name is be used as label for the tab in the docpart-editing component. The description text is the tooltip of the corresponding addressee-tab.
 
-* If the checkbox "Default" for an addressee-group is activated, a tab for this group is created with every newly added docpart.
+ * If the checkbox "Default" for an addressee-group is activated, a tab for this group is created with every newly added docpart.
 
 == Thematic Roles ==
