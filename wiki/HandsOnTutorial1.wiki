@@ -1,0 +1,7 @@
+# API-Documentation with Thematic Grids in a nutshell
+
+==Prerequisites:==
+ * You can download the undocumented and documented version of the WSDL-artefact used in this tutorial in the Download-section. 
+ * We assume that you have successfully installed iDocIt! and use it in its default configuration. 
+
+So, what are we going to learn in this session? 
