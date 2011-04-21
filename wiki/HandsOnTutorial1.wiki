@@ -1,7 +1,28 @@
-# API-Documentation with Thematic Grids in a nutshell
+#summary API-Documentation with Thematic Grids in a nutshell
 
 ==Prerequisites:==
- * You can download the undocumented and documented version of the WSDL-artefact used in this tutorial in the Download-section. 
+ * You can [http://code.google.com/p/idocit/downloads/list download] an undocumented and documented version of the WSDL-artefact used in this tutorial in the Download-section. 
  * We assume that you have successfully installed iDocIt! and use it in its default configuration. 
 
 So, what are we going to learn in this session? 
+
+==Goals:==
+ * You know about the semantic gap in current approaches to API-documentation. You are familiar with iDocIt!'s approach to bridge this gap.
+ * You know how to work with iDocIt! and how to customize it.
+
+==Create and set up an Eclipse Project:==
+Ok, let's get started. At first we need a Web Service Project in our Eclipse IDE.
+
+ # Start Eclipse and open your workspace.
+ # Right click into the view "Project Explorer" and choose "New > Project" in the context menu.
+ # In the upcoming wizard choose "General > Project" and click "Next".
+ # Enter "customer_care_service" as project name and click "Finish".
+ # Finally we have to copy the downloaded WSDL-file into the newly created project.
+
+That's it. Now we can start to document it.
+
+==Document the API:==
+Well, let's open our undocumented WSDL-file with iDocIt!.
+
+ # Right click on the WSDL-file and choose "iDocIt!".<br/><br/>*Please note:* iDocIt! does not support this context-menu extension for other API-languages like Java yet. This will be implemented with issue XXX – promised ;). For other languages as WSDL choose "Open with … > Other" and then "iDocIt!".<br/>
+ # iDocIt! opens its editor. Its GUI is structured as follows:<br/><br/>*Select signature element:* use this tree to select the element of the API you want to document.<br/>*Overview of recommended roles for …:*iDocIt! provides semantic recommendations for your documentationn in this tree in form of one or more thematic grids. iDocIt! will show all  thematic grids which hold for the predicate in the operation's identifier. The roles of a grid are highlighted in the following different ways: || hello || world
