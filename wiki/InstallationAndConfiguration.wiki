@@ -1,4 +1,5 @@
 #summary This page describes how to install and configure iDocIt!.
+#labels Installation,Configuration,Featured
 
 = Installation =
 
@@ -34,4 +35,9 @@ You can specify the groups of groups of addressees of you API documentation via 
 
 == Thematic Roles ==
 
-The available thematic roles could also be defined via the corresponding Preference Page. It's handling is likely the same as the addreessee-page. The only difference is, that there are no "Default" thematic roles.
+You can define the underlying thematic grids of iDocIt! via the corresponding Preference Page. The relevant theoretical background is described in the [http://nats-www.informatik.uni-hamburg.de/pub/User/JanChristianKrause/SETP-10-Pub.pdf paper] [http://nats-www.informatik.uni-hamburg.de/User/JanChristianKrause Jan Christian] presented on the [http://www.promoteresearch.org/2010/setp/index.html SETP-10-conference] in 2010. A hands-on tutorial could be found in this wiki.
+
+ * On the left you can see a list of all locally defined thematic grids. Locally means that these grids are available in you current workspace. You can define new grids or remove existing ones by clicking the corresponding buttons below this list.
+ * On the right you can edit the name and the description of the choosen grid. The names are used to identify the grid when recommending roles to you in the iDocIt!-editor.
+ * You have to enter the verbs the current grid belongs to. In case of more than one word, you have to seperate them with commas.
+ * You also have to define which thematic roles belong to the current grid. This can be done by activating the checkbox before the role's name in the listbox bottom right. Via a right click on the role you can define wheher it is mandantory or optional for the current grid. Mandantory roles must to be documented. For optional roles it is recommended to document them.
