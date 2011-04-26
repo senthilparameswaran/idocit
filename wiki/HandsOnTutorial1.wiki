@@ -22,7 +22,26 @@ Ok, let's get started. At first we need a Web Service Project in our Eclipse IDE
 That's it. Now we can start to document it.
 
 == Gaps in current aproaches to API-documentation==
-_TODO_
+In natural language, activities are mainly described by means of verbs, while the actors or attributes of the activity depend syntactically and semantically on the verb. For this reason it is common to choose the identifier of a Web Service operation in a way that it contains a verb which describes the activity to be carried out. A simplified example is given the following table:
+
+|| Name of Operation: || _findCustomerById_ ||
+|| Contents of Output-Message: || customer::Customer ||
+|| Contents of Input-Message: || id::integer||
+|| Faults: || None ||
+
+From a linguistic point of view, this labeling style is an imperative sentence (with a missing article, a missing conjunction and two missing personal pronouns: Find the customer by his or her id.). In linguistics, the concept of phrases is used to structure natural language sentences. Phrases split sentences into typed groups of words, which can be moved or replaced without rendering the sentence ungrammatical. 
+
+For example, the verb find binds two other nominal phrases (arguments of the verb): the subject and the object. The formalism used to specify the arguments of a verb is called a thematic grid and each required argument is called a thematic role. An argument could be mandatory or optional.  A simplified thematic grid for the example verb find would be 
+
+<center>Find [OBJECT] [COMPARISON] [SOURCE].</center>
+
+Here the thematic roles object, comparison and source are used. The role agent is only implicitly given (“you”). Its entity initiates and carries out the activity described by the verb. The object is the entity which is affected by the action. The comparison provides a criterion which classifies the object and the source specifies the place where the object comes from. In this example, the agent and object are mandatory arguments, while the comparison and source are optional. Now the operation’s signature could be matched to the thematic grid, for example as
+
+<center>Find [OBJECT Customer] [COMPARISON id] [SOURCE].</center>
+
+In this example the source is not specified as a parameter. Nevertheless the algorithm has to look somewhere for the customer with the given id. The necessity of including this information into the documentation is contributed by the thematic grid of the verb. By assigning its thematic roles to the elements mentioned in the operation’s signature, a consumed storage-resource (e.g. a database) has been identified, which is not mentioned in the operation’s signature. In line with Clements et al. this resource should definitely be documented because the result of the operation depends crucially on the availability and the state of this resource. Current state-of-the-art approaches to the documentation of Web Services derive the set of elements to be documented only from the operation’s signature and therefore would not cover the source.
+
+By using the thematic grid of the verb used in the operation’s identifier and assigning the signature-elements to the thematic roles of this grid, required hidden parameters and resources can be identified without deep knowledge about the implementation of the operation. Furthermore the use of thematic roles can decrease the effort for documentation, because the developer only assigns the uninstanciated role of the grid to the corresponding parameter or resource. It is assumed that in many cases the thematic role explains the parameter sufficiently. Possibly this advantage will lead to a high degree of acceptance on the side of developers. If necessary, the documentation could also be complemented with pre- or post-conditions or textual annotations.
 
 ==Basic Configuration and Customization of iDocIt! ==
 
