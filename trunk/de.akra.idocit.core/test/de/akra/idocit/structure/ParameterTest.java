@@ -87,7 +87,9 @@ public class ParameterTest
 
 		Parameter innerParam = new TestParameter(param, "");
 		innerParam.setDataTypeName("int");
+		innerParam.setQualifiedDataTypeName("int");
 		innerParam.setIdentifier("id");
+		innerParam.setQualifiedIdentifier("id");
 		innerParam.setSignatureElementPath("find.cust(Customer).id(int)");
 		innerParam.addDocpart(DocumentationTest.createDocumentation());
 
