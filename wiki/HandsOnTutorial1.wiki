@@ -22,6 +22,8 @@ Ok, let's get started. At first we need a Web Service Project in our Eclipse IDE
 That's it. Now we can start to document it.
 
 == Gaps in current aproaches to API-documentation==
+ The following text has been taken from the [http://nats-www.informatik.uni-hamburg.de/pub/User/JanChristianKrause/SETP-10-Pub.pdf paper] [http://nats-www.informatik.uni-hamburg.de/User/JanChristianKrause Jan Christian] presented on the [http://www.promoteresearch.org/2010/setp/index.html SETP-10-conference] in 2010. 
+
 In natural language, activities are mainly described by means of verbs, while the actors or attributes of the activity depend syntactically and semantically on the verb. For this reason it is common to choose the identifier of a Web Service operation in a way that it contains a verb which describes the activity to be carried out. A simplified example is given the following table:
 
 || Name of Operation: || _findCustomerById_ ||
@@ -64,7 +66,7 @@ You can specify the groups of groups of addressees of you API documentation via 
 
 === Thematic Roles ===
 
-You can define the underlying thematic grids of iDocIt! via the corresponding Preference Page. The relevant theoretical background is described in the [http://nats-www.informatik.uni-hamburg.de/pub/User/JanChristianKrause/SETP-10-Pub.pdf paper] [http://nats-www.informatik.uni-hamburg.de/User/JanChristianKrause Jan Christian] presented on the [http://www.promoteresearch.org/2010/setp/index.html SETP-10-conference] in 2010. A hands-on tutorial could be found in this wiki.
+You can define the underlying thematic grids of iDocIt! via the corresponding Preference Page.
 
  * On the left you can see a list of all locally defined thematic grids. Locally means that these grids are available in you current workspace. You can define new grids or remove existing ones by clicking the corresponding buttons below this list.
  * On the right you can edit the name and the description of the choosen grid. The names are used to identify the grid when recommending roles to you in the iDocIt!-editor.
