@@ -21,6 +21,9 @@ Ok, let's get started. At first we need a Web Service Project in our Eclipse IDE
 
 That's it. Now we can start to document it.
 
+== Gaps in current aproaches to API-documentation==
+_TODO_
+
 ==Document the API:==
 Well, let's open our undocumented WSDL-file with iDocIt!.
 
