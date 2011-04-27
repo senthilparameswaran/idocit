@@ -2,4 +2,4 @@
 
 iDocIt!! has been designed and developed in the context of the dissertation-project of [http://nats-www.informatik.uni-hamburg.de/User/JanChristianKrause Jan Christian Krause] at [http://www.akra.de AKRA GmbH]. 
 
-The Eclipse Plugin has been implemented by Dirk Meier-Eickhoff and is well described in Dirk's bachelor-thesis. AKRA wants to continue iDocIt!'s development together with the open source community. Therefore we published the complete source code here at Google Code under the Apache Licence.
+The Eclipse Plugin has been implemented by Dirk Meier-Eickhoff and is well described in his bachelor-thesis (available for download [http://code.google.com/p/idocit/downloads/list here]). AKRA wants to continue iDocIt!'s development together with the open source community. Therefore we published the complete source code here at Google Code under the Apache Licence.
