@@ -14,4 +14,4 @@
  # Extract the Wordnet and PoS-Tagger into a special folder on your disk drive.
  # Start you Eclipse installation and open a workspace.
 
-*Tipp:* have a look at our [HandsOnTutorial1] to see how iDocIt could be customized and configured.
+*Please note:* have a look at our [HandsOnTutorial1] to see how iDocIt could be customized and configured.
