@@ -249,7 +249,7 @@ public class DocumentItemComposite
 				List<Addressee> displayedAddressees = getSelection()
 						.getDisplayedAddressees();
 				Set<Addressee> orderedNotDisplayedAddressees = new TreeSet<Addressee>();
-				
+
 				for (Addressee addressee : allAddressees)
 				{
 					if (!displayedAddressees.contains(addressee))
@@ -355,7 +355,8 @@ public class DocumentItemComposite
 								lastSelIndex > 0 ? lastSelIndex - 1 : lastSelIndex);
 
 						// The item must be disposed after setSelection, because otherwise
-						// this listener would be triggered with the next selected TabItem.
+						// this listener would be triggered with the next selected
+						// TabItem.
 						selItem.dispose();
 
 						fireChangeEvent();
@@ -439,8 +440,7 @@ public class DocumentItemComposite
 		}
 
 		// create combobox items if thematic role list changed, in general by
-		// first
-		// use
+		// first use
 		if (oldInSelection == null
 				|| !newInSelection.getThematicRoleList().equals(
 						oldInSelection.getThematicRoleList()))
@@ -459,8 +459,7 @@ public class DocumentItemComposite
 			else
 			{
 				// TODO make default selection dependent on if it is a
-				// Operation,
-				// Parameter or something else
+				// Operation, Parameter or something else
 				// if not set, use EXPLICIT as default
 				comboScope.select(Scope.EXPLICIT.ordinal());
 			}
@@ -575,7 +574,9 @@ public class DocumentItemComposite
 		item.setToolTipText(addressee.getDescription());
 		item.setData(ITEM_DATA_KEY, addressee);
 
-		Text textField = new Text(addresseeTabFolder, SWT.MULTI | SWT.BORDER | SWT.WRAP);
+		// Changes due to Issue #5
+		Text textField = new Text(addresseeTabFolder, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		// End changes due to Issue #5
 		textField.addFocusListener(textFocusListener);
 		item.setControl(textField);
 
