@@ -185,6 +185,10 @@ public class EditArtifactDocumentationComposite
 				SignatureElement selectedSigElem = selection
 						.getSelectedSignatureElement();
 				editArtSelection.setSelectedSignatureElement(selectedSigElem);
+				// Changes due to Issue #21
+				editArtSelection.setOriginalDocumentations(selectedSigElem
+						.getDocumentations());
+				// End changes due to Issue #21
 				setSelection(editArtSelection);
 
 				fireChangeEvent();
@@ -203,6 +207,10 @@ public class EditArtifactDocumentationComposite
 				SignatureElement selectedSigElem = editArtSelection
 						.getSelectedSignatureElement();
 				selectedSigElem.setDocumentations(selection.getDocumentations());
+				// Changes due to Issue #21
+				editArtSelection.setOriginalDocumentations(selectedSigElem
+						.getDocumentations());
+				// End changes due to Issue #21
 
 				// update map with new activeAddressees
 				editArtSelection.putActiveAddressees(selectedSigElem.getId(),
@@ -232,12 +240,14 @@ public class EditArtifactDocumentationComposite
 
 				if (operation != SignatureElement.EMPTY_SIGNATURE_ELEMENT)
 				{
-					// save collapsed grids, if the selected item is an element of an
+					// save collapsed grids, if the selected item is an element
+					// of an
 					// operation
 					getSelection().putCollapsedThematicGrids(operation.getId(),
 							selection.getCollapsedThematicGridNames());
 
-					// no setSelection() needed, because the state does not affect other
+					// no setSelection() needed, because the state does not
+					// affect other
 					// composites
 					// fireChangeEvent();
 				}
@@ -280,7 +290,6 @@ public class EditArtifactDocumentationComposite
 			EditArtifactDocumentationCompositeSelection oldInSelection,
 			EditArtifactDocumentationCompositeSelection newInSelection)
 	{
-		//TODO why is "!newInSelection.equals(oldInSelection)" Test always true? Debug it! 
 		if (newInSelection != null && !newInSelection.equals(oldInSelection))
 		{
 			updateDocumentItemListComposite(newInSelection);

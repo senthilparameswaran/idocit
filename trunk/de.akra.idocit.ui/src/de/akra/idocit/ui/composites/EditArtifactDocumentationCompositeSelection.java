@@ -145,7 +145,8 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 				int initSize = DEFAULT_MAP_SIZE;
 				if (interfaceArtifact != null)
 				{
-					// initialize the map with little more space than needed, so that the
+					// initialize the map with little more space than needed, so
+					// that the
 					// map need not to grow
 					initSize = (int) (interfaceArtifact.size() * MAP_LOAD_FACTOR);
 				}
@@ -179,7 +180,8 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 		if (activeAddresseesMap == null
 				|| (result = activeAddresseesMap.get(signatureElementId)) == null)
 		{
-			// ... create a new list of active addressee-tabs for an SignatureElement and
+			// ... create a new list of active addressee-tabs for an
+			// SignatureElement and
 			// put them to the map
 			result = new ArrayList<Integer>(DEFAULT_NUMBER_OF_DOCS_PER_SIGNATURE_ELEMENT);
 
@@ -242,11 +244,6 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 	public void setSelectedSignatureElement(SignatureElement selectedSignatureElement)
 	{
 		this.selectedSignatureElement = selectedSignatureElement;
-		originalDocumentations = new ArrayList<Documentation>();
-		for (Documentation doc : this.selectedSignatureElement.getDocumentations())
-		{
-			originalDocumentations.add(doc.copy());
-		}
 	}
 
 	/**
@@ -393,6 +390,24 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 		this.displayedAddresseesForSigElemsDocumentations.put(Integer.valueOf(key),
 				displayedAddresseesForSigElemsDocumentations);
 	}
+
+	/**
+	 * Copies and caches the {@link Documentation}s. It is needed to find out changes in
+	 * the documentations of the selected {@link SignatureElement}.
+	 * 
+	 * @param documentations
+	 *            the original documentations from the {@link SignatureElement} to cache.
+	 */
+	// Changes due to Issue #21
+	public void setOriginalDocumentations(List<Documentation> documentations)
+	{
+		this.originalDocumentations = new ArrayList<Documentation>();
+		for (Documentation doc : documentations)
+		{
+			this.originalDocumentations.add(doc.copy());
+		}
+	}
+	// End changes due to Issue #21
 
 	/*
 	 * (non-Javadoc)
