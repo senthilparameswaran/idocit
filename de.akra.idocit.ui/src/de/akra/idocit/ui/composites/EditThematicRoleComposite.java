@@ -25,10 +25,7 @@ import de.akra.idocit.structure.ThematicRole;
  * @since 1.0.0
  * @version 1.0.0
  */
-public class EditThematicRoleComposite
-		extends
-		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditThematicRoleCompositeSelection>
-{
+public class EditThematicRoleComposite extends AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditThematicRoleCompositeSelection> {
 
 	// Widgets
 	private Text txtName;
@@ -48,15 +45,12 @@ public class EditThematicRoleComposite
 	 * @param parent
 	 *            The parent Composite.
 	 */
-	public EditThematicRoleComposite(Composite parent)
-	{
-		super(parent, SWT.NONE, EmptyActionConfiguration.getInstance(),
-				EmptyResourceConfiguration.getInstance());
+	public EditThematicRoleComposite(Composite parent) {
+		super(parent, SWT.NONE, EmptyActionConfiguration.getInstance(), EmptyResourceConfiguration.getInstance());
 	}
 
 	@Override
-	protected void initGUI(Composite pvParent) throws CompositeInitializationException
-	{
+	protected void initGUI(Composite pvParent) throws CompositeInitializationException {
 		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
@@ -69,31 +63,27 @@ public class EditThematicRoleComposite
 		Label lblDescription = new Label(this, SWT.NONE);
 		lblDescription.setText("Description:");
 
-		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(txtDescription);
 	}
 
 	@Override
-	protected void initListener() throws CompositeInitializationException
-	{
+	protected void initListener() throws CompositeInitializationException {
 		textFieldListener = new FocusListener() {
 
 			@Override
-			public void focusLost(FocusEvent e)
-			{
+			public void focusLost(FocusEvent e) {
 				fireChangeEvent();
 			}
 
 			@Override
-			public void focusGained(FocusEvent e)
-			{}
+			public void focusGained(FocusEvent e) {
+			}
 		};
 
 		txtNameListener = new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e)
-			{
+			public void modifyText(ModifyEvent e) {
 				EditThematicRoleCompositeSelection selection = getSelection();
 				ThematicRole item = selection.getModifiedItem();
 
@@ -106,8 +96,7 @@ public class EditThematicRoleComposite
 
 		txtDescriptionListener = new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e)
-			{
+			public void modifyText(ModifyEvent e) {
 				EditThematicRoleCompositeSelection selection = getSelection();
 				ThematicRole item = selection.getModifiedItem();
 
@@ -120,24 +109,23 @@ public class EditThematicRoleComposite
 	}
 
 	@Override
-	protected void doSetSelection(EditThematicRoleCompositeSelection oldInSelection,
-			EditThematicRoleCompositeSelection newInSelection)
-	{
-		if (!newInSelection.equals(oldInSelection))
-		{
+	protected void doSetSelection(EditThematicRoleCompositeSelection oldInSelection, EditThematicRoleCompositeSelection newInSelection) {
+		if (!newInSelection.equals(oldInSelection)) {
 			DescribedItem item = newInSelection.getModifiedItem();
 
-			if (item != null)
-			{
+			if (item != null) {
 				txtName.setText(item.getName());
-				txtDescription.setText(item.getDescription());
+				if (item.getDescription() != null) {
+					txtDescription.setText(item.getDescription());
+				} else {
+					txtDescription.setText("");
+				}
 			}
 		}
 	}
 
 	@Override
-	protected void addAllListener()
-	{
+	protected void addAllListener() {
 		txtName.addModifyListener(txtNameListener);
 		txtDescription.addModifyListener(txtDescriptionListener);
 		txtDescription.addFocusListener(textFieldListener);
@@ -145,8 +133,7 @@ public class EditThematicRoleComposite
 	}
 
 	@Override
-	protected void removeAllListener()
-	{
+	protected void removeAllListener() {
 		txtName.removeModifyListener(txtNameListener);
 		txtDescription.removeModifyListener(txtDescriptionListener);
 		txtDescription.removeFocusListener(textFieldListener);
@@ -154,8 +141,7 @@ public class EditThematicRoleComposite
 	}
 
 	@Override
-	protected void doCleanUp()
-	{
+	protected void doCleanUp() {
 		// Nothing to do!
 
 	}
