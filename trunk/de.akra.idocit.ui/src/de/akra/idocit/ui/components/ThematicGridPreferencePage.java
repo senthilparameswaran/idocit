@@ -118,5 +118,8 @@ public class ThematicGridPreferencePage
 	{
 		List<ThematicGrid> grids = getSelection().getThematicGrids();
 		PersistenceService.persistThematicGrids(grids);
+		
+		List<ThematicRole> roles = getSelection().getRoles();
+		PersistenceService.persistThematicRoles(roles);
 	}
 }
