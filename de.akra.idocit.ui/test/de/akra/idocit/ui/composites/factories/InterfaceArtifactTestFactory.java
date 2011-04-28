@@ -16,7 +16,6 @@ import de.akra.idocit.structure.impl.TestInterfaceArtifact;
 import de.akra.idocit.structure.impl.TestOperation;
 import de.akra.idocit.structure.impl.TestParameter;
 import de.akra.idocit.structure.impl.TestParameters;
-import de.akra.idocit.wsdl.structure.WSDLMessage;
 
 /**
  * Helper factory to create a test {@link InterfaceArtifact}.
@@ -140,8 +139,7 @@ public class InterfaceArtifactTestFactory
 
 	/**
 	 * Sets to all {@link Parameter}s in the structure the attribute
-	 * {@link Parameter#setSignatureElementPath(String)}. The path must start with the
-	 * identifier of a {@link WSDLMessage}, so that must be the first parant's path.
+	 * {@link Parameter#setSignatureElementPath(String)}. 
 	 * 
 	 * @param path
 	 *            The parent's path.
