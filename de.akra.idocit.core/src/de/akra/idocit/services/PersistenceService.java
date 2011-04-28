@@ -1,6 +1,13 @@
 package de.akra.idocit.services;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -130,6 +137,12 @@ public class PersistenceService {
 		return prefStore.contains(PreferenceStoreConstants.THEMATIC_ROLES);
 	}
 
+	private static XStream configureXStreamForThematicGrid() {
+		XStream stream = new XStream();
+
+		return stream;
+	}
+
 	/**
 	 * 
 	 * @return true, if the {@link IPreferenceStore} of Eclipse is loaded and it
@@ -156,7 +169,9 @@ public class PersistenceService {
 		while (keys.hasMoreElements()) {
 			String role = keys.nextElement();
 			String description = resBundle.getString(role);
-			description = StringUtils.addLineBreaks(description, MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' ');
+			if (description != null) {
+				description = StringUtils.addLineBreaks(description, MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' ');
+			}
 
 			roles.put(role, description);
 		}
@@ -214,7 +229,9 @@ public class PersistenceService {
 		Collections.sort(roles, ThematicRoleComparator.getInstance());
 
 		for (ThematicRole role : roles) {
-			role.setDescription(StringUtils.removeLineBreaks(role.getDescription()));
+			if (role.getDescription() != null) {
+				role.setDescription(StringUtils.removeLineBreaks(role.getDescription()));
+			}
 		}
 
 		String rolesXML = stream.toXML(roles);
@@ -277,7 +294,9 @@ public class PersistenceService {
 				addressees = (List<Addressee>) stream.fromXML(prefVal);
 
 				for (Addressee a : addressees) {
-					a.setDescription(StringUtils.addLineBreaks(a.getDescription(), MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' '));
+					if (a.getDescription() != null) {
+						a.setDescription(StringUtils.addLineBreaks(a.getDescription(), MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' '));
+					}
 				}
 			} catch (XStreamException e) {
 				logger.log(Level.WARNING, "No addressees were loaded.", e);
@@ -305,7 +324,9 @@ public class PersistenceService {
 				roles = (List<ThematicRole>) stream.fromXML(prefVal);
 
 				for (ThematicRole role : roles) {
-					role.setDescription(StringUtils.addLineBreaks(role.getDescription(), MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' '));
+					if (role.getDescription() != null) {
+						role.setDescription(StringUtils.addLineBreaks(role.getDescription(), MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' '));
+					}
 				}
 			} catch (XStreamException e) {
 				logger.log(Level.WARNING, "No thematic role were loaded.", e);
@@ -371,5 +392,37 @@ public class PersistenceService {
 		String verbClassRoleAssocsXML = configureXStreamForThematicRoles().toXML(verbClassRoleAssociations);
 
 		prefStore.putValue(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING, verbClassRoleAssocsXML);
+	}
+
+	public static void exportThematicGrids(final File destination, List<ThematicGrid> grids) throws IOException {
+		XStream lvXStream = configureXStreamForThematicGrid();
+		Writer lvWriter = null;
+
+		try {
+			lvWriter = new BufferedWriter(new FileWriter(destination));
+			lvXStream.toXML(grids, lvWriter);
+		} finally {
+			if (lvWriter != null) {
+				lvWriter.close();
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<ThematicGrid> importThematicGrids(final File source) throws IOException {
+		Reader reader = null;
+		List<ThematicGrid> grids = null;
+
+		try {
+			XStream xmlStream = configureXStreamForThematicGrid();
+			reader = new BufferedReader(new FileReader(source));
+			grids = (List<ThematicGrid>) xmlStream.fromXML(reader);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+
+		return grids;
 	}
 }
