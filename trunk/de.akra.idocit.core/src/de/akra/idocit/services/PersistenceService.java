@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.logging.Level;
@@ -394,7 +395,18 @@ public class PersistenceService {
 		prefStore.putValue(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING, verbClassRoleAssocsXML);
 	}
 
-	public static void exportThematicGrids(final File destination, List<ThematicGrid> grids) throws IOException {
+	/**
+	 * Exports the given list of {@link ThematicGrid}s into the file
+	 * <code>destination</code> in XML-format.
+	 * 
+	 * @param destination
+	 *            The file to store the generated XML in
+	 * @param grids
+	 *            The list of {@link ThematicGrid}s to export
+	 * @throws IOException
+	 *             In case of an error
+	 */
+	public static void exportThematicGridsAsXml(final File destination, List<ThematicGrid> grids) throws IOException {
 		XStream lvXStream = configureXStreamForThematicGrid();
 		Writer lvWriter = null;
 
@@ -408,6 +420,15 @@ public class PersistenceService {
 		}
 	}
 
+	/**
+	 * Imports the list of {@link ThematicGrid}s from the given file
+	 * <code>source</code> in XML-format.
+	 * 
+	 * @param source
+	 *            The file to import the XML from
+	 * @throws IOException
+	 *             In case of an error
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<ThematicGrid> importThematicGrids(final File source) throws IOException {
 		Reader reader = null;
@@ -424,5 +445,95 @@ public class PersistenceService {
 		}
 
 		return grids;
+	}
+
+	/**
+	 * Converts the given verbs into an unordered list (HTML). Before generating
+	 * the HTML-list, the verbs are sorted alphabetically.
+	 * 
+	 * @param verbs
+	 *            The verbs to export
+	 * @return The HTML-representation of the given verbs
+	 */
+	private static String convertVerbListIntoHtml(Set<String> verbs) {
+		List<String> sortedVerbs = new ArrayList<String>();
+		sortedVerbs.addAll(verbs);
+		Collections.sort(sortedVerbs);
+
+		StringBuffer buffer = new StringBuffer("\n\t\t\t\t\t<ul>");
+
+		for (String verb : sortedVerbs) {
+			buffer.append("\n\t\t\t\t\t\t<li>" + verb + "</li>");
+		}
+
+		buffer.append("\n\t\t\t\t\t</ul>");
+
+		return buffer.toString();
+	}
+
+	/**
+	 * Converts the given map of {@link ThematicRole}s to booleans into an
+	 * unordered list (HTML). The booleans indicate whether the role is
+	 * mandatory or optional. Mandatory are printed in bold-font.
+	 * 
+	 * @param roles
+	 *            The {@link ThematicRole}s to export
+	 * @return The HTML-representation of the given roles
+	 */
+	private static String convertRoleMapIntoHtml(Map<ThematicRole, Boolean> roles) {
+		List<ThematicRole> sortedVerbs = new ArrayList<ThematicRole>();
+		sortedVerbs.addAll(roles.keySet());
+		Collections.sort(sortedVerbs);
+
+		StringBuffer buffer = new StringBuffer("\n\t\t\t\t\t<ul>");
+
+		for (ThematicRole role : sortedVerbs) {
+			if (roles.get(role).booleanValue()) {
+				buffer.append("\n\t\t\t\t\t\t<li><b>" + role.getName() + "</b></li>");
+			} else {
+				buffer.append("\n\t\t\t\t\t\t<li>" + role.getName() + "</li>");
+			}
+		}
+
+		buffer.append("\n\t\t\t\t\t</ul>");
+
+		return buffer.toString();
+	}
+
+	/**
+	 * Exports the given list of {@link ThematicGrid}s as HTML-file.
+	 * 
+	 * @param destination
+	 *            The {@link File} to store the exported HTML in
+	 * @param grids
+	 *            The list of {@link ThematicGrid}s to export
+	 * @throws IOException
+	 *             In case of an error
+	 */
+	public static void exportThematicGridsAsHtml(File destination, List<ThematicGrid> grids) throws IOException {
+		BufferedWriter writer = null;
+
+		try {
+			writer = new BufferedWriter(new FileWriter(destination));
+			writer.write("<html>\n\t<head/>\n\t<body>");
+
+			for (ThematicGrid grid : grids) {
+				writer.write("\n\t\t<table>");
+				writer.write("\n\t\t\t<tr>\n\t\t\t\t<td colspan=\"2\" valign=\"top\"><h3>" + grid.getName() + "</h3></td>\n\t\t\t</tr>");
+
+				writer.write("\n\t\t\t<tr>\n\t\t\t\t<td valign=\"top\"><u>Included verbs</u>" + convertVerbListIntoHtml(grid.getVerbs())
+						+ "\n\t\t\t\t</td>");
+				writer.write("\n\t\t\t\t<td valign=\"top\"><u>Associated Thematic Roles</u>" + convertRoleMapIntoHtml(grid.getRoles())
+						+ "\n\t\t\t\t</td>\n\t\t\t</tr>");
+
+				writer.write("\n\t\t</table>");
+			}
+
+			writer.write("\n\t<body>\n</html>");
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
 	}
 }
