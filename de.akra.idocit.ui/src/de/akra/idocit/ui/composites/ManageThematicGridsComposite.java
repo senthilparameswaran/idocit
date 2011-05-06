@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.composites.ISelectionListener;
 import org.pocui.core.composites.PocUIComposite;
@@ -29,6 +30,7 @@ import de.akra.idocit.structure.DescribedItem;
 import de.akra.idocit.structure.ThematicGrid;
 import de.akra.idocit.structure.ThematicRole;
 import de.akra.idocit.ui.Activator;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * The composite to manage {@link ThematicGrid}s in the preference page.
@@ -47,7 +49,9 @@ public class ManageThematicGridsComposite extends
 
 	private Button btnImportGrids;
 
-	private Button btnExportGrids;
+	private Button btnExportGridsXml;
+
+	private Button btnExportGridsHtml;
 
 	// Listeners
 	private ISelectionListener<EditThematicGridCompositeSelection> editThematicGridSelectionListener;
@@ -56,7 +60,9 @@ public class ManageThematicGridsComposite extends
 
 	private SelectionListener btnImportListener;
 
-	private SelectionListener btnExportListener;
+	private SelectionListener btnExportListenerXml;
+
+	private SelectionListener btnExportListenerHtml;
 
 	/**
 	 * Constructor.
@@ -77,7 +83,8 @@ public class ManageThematicGridsComposite extends
 		editThematicGridListComposite.addSelectionListener(editThematicGridListSelectionListener);
 
 		btnImportGrids.addSelectionListener(btnImportListener);
-		btnExportGrids.addSelectionListener(btnExportListener);
+		btnExportGridsXml.addSelectionListener(btnExportListenerXml);
+		btnExportGridsHtml.addSelectionListener(btnExportListenerHtml);
 	}
 
 	@Override
@@ -136,9 +143,14 @@ public class ManageThematicGridsComposite extends
 		btnImportGrids.setText("Import Thematic Grids");
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(btnImportGrids);
 
-		btnExportGrids = new Button(btnComposite, SWT.PUSH);
-		btnExportGrids.setText("Export Thematic Grids");
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(btnExportGrids);
+		btnExportGridsXml = new Button(btnComposite, SWT.PUSH);
+		btnExportGridsXml.setText("Export Thematic Grids as XML");
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(btnExportGridsXml);
+
+		new Label(btnComposite, SWT.NONE);
+		btnExportGridsHtml = new Button(btnComposite, SWT.PUSH);
+		btnExportGridsHtml.setText("Export Thematic Grids as HTML");
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(btnExportGridsHtml);
 	}
 
 	private List<ThematicRole> collectThematicRoles(List<ThematicGrid> grids, List<ThematicRole> existingRoles) {
@@ -230,20 +242,71 @@ public class ManageThematicGridsComposite extends
 			}
 		};
 
-		btnExportListener = new SelectionListener() {
+		btnExportListenerXml = new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
-				fileDialog.setText("Export Thematic Grids");
+				fileDialog.setText("Export Thematic Grids as XML-file");
 				String[] filterExt = { "*.xml" };
 				fileDialog.setFilterExtensions(filterExt);
 				String selectedFileName = fileDialog.open();
+				boolean stored = false;
 
-				if (selectedFileName != null) {
+				while ((selectedFileName != null) && !stored) {
 					try {
-						ManageThematicGridsCompositeSelection selection = getSelection();
-						PersistenceService.exportThematicGrids(new File(selectedFileName), selection.getThematicGrids());
+						boolean exists = new File(selectedFileName).exists();
+						boolean overwrite = exists
+								&& MessageBoxUtils.openQuestionDialogBox(getShell(), "The file " + selectedFileName
+										+ " already exists. Do you want to overwrite it?");
+
+						if (overwrite || !exists) {
+							ManageThematicGridsCompositeSelection selection = getSelection();
+							PersistenceService.exportThematicGridsAsXml(new File(selectedFileName), selection.getThematicGrids());
+
+							stored = true;
+						} else {
+							selectedFileName = fileDialog.open();
+						}
+					} catch (IOException ioEx) {
+						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, ioEx.getLocalizedMessage(), null);
+						ErrorDialog.openError(Display.getCurrent().getActiveShell(), "iDocIt",
+								"An error occured while importing thematic grids from the selected resource.", status);
+					}
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		};
+
+		btnExportListenerHtml = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
+				fileDialog.setText("Export Thematic Grids as HTML-file");
+				String[] filterExt = { "*.html" };
+				fileDialog.setFilterExtensions(filterExt);
+				String selectedFileName = fileDialog.open();
+				boolean stored = false;
+
+				while ((selectedFileName != null) && !stored) {
+					try {
+						boolean exists = new File(selectedFileName).exists();
+						boolean overwrite = exists
+								&& MessageBoxUtils.openQuestionDialogBox(getShell(), "The file " + selectedFileName
+										+ " already exists. Do you want to overwrite it?");
+
+						if (overwrite || !exists) {
+							ManageThematicGridsCompositeSelection selection = getSelection();
+							PersistenceService.exportThematicGridsAsHtml(new File(selectedFileName), selection.getThematicGrids());
+
+							stored = true;
+						} else {
+							selectedFileName = fileDialog.open();
+						}
 					} catch (IOException ioEx) {
 						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, ioEx.getLocalizedMessage(), null);
 						ErrorDialog.openError(Display.getCurrent().getActiveShell(), "iDocIt",
@@ -264,6 +327,7 @@ public class ManageThematicGridsComposite extends
 		editThematicGridListComposite.removeSelectionListener(editThematicGridListSelectionListener);
 
 		btnImportGrids.removeSelectionListener(btnImportListener);
-		btnExportGrids.removeSelectionListener(btnExportListener);
+		btnExportGridsXml.removeSelectionListener(btnExportListenerXml);
+		btnExportGridsHtml.removeSelectionListener(btnExportListenerHtml);
 	}
 }
