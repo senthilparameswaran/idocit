@@ -26,6 +26,7 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.services.PersistenceService;
+import de.akra.idocit.services.ThematicGridService;
 import de.akra.idocit.structure.DescribedItem;
 import de.akra.idocit.structure.ThematicGrid;
 import de.akra.idocit.structure.ThematicRole;
@@ -153,21 +154,6 @@ public class ManageThematicGridsComposite extends
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(btnExportGridsHtml);
 	}
 
-	private List<ThematicRole> collectThematicRoles(List<ThematicGrid> grids, List<ThematicRole> existingRoles) {
-		List<ThematicRole> roles = new ArrayList<ThematicRole>();
-		roles.addAll(existingRoles);
-
-		for (ThematicGrid grid : grids) {
-			for (ThematicRole role : grid.getRoles().keySet()) {
-				if (!roles.contains(role)) {
-					roles.add(role);
-				}
-			}
-		}
-
-		return roles;
-	}
-
 	@Override
 	protected void initListener() throws CompositeInitializationException {
 		editThematicGridSelectionListener = new ISelectionListener<EditThematicGridCompositeSelection>() {
@@ -225,7 +211,7 @@ public class ManageThematicGridsComposite extends
 						grids.addAll(importedGrids);
 						selection.setThematicGrids(importedGrids);
 
-						List<ThematicRole> roles = collectThematicRoles(grids, selection.getRoles());
+						List<ThematicRole> roles = ThematicGridService.collectThematicRoles(grids, selection.getRoles());
 						selection.setRoles(roles);
 
 						setSelection(selection);
