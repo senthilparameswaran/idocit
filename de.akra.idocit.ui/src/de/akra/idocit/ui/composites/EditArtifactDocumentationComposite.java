@@ -22,22 +22,22 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.services.ThematicGridService;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
-import de.akra.idocit.structure.ThematicRole;
-import de.akra.idocit.utils.ObjectStructureUtils;
+import de.akra.idocit.core.services.ThematicGridService;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 
 /**
  * Composite that manages the Composites to edit the {@link Documentation}s of
  * {@link SignatureElement}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class EditArtifactDocumentationComposite

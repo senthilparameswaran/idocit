@@ -22,8 +22,8 @@ import de.akra.idocit.structure.SignatureElement;
  * Parser for {@link Javadoc}. It converts a Javadoc to a list of {@link Documentation}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class JavadocParser

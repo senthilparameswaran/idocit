@@ -24,15 +24,15 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
-import de.akra.idocit.IDocItCoreStartup;
-import de.akra.idocit.constants.PreferenceStoreConstants;
+import de.akra.idocit.core.IDocItCoreStartup;
+import de.akra.idocit.core.constants.PreferenceStoreConstants;
 
 /**
  * A {@link PreferencePage} for the iDocIt! settings.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage
@@ -230,6 +230,17 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	{
 		return getChoosenWordnetInstallation().exists()
 				&& getChoosenPoSTaggerModelFile().exists();
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
+	 */
+	@Override
+	protected void performApply()
+	{
+		// TODO Auto-generated method stub
+		super.performApply();
 	}
 
 	@Override

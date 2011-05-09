@@ -3,16 +3,16 @@ package de.akra.idocit.wsdl.structure;
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 
-import de.akra.idocit.structure.Interface;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Interface;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * A representation of a WSDL {@link PortType}. A {@link PortType} has no inner
  * {@link PortType}s, so <code>{@link Interface#getInnerInterfaces()} == null</code>.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class WSDLInterface extends Interface

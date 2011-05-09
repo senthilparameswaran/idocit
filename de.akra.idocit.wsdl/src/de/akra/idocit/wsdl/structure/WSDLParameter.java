@@ -2,15 +2,15 @@ package de.akra.idocit.wsdl.structure;
 
 import javax.wsdl.Message;
 
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * Representation for a parameter in a {@link Message}.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class WSDLParameter extends Parameter

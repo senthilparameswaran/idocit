@@ -20,15 +20,15 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
-import de.akra.idocit.structure.Delimiters;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Interface;
-import de.akra.idocit.structure.Operation;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.ParameterPathElement;
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
-import de.akra.idocit.utils.ObjectStructureUtils;
+import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Interface;
+import de.akra.idocit.core.structure.Operation;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.ParameterPathElement;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLMessage;
@@ -42,8 +42,8 @@ import de.jankrause.diss.wsdl.common.services.WSDLParsingService;
  * {@link WSDLInterfaceArtifact} which holds the structure.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class WSDLInterfaceParser

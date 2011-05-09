@@ -3,14 +3,14 @@ package de.akra.idocit.ui.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IResourceActionFilter;
 
-import de.akra.idocit.services.ParsingService;
+import de.akra.idocit.core.services.ParsingService;
 
 /**
  * This should be a filter to disable the Action if the file is not supported.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class IDocItActionFilter implements IResourceActionFilter

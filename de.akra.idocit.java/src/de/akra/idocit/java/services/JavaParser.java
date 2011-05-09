@@ -26,8 +26,8 @@ import de.akra.idocit.structure.InterfaceArtifact;
  * Parser implementation for Java.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class JavaParser implements Parser
@@ -61,7 +61,7 @@ public class JavaParser implements Parser
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see de.akra.idocit.extensions.Parser#parse(IFile)
+	 * @see de.akra.idocit.core.extensions.Parser#parse(IFile)
 	 */
 	@Override
 	public InterfaceArtifact parse(IFile iFile) throws Exception
@@ -97,7 +97,7 @@ public class JavaParser implements Parser
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see de.akra.idocit.extensions.Parser#write(InterfaceArtifact, IFile)
+	 * @see de.akra.idocit.core.extensions.Parser#write(InterfaceArtifact, IFile)
 	 */
 	@Override
 	public void write(InterfaceArtifact interfaceStructure, IFile iFile) throws Exception
@@ -141,7 +141,7 @@ public class JavaParser implements Parser
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see de.akra.idocit.extensions.Parser#isSupported(java.lang.String)
+	 * @see de.akra.idocit.core.extensions.Parser#isSupported(java.lang.String)
 	 */
 	@Override
 	public boolean isSupported(String type)
@@ -152,7 +152,7 @@ public class JavaParser implements Parser
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see de.akra.idocit.extensions.Parser#getSupportedType()
+	 * @see de.akra.idocit.core.extensions.Parser#getSupportedType()
 	 */
 	@Override
 	public String getSupportedType()
@@ -163,7 +163,7 @@ public class JavaParser implements Parser
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see de.akra.idocit.extensions.Parser#getDelimiters()
+	 * @see de.akra.idocit.core.extensions.Parser#getDelimiters()
 	 */
 	@Override
 	public Delimiters getDelimiters()

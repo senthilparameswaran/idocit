@@ -7,8 +7,8 @@ import de.akra.idocit.structure.SignatureElement;
  * Representation of a collection of Java parameters (input, output or exceptions).
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class JavaParameters extends Parameters

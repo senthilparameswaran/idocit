@@ -5,16 +5,16 @@ import javax.wsdl.Input;
 import javax.wsdl.Output;
 import javax.wsdl.WSDLElement;
 
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * This is a representation of an {@link Input}, {@link Output} or {@link Fault} element
  * embedded in an {@link javax.wsdl.Operation}.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class WSDLMessage extends Parameters

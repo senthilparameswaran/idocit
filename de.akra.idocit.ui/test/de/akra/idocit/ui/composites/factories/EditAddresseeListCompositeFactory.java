@@ -8,7 +8,7 @@ import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.ICompositeFactory;
 
-import de.akra.idocit.structure.Addressee;
+import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.ui.composites.EditAddresseeListComposite;
 import de.akra.idocit.ui.composites.EditAddresseeListCompositeSelection;
 

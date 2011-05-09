@@ -14,8 +14,8 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
-import de.akra.idocit.services.PersistenceService;
-import de.akra.idocit.structure.Addressee;
+import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.ui.composites.ManageAddresseeComposite;
 import de.akra.idocit.ui.composites.ManageAddresseeCompositeSelection;
 
@@ -23,8 +23,8 @@ import de.akra.idocit.ui.composites.ManageAddresseeCompositeSelection;
  * A {@link PreferencePage} for {@link Addressee}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class AddresseePreferencePage
 		extends
@@ -110,8 +110,8 @@ public class AddresseePreferencePage
 	@Override
 	public boolean performOk()
 	{
-		boolean saveState = super.performOk();
 		performApply();
+		boolean saveState = super.performOk();
 		return saveState;
 	}
 

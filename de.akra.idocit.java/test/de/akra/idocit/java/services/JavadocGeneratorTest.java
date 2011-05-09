@@ -31,7 +31,6 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 
 import de.akra.idocit.java.structure.JavadocTagElement;
 import de.akra.idocit.structure.Addressee;

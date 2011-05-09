@@ -1,13 +1,13 @@
 package de.akra.idocit.ui.actions;
 
-import de.akra.idocit.structure.DescribedItem;
+import de.akra.idocit.core.structure.DescribedItem;
 
 /**
  * Abstract item factory for {@link DescribedItem}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public abstract class AbsItemFactory

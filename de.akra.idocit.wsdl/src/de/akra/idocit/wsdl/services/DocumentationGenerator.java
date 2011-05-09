@@ -13,16 +13,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
 
 /**
  * Generates documentation elements from <code>SignatureElements</code> and
  * <code>Parameter</code>.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class DocumentationGenerator

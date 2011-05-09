@@ -27,8 +27,8 @@ import de.akra.idocit.utils.ObjectStructureUtils;
  * Parser for the HTML tables in the {@link Javadoc} comments.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class HTMLTableParser
@@ -71,8 +71,8 @@ public class HTMLTableParser
 	 * The handler to parse the HTML table and convert it to {@link Documentation}s.
 	 * 
 	 * @author Dirk Meier-Eickhoff
-	 * @since 1.0.0
-	 * @version 1.0.0
+	 * @since 0.0.1
+	 * @version 0.0.1
 	 * 
 	 */
 	private static class HTMLTableHandler extends DefaultHandler2
@@ -243,8 +243,8 @@ public class HTMLTableParser
 		 * The last found value determines what will come next and what should be done.
 		 * 
 		 * @author Dirk Meier-Eickhoff
-		 * @since 1.0.0
-		 * @version 1.0.0
+		 * @since 0.0.1
+		 * @version 0.0.1
 		 * 
 		 */
 		private enum LAST_VALUE

@@ -5,17 +5,17 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.akra.idocit.structure.Interface;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.Operation;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
-import de.akra.idocit.structure.impl.TestInterface;
-import de.akra.idocit.structure.impl.TestInterfaceArtifact;
-import de.akra.idocit.structure.impl.TestOperation;
-import de.akra.idocit.structure.impl.TestParameter;
-import de.akra.idocit.structure.impl.TestParameters;
+import de.akra.idocit.core.structure.Interface;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.Operation;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.core.structure.impl.TestInterface;
+import de.akra.idocit.core.structure.impl.TestInterfaceArtifact;
+import de.akra.idocit.core.structure.impl.TestOperation;
+import de.akra.idocit.core.structure.impl.TestParameter;
+import de.akra.idocit.core.structure.impl.TestParameters;
 
 /**
  * Helper factory to create a test {@link InterfaceArtifact}.

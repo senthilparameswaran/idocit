@@ -26,15 +26,15 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.structure.ThematicRole;
 
 /**
  * Composite with the {@link List} of recommended {@link ThematicRole}s. The list is only
  * used for displaying the information.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class DisplayRecommendedRolesComposite

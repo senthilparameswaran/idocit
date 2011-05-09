@@ -11,9 +11,9 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
-import de.akra.idocit.services.PersistenceService;
-import de.akra.idocit.structure.ThematicGrid;
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.structure.ThematicGrid;
+import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.composites.ManageThematicGridsComposite;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeAC;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;
@@ -22,8 +22,8 @@ import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;
  * A {@link PreferencePage} for {@link ThematicGrid}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class ThematicGridPreferencePage
 		extends

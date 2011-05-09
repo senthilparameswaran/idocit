@@ -13,19 +13,19 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Scope;
-import de.akra.idocit.structure.ThematicRole;
-import de.akra.idocit.utils.ObjectStructureUtils;
-import de.akra.idocit.utils.StringUtils;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Scope;
+import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.core.utils.StringUtils;
 
 /**
  * The parser for WSDL documentation elements.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class DocumentationParser
