@@ -2,8 +2,8 @@ package de.akra.idocit.java.structure;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * Representation of a Java source file.

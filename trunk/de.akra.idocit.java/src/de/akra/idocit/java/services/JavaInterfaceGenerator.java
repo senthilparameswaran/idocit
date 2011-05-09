@@ -9,13 +9,13 @@ import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
 
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.Parameters;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavadocTagElement;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.Parameters;
 
 /**
  * Updates the {@link Javadoc} comments in the {@link AST} of the source file.

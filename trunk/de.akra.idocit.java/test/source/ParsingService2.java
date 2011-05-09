@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
-import de.akra.idocit.extensions.Parser;
+import de.akra.idocit.core.extensions.Parser;
 
 public final class ParsingService2
 {

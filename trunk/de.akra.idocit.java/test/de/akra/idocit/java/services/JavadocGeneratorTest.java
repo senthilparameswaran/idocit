@@ -32,13 +32,13 @@ import org.eclipse.text.edits.TextEdit;
 import org.junit.Before;
 import org.junit.Ignore;
 
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Scope;
+import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.structure.JavadocTagElement;
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Delimiters;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Scope;
-import de.akra.idocit.structure.ThematicRole;
-import de.akra.idocit.utils.TestUtils;
 
 /**
  * Tests for {@link JavadocGenerator}.

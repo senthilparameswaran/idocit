@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * @author Dirk Meier-Eickhoff

@@ -17,11 +17,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Scope;
-import de.akra.idocit.structure.ThematicRole;
-import de.akra.idocit.utils.ObjectStructureUtils;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Scope;
+import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 
 /**
  * Parser for the HTML tables in the {@link Javadoc} comments.

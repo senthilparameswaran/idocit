@@ -9,12 +9,12 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 
-import de.akra.idocit.structure.Interface;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.Operation;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Interface;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.Operation;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * Tests for {@link InterfaceArtifact}.

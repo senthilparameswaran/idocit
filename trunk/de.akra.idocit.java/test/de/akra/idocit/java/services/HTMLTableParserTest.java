@@ -9,8 +9,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.utils.ObjectStructureUtils;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 
 /**
  * Tests for {@link HTMLTableParser}.
