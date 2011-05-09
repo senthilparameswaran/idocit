@@ -18,14 +18,14 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.structure.Addressee;
+import de.akra.idocit.core.structure.Addressee;
 
 /**
  * Composite to edit an {@link Addressee}.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class EditAddresseeComposite
 		extends

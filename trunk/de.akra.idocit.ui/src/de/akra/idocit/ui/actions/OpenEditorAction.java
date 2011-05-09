@@ -25,8 +25,8 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  * PopupMenu action to open the {@link DocumentationEditor} with the selected file.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class OpenEditorAction implements IObjectActionDelegate

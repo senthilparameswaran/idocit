@@ -15,16 +15,16 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.DescribedItem;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.DescribedItem;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 
 /**
  * {@link Composite} to manage {@link DescribedItem}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class ManageAddresseeComposite
 		extends

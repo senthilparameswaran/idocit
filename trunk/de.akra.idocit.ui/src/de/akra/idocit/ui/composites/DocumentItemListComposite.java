@@ -28,18 +28,18 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.services.Preconditions;
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.services.Preconditions;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.ThematicRole;
 
 /**
  * Composite that manages a list of {@link Documentation}s in
  * {@link DocumentItemComposite}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class DocumentItemListComposite

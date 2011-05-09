@@ -22,11 +22,11 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsEditorPart;
 
-import de.akra.idocit.services.PersistenceService;
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.SignatureElement;
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeSelection;
 import de.akra.idocit.ui.constants.DialogConstants;
@@ -37,8 +37,8 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  * concerning different groups of adressees.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class DocumentationEditor

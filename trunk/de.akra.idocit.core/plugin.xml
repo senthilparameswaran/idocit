@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="de.akra.idocit.IDocItCoreStartup">
+            class="de.akra.idocit.core.IDocItCoreStartup">
       </startup>
    </extension>
 

@@ -14,20 +14,20 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IFile;
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.Operation;
-import de.akra.idocit.structure.SignatureElement;
-import de.akra.idocit.structure.ThematicGrid;
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.Operation;
+import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.core.structure.ThematicGrid;
+import de.akra.idocit.core.structure.ThematicRole;
 
 /**
  * Selection for {@link EditArtifactDocumentationComposite}.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class EditArtifactDocumentationCompositeSelection implements ISelection

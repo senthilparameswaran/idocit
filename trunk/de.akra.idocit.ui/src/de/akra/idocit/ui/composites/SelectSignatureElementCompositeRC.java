@@ -11,28 +11,26 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GCData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.pocui.core.resources.IResourceConfiguration;
 
-import de.akra.idocit.structure.Interface;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.Operation;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.ParameterType;
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Interface;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.Operation;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.ParameterType;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.ui.Activator;
-import de.akra.idocit.utils.ObjectStructureUtils;
 
 /**
  * The image / icon management for the {@link SelectSignatureElementComposite}.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 {

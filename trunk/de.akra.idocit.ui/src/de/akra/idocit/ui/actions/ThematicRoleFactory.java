@@ -1,13 +1,13 @@
 package de.akra.idocit.ui.actions;
 
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.structure.ThematicRole;
 
 /**
  * Factory for {@link ThematicRole}s.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class ThematicRoleFactory extends AbsItemFactory
 {

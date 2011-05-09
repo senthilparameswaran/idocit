@@ -35,18 +35,18 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Scope;
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Scope;
+import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * Composite that displays a {@link Documentation} for editing.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class DocumentItemComposite

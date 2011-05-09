@@ -10,8 +10,8 @@ import de.akra.idocit.structure.SignatureElement;
  * thrown exception only the <code>identifier</code> is used.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class JavaParameter extends Parameter

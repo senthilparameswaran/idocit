@@ -1,20 +1,20 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: iDocIt! Platform
-Bundle-SymbolicName: de.akra.idocit;singleton:=true
+Bundle-SymbolicName: de.akra.idocit.core;singleton:=true
 Bundle-Version: 0.0.1
 Require-Bundle: org.eclipse.core.runtime,
  org.junit4;bundle-version="4.8.1",
  org.eclipse.ui;bundle-version="3.6.0",
  org.eclipse.core.resources;bundle-version="3.6.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: de.akra.idocit.constants,
- de.akra.idocit.extensions;uses:="org.eclipse.core.resources,de.akra.idocit.structure",
- de.akra.idocit,
- de.akra.idocit.services,
- de.akra.idocit.structure,
- de.akra.idocit.structure.impl;uses:="de.akra.idocit.structure",
- de.akra.idocit.utils;uses:="de.akra.idocit.structure"
+Export-Package: de.akra.idocit.core,
+ de.akra.idocit.core.constants,
+ de.akra.idocit.core.extensions;uses:="org.eclipse.core.resources,de.akra.idocit.core.structure",
+ de.akra.idocit.core.services,
+ de.akra.idocit.core.structure,
+ de.akra.idocit.core.structure.impl;uses:="de.akra.idocit.core.structure",
+ de.akra.idocit.core.utils;uses:="de.akra.idocit.core.structure"
 Bundle-ClassPath: 
  .,
  lib/wsdl-common-0.0.1-SNAPSHOT.jar,
@@ -24,5 +24,5 @@ Bundle-ClassPath:
  lib/idocit.wsdl.wsdl4j.jar,
  lib/xpp3_min-1.1.4c.jar
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: de.akra.idocit.IDocItActivator
+Bundle-Activator: de.akra.idocit.core.IDocItActivator
 Bundle-Vendor: AKRA GmbH

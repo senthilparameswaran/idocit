@@ -16,8 +16,8 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.structure.DescribedItem;
-import de.akra.idocit.structure.ThematicGrid;
+import de.akra.idocit.core.structure.DescribedItem;
+import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -25,8 +25,8 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  * Composite to edit {@link DescribedItem}s in the preference page.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  */
 public class EditThematicGridListComposite
 		extends

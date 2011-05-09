@@ -14,7 +14,7 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
 
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.composites.DisplayRecommendedRolesComposite;
 import de.akra.idocit.ui.composites.DisplayRecommendedRolesCompositeSelection;
 

@@ -26,8 +26,8 @@ import de.akra.idocit.structure.SignatureElement;
  * Amongst others some useful methods to reflect classes.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class ReflectionHelper

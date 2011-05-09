@@ -3,15 +3,15 @@ package de.akra.idocit.ui.composites;
 import org.eclipse.swt.widgets.Tree;
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * Selection for {@link SelectSignatureElementComposite}.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class SelectSignatureElementCompositeSelection implements ISelection

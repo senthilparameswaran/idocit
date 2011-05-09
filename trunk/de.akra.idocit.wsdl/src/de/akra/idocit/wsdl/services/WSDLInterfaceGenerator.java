@@ -21,10 +21,10 @@ import org.w3c.dom.Element;
 import com.ibm.wsdl.Constants;
 import com.ibm.wsdl.util.xml.DOMUtils;
 
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
 import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLMessage;
@@ -36,8 +36,8 @@ import de.akra.idocit.wsdl.structure.WSDLOperation;
  * {@link WSDLInterfaceArtifact}.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class WSDLInterfaceGenerator

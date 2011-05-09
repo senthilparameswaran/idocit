@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Scope;
-import de.akra.idocit.structure.ThematicRole;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Scope;
+import de.akra.idocit.core.structure.ThematicRole;
 
 /**
  * Helper to create a {@link Documentation} for testing.
@@ -69,15 +69,15 @@ public class DocumentationTestFactory
 		List<Addressee> addresseeSequence = doc.getAddresseeSequence();
 
 		Addressee developer = new Addressee("Developer");
-		docs.put(developer, "Doku für " + developer.getName());
+		docs.put(developer, "Doku fï¿½r " + developer.getName());
 		addresseeSequence.add(developer);
 
 		Addressee manager = new Addressee("Manager");
-		docs.put(manager, "Doku für " + manager.getName());
+		docs.put(manager, "Doku fï¿½r " + manager.getName());
 		addresseeSequence.add(manager);
 
 		Addressee tester = new Addressee("Tester");
-		docs.put(tester, "Doku für " + tester.getName());
+		docs.put(tester, "Doku fï¿½r " + tester.getName());
 		addresseeSequence.add(tester);
 		return doc;
 	}

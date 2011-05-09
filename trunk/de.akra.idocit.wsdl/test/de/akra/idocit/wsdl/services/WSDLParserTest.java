@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.utils.TestUtils;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.utils.TestUtils;
 
 /**
  * Tests for {@link WSDLParser}.

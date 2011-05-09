@@ -14,17 +14,17 @@ import javax.wsdl.xml.WSDLWriter;
 
 import org.eclipse.core.resources.IFile;
 
-import de.akra.idocit.extensions.Parser;
-import de.akra.idocit.structure.Delimiters;
-import de.akra.idocit.structure.InterfaceArtifact;
+import de.akra.idocit.core.extensions.Parser;
+import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.core.structure.InterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 
 /**
  * Parser implementation for WSDL interfaces.
  * 
  * @author Dirk Meier-Eickhoff
- * @since 1.0.0
- * @version 1.0.0
+ * @since 0.0.1
+ * @version 0.0.1
  * 
  */
 public class WSDLParser implements Parser
