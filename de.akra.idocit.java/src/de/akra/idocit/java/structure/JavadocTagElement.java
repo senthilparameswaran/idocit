@@ -5,7 +5,7 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
 
-import de.akra.idocit.structure.Documentation;
+import de.akra.idocit.core.structure.Documentation;
 
 /**
  * A container for information that should be added to a {@link Javadoc} comment.

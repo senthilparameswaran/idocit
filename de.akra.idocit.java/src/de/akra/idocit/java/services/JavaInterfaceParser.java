@@ -26,20 +26,20 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.xml.sax.SAXException;
 
+import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Interface;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.structure.Operation;
+import de.akra.idocit.core.structure.Parameter;
+import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavaParameter;
 import de.akra.idocit.java.structure.JavaParameters;
-import de.akra.idocit.structure.Delimiters;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Interface;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.structure.Operation;
-import de.akra.idocit.structure.Parameter;
-import de.akra.idocit.structure.Parameters;
-import de.akra.idocit.structure.SignatureElement;
-import de.akra.idocit.utils.ObjectStructureUtils;
 
 /**
  * The parser parses Java Interfaces, Classes and Enumerations and maps the structure to

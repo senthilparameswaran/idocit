@@ -20,11 +20,11 @@ import org.eclipse.jdt.core.dom.TagElement;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import de.akra.idocit.structure.Addressee;
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.Scope;
-import de.akra.idocit.structure.ThematicRole;
-import de.akra.idocit.utils.ObjectStructureUtils;
+import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.Scope;
+import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 
 /**
  * Tests for {@link JavadocParser}.

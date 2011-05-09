@@ -25,9 +25,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import de.akra.idocit.structure.Delimiters;
-import de.akra.idocit.structure.InterfaceArtifact;
-import de.akra.idocit.utils.TestUtils;
+import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.core.utils.TestUtils;
 
 /**
  * Tests for {@link JavaInterfaceParser}.

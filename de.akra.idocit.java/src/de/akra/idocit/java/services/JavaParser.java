@@ -17,10 +17,10 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
-import de.akra.idocit.extensions.Parser;
+import de.akra.idocit.core.extensions.Parser;
+import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.core.structure.InterfaceArtifact;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
-import de.akra.idocit.structure.Delimiters;
-import de.akra.idocit.structure.InterfaceArtifact;
 
 /**
  * Parser implementation for Java.

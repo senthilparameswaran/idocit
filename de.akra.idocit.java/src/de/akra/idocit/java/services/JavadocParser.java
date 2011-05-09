@@ -15,8 +15,8 @@ import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
 import org.xml.sax.SAXException;
 
-import de.akra.idocit.structure.Documentation;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * Parser for {@link Javadoc}. It converts a Javadoc to a list of {@link Documentation}s.

@@ -2,8 +2,8 @@ package de.akra.idocit.java.structure;
 
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
-import de.akra.idocit.structure.Interface;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Interface;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * Representation of a Java interface, class or enumeration (see

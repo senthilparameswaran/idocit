@@ -2,8 +2,8 @@ package de.akra.idocit.java.structure;
 
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
-import de.akra.idocit.structure.Operation;
-import de.akra.idocit.structure.SignatureElement;
+import de.akra.idocit.core.structure.Operation;
+import de.akra.idocit.core.structure.SignatureElement;
 
 /**
  * Representation of a Java method.

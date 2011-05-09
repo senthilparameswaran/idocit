@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 
-import de.akra.idocit.utils.TestUtils;
+import de.akra.idocit.core.utils.TestUtils;
 
 /**
  * Tests for {@link JavaParser}.
