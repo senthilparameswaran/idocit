@@ -95,8 +95,8 @@ public class ThematicGridPreferencePage
 	@Override
 	public boolean performOk()
 	{
-		boolean saveState = super.performOk();
 		performApply();
+		boolean saveState = super.performOk();
 		return saveState;
 	}
 

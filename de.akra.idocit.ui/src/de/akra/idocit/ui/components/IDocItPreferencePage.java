@@ -15,6 +15,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -71,12 +72,13 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	protected Control createContents(Composite parent)
 	{
 		Label lblWordNet = new Label(parent, SWT.NONE);
-		lblWordNet.setText("Please specify where WordNet is installed on your computer.");
+		lblWordNet.setText("Please specify where WordNet is installed and the PoS-Tagger Model is stored on your computer.");
 
 		lblWordNetLink = new Label(parent, SWT.NONE);
 		lblWordNetLink.setText("If you do not have Wordnet, download it here!");
 		lblWordNetLink.setForeground(getShell().getDisplay().getSystemColor(
 				SWT.COLOR_BLUE));
+		lblWordNetLink.setCursor(Display.getCurrent().getSystemCursor(SWT.CURSOR_HAND));
 
 		wordnetLinkMouseListener = new MouseListener() {
 			@Override
@@ -110,7 +112,6 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 			public void mouseDown(MouseEvent e)
 			{
 				// Nothing to do!
-
 			}
 
 			@Override
@@ -159,25 +160,11 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void checkState()
 	{
-		File wordNetInstallation = getChoosenWordnetInstallation();
-		File taggerModelFile = getChoosenPoSTaggerModelFile();
-
-		if (wordNetInstallation.exists())
-		{
-			setErrorMessage(null);
-		}
-		else if (!wordNetInstallation.exists())
-		{
-			setErrorMessage("The choosen directory does not contain a valid WordNet-Installation.");
-		}
-		else if (taggerModelFile.exists())
-		{
-			setErrorMessage(null);
-		}
-		else
-		{
-			setErrorMessage("The choosen model file for the Part-of-Speech-tagger does not exist.");
-		}
+		// Changes due to Issue #11
+		// the FieldEditorPreferencePage does the check already
+		super.checkState();
+		updateApplyButton();
+		// End changes due to Issue #11
 	}
 
 	/**
@@ -231,25 +218,12 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 		return getChoosenWordnetInstallation().exists()
 				&& getChoosenPoSTaggerModelFile().exists();
 	}
-	
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
-	@Override
-	protected void performApply()
-	{
-		// TODO Auto-generated method stub
-		super.performApply();
-	}
 
 	@Override
 	public boolean performOk()
 	{
-		boolean saveState = super.performOk();
-
 		IDocItCoreStartup.initializeIDocIt();
-
+		boolean saveState = super.performOk();
 		return saveState;
 	}
 }
