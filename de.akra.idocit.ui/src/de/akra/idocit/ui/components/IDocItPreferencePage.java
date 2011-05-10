@@ -242,8 +242,8 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public boolean performOk()
 	{
-		IDocItCoreStartup.initializeIDocIt();
 		boolean saveState = super.performOk();
+		IDocItCoreStartup.initializeIDocIt();
 		return saveState;
 	}
 }
