@@ -47,6 +47,12 @@ import de.akra.idocit.core.utils.ThematicRoleComparator;
  * 
  */
 public class PersistenceService {
+	private static final String XML_ALIAS_THEMATIC_GRID = "thematicGrid";
+
+	private static final String XML_ALIAS_THEMATIC_ROLE = "thematicRole";
+
+	private static final String XML_ALIAS_ADDRESSEE = "addressee";
+
 	/*
 	 * Constants
 	 */
@@ -140,7 +146,20 @@ public class PersistenceService {
 
 	private static XStream configureXStreamForThematicGrid() {
 		XStream stream = new XStream();
-
+		stream.alias(XML_ALIAS_THEMATIC_GRID, ThematicGrid.class);
+		stream.alias(XML_ALIAS_THEMATIC_ROLE, ThematicRole.class);
+		return stream;
+	}
+	
+	private static XStream configureXStreamForThematicRoles() {
+		XStream stream = new XStream();
+		stream.alias(XML_ALIAS_THEMATIC_ROLE, ThematicRole.class);
+		return stream;
+	}
+	
+	private static XStream configureXStreamForAddressee() {
+		XStream stream = new XStream();
+		stream.alias(XML_ALIAS_ADDRESSEE, Addressee.class);
 		return stream;
 	}
 
@@ -207,7 +226,7 @@ public class PersistenceService {
 	public static void persistAddressees(List<Addressee> addressees) {
 		// TODO delete old entries from preference store
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = new XStream();
+		XStream stream = configureXStreamForAddressee();
 
 		for (Addressee a : addressees) {
 			a.setDescription(StringUtils.removeLineBreaks(a.getDescription()));
@@ -226,7 +245,7 @@ public class PersistenceService {
 	public static void persistThematicRoles(List<ThematicRole> roles) {
 		// TODO delete old entries from preference store
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = new XStream();
+		XStream stream = configureXStreamForThematicRoles();
 		Collections.sort(roles, ThematicRoleComparator.getInstance());
 
 		for (ThematicRole role : roles) {
@@ -286,7 +305,7 @@ public class PersistenceService {
 	@SuppressWarnings("unchecked")
 	public static List<Addressee> loadConfiguredAddressees() {
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = new XStream();
+		XStream stream = configureXStreamForAddressee();
 		List<Addressee> addressees = new ArrayList<Addressee>();
 
 		String prefVal = prefStore.getString(PreferenceStoreConstants.ADDRESSEES);
@@ -316,7 +335,7 @@ public class PersistenceService {
 	@SuppressWarnings("unchecked")
 	public static List<ThematicRole> loadThematicRoles() {
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = new XStream();
+		XStream stream = configureXStreamForThematicRoles();
 		List<ThematicRole> roles = new ArrayList<ThematicRole>();
 
 		String prefVal = prefStore.getString(PreferenceStoreConstants.THEMATIC_ROLES);
@@ -339,14 +358,6 @@ public class PersistenceService {
 		return roles;
 	}
 
-	private static XStream configureXStreamForThematicRoles() {
-		XStream stream = new XStream();
-
-		stream.alias("role", ThematicRole.class);
-
-		return stream;
-	}
-
 	/**
 	 * Load the {@link ThematicGrid}s that are configured in the Eclipse
 	 * preference pages for iDocIt!.
@@ -360,11 +371,10 @@ public class PersistenceService {
 
 		if (verbClassRoleAssocsXML != null) {
 			try {
-				return (List<ThematicGrid>) configureXStreamForThematicRoles().fromXML(verbClassRoleAssocsXML);
+				return (List<ThematicGrid>) configureXStreamForThematicGrid().fromXML(verbClassRoleAssocsXML);
 			} catch (XStreamException e) {
 				// TODO maybe display user message to inform, that the grids
-				// could not be
-				// read and iDocIt! uses no one, now.
+				// could not be read and iDocIt! uses no one, now.
 				logger.log(Level.WARNING, e.getMessage());
 			}
 		}
@@ -390,7 +400,7 @@ public class PersistenceService {
 	 */
 	public static void persistThematicGrids(List<ThematicGrid> verbClassRoleAssociations) {
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		String verbClassRoleAssocsXML = configureXStreamForThematicRoles().toXML(verbClassRoleAssociations);
+		String verbClassRoleAssocsXML = configureXStreamForThematicGrid().toXML(verbClassRoleAssociations);
 
 		prefStore.putValue(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING, verbClassRoleAssocsXML);
 	}
