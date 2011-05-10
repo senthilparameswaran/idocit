@@ -219,6 +219,26 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 				&& getChoosenPoSTaggerModelFile().exists();
 	}
 
+//	@Override
+//	public boolean okToLeave()
+//	{
+//		String info = null;
+//		if (!getChoosenWordnetInstallation().exists())
+//		{
+//			info = "The choosen directory does not contain a valid WordNet-Installation.";
+//		}
+//		else if (!getChoosenPoSTaggerModelFile().exists())
+//		{
+//			info = "The choosen model file for the Part-of-Speech-tagger does not exist.";
+//		}
+//		if (info != null)
+//		{
+//			// return true, if user clicked on No. Then he wants to leave the page.
+//			return !MessageBoxUtils.openYesNoWarningDialogBox(getShell(), info+"\n\nWithout correct settings iDocIt! will not work.\nDo you want to stay on the page and correct the settings?" );
+//		}
+//		return true;
+//	}
+
 	@Override
 	public boolean performOk()
 	{
