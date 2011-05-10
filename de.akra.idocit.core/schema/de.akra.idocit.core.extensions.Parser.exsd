@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="de.akra.idocit" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="de.akra.idocit.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="de.akra.idocit" id="de.akra.idocit.extensions.Parser" name="Parser"/>
+         <meta.schema plugin="de.akra.idocit.core" id="de.akra.idocit.core.extensions.Parser" name="Parser"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":de.akra.idocit.extensions.Parser"/>
+                  <meta.attribute kind="java" basedOn=":de.akra.idocit.core.extensions.Parser"/>
                </appinfo>
             </annotation>
          </attribute>
