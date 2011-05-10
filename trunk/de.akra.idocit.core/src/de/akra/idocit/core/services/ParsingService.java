@@ -32,7 +32,7 @@ public final class ParsingService
 	/**
 	 * This the ID from the extension point
 	 */
-	private static final String PARSER_EXTENSION_POINT_ID = "de.akra.idocit.extensions.Parser";
+	private static final String PARSER_EXTENSION_POINT_ID = "de.akra.idocit.core.extensions.Parser";
 
 	/**
 	 * Constructor. No need for instantiation, because all methods are static.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="de.akra.idocit.extensions.Parser">
+   <extension point="de.akra.idocit.core.extensions.Parser">
       <client class="de.akra.idocit.wsdl.services.WSDLParser" />
    </extension>
 </plugin>

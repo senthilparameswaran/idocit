@@ -2,11 +2,8 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-   <extension
-         point="de.akra.idocit.extensions.Parser">
-      <client
-            class="de.akra.idocit.java.services.JavaParser">
-      </client>
+   <extension point="de.akra.idocit.core.extensions.Parser">
+      <client class="de.akra.idocit.java.services.JavaParser" />
    </extension>
 
 </plugin>

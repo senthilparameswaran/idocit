@@ -58,7 +58,7 @@
       </objectContribution>
    </extension>
    <extension
-         id="de.akra.idocit"
+         id="de.akra.idocit.core"
          name="iDocIt!"
          point="org.eclipse.core.runtime.applications">
       <application

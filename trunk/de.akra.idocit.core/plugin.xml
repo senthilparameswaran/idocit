@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="de.akra.idocit.extensions.Parser" name="Parser" schema="schema/de.akra.idocit.extensions.Parser.exsd"/>
+   <extension-point id="de.akra.idocit.core.extensions.Parser" name="Parser" schema="schema/de.akra.idocit.core.extensions.Parser.exsd"/>
    <extension
          point="org.eclipse.ui.startup">
       <startup
             class="de.akra.idocit.core.IDocItCoreStartup">
       </startup>
    </extension>
-
-
 </plugin>
