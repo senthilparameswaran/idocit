@@ -30,6 +30,7 @@ import de.akra.idocit.core.structure.Parameters;
 import de.akra.idocit.core.structure.SignatureElement;
 import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * Composite that manages the Composites to edit the {@link Documentation}s of
@@ -399,7 +400,17 @@ public class EditArtifactDocumentationComposite
 			recRolesCompSelection.setCollapsedThematicGridNames(newInSelection
 					.getCollapsedThematicGrids(operation.getId()));
 
-			roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier());
+			// Changes due to Issue #23
+			try
+			{
+				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier());
+			}
+			catch (NullPointerException e)
+			{
+				logger.log(Level.WARNING, "WSDLTaggingService is not initialized.", e);
+				MessageBoxUtils.openErrorBox(getShell(), "The thematic grid deriving service is not initialized,\nplease check the configurations under \"Window\" -> \"Preferences\" -> \"iDocIt!\".");
+			}
+			// End changes due to Issue #23
 
 			associatedThematicRoles = new TreeSet<ThematicRole>();
 			ObjectStructureUtils.collectAssociatedThematicRoles(associatedThematicRoles,
