@@ -1,8 +1,8 @@
 package de.akra.idocit.wsdl.services;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,11 +111,13 @@ public class WSDLParser implements Parser
 				.updateDocumentationInDefinition();
 
 		// write to file
-		BufferedWriter bufWriter = new BufferedWriter(new FileWriter(iFile.getLocation()
-				.toFile()));
 		WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
-		wsdlWriter.writeWSDL(updatedDefinition, bufWriter);
-		bufWriter.close();
+		// Changes due to Issue #28
+		Writer writer = new FileWriter(iFile.getLocation().toFile());
+		wsdlWriter.writeWSDL(updatedDefinition, writer);
+		// End changes due to Issue #28
+		
+		writer.close();
 	}
 
 	/**
