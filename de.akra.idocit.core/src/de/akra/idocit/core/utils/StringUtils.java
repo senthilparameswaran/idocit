@@ -189,7 +189,9 @@ public class StringUtils
 	 */
 	public static String cleanFormatting(String text)
 	{
-		return text.replaceAll("[" + ASCII_CR + ASCII_LF + ASCII_TAB + "]+", "")
+		// Changes due to Issue #29
+		return text.replaceAll("[" + ASCII_CR + ASCII_LF + ASCII_TAB + "]+", " ")
 				.replaceAll("[ ]+", " ");
+		// End changes due to Issue #29
 	}
 }
