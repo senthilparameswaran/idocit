@@ -15,7 +15,6 @@ import org.eclipse.ui.PlatformUI;
 
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.services.ThematicGridService;
 import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
