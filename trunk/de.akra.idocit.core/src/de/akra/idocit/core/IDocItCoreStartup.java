@@ -1,10 +1,13 @@
 package de.akra.idocit.core;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IStartup;
@@ -12,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.ThematicGridService;
 import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
@@ -27,6 +31,8 @@ import de.jankrause.diss.wsdl.common.services.WSDLTaggingService;
  */
 public class IDocItCoreStartup implements IStartup
 {
+	private static final Logger logger = Logger.getLogger(IDocItCoreStartup.class
+			.getName());
 
 	/**
 	 * {@inheritDoc}
@@ -77,6 +83,10 @@ public class IDocItCoreStartup implements IStartup
 		{
 			WSDLTaggingService.init(store
 					.getString(PreferenceStoreConstants.TAGGER_MODEL_FILE));
+		}
+		catch (FileNotFoundException e)
+		{
+			logger.log(Level.WARNING, e.getMessage(), e);
 		}
 		catch (IOException ioEx)
 		{
