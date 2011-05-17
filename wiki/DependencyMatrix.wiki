@@ -38,5 +38,5 @@
 || *Library / Project* || *Version* || *License* ||
 ||JUnit||4.8.1||Common Public License 1.0||
 ||WSDL4J||1.6.2||Common Public License 1.0||
-||WordNet||1.3|| WordNet License ||
-||StanfordTagger||3.0|| GPL 2||
+||Word Net||1.3|| Word Net License ||
+||Stanford Tagger||3.0|| GPL 2||
