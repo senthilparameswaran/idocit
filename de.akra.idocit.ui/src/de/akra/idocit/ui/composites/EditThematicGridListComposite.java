@@ -139,9 +139,27 @@ public class EditThematicGridListComposite
 					{
 						// Remove the selected item.
 						java.util.List<ThematicGrid> items = selection.getItems();
+
+						// Changes due to Issue #10
+						int nextSelIndex = -1;
+						if (!selection.getActiveItems().isEmpty())
+						{
+							nextSelIndex = items.indexOf(selection.getActiveItems()
+									.get(0));
+							if (nextSelIndex >= items.size()-1)
+							{
+								nextSelIndex = items.size() - 2;
+							}
+						}
+						// End changes due to Issue #10
+
 						items.removeAll(selection.getActiveItems());
 
 						selection.setItems(items);
+						// Changes due to Issue #10
+						selection.setActiveItems(nextSelIndex > -1 ? new ArrayList<ThematicGrid>(items
+								.subList(nextSelIndex, nextSelIndex+1)) : null);
+						// End changes due to Issue #10
 						setSelection(selection);
 
 						fireChangeEvent();
