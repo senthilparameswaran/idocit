@@ -31,6 +31,7 @@ import de.akra.idocit.core.structure.DescribedItem;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.Activator;
+import de.akra.idocit.ui.constants.DialogConstants;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
@@ -40,8 +41,10 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  * @since 0.0.1
  * @version 0.0.1
  */
-public class ManageThematicGridsComposite extends
-		AbsComposite<ManageThematicGridsCompositeAC, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection> {
+public class ManageThematicGridsComposite
+		extends
+		AbsComposite<ManageThematicGridsCompositeAC, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>
+{
 
 	// Widgets
 	private EditThematicGridListComposite editThematicGridListComposite;
@@ -71,17 +74,20 @@ public class ManageThematicGridsComposite extends
 	 * @param parent
 	 *            The parent Composite.
 	 * @param actionConf
-	 *            The action configuration
-	 *            {@link ManageThematicGridsCompositeAC}.
+	 *            The action configuration {@link ManageThematicGridsCompositeAC}.
 	 */
-	public ManageThematicGridsComposite(Composite parent, ManageThematicGridsCompositeAC actionConf) {
+	public ManageThematicGridsComposite(Composite parent,
+			ManageThematicGridsCompositeAC actionConf)
+	{
 		super(parent, SWT.NONE, actionConf, EmptyResourceConfiguration.getInstance());
 	}
 
 	@Override
-	protected void addAllListener() {
+	protected void addAllListener()
+	{
 		editThematicGridComposite.addSelectionListener(editThematicGridSelectionListener);
-		editThematicGridListComposite.addSelectionListener(editThematicGridListSelectionListener);
+		editThematicGridListComposite
+				.addSelectionListener(editThematicGridListSelectionListener);
 
 		btnImportGrids.addSelectionListener(btnImportListener);
 		btnExportGridsXml.addSelectionListener(btnExportListenerXml);
@@ -89,12 +95,15 @@ public class ManageThematicGridsComposite extends
 	}
 
 	@Override
-	protected void doCleanUp() {
+	protected void doCleanUp()
+	{
 		// Nothing to do!
 	}
 
 	@Override
-	protected void doSetSelection(ManageThematicGridsCompositeSelection oldSelection, ManageThematicGridsCompositeSelection newSelection) {
+	protected void doSetSelection(ManageThematicGridsCompositeSelection oldSelection,
+			ManageThematicGridsCompositeSelection newSelection)
+	{
 		EditThematicGridListCompositeSelection editItemListCompositeSelection = new EditThematicGridListCompositeSelection();
 		editItemListCompositeSelection.setMinNumberOfItems(1);
 
@@ -110,14 +119,15 @@ public class ManageThematicGridsComposite extends
 
 		EditThematicGridCompositeSelection editThematicGridCompositeSelection = new EditThematicGridCompositeSelection();
 		editThematicGridCompositeSelection.setRoles(newSelection.getRoles());
-		editThematicGridCompositeSelection.setThematicGrid(newSelection.getActiveThematicGrid());
-		editThematicGridCompositeSelection.setExistingGrids(newSelection.getThematicGrids());
+		editThematicGridCompositeSelection.setThematicGrid(newSelection
+				.getActiveThematicGrid());
 
 		editThematicGridComposite.setSelection(editThematicGridCompositeSelection);
 	}
 
 	@Override
-	protected void initGUI(Composite arg0) throws CompositeInitializationException {
+	protected void initGUI(Composite arg0) throws CompositeInitializationException
+	{
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
@@ -129,15 +139,18 @@ public class ManageThematicGridsComposite extends
 		editThematicGridListComposite = new EditThematicGridListComposite(grpEditList);
 
 		Group grpEditDescribedItem = new Group(this, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).applyTo(grpEditDescribedItem);
-		GridDataFactory.fillDefaults().span(1, 2).grab(true, true).applyTo(grpEditDescribedItem);
+		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5)
+				.applyTo(grpEditDescribedItem);
+		GridDataFactory.fillDefaults().span(1, 2).grab(true, true)
+				.applyTo(grpEditDescribedItem);
 		grpEditDescribedItem.setText("Edit selected Thematic Grid:");
 
 		editThematicGridComposite = new EditThematicGridComposite(grpEditDescribedItem);
 
 		Composite btnComposite = new Composite(this, SWT.NONE);
 
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(btnComposite);
+		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5)
+				.applyTo(btnComposite);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(btnComposite);
 
 		btnImportGrids = new Button(btnComposite, SWT.PUSH);
@@ -155,10 +168,13 @@ public class ManageThematicGridsComposite extends
 	}
 
 	@Override
-	protected void initListener() throws CompositeInitializationException {
+	protected void initListener() throws CompositeInitializationException
+	{
 		editThematicGridSelectionListener = new ISelectionListener<EditThematicGridCompositeSelection>() {
 			@Override
-			public void selectionChanged(EditThematicGridCompositeSelection selection, PocUIComposite<EditThematicGridCompositeSelection> composite) {
+			public void selectionChanged(EditThematicGridCompositeSelection selection,
+					PocUIComposite<EditThematicGridCompositeSelection> composite)
+			{
 				ManageThematicGridsCompositeSelection mySelection = getSelection();
 				mySelection.setActiveThematicGrid(selection.getThematicGrid());
 
@@ -168,17 +184,27 @@ public class ManageThematicGridsComposite extends
 
 		editThematicGridListSelectionListener = new ISelectionListener<EditThematicGridListCompositeSelection>() {
 			@Override
-			public void selectionChanged(EditThematicGridListCompositeSelection selection,
-					PocUIComposite<EditThematicGridListCompositeSelection> composite) {
+			public void selectionChanged(
+					EditThematicGridListCompositeSelection selection,
+					PocUIComposite<EditThematicGridListCompositeSelection> composite)
+			{
 				ManageThematicGridsCompositeSelection mySelection = getSelection();
 				List<ThematicGrid> selectedItems = selection.getActiveItems();
 
-				if ((selectedItems != null) && !selectedItems.isEmpty()) {
-					mySelection.setActiveThematicGrid((ThematicGrid) selectedItems.get(0));
+				if ((selectedItems != null) && !selectedItems.isEmpty())
+				{
+					mySelection.setActiveThematicGrid(selectedItems.get(0));
 				}
+				// Changes due to Issue #10
+				else
+				{
+					mySelection.setActiveThematicGrid(null);
+				}
+				// End changes due to Issue #10
 
 				List<ThematicGrid> grids = new ArrayList<ThematicGrid>();
-				for (DescribedItem item : selection.getItems()) {
+				for (DescribedItem item : selection.getItems())
+				{
 					grids.add((ThematicGrid) item);
 				}
 				mySelection.setThematicGrids(grids);
@@ -190,48 +216,66 @@ public class ManageThematicGridsComposite extends
 		btnImportListener = new SelectionListener() {
 
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				FileDialog fileDialog = new FileDialog(getShell(), SWT.OPEN);
 				fileDialog.setText("Import Thematic Grids");
 				String[] filterExt = { "*.xml" };
 				fileDialog.setFilterExtensions(filterExt);
 				String selectedFileName = fileDialog.open();
 
-				if (selectedFileName != null) {
-					try {
-						List<ThematicGrid> importedGrids = PersistenceService.importThematicGrids(new File(selectedFileName));
+				if (selectedFileName != null)
+				{
+					try
+					{
+						List<ThematicGrid> importedGrids = PersistenceService
+								.importThematicGrids(new File(selectedFileName));
 
 						ManageThematicGridsCompositeSelection selection = getSelection();
 						List<ThematicGrid> grids = selection.getThematicGrids();
 
-						if (grids == null) {
+						if (grids == null)
+						{
 							grids = new ArrayList<ThematicGrid>();
 						}
 
 						grids.addAll(importedGrids);
 						selection.setThematicGrids(importedGrids);
+						// Changes due to Issue #10
+						selection.setActiveThematicGrid(grids.size() > 0 ? grids.get(0)
+								: null);
+						// End changes due to Issue #10
 
-						List<ThematicRole> roles = ThematicGridService.collectThematicRoles(grids, selection.getRoles());
+						List<ThematicRole> roles = ThematicGridService
+								.collectThematicRoles(grids, selection.getRoles());
 						selection.setRoles(roles);
 
 						setSelection(selection);
-					} catch (IOException ioEx) {
-						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, ioEx.getLocalizedMessage(), null);
-						ErrorDialog.openError(Display.getCurrent().getActiveShell(), "iDocIt",
-								"An error occured while importing thematic grids from the selected resource.", status);
+					}
+					catch (IOException ioEx)
+					{
+						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
+								ioEx.getLocalizedMessage(), null);
+						ErrorDialog
+								.openError(
+										Display.getCurrent().getActiveShell(),
+										DialogConstants.DIALOG_TITLE,
+										"An error occured while importing thematic grids from the selected resource.",
+										status);
 					}
 				}
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+			public void widgetDefaultSelected(SelectionEvent e)
+			{}
 		};
 
 		btnExportListenerXml = new SelectionListener() {
 
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
 				fileDialog.setText("Export Thematic Grids as XML-file");
 				String[] filterExt = { "*.xml" };
@@ -239,38 +283,56 @@ public class ManageThematicGridsComposite extends
 				String selectedFileName = fileDialog.open();
 				boolean stored = false;
 
-				while ((selectedFileName != null) && !stored) {
-					try {
+				while ((selectedFileName != null) && !stored)
+				{
+					try
+					{
 						boolean exists = new File(selectedFileName).exists();
 						boolean overwrite = exists
-								&& MessageBoxUtils.openQuestionDialogBox(getShell(), "The file " + selectedFileName
-										+ " already exists. Do you want to overwrite it?");
+								&& MessageBoxUtils
+										.openQuestionDialogBox(
+												getShell(),
+												"The file "
+														+ selectedFileName
+														+ " already exists. Do you want to overwrite it?");
 
-						if (overwrite || !exists) {
+						if (overwrite || !exists)
+						{
 							ManageThematicGridsCompositeSelection selection = getSelection();
-							PersistenceService.exportThematicGridsAsXml(new File(selectedFileName), selection.getThematicGrids());
+							PersistenceService.exportThematicGridsAsXml(new File(
+									selectedFileName), selection.getThematicGrids());
 
 							stored = true;
-						} else {
+						}
+						else
+						{
 							selectedFileName = fileDialog.open();
 						}
-					} catch (IOException ioEx) {
-						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, ioEx.getLocalizedMessage(), null);
-						ErrorDialog.openError(Display.getCurrent().getActiveShell(), "iDocIt",
-								"An error occured while importing thematic grids from the selected resource.", status);
+					}
+					catch (IOException ioEx)
+					{
+						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
+								ioEx.getLocalizedMessage(), null);
+						ErrorDialog
+								.openError(
+										Display.getCurrent().getActiveShell(),
+										DialogConstants.DIALOG_TITLE,
+										"An error occured while importing thematic grids from the selected resource.",
+										status);
 					}
 				}
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+			public void widgetDefaultSelected(SelectionEvent e)
+			{}
 		};
 
 		btnExportListenerHtml = new SelectionListener() {
 
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
 				fileDialog.setText("Export Thematic Grids as HTML-file");
 				String[] filterExt = { "*.html" };
@@ -278,39 +340,59 @@ public class ManageThematicGridsComposite extends
 				String selectedFileName = fileDialog.open();
 				boolean stored = false;
 
-				while ((selectedFileName != null) && !stored) {
-					try {
+				while ((selectedFileName != null) && !stored)
+				{
+					try
+					{
 						boolean exists = new File(selectedFileName).exists();
 						boolean overwrite = exists
-								&& MessageBoxUtils.openQuestionDialogBox(getShell(), "The file " + selectedFileName
-										+ " already exists. Do you want to overwrite it?");
+								&& MessageBoxUtils
+										.openQuestionDialogBox(
+												getShell(),
+												"The file "
+														+ selectedFileName
+														+ " already exists. Do you want to overwrite it?");
 
-						if (overwrite || !exists) {
+						if (overwrite || !exists)
+						{
 							ManageThematicGridsCompositeSelection selection = getSelection();
-							PersistenceService.exportThematicGridsAsHtml(new File(selectedFileName), selection.getThematicGrids());
+							PersistenceService.exportThematicGridsAsHtml(new File(
+									selectedFileName), selection.getThematicGrids());
 
 							stored = true;
-						} else {
+						}
+						else
+						{
 							selectedFileName = fileDialog.open();
 						}
-					} catch (IOException ioEx) {
-						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, ioEx.getLocalizedMessage(), null);
-						ErrorDialog.openError(Display.getCurrent().getActiveShell(), "iDocIt",
-								"An error occured while importing thematic grids from the selected resource.", status);
+					}
+					catch (IOException ioEx)
+					{
+						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
+								ioEx.getLocalizedMessage(), null);
+						ErrorDialog
+								.openError(
+										Display.getCurrent().getActiveShell(),
+										DialogConstants.DIALOG_TITLE,
+										"An error occured while importing thematic grids from the selected resource.",
+										status);
 					}
 				}
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+			public void widgetDefaultSelected(SelectionEvent e)
+			{}
 		};
 	}
 
 	@Override
-	protected void removeAllListener() {
-		editThematicGridComposite.removeSelectionListener(editThematicGridSelectionListener);
-		editThematicGridListComposite.removeSelectionListener(editThematicGridListSelectionListener);
+	protected void removeAllListener()
+	{
+		editThematicGridComposite
+				.removeSelectionListener(editThematicGridSelectionListener);
+		editThematicGridListComposite
+				.removeSelectionListener(editThematicGridListSelectionListener);
 
 		btnImportGrids.removeSelectionListener(btnImportListener);
 		btnExportGridsXml.removeSelectionListener(btnExportListenerXml);
