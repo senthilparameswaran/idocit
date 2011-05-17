@@ -1,0 +1,30 @@
+#labels Phase-Requirements
+Dependencies of the iDocIt! projects
+
+= iDocIt! Core =
+
+|| *Library / Project* || *Version* || *License* ||
+||XStream||1.3||BSD||
+||JUnit||4.8.1||Common Public License 1.0||
+||Eclipse||3.6||Eclipse Public License 1.0||
+
+= iDocIt! UI =
+
+|| *Library / Project* || *Version* || *License* ||
+||POCUI||1.0||||
+||JUnit||4.8.1||Common Public License 1.0||
+||Eclipse||3.6||Eclipse Public License 1.0||
+
+= iDocIt! WSDL Support =
+
+|| *Library / Project* || *Version* || *License* ||
+||WSDL4J||4.8.1||Common Public License 1.0||
+||JUnit||4.8.1||Common Public License 1.0||
+||Eclipse||3.6||Eclipse Public License 1.0||
+
+
+= iDocIt! Java Support =
+
+|| *Library / Project* || *Version* || *License* ||
+||JUnit||4.8.1||Common Public License 1.0||
+||Eclipse||3.6||Eclipse Public License 1.0||
