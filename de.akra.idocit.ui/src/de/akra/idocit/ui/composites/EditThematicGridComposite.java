@@ -246,6 +246,15 @@ public class EditThematicGridComposite
 					tabCols[i].pack();
 				}
 			}
+			// Changes due to Issue #27
+			else{
+				// uncheck all items in the table
+				for(int i = 0; i < items.length; ++i)
+				{
+					items[i].setChecked(false);
+				}
+			}
+			// End changes due to Issue #27
 
 			Map<ThematicRole, Boolean> newSelectedRoles = newSelection.getThematicGrid()
 					.getRoles();

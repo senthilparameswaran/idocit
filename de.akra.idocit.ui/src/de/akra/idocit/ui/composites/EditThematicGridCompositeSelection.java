@@ -18,30 +18,15 @@ import de.akra.idocit.core.structure.ThematicRole;
  */
 public class EditThematicGridCompositeSelection implements ISelection
 {
+	/**
+	 * The selected {@link ThematicGrid} to edit.
+	 */
 	private ThematicGrid thematicGrid;
 
+	/**
+	 * All existing {@link ThematicRole}s that are defined in the preference page.
+	 */
 	private List<ThematicRole> roles = Collections.emptyList();
-
-	private List<ThematicGrid> existingGrids = Collections.emptyList();
-
-	/**
-	 * 
-	 * @return The configured {@link ThematicGrid}s.
-	 */
-	public List<ThematicGrid> getExistingGrids()
-	{
-		return existingGrids;
-	}
-
-	/**
-	 * 
-	 * @param existingGrids
-	 *            The existing {@link ThematicGrid}s.
-	 */
-	public void setExistingGrids(List<ThematicGrid> existingGrids)
-	{
-		this.existingGrids = existingGrids;
-	}
 
 	/**
 	 * 
@@ -81,18 +66,22 @@ public class EditThematicGridCompositeSelection implements ISelection
 		this.roles = roles;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((existingGrids == null) ? 0 : existingGrids.hashCode());
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result + ((thematicGrid == null) ? 0 : thematicGrid.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -103,13 +92,6 @@ public class EditThematicGridCompositeSelection implements ISelection
 		if (getClass() != obj.getClass())
 			return false;
 		EditThematicGridCompositeSelection other = (EditThematicGridCompositeSelection) obj;
-		if (existingGrids == null)
-		{
-			if (other.existingGrids != null)
-				return false;
-		}
-		else if (!existingGrids.equals(other.existingGrids))
-			return false;
 		if (roles == null)
 		{
 			if (other.roles != null)
@@ -127,17 +109,13 @@ public class EditThematicGridCompositeSelection implements ISelection
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("EditThematicGridCompositeSelection [thematicGrid=");
-		builder.append(thematicGrid);
-		builder.append(", roles=");
-		builder.append(roles);
-		builder.append(", existingGrids=");
-		builder.append(existingGrids);
-		builder.append("]");
-		return builder.toString();
+		return "EditThematicGridCompositeSelection [thematicGrid=" + thematicGrid
+				+ ", roles=" + roles + "]";
 	}
 }
