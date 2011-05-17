@@ -7,6 +7,7 @@
 ||XStream||1.3||BSD||
 ||JUnit||4.8.1||Common Public License 1.0||
 ||Eclipse||3.6||Eclipse Public License 1.0||
+||wsdl-common||0.0.1-SNAPSHOT|| GPL 2||
 
 = iDocIt! UI =
 
@@ -28,3 +29,10 @@
 || *Library / Project* || *Version* || *License* ||
 ||JUnit||4.8.1||Common Public License 1.0||
 ||Eclipse||3.6||Eclipse Public License 1.0||
+
+= WSDL-COMMON =
+|| *Library / Project* || *Version* || *License* ||
+||JUnit||4.8.1||Common Public License 1.0||
+||WSDL4J||1.6.2||Common Public License 1.0||
+||WordNet||1.3|| WordNet License ||
+||StanfordTagger||3.0|| GPL 2||
