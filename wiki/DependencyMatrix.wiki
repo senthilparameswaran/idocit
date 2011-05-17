@@ -1,5 +1,5 @@
 #labels Phase-Requirements
-Dependencies of the iDocIt! projects
+#Dependencies of the iDocIt! projects
 
 = iDocIt! Core =
 
