@@ -19,6 +19,8 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
@@ -111,6 +113,27 @@ public class DocumentItemComposite
 	private SelectionListener addresseeTabFolderSelectionListener;
 
 	/**
+	 * Listener to update the active docu text while the user is typing.
+	 */
+	private ModifyListener textModifyListener;
+
+	/**
+	 * Thread to fire the change events after a predefined interval, if the focus is still
+	 * on a text field and modifications were made.
+	 */
+	private Thread textModifyCheckThread;
+
+	/**
+	 * Timestamp of the last modification time of the focused text field.
+	 */
+	private long lastTextModification;
+
+	/**
+	 * True, if the focus is on a documentation text field.
+	 */
+	private boolean isInTextField = false;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param pvParent
@@ -174,27 +197,65 @@ public class DocumentItemComposite
 			public void focusLost(FocusEvent e)
 			{
 				super.focusLost(e);
-
-				DocumentItemCompositeSelection selection = getSelection();
-
-				Addressee activeAddressee = (Addressee) addresseeTabFolder.getItem(
-						addresseeTabFolder.getSelectionIndex()).getData(ITEM_DATA_KEY);
-
-				// update documentation for the addressee
-				Documentation documentation = selection.getDocumentation();
-				Text text = (Text) e.widget;
-				Map<Addressee, String> docMap = documentation.getDocumentation();
-				docMap.put(activeAddressee, text.getText());
-
-				// add addressee to sequence, if not already added
-				if (!documentation.getAddresseeSequence().contains(activeAddressee))
+				if (updateDocForActiveAddressee((Text) e.widget))
 				{
-					documentation.getAddresseeSequence().add(activeAddressee);
+					fireChangeEvent();
 				}
+				isInTextField = false;
+			}
 
-				fireChangeEvent();
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				super.focusGained(e);
+				isInTextField = true;
+				lastTextModification = System.currentTimeMillis();
 			}
 		};
+
+		textModifyListener = new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e)
+			{
+				lastTextModification = System.currentTimeMillis();
+			}
+		};
+
+		textModifyCheckThread = new Thread() {
+
+			private final long checkInterval = 1500;
+
+			@Override
+			public void run()
+			{
+				try
+				{
+					while (!isInterrupted())
+					{
+						sleep(checkInterval);
+						long intervalDiff = System.currentTimeMillis()
+								- lastTextModification;
+						if (isInTextField && intervalDiff >= checkInterval)
+						{
+							// start a terminating thread in SWT thread handling to be
+							// allowed to access the widgets
+							getDisplay().asyncExec(new Runnable() {
+								public void run()
+								{
+									updateDocForActiveAddressee();
+								}
+							});
+						}
+					}
+				}
+				catch (InterruptedException e)
+				{
+					logger.log(Level.WARNING, "textModifyCheckThread is interrupted", e);
+				}
+			}
+		};
+		textModifyCheckThread.start();
 
 		comboThematicRoleSelectionListener = new SelectionListener() {
 
@@ -375,6 +436,70 @@ public class DocumentItemComposite
 			public void widgetDefaultSelected(SelectionEvent e)
 			{}
 		};
+	}
+
+	/**
+	 * Updates the current active addressee documentation.
+	 * 
+	 * @param text
+	 *            The text field of the active addressee tab.
+	 * @return true, if the documentation text were changed and the fireChangeEvent has to
+	 *         be fired.
+	 */
+	private synchronized boolean updateDocForActiveAddressee(Text text)
+	{
+		Addressee activeAddressee = (Addressee) addresseeTabFolder.getItem(
+				addresseeTabFolder.getSelectionIndex()).getData(ITEM_DATA_KEY);
+		return updateDocForActiveAddressee(text, activeAddressee);
+	}
+
+	/**
+	 * Updates the current active addressee documentation and fires the fireChangeEvent if
+	 * the documentation text were changed.
+	 */
+	private synchronized void updateDocForActiveAddressee()
+	{
+		Addressee activeAddressee = (Addressee) addresseeTabFolder.getItem(
+				addresseeTabFolder.getSelectionIndex()).getData(ITEM_DATA_KEY);
+		Text text = addresseeDocTextField.get(activeAddressee);
+
+		if (updateDocForActiveAddressee(text, activeAddressee))
+		{
+			fireChangeEvent();
+		}
+	}
+
+	/**
+	 * Updates the current active addressee documentation.
+	 * 
+	 * @param text
+	 *            The text field of the active addressee.
+	 * @param activeAddressee
+	 *            the active {@link Addressee}.
+	 * @return true, if the documentation text were changed and the fireChangeEvent has to
+	 *         be fired.
+	 */
+	private synchronized boolean updateDocForActiveAddressee(Text text, Addressee activeAddressee)
+	{
+		boolean changed = false;
+		DocumentItemCompositeSelection selection = getSelection();
+
+		// update documentation for the addressee
+		Documentation documentation = selection.getDocumentation();
+		Map<Addressee, String> docMap = documentation.getDocumentation();
+
+		if (!docMap.get(activeAddressee).equals(text.getText()))
+		{
+			changed = true;
+			docMap.put(activeAddressee, text.getText());
+
+			// add addressee to sequence, if not already added
+			if (!documentation.getAddresseeSequence().contains(activeAddressee))
+			{
+				documentation.getAddresseeSequence().add(activeAddressee);
+			}
+		}
+		return changed;
 	}
 
 	/**
@@ -575,7 +700,8 @@ public class DocumentItemComposite
 		item.setData(ITEM_DATA_KEY, addressee);
 
 		// Changes due to Issue #5
-		Text textField = new Text(addresseeTabFolder, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		Text textField = new Text(addresseeTabFolder, SWT.MULTI | SWT.BORDER | SWT.WRAP
+				| SWT.V_SCROLL);
 		// End changes due to Issue #5
 		textField.addFocusListener(textFocusListener);
 		item.setControl(textField);
@@ -630,6 +756,7 @@ public class DocumentItemComposite
 		for (Text text : addresseeDocTextField.values())
 		{
 			text.addFocusListener(textFocusListener);
+			text.addModifyListener(textModifyListener);
 		}
 		comboScope.addSelectionListener(comboScopeSelectionListener);
 		comboThematicRole.addSelectionListener(comboThematicRoleSelectionListener);
@@ -643,6 +770,7 @@ public class DocumentItemComposite
 		for (Text text : addresseeDocTextField.values())
 		{
 			text.removeFocusListener(textFocusListener);
+			text.removeModifyListener(textModifyListener);
 		}
 		comboScope.removeSelectionListener(comboScopeSelectionListener);
 		comboThematicRole.removeSelectionListener(comboThematicRoleSelectionListener);
@@ -653,6 +781,6 @@ public class DocumentItemComposite
 	@Override
 	public void doCleanUp()
 	{
-		// Nothing do to!
+		textModifyCheckThread.interrupt();
 	}
 }
