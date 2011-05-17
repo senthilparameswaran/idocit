@@ -9,12 +9,14 @@
 ||Eclipse||3.6||Eclipse Public License 1.0||
 ||wsdl-common||0.0.1-SNAPSHOT|| GPL 2||
 
+
 = iDocIt! UI =
 
 || *Library / Project* || *Version* || *License* ||
 ||POC-UI||1.0||Apache License 2.0||
 ||JUnit||4.8.1||Common Public License 1.0||
 ||Eclipse||3.6||Eclipse Public License 1.0||
+
 
 = iDocIt! WSDL Support =
 
