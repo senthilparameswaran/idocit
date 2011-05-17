@@ -18,7 +18,7 @@
 = iDocIt! WSDL Support =
 
 || *Library / Project* || *Version* || *License* ||
-||WSDL4J||4.8.1||Common Public License 1.0||
+||WSDL4J||1.6.2||Common Public License 1.0||
 ||JUnit||4.8.1||Common Public License 1.0||
 ||Eclipse||3.6||Eclipse Public License 1.0||
 
