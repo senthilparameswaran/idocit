@@ -248,10 +248,11 @@ public class EditThematicGridComposite
 			}
 			// Changes due to Issue #27
 			else{
-				// uncheck all items in the table
+				// uncheck all items in the table and set status to default
 				for(int i = 0; i < items.length; ++i)
 				{
 					items[i].setChecked(false);
+					items[i].setText(ROLE_TABLE_COL_STATUS, STATUS_MANDATORY);
 				}
 			}
 			// End changes due to Issue #27
