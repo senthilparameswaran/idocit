@@ -1,5 +1,7 @@
 #summary Dependencies of the iDocIt! projects
 #labels Phase-Requirements
+= Table of Contents =
+<wiki:toc max_depth="2" />
 
 = iDocIt! Core =
 
