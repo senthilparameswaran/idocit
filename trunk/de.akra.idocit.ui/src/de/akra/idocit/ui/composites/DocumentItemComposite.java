@@ -479,7 +479,8 @@ public class DocumentItemComposite
 	 * @return true, if the documentation text were changed and the fireChangeEvent has to
 	 *         be fired.
 	 */
-	private synchronized boolean updateDocForActiveAddressee(Text text, Addressee activeAddressee)
+	private synchronized boolean updateDocForActiveAddressee(Text text,
+			Addressee activeAddressee)
 	{
 		boolean changed = false;
 		DocumentItemCompositeSelection selection = getSelection();
@@ -488,7 +489,8 @@ public class DocumentItemComposite
 		Documentation documentation = selection.getDocumentation();
 		Map<Addressee, String> docMap = documentation.getDocumentation();
 
-		if (!docMap.get(activeAddressee).equals(text.getText()))
+		if (docMap.get(activeAddressee) == null
+				|| !docMap.get(activeAddressee).equals(text.getText()))
 		{
 			changed = true;
 			docMap.put(activeAddressee, text.getText());
