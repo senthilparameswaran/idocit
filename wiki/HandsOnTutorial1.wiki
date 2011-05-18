@@ -1,16 +1,19 @@
 #summary API-Documentation with Thematic Grids in a nutshell
 
-==Prerequisites:==
+= Hands-on Tutorial 1 =
+<wiki:toc max_depth="3" />
+
+=Prerequisites:=
  * You can [http://code.google.com/p/idocit/downloads/list download] an undocumented and documented version of the WSDL-artefact used in this tutorial in the Download-section. 
  * We assume that you have successfully installed iDocIt! and use it in its default configuration. 
 
 So, what are we going to learn in this session? 
 
-==Goals:==
+=Goals:=
  * You know about the semantic gap in current approaches to API-documentation. You are familiar with iDocIt!'s approach to bridge this gap.
  * You know how to work with iDocIt! and how to customize it.
 
-==Create and set up an Eclipse Project:==
+=Create and set up an Eclipse Project:=
 Ok, let's get started. At first we need a Web Service Project in our Eclipse IDE.
 
  # Start Eclipse and open your workspace.
@@ -21,7 +24,7 @@ Ok, let's get started. At first we need a Web Service Project in our Eclipse IDE
 
 That's it. Now we can start to document it.
 
-== Gaps in current aproaches to API-documentation==
+= Gaps in current aproaches to API-documentation=
  The following text has been taken from the [http://nats-www.informatik.uni-hamburg.de/pub/User/JanChristianKrause/SETP-10-Pub.pdf paper] [http://nats-www.informatik.uni-hamburg.de/User/JanChristianKrause Jan Christian] presented on the [http://www.promoteresearch.org/2010/setp/index.html SETP-10-conference] in 2010. 
 
 In natural language, activities are mainly described by means of verbs, while the actors or attributes of the activity depend syntactically and semantically on the verb. For this reason it is common to choose the identifier of a Web Service operation in a way that it contains a verb which describes the activity to be carried out. A simplified example is given the following table:
@@ -45,14 +48,14 @@ In this example the source is not specified as a parameter. Nevertheless the alg
 
 By using the thematic grid of the verb used in the operation’s identifier and assigning the signature-elements to the thematic roles of this grid, required hidden parameters and resources can be identified without deep knowledge about the implementation of the operation. Furthermore the use of thematic roles can decrease the effort for documentation, because the developer only assigns the uninstanciated role of the grid to the corresponding parameter or resource. It is assumed that in many cases the thematic role explains the parameter sufficiently. Possibly this advantage will lead to a high degree of acceptance on the side of developers. If necessary, the documentation could also be complemented with pre- or post-conditions or textual annotations.
 
-==Basic Configuration and Customization of iDocIt! ==
+=Basic Configuration and Customization of iDocIt! =
 
-=== Basic Setup ===
+== Basic Setup ==
 Open the "iDocIt!"-Preference Page.
  * As *Wordnet Path* enter the path to the subdirectory "dict" of your Wordnet-installation, e.g. "/home/myusername/wordnet/dict"
  * We have achieved the best PoS-tagging results for english identifiers by using the model "left3words-distsim-wsj-0-18.tagger" as *PoS-Tagger Model*. Enter the complete path with the filename of the model here, e.g. "/home/myusername/tagger/left3words-distsim-wsj-0-18.tagger".
 
-=== Addressees ===
+== Addressees ==
 
 You can specify the groups of groups of addressees of you API documentation via the corresponding Preference Page.
 
@@ -64,7 +67,7 @@ You can specify the groups of groups of addressees of you API documentation via 
 
 *Please note:* iDocIt! uses the stakeholders of interface documentation identified and published by Clements et al. as default-addressees. For further information on them see the great book [http://www.amazon.com/Documenting-Software-Architectures-p-Clements-F-Bachmann-L-Bass-D-Garlan-J-Ivers-R-Little/dp/B003WEPPOC/ref=sr_1_6?ie=UTF8&s=books&qid=1303241275&sr=8-6 Documenting Software Architectures], pages 237 - 239.
 
-=== Thematic Roles ===
+== Thematic Roles ==
 
 You can define the underlying thematic grids of iDocIt! via the corresponding Preference Page.
 
@@ -73,7 +76,7 @@ You can define the underlying thematic grids of iDocIt! via the corresponding Pr
  * You have to enter the verbs the current grid belongs to. In case of more than one word, you have to seperate them with commas.
  * You also have to define which thematic roles belong to the current grid. This can be done by activating the checkbox before the role's name in the listbox bottom right. Via a right click on the role you can define wheher it is mandatory or optional for the current grid. Mandatory roles must to be documented. For optional roles it is recommended to document them.
 
-==Document the API:==
+=Document the API:=
 Well, let's open our undocumented WSDL-file with iDocIt!.
 
  # Right click on the WSDL-file and choose "iDocIt!".<br/><br/>*Please note:* iDocIt! does not support this context-menu extension for other API-languages like Java yet. This will be implemented with this [http://code.google.com/p/idocit/issues/detail?id=7 issue] – we promise ;). For other languages as WSDL choose "Open with … > Other" and then "iDocIt!".<br/>
