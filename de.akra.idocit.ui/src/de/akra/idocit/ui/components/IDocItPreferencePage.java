@@ -25,7 +25,7 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
-import de.akra.idocit.core.IDocItCoreStartup;
+import de.akra.idocit.core.IDocItInitialitationManager;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 
 /**
@@ -243,7 +243,7 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	public boolean performOk()
 	{
 		boolean saveState = super.performOk();
-		IDocItCoreStartup.initializeIDocIt();
+		IDocItInitialitationManager.initializeIDocIt();
 		return saveState;
 	}
 }

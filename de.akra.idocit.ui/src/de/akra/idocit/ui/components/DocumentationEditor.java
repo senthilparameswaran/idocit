@@ -8,8 +8,15 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -22,6 +29,8 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsEditorPart;
 
+import de.akra.idocit.core.IDocItInitialitationManager;
+import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.InterfaceArtifact;
@@ -55,8 +64,61 @@ public class DocumentationEditor
 	private static final Logger logger = Logger.getLogger(DocumentationEditor.class
 			.getName());
 
-	// The root composite
+	/**
+	 * Configuration Listener
+	 */
+	private final class DocumentationEditorConfigListener implements
+			IDocItInitializationListener
+	{
+
+		@Override
+		public void initializationStarted()
+		{
+			Display.getDefault().syncExec(new Runnable() {
+				@Override
+				public void run()
+				{
+					if ((rootComposite != null) && !rootComposite.isDisposed())
+					{
+						editorParentLayout.topControl = intializationMessageComposite;
+						rootComposite.getParent().layout();
+					}
+				}
+			});
+		}
+
+		@Override
+		public void initializationFinished()
+		{
+			Display.getDefault().syncExec(new Runnable() {
+				@Override
+				public void run()
+				{
+
+					if ((rootComposite != null) && !rootComposite.isDisposed())
+					{
+						editorParentLayout.topControl = rootComposite;
+						rootComposite.getParent().layout();
+					}
+				}
+			});
+		}
+
+	}
+
+	// The root composites
+	private EditArtifactDocumentationComposite rootComposite = null;
+
+	private Composite intializationMessageComposite = null;
+
+	// Resources
+	private StackLayout editorParentLayout = null;
+
 	private InterfaceArtifact initialInterfaceArtifact = null;
+
+	private DocumentationEditorConfigListener listener = new DocumentationEditorConfigListener();
+
+	private Font initializationFont = null;
 
 	// Listeners
 	private ISelectionListener<EditArtifactDocumentationCompositeSelection> rootCompositeSelectionListener = null;
@@ -239,7 +301,10 @@ public class DocumentationEditor
 	@Override
 	protected EditArtifactDocumentationComposite instanciateMask(Composite parent)
 	{
-		return new EditArtifactDocumentationComposite(parent, SWT.NONE);
+		rootComposite = new EditArtifactDocumentationComposite(parent, SWT.NONE);
+		rootComposite.setVisible(false);
+
+		return rootComposite;
 	}
 
 	/**
@@ -257,4 +322,65 @@ public class DocumentationEditor
 		// Nothing to do!
 
 	}
+
+	/**
+	 * Returns a label with an initialization-message
+	 * 
+	 * @param arg0
+	 *            The parent composite
+	 * @return The message-label
+	 */
+	private Label createInitializingLabel(Composite arg0)
+	{
+		Label initializingMessageLabel = new Label(arg0, SWT.NONE);
+		initializationFont = new Font(Display.getDefault(), new FontData("Arial", 20,
+				SWT.BOLD));
+		initializingMessageLabel.setFont(initializationFont);
+		initializingMessageLabel
+				.setText("iDocIt! is initializing at the moment. Please wait ...");
+		initializingMessageLabel.setBackground(Display.getDefault().getSystemColor(
+				SWT.COLOR_WHITE));
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true)
+				.applyTo(initializingMessageLabel);
+
+		return initializingMessageLabel;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void createPartControl(Composite arg0)
+	{
+		editorParentLayout = new StackLayout();
+		arg0.setLayout(editorParentLayout);
+
+		intializationMessageComposite = new Composite(arg0, SWT.NONE);
+		GridLayoutFactory.fillDefaults().applyTo(intializationMessageComposite);
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER)
+				.applyTo(intializationMessageComposite);
+
+		intializationMessageComposite.setBackground(Display.getDefault().getSystemColor(
+				SWT.COLOR_WHITE));
+		createInitializingLabel(intializationMessageComposite);
+
+		super.createPartControl(arg0);
+		editorParentLayout.topControl = intializationMessageComposite;
+		arg0.layout();
+
+		IDocItInitialitationManager.addConfigurationListener(listener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		initializationFont.dispose();
+
+		IDocItInitialitationManager.removeConfigurationListener(listener);
+	}
+
 }

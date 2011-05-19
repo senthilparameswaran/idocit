@@ -31,6 +31,7 @@ import de.akra.idocit.core.structure.SignatureElement;
 import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
+import de.jankrause.diss.wsdl.common.exceptions.UnitializedServiceException;
 
 /**
  * Composite that manages the Composites to edit the {@link Documentation}s of
@@ -405,10 +406,14 @@ public class EditArtifactDocumentationComposite
 			{
 				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier());
 			}
-			catch (NullPointerException e)
+			catch (UnitializedServiceException unEx)
 			{
-				logger.log(Level.WARNING, "WSDLTaggingService is not initialized.", e);
-				MessageBoxUtils.openErrorBox(getShell(), "The thematic grid deriving service is not initialized,\nplease check the configurations under \"Window\" -> \"Preferences\" -> \"iDocIt!\".");
+				logger.log(Level.WARNING, "WSDLTaggingService is not initialized.", unEx);
+
+				MessageBoxUtils
+						.openErrorBox(
+								getShell(),
+								"The thematic grid deriving service is not initialized,\nplease check the configurations under \"Window\" -> \"Preferences\" -> \"iDocIt!\".");
 			}
 			// End changes due to Issue #23
 

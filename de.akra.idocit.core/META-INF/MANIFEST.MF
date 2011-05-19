@@ -15,10 +15,12 @@ Export-Package: de.akra.idocit.core;
    org.osgi.framework",
  de.akra.idocit.core.constants,
  de.akra.idocit.core.extensions;uses:="de.akra.idocit.core.structure,org.eclipse.core.resources",
+ de.akra.idocit.core.listeners,
  de.akra.idocit.core.services,
  de.akra.idocit.core.structure,
  de.akra.idocit.core.structure.impl;uses:="de.akra.idocit.core.structure",
- de.akra.idocit.core.utils;uses:="de.akra.idocit.core.structure"
+ de.akra.idocit.core.utils;uses:="de.akra.idocit.core.structure",
+ de.jankrause.diss.wsdl.common.exceptions
 Bundle-ClassPath: 
  .,
  lib/wsdl-common-0.0.1-SNAPSHOT.jar,
