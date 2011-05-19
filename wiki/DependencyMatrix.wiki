@@ -1,6 +1,6 @@
 #summary Dependencies of the iDocIt! projects
 #labels Phase-Requirements
-= Project's dependencies =
+= Projects' dependencies =
 <wiki:toc max_depth="2" />
 
 = iDocIt! Core =
