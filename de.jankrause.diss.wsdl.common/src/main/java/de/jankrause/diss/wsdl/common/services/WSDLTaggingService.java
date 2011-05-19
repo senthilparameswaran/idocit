@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jankrause.diss.wsdl.common.exceptions.UnitializedServiceException;
 import de.jankrause.diss.wsdl.common.services.verbs.VerbClassificationService;
 import de.jankrause.diss.wsdl.common.structure.wsdl.TaggedOperationIdentifier;
 import de.jankrause.diss.wsdl.common.structure.wsdl.TaggedToken;
@@ -42,26 +43,57 @@ public final class WSDLTaggingService
 	 * @return The {@link List} of tagged identifiers
 	 * @throws IOException
 	 *             If an error occurs.
+	 * @throws UnitializedServiceException
+	 *             If this service had not been initialized with a valid tagger-model via
+	 *             {@link WSDLTaggingService#init(String)}.
 	 */
 	public static List<TaggedOperationIdentifier> tagIdentifiers(List<String> identifiers)
-			throws IOException
+			throws IOException, UnitializedServiceException
 	{
-		List<String> taggedIdentifiers = new ArrayList<String>();
-
-		for (String identifier : identifiers)
+		if (tagger != null)
 		{
-			taggedIdentifiers.add(tagger.tagString(identifier));
-		}
+			List<String> taggedIdentifiers = new ArrayList<String>();
 
-		return WSDLParsingService.convertToTaggedIdentifiers(taggedIdentifiers);
+			for (String identifier : identifiers)
+			{
+				taggedIdentifiers.add(tagger.tagString(identifier));
+			}
+
+			return WSDLParsingService.convertToTaggedIdentifiers(taggedIdentifiers);
+		}
+		else
+		{
+			throw new UnitializedServiceException(
+					"No valid tagging-model has been set yet. Therefore no tagging-operations could be performed");
+		}
 	}
 
+	/**
+	 * Tags the given identifier and returns it with tags.
+	 * 
+	 * @param identifier
+	 *            The identifier to tag
+	 * @return The tagged identifier
+	 * @throws IOException
+	 *             If an error occurs
+	 * @throws UnitializedServiceException
+	 *             If this service had not been initialized with a valid tagger-model via
+	 *             {@link WSDLTaggingService#init(String)}.
+	 */
 	public static TaggedOperationIdentifier tagIdentifier(String identifier)
-			throws IOException
+			throws IOException, UnitializedServiceException
 	{
-		String taggedIdentifier = tagger.tagString(identifier);
+		if (tagger != null)
+		{
+			String taggedIdentifier = tagger.tagString(identifier);
 
-		return WSDLParsingService.convertToTaggedIdentifier(taggedIdentifier);
+			return WSDLParsingService.convertToTaggedIdentifier(taggedIdentifier);
+		}
+		else
+		{
+			throw new UnitializedServiceException(
+					"No valid tagging-model has been set yet. Therefore no tagging-operations could be performed");
+		}
 	}
 
 	private static String getIdentifier(TaggedOperationIdentifier taggedIdentifier)
@@ -114,9 +146,12 @@ public final class WSDLTaggingService
 	 * @param identifiers
 	 * @return
 	 * @throws IOException
+	 * @throws UnitializedServiceException
+	 *             If this service had not been initialized with a valid tagger-model via
+	 *             {@link WSDLTaggingService#init(String)}.
 	 */
 	public static List<TaggedOperationIdentifier> tagIdentifiersinWeMode(
-			List<String> identifiers) throws IOException
+			List<String> identifiers) throws IOException, UnitializedServiceException
 	{
 		List<String> weIdentifiers = new ArrayList<String>();
 
@@ -128,8 +163,18 @@ public final class WSDLTaggingService
 		return tagIdentifiers(weIdentifiers);
 	}
 
+	/**
+	 * 
+	 * @param untaggedIdentifiers
+	 * @return
+	 * @throws IOException
+	 * @throws UnitializedServiceException
+	 *             If this service had not been initialized with a valid tagger-model via
+	 *             {@link WSDLTaggingService#init(String)}.
+	 */
 	public static List<TaggedOperationIdentifier> performTwoPhaseIdentifierTagging(
-			List<String> untaggedIdentifiers) throws IOException
+			List<String> untaggedIdentifiers) throws IOException,
+			UnitializedServiceException
 	{
 		List<TaggedOperationIdentifier> taggedOperationIdentifiers = new ArrayList<TaggedOperationIdentifier>();
 
