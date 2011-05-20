@@ -1,0 +1,12 @@
+#This page describes our working and coding conventions.
+
+= IDE =
+Our reference IDE is an English Eclipse 3.6 Helios.
+
+= Source Code Format =
+We work with the source code format defined in the idocit_format.xml (available in the Downloads-section).
+
+How to import it:
+# Open the Preferences-Dialog (Window > Preferences).
+# Choose the page Java > Code Style > Formatter.
+# Import the downloaded file via the "Import ..."-button.
