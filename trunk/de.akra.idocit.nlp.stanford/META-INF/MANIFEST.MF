@@ -9,3 +9,4 @@ Bundle-ClassPath: lib/stanford-postagger.jar,
 Export-Package: de.akra.idocit.nlp.stanford.exception,
  de.akra.idocit.nlp.stanford.services,
  de.akra.idocit.nlp.stanford.structure
+Bundle-Vendor: AKRA GmbH
