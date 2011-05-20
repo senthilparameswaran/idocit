@@ -1,9 +1,9 @@
 #This page describes our working and coding conventions.
 
-= IDE =
+=== IDE ===
 Our reference IDE is an English Eclipse 3.6 Helios.
 
-= Source Code Format =
+=== Source Code Format ===
 We work with the source code format defined in the idocit_format.xml (available in the Downloads-section).
 
 How to import it:
