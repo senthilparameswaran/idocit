@@ -1,4 +1,4 @@
-#This page describes our working and coding conventions.
+#summary This page describes our working and coding conventions.
 
 === IDE ===
 Our reference IDE is an English Eclipse 3.6 Helios.
