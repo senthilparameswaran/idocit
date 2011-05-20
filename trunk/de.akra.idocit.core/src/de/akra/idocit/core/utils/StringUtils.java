@@ -1,6 +1,23 @@
+/*******************************************************************************
+ *   Copyright 2011 AKRA GmbH
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *******************************************************************************/
 package de.akra.idocit.core.utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -193,5 +210,78 @@ public class StringUtils
 		return text.replaceAll("[" + ASCII_CR + ASCII_LF + ASCII_TAB + "]+", " ")
 				.replaceAll("[ ]+", " ");
 		// End changes due to Issue #29
+	}
+
+	public static String concat(String... strings)
+	{
+		StringBuffer buffer = new StringBuffer();
+
+		for (String string : strings)
+		{
+			buffer.append(string);
+		}
+
+		return buffer.toString();
+	}
+
+	public static List<String> replaceColons(List<String> unstructuredSentences)
+	{
+		List<String> colonFreeSentences = new ArrayList<String>();
+
+		for (String unstructuredSentence : unstructuredSentences)
+		{
+			String colonFreeSentence = unstructuredSentence.replaceAll("\\.", " ");
+
+			colonFreeSentences.add(colonFreeSentence);
+		}
+
+		return colonFreeSentences;
+	}
+
+	private static String addBlanksToCamelSyntax(String camelSyntaxLabel)
+	{
+		StringBuffer labelWithBlanks = new StringBuffer();
+
+		if (camelSyntaxLabel != null)
+		{
+			camelSyntaxLabel = camelSyntaxLabel.replace('_', ' ');
+
+			for (int letter = 0; letter < camelSyntaxLabel.length(); letter++)
+			{
+				char currentLetter = camelSyntaxLabel.charAt(letter);
+
+				if (isBigCharacter(currentLetter))
+				{
+					char prevChar = (letter > 0) ? camelSyntaxLabel.charAt(letter - 1)
+							: 'a';
+
+					if (!isBigCharacter(prevChar) || Character.isDigit(prevChar))
+					{
+						labelWithBlanks.append(' ');
+					}
+				}
+
+				labelWithBlanks.append(currentLetter);
+			}
+		}
+
+		return labelWithBlanks.toString().trim();
+	}
+
+	private static boolean isBigCharacter(char currentLetter)
+	{
+		return (currentLetter >= 65) && (currentLetter <= 90);
+	}
+
+	public static List<String> addBlanksToCamelSyntax(List<String> camelSyntaxLabels)
+	{
+		List<String> blankCamelSyntax = new ArrayList<String>();
+
+		for (String camelLabel : camelSyntaxLabels)
+		{
+			blankCamelSyntax.add(addBlanksToCamelSyntax(camelLabel));
+		}
+
+		return blankCamelSyntax;
 	}
 }
