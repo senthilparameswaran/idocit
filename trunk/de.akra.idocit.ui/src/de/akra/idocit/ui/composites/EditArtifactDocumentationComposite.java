@@ -1,3 +1,18 @@
+/*******************************************************************************
+ *   Copyright 2011 AKRA GmbH
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
 import java.util.Collections;
@@ -22,6 +37,7 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.ThematicGridService;
 import de.akra.idocit.core.structure.Documentation;
 import de.akra.idocit.core.structure.InterfaceArtifact;
@@ -31,7 +47,6 @@ import de.akra.idocit.core.structure.SignatureElement;
 import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
-import de.jankrause.diss.wsdl.common.exceptions.UnitializedServiceException;
 
 /**
  * Composite that manages the Composites to edit the {@link Documentation}s of
@@ -406,7 +421,7 @@ public class EditArtifactDocumentationComposite
 			{
 				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier());
 			}
-			catch (UnitializedServiceException unEx)
+			catch (UnitializedIDocItException unEx)
 			{
 				logger.log(Level.WARNING, "WSDLTaggingService is not initialized.", unEx);
 
