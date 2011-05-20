@@ -1,3 +1,18 @@
+/*******************************************************************************
+ *   Copyright 2011 AKRA GmbH
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *******************************************************************************/
 package de.akra.idocit.core.services;
 
 import java.io.IOException;
@@ -9,13 +24,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.akra.idocit.core.exceptions.UnitializedIDocItException;
+import de.akra.idocit.core.services.nlp.VerbClassificationService;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
-import de.jankrause.diss.wsdl.common.exceptions.UnitializedServiceException;
-import de.jankrause.diss.wsdl.common.services.WSDLTaggingService;
-import de.jankrause.diss.wsdl.common.services.verbs.VerbClassificationService;
-import de.jankrause.diss.wsdl.common.structure.wsdl.TaggedOperationIdentifier;
-import de.jankrause.diss.wsdl.common.utils.StringUtils;
+import de.akra.idocit.core.utils.StringUtils;
+import de.akra.idocit.nlp.stanford.exception.UnitializedServiceException;
+import de.akra.idocit.nlp.stanford.services.WSDLTaggingService;
+import de.akra.idocit.nlp.stanford.structure.TaggedOperationIdentifier;
 
 /**
  * Service to derive thematic grids for a verb out of an identifier.
@@ -61,12 +77,12 @@ public class ThematicGridService
 	 *            grids should be derived.
 	 * @return Map of thematic grid names linking to Set of {@link ThematicRole} s.
 	 * 
-	 * @throws UnitializedServiceException
+	 * @throws UnitializedIDocItException
 	 * @see For further information on this exception see
 	 *      {@link WSDLTaggingService#performTwoPhaseIdentifierTagging(List)}
 	 */
 	public static Map<String, Map<ThematicRole, Boolean>> deriveThematicGrid(
-			String identifier) throws UnitializedServiceException
+			String identifier) throws UnitializedIDocItException
 	{
 		Map<String, Map<ThematicRole, Boolean>> matchingRoles = new HashMap<String, Map<ThematicRole, Boolean>>();
 
@@ -107,6 +123,11 @@ public class ThematicGridService
 		catch (IOException ioEx)
 		{
 			logger.log(Level.WARNING, "The identifier could not be tagged.", ioEx);
+		}
+		catch (UnitializedServiceException unEx)
+		{
+			logger.log(Level.WARNING, "The Tagging-Service seems not to be initialized.");
+			throw new UnitializedIDocItException(unEx.getMessage());
 		}
 
 		return matchingRoles;
