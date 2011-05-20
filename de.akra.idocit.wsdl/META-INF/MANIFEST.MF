@@ -9,7 +9,6 @@ Require-Bundle: de.akra.idocit.core;bundle-version="0.0.1",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  libs/idocit.wsdl.wsdl4j.jar,
- libs/wsdl-common-0.0.1-SNAPSHOT.jar,
  libs/xercesImpl3263291.jar
 Export-Package: de.akra.idocit.wsdl.services,
  de.akra.idocit.wsdl.structure
