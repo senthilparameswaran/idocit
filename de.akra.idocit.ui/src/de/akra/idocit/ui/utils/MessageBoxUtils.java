@@ -55,13 +55,33 @@ public final class MessageBoxUtils
 	 *            The parent shell for modal displaying.
 	 * @param text
 	 *            The displayed text in the message box.
-	 * @return true, if the SWT.YES button was clicked in the dialog. If SWT.YES was
+	 * @return true, if the SWT.YES button was clicked in the dialog. If SWT.NO was
 	 *         clicked, false is returned.
 	 */
 	public static boolean openQuestionDialogBox(Shell parentShell, String text)
 	{
 		MessageBox messageBox = new MessageBox(parentShell, SWT.YES | SWT.NO
 				| SWT.ICON_QUESTION);
+		messageBox.setText(DialogConstants.DIALOG_TITLE);
+		messageBox.setMessage(text);
+		return messageBox.open() == SWT.YES;
+	}
+	
+	/**
+	 * 
+	 * Shows an warning message box with {@link SWT#YES} and {@link SWT#NO} buttons.
+	 * 
+	 * @param parentShell
+	 *            The parent shell for modal displaying.
+	 * @param text
+	 *            The displayed text in the message box.
+	 * @return true, if the SWT.YES button was clicked in the dialog. If SWT.NO was
+	 *         clicked, false is returned.
+	 */
+	public static boolean openYesNoWarningDialogBox(Shell parentShell, String text)
+	{
+		MessageBox messageBox = new MessageBox(parentShell, SWT.YES | SWT.NO
+				| SWT.ICON_WARNING);
 		messageBox.setText(DialogConstants.DIALOG_TITLE);
 		messageBox.setMessage(text);
 		return messageBox.open() == SWT.YES;
