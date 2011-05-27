@@ -164,7 +164,8 @@ public class PersistenceService
 	{
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 
-		return prefStore.contains(PreferenceStoreConstants.ADDRESSEES);
+		return prefStore.contains(PreferenceStoreConstants.ADDRESSEES)
+				&& !"".equals(prefStore.getString(PreferenceStoreConstants.ADDRESSEES));
 	}
 
 	/**
@@ -176,7 +177,9 @@ public class PersistenceService
 	{
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 
-		return prefStore.contains(PreferenceStoreConstants.THEMATIC_ROLES);
+		return prefStore.contains(PreferenceStoreConstants.THEMATIC_ROLES)
+				&& !"".equals(prefStore
+						.getString(PreferenceStoreConstants.THEMATIC_ROLES));
 	}
 
 	private static XStream configureXStreamForThematicGrid()
@@ -305,7 +308,7 @@ public class PersistenceService
 	 */
 	public static List<ThematicRole> readInitialThematicRoles()
 	{
-		List<ThematicRole> addressees = new ArrayList<ThematicRole>();
+		List<ThematicRole> roles = new ArrayList<ThematicRole>();
 		Map<String, String> initialRoles = getInitialThematicRoles();
 
 		for (Entry<String, String> entry : initialRoles.entrySet())
@@ -313,10 +316,12 @@ public class PersistenceService
 			ThematicRole addressee = new ThematicRole(entry.getKey());
 			addressee.setDescription(entry.getValue());
 
-			addressees.add(addressee);
+			roles.add(addressee);
 		}
 
-		return addressees;
+		Collections.sort(roles, ThematicRoleComparator.getInstance());
+		
+		return roles;
 	}
 
 	/**
@@ -432,7 +437,8 @@ public class PersistenceService
 		String verbClassRoleAssocsXML = prefStore
 				.getString(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING);
 
-		if ((verbClassRoleAssocsXML != null) && (!"".equals(verbClassRoleAssocsXML.trim())))
+		if ((verbClassRoleAssocsXML != null)
+				&& (!"".equals(verbClassRoleAssocsXML.trim())))
 		{
 			try
 			{

@@ -83,13 +83,11 @@ public class ThematicRolePreferencePage
 			prefStore = getPreferenceStore();
 		}
 
-		loadPreferences();
+		loadPreferences(PersistenceService.loadThematicRoles());
 	}
 
-	private void loadPreferences()
+	private void loadPreferences(List<ThematicRole> roles)
 	{
-		List<ThematicRole> roles = PersistenceService.loadThematicRoles();
-
 		ManageThematicRoleCompositeSelection selection = new ManageThematicRoleCompositeSelection();
 		selection.setActiveThematicRole(!roles.isEmpty() ? roles.get(0) : null);
 		selection.setThematicRoles(roles);
@@ -100,7 +98,9 @@ public class ThematicRolePreferencePage
 	@Override
 	protected void performDefaults()
 	{
-		loadPreferences();
+		List<ThematicRole> initialRoles = PersistenceService.readInitialThematicRoles();
+
+		loadPreferences(initialRoles);
 	}
 
 	@Override
