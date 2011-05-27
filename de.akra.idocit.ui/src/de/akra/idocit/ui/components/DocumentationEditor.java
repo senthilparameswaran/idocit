@@ -44,7 +44,7 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsEditorPart;
 
-import de.akra.idocit.core.IDocItInitialitationManager;
+import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.structure.Addressee;
@@ -383,7 +383,7 @@ public class DocumentationEditor
 		editorParentLayout.topControl = intializationMessageComposite;
 		arg0.layout();
 
-		IDocItInitialitationManager.addConfigurationListener(listener);
+		IDocItActivator.addConfigurationListener(listener);
 	}
 
 	/**
@@ -395,7 +395,7 @@ public class DocumentationEditor
 		super.dispose();
 		initializationFont.dispose();
 
-		IDocItInitialitationManager.removeConfigurationListener(listener);
+		IDocItActivator.removeConfigurationListener(listener);
 	}
 
 }

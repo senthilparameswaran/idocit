@@ -20,7 +20,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="de.akra.idocit.core.IDocItInitialitationManager">
+            class="de.akra.idocit.core.IDocItActivator">
       </startup>
    </extension>
 </plugin>

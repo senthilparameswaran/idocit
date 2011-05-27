@@ -52,7 +52,7 @@ public final class ParsingService
 	/**
 	 * Constructor. No need for instantiation, because all methods are static.
 	 */
-	private ParsingService()
+	ParsingService()
 	{}
 
 	/**
