@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH and Jan Christian Krause
+ * Copyright 2011 AKRA GmbH 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,13 +47,14 @@ public final class WSDLTaggingService
 	{
 
 	}
-	
+
 	/**
 	 * Returns the singleton-instance of this service.
 	 * 
 	 * @return The singleton-instance of this service
 	 */
-	public static WSDLTaggingService getInstance(){
+	public static WSDLTaggingService getInstance()
+	{
 		return instance;
 	}
 

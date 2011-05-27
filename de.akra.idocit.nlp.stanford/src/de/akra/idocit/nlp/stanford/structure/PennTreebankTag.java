@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH and Jan Christian Krause
+ * Copyright 2011 AKRA GmbH 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@ package de.akra.idocit.nlp.stanford.structure;
  * @since 12.08.2009
  * 
  */
-public enum PennTreebankTag {
-	CC("CC"), CD("CD"), DT("DT"), EX("EX"), FW("FW"), IN("IN"), JJ("JJ"), JJR(
-			"JJR"), JJS("JJS"), LS("LS"), MD("MD"), NN("NN"), NNS("NNS"), NNP(
-			"NNP"), NNPS("NNPS"), PDT("PDT"), POS("POS"), PRP("PRP"), PRP$(
-			"PRP$"), RB("RB"), RBR("RBR"), RBS("RBS"), RP("RP"), SYM("SYM"), TO(
-			"TO"), UH("UH"), VB("VB"), VBD("VBD"), VBG("VBG"), VBN("VBN"), VBP(
-			"VBP"), VBZ("VBZ"), WDT("WDT"), WP("WP"), WP$("WP$"), WRB("WRB");
+public enum PennTreebankTag
+{
+	CC("CC"), CD("CD"), DT("DT"), EX("EX"), FW("FW"), IN("IN"), JJ("JJ"), JJR("JJR"), JJS(
+			"JJS"), LS("LS"), MD("MD"), NN("NN"), NNS("NNS"), NNP("NNP"), NNPS("NNPS"), PDT(
+			"PDT"), POS("POS"), PRP("PRP"), PRP$("PRP$"), RB("RB"), RBR("RBR"), RBS("RBS"), RP(
+			"RP"), SYM("SYM"), TO("TO"), UH("UH"), VB("VB"), VBD("VBD"), VBG("VBG"), VBN(
+			"VBN"), VBP("VBP"), VBZ("VBZ"), WDT("WDT"), WP("WP"), WP$("WP$"), WRB("WRB");
 
 	private String ivXMLTag = null;
 
@@ -39,7 +39,8 @@ public enum PennTreebankTag {
 	 * @param pvXMLTag
 	 *            The XML-Tag of this STT
 	 */
-	private PennTreebankTag(String pvXMLTag) {
+	private PennTreebankTag(String pvXMLTag)
+	{
 		ivXMLTag = pvXMLTag;
 	}
 
@@ -48,7 +49,8 @@ public enum PennTreebankTag {
 	 * 
 	 * @return The XML-tag of this STT
 	 */
-	public String getXMLTag() {
+	public String getXMLTag()
+	{
 		return ivXMLTag;
 	}
 }

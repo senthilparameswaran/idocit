@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH and Jan Christian Krause
+ * Copyright 2011 AKRA GmbH 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,36 @@
  *******************************************************************************/
 package de.akra.idocit.nlp.stanford.structure;
 
-
 /**
  * Represents a tagged token. As tagset the {@link PennTreebankTag}s are used.
  * 
  * @author Jan Christian Krause
- *
+ * 
  */
-public class TaggedToken {
+public class TaggedToken
+{
 
 	private String token = null;
-	
+
 	private PennTreebankTag tag = null;
 
-	public String getToken() {
+	public String getToken()
+	{
 		return token;
 	}
 
-	public void setToken(String token) {
+	public void setToken(String token)
+	{
 		this.token = token;
 	}
 
-	public PennTreebankTag getTag() {
+	public PennTreebankTag getTag()
+	{
 		return tag;
 	}
 
-	public void setTag(PennTreebankTag tag) {
+	public void setTag(PennTreebankTag tag)
+	{
 		this.tag = tag;
 	}
 
@@ -49,7 +53,8 @@ public class TaggedToken {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((tag == null) ? 0 : tag.hashCode());
@@ -61,7 +66,8 @@ public class TaggedToken {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -69,15 +75,19 @@ public class TaggedToken {
 		if (getClass() != obj.getClass())
 			return false;
 		TaggedToken other = (TaggedToken) obj;
-		if (tag == null) {
+		if (tag == null)
+		{
 			if (other.tag != null)
 				return false;
-		} else if (!tag.equals(other.tag))
+		}
+		else if (!tag.equals(other.tag))
 			return false;
-		if (token == null) {
+		if (token == null)
+		{
 			if (other.token != null)
 				return false;
-		} else if (!token.equals(other.token))
+		}
+		else if (!token.equals(other.token))
 			return false;
 		return true;
 	}
@@ -86,15 +96,18 @@ public class TaggedToken {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("TaggedToken [");
-		if (tag != null) {
+		if (tag != null)
+		{
 			builder.append("tag=");
 			builder.append(tag);
 			builder.append(", ");
 		}
-		if (token != null) {
+		if (token != null)
+		{
 			builder.append("token=");
 			builder.append(token);
 		}
