@@ -85,51 +85,62 @@ public class ThematicGridService
 			String identifier) throws UnitializedIDocItException
 	{
 		Map<String, Map<ThematicRole, Boolean>> matchingRoles = new HashMap<String, Map<ThematicRole, Boolean>>();
+		WSDLTaggingService taggingService = ServiceManager.getInstance()
+				.getWsdlTaggingService();
 
-		// Tag the tokens and find the verb.
-		List<String> identifiers = new ArrayList<String>();
-		identifiers.add(identifier);
-
-		try
+		if (taggingService != null)
 		{
-			// Add blanks before each word. A word is identified by applying
-			// the camel case-syntax.
-			List<TaggedOperationIdentifier> operationIdentifiers = WSDLTaggingService
-					.performTwoPhaseIdentifierTagging(StringUtils
-							.addBlanksToCamelSyntax(identifiers));
+			// Tag the tokens and find the verb.
+			List<String> identifiers = new ArrayList<String>();
+			identifiers.add(identifier);
 
-			if (!operationIdentifiers.isEmpty())
+			try
 			{
-				// Identify the verb.
-				String verb = VerbClassificationService
-						.findFirstVerb(operationIdentifiers.get(0));
+				// Add blanks before each word. A word is identified by applying
+				// the camel case-syntax.
+				List<TaggedOperationIdentifier> operationIdentifiers = taggingService
+						.performTwoPhaseIdentifierTagging(StringUtils
+								.addBlanksToCamelSyntax(identifiers));
 
-				if (!VerbClassificationService.EMPTY_VERB.equals(verb))
+				if (!operationIdentifiers.isEmpty())
 				{
-					// Classify the verb.
-					List<ThematicGrid> matchingVerbClasses = findMatchingGrids(verb);
+					// Identify the verb.
+					String verb = VerbClassificationService
+							.findFirstVerb(operationIdentifiers.get(0));
 
-					if (!matchingVerbClasses.isEmpty())
+					if (!VerbClassificationService.EMPTY_VERB.equals(verb))
 					{
-						// Lookup the recommended arguments and modificators.
-						for (ThematicGrid verbClass : matchingVerbClasses)
+						// Classify the verb.
+						List<ThematicGrid> matchingVerbClasses = findMatchingGrids(verb);
+
+						if (!matchingVerbClasses.isEmpty())
 						{
-							matchingRoles.put(verbClass.getName(), verbClass.getRoles());
+							// Lookup the recommended arguments and modificators.
+							for (ThematicGrid verbClass : matchingVerbClasses)
+							{
+								matchingRoles.put(verbClass.getName(),
+										verbClass.getRoles());
+							}
 						}
 					}
 				}
 			}
+			catch (IOException ioEx)
+			{
+				logger.log(Level.WARNING, "The identifier could not be tagged.", ioEx);
+			}
+			catch (UnitializedServiceException unEx)
+			{
+				logger.log(Level.WARNING,
+						"The Tagging-Service seems not to be initialized.");
+				throw new UnitializedIDocItException(unEx.getMessage());
+			}
 		}
-		catch (IOException ioEx)
+		else
 		{
-			logger.log(Level.WARNING, "The identifier could not be tagged.", ioEx);
+			throw new UnitializedIDocItException("The WsdlTaggingService from the NLP-Plugin is not initialized yet.");
 		}
-		catch (UnitializedServiceException unEx)
-		{
-			logger.log(Level.WARNING, "The Tagging-Service seems not to be initialized.");
-			throw new UnitializedIDocItException(unEx.getMessage());
-		}
-
+		
 		return matchingRoles;
 	}
 
