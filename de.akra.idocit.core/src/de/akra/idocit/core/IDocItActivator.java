@@ -18,8 +18,6 @@ package de.akra.idocit.core;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PropertyResourceBundle;
@@ -44,7 +42,6 @@ import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.services.ServiceManager;
 import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.nlp.stanford.constants.NlpConstans;
 import de.akra.idocit.nlp.stanford.services.WSDLTaggingService;
@@ -71,6 +68,8 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 * Path in the resource file for the stored thematic roles.
 	 */
 	private static final String ROLE_RESOURCE_FILE = "resources/roles.properties";
+
+	private static final String THEMATIC_GRIDS_RESOURCE_FILE = "resources/thematicgrids.xml";
 
 	/**
 	 * Path in the resource file for the stored addresses.
@@ -150,21 +149,6 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 			PersistenceService.persistThematicRoles(roles);
 		}
 
-		if (!PersistenceService.areThematicGridsInitialized())
-		{
-			List<ThematicGrid> grids = new ArrayList<ThematicGrid>();
-
-			ThematicGrid grid = new ThematicGrid();
-			grid.setDescription("Description");
-			grid.setName("Grid 1");
-			grid.setRoles(new HashMap<ThematicRole, Boolean>());
-			grid.setVerbs(new HashSet<String>());
-
-			grids.add(grid);
-			// TODO: Init Thematic Grids with Property File
-			PersistenceService.persistThematicGrids(grids);
-		}
-
 		initializeIDocIt();
 	}
 
@@ -209,10 +193,12 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 * Informs all registered listeners about changes on the iDocIt! configuration.
 	 * 
 	 * @param initializationStarted
-	 *  <ul>	
-	 *   <li>If <code>true</code> then the method initializationStarted() will be called on each registered listener</li>
-	 *   <li>If <code>false</code> then the method initializationFinished() will be called on each registered listener</li></li>
-	 * 	</ul>
+	 *            <ul>
+	 *            <li>If <code>true</code> then the method initializationStarted() will be
+	 *            called on each registered listener</li>
+	 *            <li>If <code>false</code> then the method initializationFinished() will
+	 *            be called on each registered listener</li></li>
+	 *            </ul>
 	 */
 	private static void fireChangeEvent(boolean initializationStarted)
 	{
@@ -244,14 +230,24 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 				if (taggingService != null)
 				{
 					fireChangeEvent(true);
-
-					IPreferenceStore store = PlatformUI.getPreferenceStore();
-					System.setProperty("wordnet.database.dir",
-							store.getString(PreferenceStoreConstants.WORDNET_PATH));
 					try
 					{
+						IPreferenceStore store = PlatformUI.getPreferenceStore();
+
+						// Thematic Grids
+						InputStream resourceInputStream = FileLocator.openStream(
+								plugin.getBundle(),
+								new Path(THEMATIC_GRIDS_RESOURCE_FILE), false);
+						PersistenceService.init(resourceInputStream);
+
+						// WordNet
+						System.setProperty("wordnet.database.dir",
+								store.getString(PreferenceStoreConstants.WORDNET_PATH));
+
+						// PoS-Tagger
 						taggingService.init(store
 								.getString(PreferenceStoreConstants.TAGGER_MODEL_FILE));
+
 					}
 					catch (FileNotFoundException e)
 					{
@@ -262,10 +258,12 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 						// TODO: Route exception to Eclipse Platform
 						throw new RuntimeException(ioEx);
 					}
+					finally
+					{
+						initializedAtStartup = true;
 
-					initializedAtStartup = true;
-
-					fireChangeEvent(false);
+						fireChangeEvent(false);
+					}
 				}
 			}
 		};
