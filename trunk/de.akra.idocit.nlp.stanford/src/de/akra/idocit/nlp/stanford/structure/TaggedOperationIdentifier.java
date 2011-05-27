@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH and Jan Christian Krause
+ * Copyright 2011 AKRA GmbH 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +18,18 @@ package de.akra.idocit.nlp.stanford.structure;
 
 import java.util.List;
 
-public final class TaggedOperationIdentifier {
+public final class TaggedOperationIdentifier
+{
 
 	private List<TaggedToken> taggedTokens = null;
 
-	public List<TaggedToken> getTaggedTokens() {
+	public List<TaggedToken> getTaggedTokens()
+	{
 		return taggedTokens;
 	}
 
-	public void setTaggedTokens(List<TaggedToken> taggedTokens) {
+	public void setTaggedTokens(List<TaggedToken> taggedTokens)
+	{
 		this.taggedTokens = taggedTokens;
 	}
 
@@ -34,11 +37,11 @@ public final class TaggedOperationIdentifier {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((taggedTokens == null) ? 0 : taggedTokens.hashCode());
+		result = prime * result + ((taggedTokens == null) ? 0 : taggedTokens.hashCode());
 		return result;
 	}
 
@@ -46,7 +49,8 @@ public final class TaggedOperationIdentifier {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -54,10 +58,12 @@ public final class TaggedOperationIdentifier {
 		if (getClass() != obj.getClass())
 			return false;
 		TaggedOperationIdentifier other = (TaggedOperationIdentifier) obj;
-		if (taggedTokens == null) {
+		if (taggedTokens == null)
+		{
 			if (other.taggedTokens != null)
 				return false;
-		} else if (!taggedTokens.equals(other.taggedTokens))
+		}
+		else if (!taggedTokens.equals(other.taggedTokens))
 			return false;
 		return true;
 	}
@@ -66,10 +72,12 @@ public final class TaggedOperationIdentifier {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("TaggedOperationIdentifier [");
-		if (taggedTokens != null) {
+		if (taggedTokens != null)
+		{
 			builder.append("taggedTokens=");
 			builder.append(taggedTokens);
 		}
