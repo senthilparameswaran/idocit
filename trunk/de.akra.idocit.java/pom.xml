@@ -1,0 +1,16 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.akra.idocit</groupId>
+	<artifactId>de.akra.idocit.java</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<version>0.0.1</version>
+	<name>iDocIt! Java Support</name>
+
+	<parent>
+		<version>0.0.1</version>
+		<groupId>de.akra.idocit</groupId>
+		<artifactId>parent</artifactId>
+	</parent>
+</project>
