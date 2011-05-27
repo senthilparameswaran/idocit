@@ -26,6 +26,7 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
+import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
@@ -104,7 +105,9 @@ public class ThematicGridPreferencePage
 		setSelection(selection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	@Override
@@ -118,6 +121,9 @@ public class ThematicGridPreferencePage
 	@Override
 	protected void performDefaults()
 	{
+		PlatformUI.getPreferenceStore().setValue(
+				PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING, "");
+
 		loadPreferences();
 	}
 
@@ -133,7 +139,7 @@ public class ThematicGridPreferencePage
 	{
 		List<ThematicGrid> grids = getSelection().getThematicGrids();
 		PersistenceService.persistThematicGrids(grids);
-		
+
 		List<ThematicRole> roles = getSelection().getRoles();
 		PersistenceService.persistThematicRoles(roles);
 	}

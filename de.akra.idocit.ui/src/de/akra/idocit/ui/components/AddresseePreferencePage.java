@@ -83,13 +83,11 @@ public class AddresseePreferencePage
 			prefStore = getPreferenceStore();
 		}
 
-		loadPreferences();
+		loadPreferences(PersistenceService.loadConfiguredAddressees());
 	}
 
-	private void loadPreferences()
+	private void loadPreferences(List<Addressee> addressees)
 	{
-		List<Addressee> addressees = PersistenceService.loadConfiguredAddressees();
-
 		ManageAddresseeCompositeSelection selection = new ManageAddresseeCompositeSelection();
 		selection
 				.setActiveAddressee(!addressees.isEmpty() ? addressees.get(0) : null);
@@ -101,7 +99,9 @@ public class AddresseePreferencePage
 	@Override
 	protected void performDefaults()
 	{
-		loadPreferences();
+		List<Addressee> addressees = PersistenceService.readInitialAddressees();
+		
+		loadPreferences(addressees);
 	}
 
 	@Override
