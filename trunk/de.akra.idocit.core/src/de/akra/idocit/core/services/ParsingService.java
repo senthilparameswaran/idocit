@@ -104,7 +104,8 @@ public final class ParsingService
 	 * 
 	 * @param type
 	 *            The file type.
-	 * @return {@link Delimiters} of the corresponding {@link Parser}.
+	 * @return {@link Delimiters} of the corresponding {@link Parser}, if the type is not
+	 *         supported <code>null</code> is returned.
 	 */
 	public static Delimiters getDelimiters(String type)
 	{
