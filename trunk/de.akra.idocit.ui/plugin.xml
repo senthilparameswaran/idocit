@@ -53,9 +53,8 @@
             name="Thematic Grids">
       </page>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
+   <extension point="org.eclipse.ui.popupMenus">
+		<objectContribution
             id="de.akra.idocit.ui.contribution.IDocIt"
             objectClass="org.eclipse.core.resources.IFile">
 	     
@@ -70,7 +69,20 @@
                label="iDocIt!"
                menubarPath="additions">
          </action>
-      </objectContribution>
+		</objectContribution>
+      
+		<objectContribution 
+				id="de.akra.idocit.ui.contribution.IDocIt.HTMLExport"
+				objectClass="org.eclipse.core.resources.IFile" >
+		
+			<action
+				id="de.akra.idocit.ui.contribution.IDocIt.HTMLExport.generateHTML" 
+				label="Export iDocIt! documentation"
+				enablesFor="1"
+				menubarPath="additions" 
+				class="de.akra.idocit.ui.actions.HTMLExport"> 
+			</action> 
+		</objectContribution> 
    </extension>
    <extension
          id="de.akra.idocit.core"
