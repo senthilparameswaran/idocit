@@ -22,10 +22,10 @@ Node: Releng Tools > Eclipse Releng Tools
 
 ====Configuration====
 
-# Open the Eclipse Preference Dialog via "Window" > "Preferences".
-# Choose the preference page "Copyright Tool"
-# Add one of the following copyright-templates to the corresponding text box.
-# Activate the checkbox "Replace all existing copyright comments [...]"
+ # Open the Eclipse Preference Dialog via "Window" > "Preferences".
+ # Choose the preference page "Copyright Tool"
+ # Add one of the following copyright-templates to the corresponding text box.
+ # Activate the checkbox "Replace all existing copyright comments [...]"
 
 ====Copyright Templates====
 
