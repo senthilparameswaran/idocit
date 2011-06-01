@@ -25,7 +25,7 @@ This document describes the iDocIt! milestones, their objectives and release dat
  * Implementation of role-specific editors
  * idocit's Java support works stable and could be used to document interfaces, enums and classes.
 
-*Issues:*
+[http://code.google.com/p/idocit/issues/list?can=1&q=label%3AMilestone_2 Issues for Milestone #2]
 
 ==Milestone #3==
 
@@ -33,6 +33,12 @@ This document describes the iDocIt! milestones, their objectives and release dat
 
 *Objectives:*
 
-*Issues:*
+[http://code.google.com/p/idocit/issues/list?can=1&q=label%3AMilestone_3 Issues for Milestone #3]
 
 ==Milestone #4==
+
+*Planned release data:* Unscheduled
+
+*Objectives:*
+
+[http://code.google.com/p/idocit/issues/list?can=1&q=label%3AMilestone_4 Issues for Milestone #4]
