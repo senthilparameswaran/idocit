@@ -25,6 +25,7 @@ This document describes the iDocIt! milestones, their objectives and release dat
  * Documentation could be exported to professional formats (e.g. DITA) in a clear manner.
  * Implementation of role-specific editors
  * idocit's Java support works stable and could be used to document interfaces, enums and classes.
+ * Changed configurations are applied to open editors.
 
 [http://code.google.com/p/idocit/issues/list?can=1&q=label%3AMilestone_2 Issues for Milestone #2]
 
