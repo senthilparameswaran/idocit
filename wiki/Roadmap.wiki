@@ -23,6 +23,7 @@ This document describes the iDocIt! milestones, their objectives and release dat
 *Objectives:*
  * Documentation could be exported to professional formats (e.g. DITA) in a clear manner.
  * Implementation of role-specific editors
+ * idocit's Java support works stable and could be used to document interfaces, enums and classes.
 
 *Issues:*
 
