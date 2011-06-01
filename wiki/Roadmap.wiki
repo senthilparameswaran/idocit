@@ -14,9 +14,7 @@ This document describes the iDocIt! milestones, their objectives and release dat
  * Created documentation could be exported to HTML
  * idocit! provides a set of thematic grids.
 
-*Issues:*
-
-[http://code.google.com/p/idocit/issues/list?can=1&q=label%3AMilestone_1 | Issues for Milestone #1]
+[http://code.google.com/p/idocit/issues/list?can=1&q=label%3AMilestone_1 Issues for Milestone #1]
 
 ==Milestone #2==
 
