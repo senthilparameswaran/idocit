@@ -10,18 +10,18 @@ This document describes the iDocIt! milestones, their objectives and release dat
 *Planned release date:* 2011/07/01
 
 *Objectives:*
- *iDocIt! runs in a stable and easy useable manner
- *Created documentation could be exported to HTML
- *iDocIt! provides a set of thematic grids.
+ * idocit! runs in a stable and easy to use manner
+ * Created documentation could be exported to HTML
+ * idocit! provides a set of thematic grids.
 
 *Issues:*
 
 ==Milestone #2==
 
-*Planned release date:* 2011/12/23
+* Planned release date:* 2011/12/23
 
 *Objectives:*
- *Documentation could be exported to professional formats (e.g. DITA) in a clear manner.
+ * Documentation could be exported to professional formats (e.g. DITA) in a clear manner.
  * Implementation of role-specific editors
 
 *Issues:*
