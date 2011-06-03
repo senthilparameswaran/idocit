@@ -31,7 +31,7 @@ This document describes the iDocIt! milestones, their objectives and release dat
 
 ==Milestone #3==
 
-*Planned release data:* Unscheduled
+*Planned release data:* 2012/07/01
 
 *Objectives:*
 
@@ -39,7 +39,7 @@ This document describes the iDocIt! milestones, their objectives and release dat
 
 ==Milestone #4==
 
-*Planned release data:* Unscheduled
+*Planned release data:* 2013/04/01
 
 *Objectives:*
 
