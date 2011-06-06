@@ -440,8 +440,8 @@ public class WSDLInterfaceParser
 		while (i.hasNext() && result == null)
 		{
 			Parameter p = i.next();
-			if (p.getQualifiedIdentifier().equals(qualifiedElemName)
-					&& p.getQualifiedDataTypeName().equals(qualifiedElemType))
+			if ((p.getQualifiedIdentifier() != null) && p.getQualifiedIdentifier().equals(qualifiedElemName)
+					&& (p.getQualifiedDataTypeName() != null) && p.getQualifiedDataTypeName().equals(qualifiedElemType))
 			{
 				result = p;
 			}
