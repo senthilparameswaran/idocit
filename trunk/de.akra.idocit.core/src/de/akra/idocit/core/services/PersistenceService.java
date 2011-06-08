@@ -50,8 +50,8 @@ import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.InterfaceArtifact;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.DescribedItemNameComparator;
 import de.akra.idocit.core.utils.StringUtils;
-import de.akra.idocit.core.utils.ThematicRoleComparator;
 
 /**
  * Provides services to load and to write an {@link InterfaceArtifact}.
@@ -63,16 +63,20 @@ import de.akra.idocit.core.utils.ThematicRoleComparator;
  */
 public class PersistenceService
 {
+	/*
+	 * Constants
+	 */
 	private static final String XML_ALIAS_THEMATIC_GRID = "thematicGrid";
 
 	private static final String XML_ALIAS_THEMATIC_ROLE = "thematicRole";
 
 	private static final String XML_ALIAS_ADDRESSEE = "addressee";
 
-	/*
-	 * Constants
-	 */
 	private static final int MAX_CHARACTERS_PER_DESCRIPTION_LINE = 80;
+
+	private static long LAST_SAVE_TIME_OF_THEMATIC_GRIDS = -1;
+	private static long LAST_SAVE_TIME_OF_THEMATIC_ROLES = -1;
+	private static long LAST_SAVE_TIME_OF_ADDRESSEES = -1;
 
 	/**
 	 * Logger.
@@ -274,6 +278,7 @@ public class PersistenceService
 
 		String addresseeXML = stream.toXML(addressees);
 		prefStore.putValue(PreferenceStoreConstants.ADDRESSEES, addresseeXML);
+		LAST_SAVE_TIME_OF_ADDRESSEES = System.currentTimeMillis();
 	}
 
 	/**
@@ -287,7 +292,7 @@ public class PersistenceService
 		// TODO delete old entries from preference store
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 		XStream stream = configureXStreamForThematicRoles();
-		Collections.sort(roles, ThematicRoleComparator.getInstance());
+		Collections.sort(roles, DescribedItemNameComparator.getInstance());
 
 		for (ThematicRole role : roles)
 		{
@@ -299,6 +304,7 @@ public class PersistenceService
 
 		String rolesXML = stream.toXML(roles);
 		prefStore.putValue(PreferenceStoreConstants.THEMATIC_ROLES, rolesXML);
+		LAST_SAVE_TIME_OF_THEMATIC_ROLES = System.currentTimeMillis();
 	}
 
 	/**
@@ -313,14 +319,14 @@ public class PersistenceService
 
 		for (Entry<String, String> entry : initialRoles.entrySet())
 		{
-			ThematicRole addressee = new ThematicRole(entry.getKey());
-			addressee.setDescription(entry.getValue());
+			ThematicRole role = new ThematicRole(entry.getKey());
+			role.setDescription(entry.getValue());
 
-			roles.add(addressee);
+			roles.add(role);
 		}
 
-		Collections.sort(roles, ThematicRoleComparator.getInstance());
-		
+		Collections.sort(roles, DescribedItemNameComparator.getInstance());
+
 		return roles;
 	}
 
@@ -419,7 +425,7 @@ public class PersistenceService
 			}
 		}
 
-		Collections.sort(roles, ThematicRoleComparator.getInstance());
+		Collections.sort(roles, DescribedItemNameComparator.getInstance());
 
 		return roles;
 	}
@@ -474,6 +480,7 @@ public class PersistenceService
 
 		prefStore.putValue(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING,
 				verbClassRoleAssocsXML);
+		LAST_SAVE_TIME_OF_THEMATIC_GRIDS = System.currentTimeMillis();
 	}
 
 	/**
@@ -644,5 +651,29 @@ public class PersistenceService
 				writer.close();
 			}
 		}
+	}
+	
+	/**
+	 * @return the lAST_SAVE_TIME_OF_THEMATIC_GRIDS
+	 */
+	public static long getLastSaveTimeOfThematicGrids()
+	{
+		return LAST_SAVE_TIME_OF_THEMATIC_GRIDS;
+	}
+
+	/**
+	 * @return the lAST_SAVE_TIME_OF_THEMATIC_ROLES
+	 */
+	public static long getLastSaveTimeOfThematicRoles()
+	{
+		return LAST_SAVE_TIME_OF_THEMATIC_ROLES;
+	}
+
+	/**
+	 * @return the lAST_SAVE_TIME_OF_ADDRESSEES
+	 */
+	public static long getLastSaveTimeOfAddressees()
+	{
+		return LAST_SAVE_TIME_OF_ADDRESSEES;
 	}
 }

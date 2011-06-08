@@ -18,6 +18,7 @@ package de.akra.idocit.core.services;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -138,9 +139,10 @@ public class ThematicGridService
 		}
 		else
 		{
-			throw new UnitializedIDocItException("The WsdlTaggingService from the NLP-Plugin is not initialized yet.");
+			throw new UnitializedIDocItException(
+					"The WsdlTaggingService from the NLP-Plugin is not initialized yet.");
 		}
-		
+
 		return matchingRoles;
 	}
 
@@ -206,5 +208,29 @@ public class ThematicGridService
 		}
 
 		return roles;
+	}
+
+	/**
+	 * Make a copy of the ThematicGrid. The containing lists are also new created, but the
+	 * {@link ThematicRole}s are not copied itself, they are only added to the new list.
+	 * 
+	 * @param oldGrid
+	 *            The grid to copy.
+	 * @return the new {@link ThematicGrid}.
+	 */
+	public static ThematicGrid copy(ThematicGrid oldGrid)
+	{
+		ThematicGrid newGrid = new ThematicGrid();
+		newGrid.setName(oldGrid.getName());
+		newGrid.setDescription(oldGrid.getDescription());
+
+		Map<ThematicRole, Boolean> roles = new HashMap<ThematicRole, Boolean>(
+				oldGrid.getRoles());
+		newGrid.setRoles(roles);
+
+		Set<String> verbs = new HashSet<String>(oldGrid.getVerbs());
+		newGrid.setVerbs(verbs);
+
+		return newGrid;
 	}
 }

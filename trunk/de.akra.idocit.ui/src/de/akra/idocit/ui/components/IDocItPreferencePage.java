@@ -80,7 +80,6 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	{
 		super.dispose();
 		lblWordNetLink.removeMouseListener(wordnetLinkMouseListener);
-
 	}
 
 	@Override

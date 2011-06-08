@@ -16,13 +16,16 @@
 package de.akra.idocit.ui.composites;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.composites.ISelectionListener;
@@ -30,7 +33,10 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.DescribedItemNameComparator;
+import de.akra.idocit.ui.constants.DialogConstants;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 
 /**
@@ -44,16 +50,20 @@ public class ManageThematicRoleComposite
 		extends
 		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection>
 {
-
 	// Widgets
 	private EditThematicRoleListComposite editThematicRoleListComposite;
 
 	private EditThematicRoleComposite editThematicRoleComposite;
 
+	private Label errorLabel;
+
 	// Listeners
 	private ISelectionListener<EditThematicRoleCompositeSelection> editThematicRoleCompositeSelectionListener;
 
 	private ISelectionListener<EditThematicRoleListCompositeSelection> editThematicRoleListCompositeSelectionListener;
+
+	// globals
+	private Color RED;
 
 	/**
 	 * Constructor.
@@ -63,7 +73,7 @@ public class ManageThematicRoleComposite
 	 */
 	public ManageThematicRoleComposite(Composite parent)
 	{
-		super(parent, SWT.NONE,EmptyActionConfiguration.getInstance(),
+		super(parent, SWT.NONE, EmptyActionConfiguration.getInstance(),
 				EmptyResourceConfiguration.getInstance());
 	}
 
@@ -79,14 +89,17 @@ public class ManageThematicRoleComposite
 	@Override
 	protected void doCleanUp()
 	{
-		// Nothing to do!
-
+		RED.dispose();
 	}
 
 	@Override
 	protected void doSetSelection(ManageThematicRoleCompositeSelection oldSelection,
 			ManageThematicRoleCompositeSelection newSelection)
 	{
+		updateRoleList(newSelection);
+
+		errorLabel.setVisible(newSelection.isNameExists());
+
 		// Update the EditItemListComposite.
 		EditThematicRoleListCompositeSelection editItemListSelection = new EditThematicRoleListCompositeSelection();
 		editItemListSelection.setItems(newSelection.getThematicRoles());
@@ -105,19 +118,46 @@ public class ManageThematicRoleComposite
 		editThematicRoleListComposite.setSelection(editItemListSelection);
 
 		// Update the EditDescribedItemComposite.
-		EditThematicRoleCompositeSelection editAddresseeCompositeSelection = new EditThematicRoleCompositeSelection();
-		editAddresseeCompositeSelection.setItem(activeRole);
+		EditThematicRoleCompositeSelection editThematicRoleCompositeSelection = new EditThematicRoleCompositeSelection();
+		editThematicRoleCompositeSelection.setItem(activeRole);
 
-		if (activeRole != null)
+		if (newSelection.isNameExists())
 		{
-			ThematicRole modifiedItem = DescribedItemUtils.createNewThematicRole();
-			modifiedItem.setName(activeRole.getName());
-			modifiedItem.setDescription(activeRole.getDescription());
-
-			editAddresseeCompositeSelection.setModifiedItem(modifiedItem);
+			editThematicRoleCompositeSelection.setModifiedItem(newSelection
+					.getModifiedThematicRole());
 		}
+		else
+		{
+			if (activeRole != null)
+			{
+				ThematicRole modifiedItem = DescribedItemUtils.copy(activeRole);
+				editThematicRoleCompositeSelection.setModifiedItem(modifiedItem);
+			}
+			else
+			{
+				editThematicRoleCompositeSelection.setModifiedItem(null);
+			}
+		}
+		editThematicRoleCompositeSelection.setLastCurserPosition(newSelection
+				.getLastCurserPosition());
+		editThematicRoleComposite.setSelection(editThematicRoleCompositeSelection);
+	}
 
-		editThematicRoleComposite.setSelection(editAddresseeCompositeSelection);
+	/**
+	 * If the global {@link ThematicRole} list is changed, load them again.
+	 * 
+	 * @param newSelection
+	 *            The new selection object to update.
+	 */
+	private void updateRoleList(ManageThematicRoleCompositeSelection newSelection)
+	{
+		if (newSelection.getLastSaveTimeThematicRoles() < PersistenceService
+				.getLastSaveTimeOfThematicRoles())
+		{
+			newSelection.setLastSaveTimeThematicRoles(PersistenceService
+					.getLastSaveTimeOfThematicRoles());
+			newSelection.setThematicRoles(PersistenceService.loadThematicRoles());
+		}
 	}
 
 	@Override
@@ -125,6 +165,16 @@ public class ManageThematicRoleComposite
 	{
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
+
+		RED = this.getDisplay().getSystemColor(SWT.COLOR_RED);
+
+		// TODO reduce the used space in UI if the label is not displayed (if possible)
+		errorLabel = new Label(this, SWT.NONE);
+		errorLabel.setVisible(false);
+		errorLabel.setText(DialogConstants.ERR_MSG_NAME_CONFLICT);
+		errorLabel.setForeground(RED);
+		errorLabel.setAlignment(SWT.CENTER);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(errorLabel);
 
 		Group grpEditList = new Group(this, SWT.NONE);
 		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).applyTo(grpEditList);
@@ -150,28 +200,47 @@ public class ManageThematicRoleComposite
 			public void selectionChanged(EditThematicRoleCompositeSelection selection,
 					PocUIComposite<EditThematicRoleCompositeSelection> changedComposite)
 			{
-				// If this composite fires a change event, the active Addressee
-				// as been modified. We have to update this composite.
+				// If this composite fires a change event, the active ThematicRole
+				// has been modified. We have to update this composite.
 
-				// Get the addressee to change.
 				ManageThematicRoleCompositeSelection editSelection = getSelection();
-				ThematicRole activeThematicRole = editSelection.getActiveThematicRole();
-				List<ThematicRole> thematicRoles = editSelection.getThematicRoles();
 
-				// Remove the old ThematicRole.
-				int roleIndex = thematicRoles.indexOf(activeThematicRole);
-				thematicRoles.remove(roleIndex);
+				boolean foundSameName = (!selection.getItem().getName()
+						.equals(selection.getModifiedItem().getName()) && DescribedItemUtils
+						.containsName(selection.getModifiedItem(),
+								editSelection.getThematicRoles()));
 
-				// Add the changed ThematicRole at the same position as the old one.
-				ThematicRole changedAddressee = selection.getModifiedItem();
-				thematicRoles.add(roleIndex, changedAddressee);
+				editSelection.setNameExists(foundSameName);
+				editSelection.setLastCurserPosition(selection.getLastCurserPosition());
 
-				editSelection.setActiveThematicRole(changedAddressee);
+				if (foundSameName)
+				{
+					editSelection.setModifiedThematicRole(selection.getModifiedItem());
+				}
+				else
+				{
+					// Get the role to change.
+					ThematicRole activeThematicRole = editSelection
+							.getActiveThematicRole();
+					List<ThematicRole> thematicRoles = editSelection.getThematicRoles();
 
-				// Update the selection.
-				editSelection.setThematicRoles(thematicRoles);
+					// Remove the old ThematicRole.
+					int roleIndex = thematicRoles.indexOf(activeThematicRole);
+					thematicRoles.remove(roleIndex);
+
+					// Add the changed ThematicRole at the same position as the old one.
+					ThematicRole changedRole = selection.getModifiedItem();
+					thematicRoles.add(roleIndex, changedRole);
+
+					Collections.sort(editSelection.getThematicRoles(),
+							DescribedItemNameComparator.getInstance());
+					editSelection.setActiveThematicRole(changedRole);
+
+					// Update the selection.
+					editSelection.setThematicRoles(thematicRoles);
+				}
+
 				setSelection(editSelection);
-
 				fireChangeEvent();
 			}
 		};
@@ -182,22 +251,25 @@ public class ManageThematicRoleComposite
 					EditThematicRoleListCompositeSelection selection,
 					PocUIComposite<EditThematicRoleListCompositeSelection> changedComposite)
 			{
-				// If this composite fires a change event, a new active addressee has been
+				// If this composite fires a change event, a new active role has been
 				// chosen.
-				ManageThematicRoleCompositeSelection editSelection = getSelection();
+				ManageThematicRoleCompositeSelection mySelection = getSelection();
+				mySelection.setNameExists(false);
+				mySelection.setModifiedThematicRole(null);
 
-				if (!selection.getActiveItems().isEmpty())
+				if (selection.getActiveItems() != null
+						&& !selection.getActiveItems().isEmpty())
 				{
-					editSelection
-							.setActiveThematicRole(selection.getActiveItems().get(0));
+					mySelection.setActiveThematicRole(selection.getActiveItems().get(0));
 				}
 				else
 				{
-					editSelection.setActiveThematicRole(DescribedItemUtils
+					mySelection.setActiveThematicRole(DescribedItemUtils
 							.createNewThematicRole());
 				}
 
-				setSelection(editSelection);
+				setSelection(mySelection);
+				fireChangeEvent();
 			}
 		};
 	}

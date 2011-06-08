@@ -73,7 +73,7 @@ public class EditThematicGridCompositeFactory
 		selectedRoles.put(roleAction, Boolean.FALSE);
 		grid.setRoles(selectedRoles);
 
-		selection.setThematicGrid(grid);
+		selection.setActiveThematicGrid(grid);
 
 		composite.setSelection(selection);
 

@@ -30,14 +30,83 @@ import de.akra.idocit.core.structure.DescribedItem;
 public class EditAddresseeCompositeSelection implements ISelection
 {
 	/**
-	 * The original item.
+	 * The original (selected) item.
 	 */
 	private Addressee addressee = null;
 
 	/**
-	 * The modified item.
+	 * The modified item (copy of the selected item).
 	 */
 	private Addressee modifiedAddressee = null;
+	
+	/**
+	 * The last cursor position in the name text field.
+	 */
+	private int lastCurserPosition = 0;
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((addressee == null) ? 0 : addressee.hashCode());
+		result = prime * result + lastCurserPosition;
+		result = prime * result
+				+ ((modifiedAddressee == null) ? 0 : modifiedAddressee.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EditAddresseeCompositeSelection other = (EditAddresseeCompositeSelection) obj;
+		if (addressee == null)
+		{
+			if (other.addressee != null)
+				return false;
+		}
+		else if (!addressee.equals(other.addressee))
+			return false;
+		if (lastCurserPosition != other.lastCurserPosition)
+			return false;
+		if (modifiedAddressee == null)
+		{
+			if (other.modifiedAddressee != null)
+				return false;
+		}
+		else if (!modifiedAddressee.equals(other.modifiedAddressee))
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("EditAddresseeCompositeSelection [addressee=");
+		builder.append(addressee);
+		builder.append(", modifiedAddressee=");
+		builder.append(modifiedAddressee);
+		builder.append(", lastCurserPosition=");
+		builder.append(lastCurserPosition);
+		builder.append("]");
+		return builder.toString();
+	}
 
 	/**
 	 * 
@@ -75,6 +144,16 @@ public class EditAddresseeCompositeSelection implements ISelection
 	public void setAddressee(Addressee addressee)
 	{
 		this.addressee = addressee;
+	}
+
+	public void setLastCurserPosition(int lastCurserPosition)
+	{
+		this.lastCurserPosition = lastCurserPosition;
+	}
+
+	public int getLastCurserPosition()
+	{
+		return lastCurserPosition;
 	}
 
 	

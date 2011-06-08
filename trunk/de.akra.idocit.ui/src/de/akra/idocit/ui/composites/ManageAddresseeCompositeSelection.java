@@ -32,9 +32,31 @@ import de.akra.idocit.core.structure.DescribedItem;
  */
 public class ManageAddresseeCompositeSelection implements ISelection
 {
+	/**
+	 * The original selected Addressee.
+	 */
 	private Addressee activeAddressee = null;
 
+	/**
+	 * The modified addressee (copy of the active addressee with changes).
+	 */
+	private Addressee modifiedAddressee = null;
+
+	/**
+	 * All available addressees.
+	 */
 	private List<Addressee> addressees = null;
+
+	/**
+	 * True, if a Addressee with same name exists. If same name exists, changes can not be
+	 * applied.
+	 */
+	private boolean nameExists = false;
+
+	/**
+	 * The last cursor position in the name text field.
+	 */
+	 private int lastCurserPosition = 0;
 
 	/**
 	 * 
@@ -74,6 +96,38 @@ public class ManageAddresseeCompositeSelection implements ISelection
 		this.addressees = addressees;
 	}
 
+	/**
+	 * @return the modifiedAddressee
+	 */
+	public Addressee getModifiedAddressee()
+	{
+		return modifiedAddressee;
+	}
+
+	/**
+	 * @param modifiedAddressee the modifiedAddressee to set
+	 */
+	public void setModifiedAddressee(Addressee modifiedAddressee)
+	{
+		this.modifiedAddressee = modifiedAddressee;
+	}
+
+	/**
+	 * @return the nameExists
+	 */
+	public boolean isNameExists()
+	{
+		return nameExists;
+	}
+
+	/**
+	 * @param nameExists the nameExists to set
+	 */
+	public void setNameExists(boolean nameExists)
+	{
+		this.nameExists = nameExists;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -83,8 +137,14 @@ public class ManageAddresseeCompositeSelection implements ISelection
 		StringBuilder builder = new StringBuilder();
 		builder.append("ManageAddresseeCompositeSelection [activeAddressee=");
 		builder.append(activeAddressee);
+		builder.append(", modifiedAddressee=");
+		builder.append(modifiedAddressee);
 		builder.append(", addressees=");
 		builder.append(addressees);
+		builder.append(", nameExists=");
+		builder.append(nameExists);
+		builder.append(", lastCurserPosition=");
+		builder.append(lastCurserPosition);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -100,6 +160,10 @@ public class ManageAddresseeCompositeSelection implements ISelection
 		result = prime * result
 				+ ((activeAddressee == null) ? 0 : activeAddressee.hashCode());
 		result = prime * result + ((addressees == null) ? 0 : addressees.hashCode());
+		result = prime * result + lastCurserPosition;
+		result = prime * result
+				+ ((modifiedAddressee == null) ? 0 : modifiedAddressee.hashCode());
+		result = prime * result + (nameExists ? 1231 : 1237);
 		return result;
 	}
 
@@ -110,42 +174,48 @@ public class ManageAddresseeCompositeSelection implements ISelection
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
 		if (obj == null)
-		{
 			return false;
-		}
-		if (!(obj instanceof ManageAddresseeCompositeSelection))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		ManageAddresseeCompositeSelection other = (ManageAddresseeCompositeSelection) obj;
 		if (activeAddressee == null)
 		{
 			if (other.activeAddressee != null)
-			{
 				return false;
-			}
 		}
 		else if (!activeAddressee.equals(other.activeAddressee))
-		{
 			return false;
-		}
 		if (addressees == null)
 		{
 			if (other.addressees != null)
-			{
 				return false;
-			}
 		}
 		else if (!addressees.equals(other.addressees))
-		{
 			return false;
+		if (lastCurserPosition != other.lastCurserPosition)
+			return false;
+		if (modifiedAddressee == null)
+		{
+			if (other.modifiedAddressee != null)
+				return false;
 		}
+		else if (!modifiedAddressee.equals(other.modifiedAddressee))
+			return false;
+		if (nameExists != other.nameExists)
+			return false;
 		return true;
 	}
 
-	
+	public void setLastCurserPosition(int lastCurserPosition)
+	{
+		this.lastCurserPosition = lastCurserPosition;
+	}
+
+	public int getLastCurserPosition()
+	{
+		return lastCurserPosition;
+	}
+
 }

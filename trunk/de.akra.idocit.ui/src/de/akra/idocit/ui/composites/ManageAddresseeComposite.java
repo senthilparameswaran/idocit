@@ -16,13 +16,16 @@
 package de.akra.idocit.ui.composites;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.composites.ISelectionListener;
@@ -31,11 +34,12 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.DescribedItem;
+import de.akra.idocit.core.utils.DescribedItemNameComparator;
+import de.akra.idocit.ui.constants.DialogConstants;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 
 /**
- * {@link Composite} to manage {@link DescribedItem}s.
+ * {@link Composite} to manage {@link Addressee}s.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
@@ -45,16 +49,20 @@ public class ManageAddresseeComposite
 		extends
 		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageAddresseeCompositeSelection>
 {
-
 	// Widgets
 	private EditAddresseeListComposite editAddresseeListComposite;
 
 	private EditAddresseeComposite editAddresseeComposite;
 
+	private Label errorLabel;
+
 	// Listeners
 	private ISelectionListener<EditAddresseeCompositeSelection> editAddresseeCompositeSelectionListener;
 
 	private ISelectionListener<EditAddresseeListCompositeSelection> editAddresseeListCompositeSelectionListener;
+
+	// globals
+	private Color RED;
 
 	/**
 	 * Constructor.
@@ -80,14 +88,15 @@ public class ManageAddresseeComposite
 	@Override
 	protected void doCleanUp()
 	{
-		// Nothing to do!
-
+		RED.dispose();
 	}
 
 	@Override
 	protected void doSetSelection(ManageAddresseeCompositeSelection oldSelection,
 			ManageAddresseeCompositeSelection newSelection)
 	{
+		errorLabel.setVisible(newSelection.isNameExists());
+
 		// Update the EditAddresseeListComposite.
 		EditAddresseeListCompositeSelection editItemListSelection = new EditAddresseeListCompositeSelection();
 		editItemListSelection.setAddressees(newSelection.getAddressees());
@@ -109,16 +118,26 @@ public class ManageAddresseeComposite
 		EditAddresseeCompositeSelection editAddresseeCompositeSelection = new EditAddresseeCompositeSelection();
 		editAddresseeCompositeSelection.setAddressee(activeAddressee);
 
-		if (activeAddressee != null)
+		if (newSelection.isNameExists())
 		{
-			Addressee modifiedItem = DescribedItemUtils.createNewAddressee();
-			modifiedItem.setName(activeAddressee.getName());
-			modifiedItem.setDescription(activeAddressee.getDescription());
-			modifiedItem.setDefault(activeAddressee.isDefault());
-
-			editAddresseeCompositeSelection.setModifiedAddressee(modifiedItem);
+			editAddresseeCompositeSelection.setModifiedAddressee(newSelection
+					.getModifiedAddressee());
+		}
+		else
+		{
+			if (activeAddressee != null)
+			{
+				Addressee modifiedItem = DescribedItemUtils.copy(activeAddressee);
+				editAddresseeCompositeSelection.setModifiedAddressee(modifiedItem);
+			}
+			else
+			{
+				editAddresseeCompositeSelection.setModifiedAddressee(null);
+			}
 		}
 
+		editAddresseeCompositeSelection.setLastCurserPosition(newSelection
+				.getLastCurserPosition());
 		editAddresseeComposite.setSelection(editAddresseeCompositeSelection);
 	}
 
@@ -127,6 +146,16 @@ public class ManageAddresseeComposite
 	{
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
+
+		RED = this.getDisplay().getSystemColor(SWT.COLOR_RED);
+
+		// TODO reduce the used space in UI if the label is not displayed (if possible)
+		errorLabel = new Label(this, SWT.NONE);
+		errorLabel.setVisible(false);
+		errorLabel.setText(DialogConstants.ERR_MSG_NAME_CONFLICT);
+		errorLabel.setForeground(RED);
+		errorLabel.setAlignment(SWT.CENTER);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(errorLabel);
 
 		Group grpEditList = new Group(this, SWT.NONE);
 		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).applyTo(grpEditList);
@@ -155,26 +184,44 @@ public class ManageAddresseeComposite
 				// If this composite fires a change event, the active Addressee
 				// has been modified. We have to update this composite.
 
-				// Get the addressee to change.
 				ManageAddresseeCompositeSelection editSelection = getSelection();
-				Addressee activeAddressee = editSelection.getActiveAddressee();
-				List<Addressee> addressees = editSelection.getAddressees();
 
-				// Remove the old addressee.
-				int addresseeIndex = addressees.indexOf(activeAddressee);
-				addressees.remove(addresseeIndex);
+				boolean foundSameName = (!selection.getAddressee().getName()
+						.equals(selection.getModifiedAddressee().getName()) && DescribedItemUtils
+						.containsName(selection.getModifiedAddressee(),
+								editSelection.getAddressees()));
 
-				// Add the changed Addressee at the same position as the old one.
-				Addressee changedAddressee = selection.getModifiedAddressee();
-				addressees.add(addresseeIndex, changedAddressee);
+				editSelection.setNameExists(foundSameName);
+				editSelection.setLastCurserPosition(selection.getLastCurserPosition());
 
-				editSelection.setActiveAddressee(changedAddressee);
+				if (foundSameName)
+				{
+					editSelection.setModifiedAddressee(selection.getModifiedAddressee());
+				}
+				else
+				{
+					// Get the addressee to change.
+					Addressee activeAddressee = editSelection.getActiveAddressee();
+					List<Addressee> addressees = editSelection.getAddressees();
 
-				// Update the selection.
-				editSelection.setAddressees(addressees);
+					// Remove the old addressee.
+					int addresseeIndex = addressees.indexOf(activeAddressee);
+					addressees.remove(addresseeIndex);
+
+					// Add the changed Addressee at the same position as the old one.
+					Addressee changedAddressee = selection.getModifiedAddressee();
+					addressees.add(addresseeIndex, changedAddressee);
+
+					Collections.sort(editSelection.getAddressees(),
+							DescribedItemNameComparator.getInstance());
+
+					editSelection.setActiveAddressee(changedAddressee);
+
+					// Update the selection.
+					editSelection.setAddressees(addressees);
+				}
+
 				setSelection(editSelection);
-
-				fireChangeEvent();
 			}
 		};
 
@@ -186,8 +233,11 @@ public class ManageAddresseeComposite
 				// If this composite fires a change event, a new active addressee has been
 				// chosen.
 				ManageAddresseeCompositeSelection editSelection = getSelection();
+				editSelection.setNameExists(false);
+				editSelection.setModifiedAddressee(null);
 
-				if (!selection.getActiveAddressees().isEmpty())
+				if (selection.getActiveAddressees() != null
+						&& !selection.getActiveAddressees().isEmpty())
 				{
 					editSelection.setActiveAddressee(selection.getActiveAddressees().get(
 							0));

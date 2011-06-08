@@ -121,11 +121,11 @@ public class EditAddresseeComposite
 			{
 				EditAddresseeCompositeSelection selection = getSelection();
 				Addressee item = selection.getModifiedAddressee();
-
 				item.setName(txtName.getText());
-
+				selection.setLastCurserPosition(txtName.getSelection().x);
 				selection.setModifiedAddressee(item);
-				setSelection(selection);
+				
+				fireChangeEvent();
 			}
 		};
 
@@ -135,10 +135,9 @@ public class EditAddresseeComposite
 			{
 				EditAddresseeCompositeSelection selection = getSelection();
 				Addressee item = selection.getModifiedAddressee();
-
 				item.setDescription(txtDescription.getText());
-
 				selection.setModifiedAddressee(item);
+				
 				setSelection(selection);
 			}
 		};
@@ -151,9 +150,7 @@ public class EditAddresseeComposite
 				EditAddresseeCompositeSelection selection = getSelection();
 				Addressee item = selection.getModifiedAddressee();
 				item.setDefault(chkDefault.getSelection());
-
 				selection.setModifiedAddressee(item);
-				setSelection(selection);
 				
 				fireChangeEvent();
 			}
@@ -171,10 +168,10 @@ public class EditAddresseeComposite
 		if (!newInSelection.equals(oldInSelection))
 		{
 			Addressee item = newInSelection.getModifiedAddressee();
-
 			if (item != null)
 			{
 				txtName.setText(item.getName());
+				txtName.setSelection(newInSelection.getLastCurserPosition());
 				txtDescription.setText(item.getDescription());
 				chkDefault.setSelection(item.isDefault());
 			}
@@ -187,7 +184,6 @@ public class EditAddresseeComposite
 		txtName.addModifyListener(txtNameListener);
 		txtDescription.addModifyListener(txtDescriptionListener);
 		txtDescription.addFocusListener(textFieldListener);
-		txtName.addFocusListener(textFieldListener);
 		chkDefault.addSelectionListener(chkDefaultListener);
 	}
 
@@ -197,7 +193,6 @@ public class EditAddresseeComposite
 		txtName.removeModifyListener(txtNameListener);
 		txtDescription.removeModifyListener(txtDescriptionListener);
 		txtDescription.removeFocusListener(textFieldListener);
-		txtName.removeFocusListener(textFieldListener);
 		chkDefault.removeSelectionListener(chkDefaultListener);
 	}
 

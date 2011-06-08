@@ -36,7 +36,8 @@ public class EditThematicGridCompositeSelection implements ISelection
 	/**
 	 * The selected {@link ThematicGrid} to edit.
 	 */
-	private ThematicGrid thematicGrid;
+	private ThematicGrid activeThematicGrid;
+
 
 	/**
 	 * All existing {@link ThematicRole}s that are defined in the preference page.
@@ -44,22 +45,20 @@ public class EditThematicGridCompositeSelection implements ISelection
 	private List<ThematicRole> roles = Collections.emptyList();
 
 	/**
-	 * 
-	 * @return the {@link ThematicGrid} to edit.
+	 * @return the activeThematicGrid
 	 */
-	public ThematicGrid getThematicGrid()
+	public ThematicGrid getActiveThematicGrid()
 	{
-		return thematicGrid;
+		return activeThematicGrid;
 	}
 
 	/**
-	 * 
-	 * @param thematicGrid
-	 *            The {@link ThematicGrid} to edit.
+	 * @param activeThematicGrid
+	 *            the activeThematicGrid to set
 	 */
-	public void setThematicGrid(ThematicGrid thematicGrid)
+	public void setActiveThematicGrid(ThematicGrid activeThematicGrid)
 	{
-		this.thematicGrid = thematicGrid;
+		this.activeThematicGrid = activeThematicGrid;
 	}
 
 	/**
@@ -81,7 +80,9 @@ public class EditThematicGridCompositeSelection implements ISelection
 		this.roles = roles;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -90,11 +91,14 @@ public class EditThematicGridCompositeSelection implements ISelection
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-		result = prime * result + ((thematicGrid == null) ? 0 : thematicGrid.hashCode());
+		result = prime * result
+				+ ((activeThematicGrid == null) ? 0 : activeThematicGrid.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -114,23 +118,25 @@ public class EditThematicGridCompositeSelection implements ISelection
 		}
 		else if (!roles.equals(other.roles))
 			return false;
-		if (thematicGrid == null)
+		if (activeThematicGrid == null)
 		{
-			if (other.thematicGrid != null)
+			if (other.activeThematicGrid != null)
 				return false;
 		}
-		else if (!thematicGrid.equals(other.thematicGrid))
+		else if (!activeThematicGrid.equals(other.activeThematicGrid))
 			return false;
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return "EditThematicGridCompositeSelection [thematicGrid=" + thematicGrid
+		return "EditThematicGridCompositeSelection [thematicGrid=" + activeThematicGrid
 				+ ", roles=" + roles + "]";
 	}
 }

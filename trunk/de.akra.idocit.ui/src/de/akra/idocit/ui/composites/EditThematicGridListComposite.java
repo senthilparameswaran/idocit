@@ -115,8 +115,14 @@ public class EditThematicGridListComposite
 					java.util.List<ThematicGrid> items = selection.getItems();
 
 					items.add(newItem);
-
 					selection.setItems(items);
+
+					// Changes due to Issue #32
+					java.util.List<ThematicGrid> activeThematicGrids = new ArrayList<ThematicGrid>(
+							1);
+					activeThematicGrids.add(newItem);
+					selection.setActiveItems(activeThematicGrids);
+					// End changes due to Issue #32
 					setSelection(selection);
 
 					fireChangeEvent();
@@ -161,7 +167,7 @@ public class EditThematicGridListComposite
 						{
 							nextSelIndex = items.indexOf(selection.getActiveItems()
 									.get(0));
-							if (nextSelIndex >= items.size()-1)
+							if (nextSelIndex >= items.size() - 1)
 							{
 								nextSelIndex = items.size() - 2;
 							}
@@ -172,8 +178,10 @@ public class EditThematicGridListComposite
 
 						selection.setItems(items);
 						// Changes due to Issue #10
-						selection.setActiveItems(nextSelIndex > -1 ? new ArrayList<ThematicGrid>(items
-								.subList(nextSelIndex, nextSelIndex+1)) : null);
+						selection
+								.setActiveItems(nextSelIndex > -1 ? new ArrayList<ThematicGrid>(
+										items.subList(nextSelIndex, nextSelIndex + 1))
+										: null);
 						// End changes due to Issue #10
 						setSelection(selection);
 

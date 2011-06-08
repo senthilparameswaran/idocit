@@ -31,9 +31,37 @@ import de.akra.idocit.core.structure.ThematicRole;
  */
 public class ManageThematicRoleCompositeSelection implements ISelection
 {
+	/**
+	 * The selected ThematicRole to edit.
+	 */
 	private ThematicRole activeThematicRole = null;
+	
+	/**
+	 * The modified role (copy of the active role with changes).
+	 */
+	private ThematicRole modifiedThematicRole = null;
 
+	/**
+	 * All available ThematicRoles.
+	 */
 	private List<ThematicRole> thematicRoles = null;
+
+	/**
+	 * The timestamp of the last save action. If the roles were not saved during this
+	 * session the value is -1.
+	 */
+	private long lastSaveTimeThematicRoles = -1;
+
+	/**
+	 * True, if a ThematicRole with same name exists. If same name exists, changes can not
+	 * be applied.
+	 */
+	private boolean nameExists = false;
+	
+	/**
+	 * The last cursor position in the name text field at the edit composite.
+	 */
+	private int lastCurserPosition = 0;
 
 	/**
 	 * 
@@ -73,16 +101,30 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		this.thematicRoles = roles;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((activeThematicRole == null) ? 0 : activeThematicRole.hashCode());
-		result = prime * result + ((thematicRoles == null) ? 0 : thematicRoles.hashCode());
+		result = prime * result
+				+ ((activeThematicRole == null) ? 0 : activeThematicRole.hashCode());
+		result = prime * result + lastCurserPosition;
+		result = prime * result
+				+ (int) (lastSaveTimeThematicRoles ^ (lastSaveTimeThematicRoles >>> 32));
+		result = prime * result
+				+ ((modifiedThematicRole == null) ? 0 : modifiedThematicRole.hashCode());
+		result = prime * result + (nameExists ? 1231 : 1237);
+		result = prime * result
+				+ ((thematicRoles == null) ? 0 : thematicRoles.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -100,6 +142,19 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		}
 		else if (!activeThematicRole.equals(other.activeThematicRole))
 			return false;
+		if (lastCurserPosition != other.lastCurserPosition)
+			return false;
+		if (lastSaveTimeThematicRoles != other.lastSaveTimeThematicRoles)
+			return false;
+		if (modifiedThematicRole == null)
+		{
+			if (other.modifiedThematicRole != null)
+				return false;
+		}
+		else if (!modifiedThematicRole.equals(other.modifiedThematicRole))
+			return false;
+		if (nameExists != other.nameExists)
+			return false;
 		if (thematicRoles == null)
 		{
 			if (other.thematicRoles != null)
@@ -110,15 +165,66 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("ManageAddresseesCompositeSelection [activeAddressee=");
+		builder.append("ManageThematicRoleCompositeSelection [activeThematicRole=");
 		builder.append(activeThematicRole);
-		builder.append(", addressees=");
+		builder.append(", modifiedThematicRole=");
+		builder.append(modifiedThematicRole);
+		builder.append(", thematicRoles=");
 		builder.append(thematicRoles);
+		builder.append(", lastSaveTimeThematicRoles=");
+		builder.append(lastSaveTimeThematicRoles);
+		builder.append(", nameExists=");
+		builder.append(nameExists);
+		builder.append(", lastCurserPosition=");
+		builder.append(lastCurserPosition);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public void setLastSaveTimeThematicRoles(long lastSaveTimeThematicRoles)
+	{
+		this.lastSaveTimeThematicRoles = lastSaveTimeThematicRoles;
+	}
+
+	public long getLastSaveTimeThematicRoles()
+	{
+		return lastSaveTimeThematicRoles;
+	}
+
+	public void setNameExists(boolean nameExists)
+	{
+		this.nameExists = nameExists;
+	}
+
+	public boolean isNameExists()
+	{
+		return nameExists;
+	}
+
+	public void setLastCurserPosition(int lastCurserPosition)
+	{
+		this.lastCurserPosition = lastCurserPosition;
+	}
+
+	public int getLastCurserPosition()
+	{
+		return lastCurserPosition;
+	}
+
+	public void setModifiedThematicRole(ThematicRole modifiedThematicRole)
+	{
+		this.modifiedThematicRole = modifiedThematicRole;
+	}
+
+	public ThematicRole getModifiedThematicRole()
+	{
+		return modifiedThematicRole;
 	}
 }
