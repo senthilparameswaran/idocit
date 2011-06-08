@@ -56,6 +56,7 @@ import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.Documentation;
 import de.akra.idocit.core.structure.Scope;
 import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.DescribedItemNameComparator;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
@@ -253,14 +254,17 @@ public class DocumentItemComposite
 								- lastTextModification;
 						if (isInTextField && intervalDiff >= checkInterval)
 						{
-							// start a terminating thread in SWT thread handling to be
-							// allowed to access the widgets
-							getDisplay().asyncExec(new Runnable() {
-								public void run()
-								{
-									updateDocForActiveAddressee();
-								}
-							});
+							if (!isDisposed())
+							{
+								// start a terminating thread in SWT thread handling to be
+								// allowed to access the widgets
+								getDisplay().asyncExec(new Runnable() {
+									public void run()
+									{
+										updateDocForActiveAddressee();
+									}
+								});
+							}
 						}
 					}
 				}
@@ -324,7 +328,7 @@ public class DocumentItemComposite
 				List<Addressee> allAddressees = getSelection().getAddresseeList();
 				List<Addressee> displayedAddressees = getSelection()
 						.getDisplayedAddressees();
-				Set<Addressee> orderedNotDisplayedAddressees = new TreeSet<Addressee>();
+				Set<Addressee> orderedNotDisplayedAddressees = new TreeSet<Addressee>(DescribedItemNameComparator.getInstance());
 
 				for (Addressee addressee : allAddressees)
 				{

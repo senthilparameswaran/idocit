@@ -32,11 +32,38 @@ import de.akra.idocit.core.structure.ThematicRole;
  */
 public class ManageThematicGridsCompositeSelection implements ISelection
 {
+	/**
+	 * All available thematic grids.
+	 */
 	private List<ThematicGrid> thematicGrids;
 
+	/**
+	 * Copy of the selected thematic grid.
+	 */
 	private ThematicGrid activeThematicGrid;
 
+	/**
+	 * Index of the selected thematic grid in the global grid list (
+	 * <code>thematicGrids</code>).
+	 */
+	private int indexOfActiveThematicGrid;
+
+	/**
+	 * All available thematic roles.
+	 */
 	private List<ThematicRole> roles;
+
+	/**
+	 * True, if a ThematicGrid with same name exists. If same name exists, changes can not
+	 * be applied.
+	 */
+	private boolean nameExists = false;
+
+	/**
+	 * The timestamp of the last save action. If the roles were not saved during this
+	 * session the value is -1.
+	 */
+	private long lastSaveTimeThematicRoles = -1;
 
 	/**
 	 * 
@@ -96,6 +123,26 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		this.activeThematicGrid = activeThematicGrid;
 	}
 
+	/**
+	 * @param nameExists
+	 *            the nameExists to set
+	 */
+	public void setNameExists(boolean nameExists)
+	{
+		this.nameExists = nameExists;
+	}
+
+	/**
+	 * @return the nameExists
+	 */
+	public boolean isNameExists()
+	{
+		return nameExists;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
@@ -103,12 +150,19 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		int result = 1;
 		result = prime * result
 				+ ((activeThematicGrid == null) ? 0 : activeThematicGrid.hashCode());
+		result = prime * result + indexOfActiveThematicGrid;
+		result = prime * result
+				+ (int) (lastSaveTimeThematicRoles ^ (lastSaveTimeThematicRoles >>> 32));
+		result = prime * result + (nameExists ? 1231 : 1237);
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result
 				+ ((thematicGrids == null) ? 0 : thematicGrids.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -116,7 +170,7 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof ManageThematicGridsCompositeSelection))
 			return false;
 		ManageThematicGridsCompositeSelection other = (ManageThematicGridsCompositeSelection) obj;
 		if (activeThematicGrid == null)
@@ -125,6 +179,12 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 				return false;
 		}
 		else if (!activeThematicGrid.equals(other.activeThematicGrid))
+			return false;
+		if (indexOfActiveThematicGrid != other.indexOfActiveThematicGrid)
+			return false;
+		if (lastSaveTimeThematicRoles != other.lastSaveTimeThematicRoles)
+			return false;
+		if (nameExists != other.nameExists)
 			return false;
 		if (roles == null)
 		{
@@ -141,5 +201,48 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		else if (!thematicGrids.equals(other.thematicGrids))
 			return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("ManageThematicGridsCompositeSelection [thematicGrids=");
+		builder.append(thematicGrids);
+		builder.append(", activeThematicGrid=");
+		builder.append(activeThematicGrid);
+		builder.append(", indexOfActiveThematicGrid=");
+		builder.append(indexOfActiveThematicGrid);
+		builder.append(", roles=");
+		builder.append(roles);
+		builder.append(", nameExists=");
+		builder.append(nameExists);
+		builder.append(", lastSaveTimeThematicRoles=");
+		builder.append(lastSaveTimeThematicRoles);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	public void setLastSaveTimeThematicRoles(long lastSaveTimeThematicRoles)
+	{
+		this.lastSaveTimeThematicRoles = lastSaveTimeThematicRoles;
+	}
+
+	public long getLastSaveTimeThematicRoles()
+	{
+		return lastSaveTimeThematicRoles;
+	}
+
+	public void setIndexOfActiveThematicGrid(int indexOfActiveThematicGrid)
+	{
+		this.indexOfActiveThematicGrid = indexOfActiveThematicGrid;
+	}
+
+	public int getIndexOfActiveThematicGrid()
+	{
+		return indexOfActiveThematicGrid;
 	}
 }

@@ -37,6 +37,11 @@ public class EditThematicRoleCompositeSelection implements ISelection
 	 * The modified item.
 	 */
 	private ThematicRole modifiedItem = null;
+	
+	/**
+	 * The last cursor position in the name text field.
+	 */
+	private int lastCurserPosition = 0;
 
 	/**
 	 * 
@@ -76,16 +81,23 @@ public class EditThematicRoleCompositeSelection implements ISelection
 		this.item = item;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((item == null) ? 0 : item.hashCode());
+		result = prime * result + lastCurserPosition;
 		result = prime * result + ((modifiedItem == null) ? 0 : modifiedItem.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -103,6 +115,8 @@ public class EditThematicRoleCompositeSelection implements ISelection
 		}
 		else if (!item.equals(other.item))
 			return false;
+		if (lastCurserPosition != other.lastCurserPosition)
+			return false;
 		if (modifiedItem == null)
 		{
 			if (other.modifiedItem != null)
@@ -113,15 +127,30 @@ public class EditThematicRoleCompositeSelection implements ISelection
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("EditDescribedItemCompositeSelection [item=");
+		builder.append("EditThematicRoleCompositeSelection [item=");
 		builder.append(item);
 		builder.append(", modifiedItem=");
 		builder.append(modifiedItem);
+		builder.append(", lastCurserPosition=");
+		builder.append(lastCurserPosition);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public void setLastCurserPosition(int lastCurserPosition)
+	{
+		this.lastCurserPosition = lastCurserPosition;
+	}
+
+	public int getLastCurserPosition()
+	{
+		return lastCurserPosition;
 	}
 }

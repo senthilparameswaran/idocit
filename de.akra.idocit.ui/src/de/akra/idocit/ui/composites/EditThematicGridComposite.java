@@ -198,20 +198,20 @@ public class EditThematicGridComposite
 	protected void doSetSelection(EditThematicGridCompositeSelection oldSelection,
 			EditThematicGridCompositeSelection newSelection)
 	{
-		if (!newSelection.equals(oldSelection) && newSelection.getThematicGrid() != null)
+		if (!newSelection.equals(oldSelection) && newSelection.getActiveThematicGrid() != null)
 		{
-			String newName = newSelection.getThematicGrid().getName();
-			String oldName = (oldSelection != null && oldSelection.getThematicGrid() != null) ? oldSelection
-					.getThematicGrid().getName() : null;
+			String newName = newSelection.getActiveThematicGrid().getName();
+			String oldName = (oldSelection != null && oldSelection.getActiveThematicGrid() != null) ? oldSelection
+					.getActiveThematicGrid().getName() : null;
 
 			if (!newName.equals(oldName))
 			{
 				txtName.setText(newName);
 			}
 
-			String newDescription = newSelection.getThematicGrid().getDescription();
+			String newDescription = newSelection.getActiveThematicGrid().getDescription();
 			String oldDescription = (oldSelection != null && oldSelection
-					.getThematicGrid() != null) ? oldSelection.getThematicGrid()
+					.getActiveThematicGrid() != null) ? oldSelection.getActiveThematicGrid()
 					.getDescription() : null;
 
 			if (!newDescription.equals(oldDescription))
@@ -219,9 +219,9 @@ public class EditThematicGridComposite
 				txtDescription.setText(newDescription);
 			}
 
-			Set<String> newVerbs = newSelection.getThematicGrid().getVerbs();
+			Set<String> newVerbs = newSelection.getActiveThematicGrid().getVerbs();
 			Set<String> oldVerbs = (oldSelection != null) ? oldSelection
-					.getThematicGrid().getVerbs() : null;
+					.getActiveThematicGrid().getVerbs() : null;
 
 			if (!newVerbs.equals(oldVerbs))
 			{}
@@ -272,7 +272,7 @@ public class EditThematicGridComposite
 			}
 			// End changes due to Issue #27
 
-			Map<ThematicRole, Boolean> newSelectedRoles = newSelection.getThematicGrid()
+			Map<ThematicRole, Boolean> newSelectedRoles = newSelection.getActiveThematicGrid()
 					.getRoles();
 			List<ThematicRole> roles = newSelection.getRoles();
 
@@ -301,14 +301,13 @@ public class EditThematicGridComposite
 			public void modifyText(ModifyEvent e)
 			{
 				EditThematicGridCompositeSelection selection = getSelection();
-				ThematicGrid grid = selection.getThematicGrid();
+				ThematicGrid grid = selection.getActiveThematicGrid();
 
 				Set<String> verbs = StringUtils.convertIntoTokenSet(txtVerbs.getText(),
 						",");
 				grid.setVerbs(verbs);
-				selection.setThematicGrid(grid);
+				selection.setActiveThematicGrid(grid);
 
-				setSelection(selection);
 				fireChangeEvent();
 			}
 		};
@@ -318,11 +317,10 @@ public class EditThematicGridComposite
 			public void modifyText(ModifyEvent e)
 			{
 				EditThematicGridCompositeSelection selection = getSelection();
-				ThematicGrid grid = selection.getThematicGrid();
+				ThematicGrid grid = selection.getActiveThematicGrid();
 				grid.setName(txtName.getText());
-				selection.setThematicGrid(grid);
+				selection.setActiveThematicGrid(grid);
 
-				setSelection(selection);
 				fireChangeEvent();
 			}
 		};
@@ -332,13 +330,10 @@ public class EditThematicGridComposite
 			public void modifyText(ModifyEvent e)
 			{
 				EditThematicGridCompositeSelection selection = getSelection();
-				ThematicGrid grid = selection.getThematicGrid();
-
+				ThematicGrid grid = selection.getActiveThematicGrid();
 				grid.setDescription(txtDescription.getText());
-
-				selection.setThematicGrid(grid);
-
-				setSelection(selection);
+				selection.setActiveThematicGrid(grid);
+				
 				fireChangeEvent();
 			}
 		};
@@ -423,7 +418,7 @@ public class EditThematicGridComposite
 	{
 		TableItem[] selectedItems = tabRoles.getItems();
 		EditThematicGridCompositeSelection selection = getSelection();
-		ThematicGrid grid = selection.getThematicGrid();
+		ThematicGrid grid = selection.getActiveThematicGrid();
 
 		Map<ThematicRole, Boolean> roles = grid.getRoles();
 		roles.clear();
@@ -439,9 +434,7 @@ public class EditThematicGridComposite
 		}
 
 		grid.setRoles(roles);
-		selection.setThematicGrid(grid);
-
-		setSelection(selection);
+		selection.setActiveThematicGrid(grid);
 	}
 
 	/**

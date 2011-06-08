@@ -29,4 +29,5 @@ public class DialogConstants
 	 * The title for the editor.
 	 */
 	public static final String DIALOG_TITLE = "iDocIt!";
+	public static final String ERR_MSG_NAME_CONFLICT = "Invalid state! Names must be unique. Changes will not be saved.";
 }

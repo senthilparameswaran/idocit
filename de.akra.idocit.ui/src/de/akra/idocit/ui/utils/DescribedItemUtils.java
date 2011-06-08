@@ -60,6 +60,50 @@ public final class DescribedItemUtils
 	}
 
 	/**
+	 * Finds the DescribedItem with the given name.
+	 * 
+	 * @param name
+	 *            The name to find.
+	 * @param items
+	 *            List of DescribedItems to search in.
+	 * @return The found DescribedItem, otherwise <code>null</code>.
+	 */
+	public static DescribedItem findByName(String name,
+			java.util.List<? extends DescribedItem> items)
+	{
+		for (DescribedItem curItem : items)
+		{
+			if (curItem.getName().equals(name))
+			{
+				return curItem;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Find the index in the items list of the item with the given name.
+	 * 
+	 * @param name
+	 *            The name to search for.
+	 * @param items
+	 *            The list of items in that should be searched.
+	 * @return the 0 based index of the item in the items list, otherwise -1.
+	 */
+	public static int indexOfName(String name,
+			java.util.List<? extends DescribedItem> items)
+	{
+		for (int i = 0; i < items.size(); ++i)
+		{
+			if (items.get(i).getName().equals(name))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
 	 * Create a new {@link Addressee} with default values.
 	 * 
 	 * @return a new {@link Addressee}.
@@ -96,5 +140,32 @@ public final class DescribedItemUtils
 		grid.setVerbs(new HashSet<String>());
 		grid.setRoles(new HashMap<ThematicRole, Boolean>());
 		return grid;
+	}
+	
+	/**
+	 * Copies the oldRole and returns a new one.
+	 * 
+	 * @param oldRole
+	 *            The role to copy.
+	 * @return The new {@link ThematicRole}.
+	 */
+	public static ThematicRole copy(ThematicRole oldRole)
+	{
+		return new ThematicRole(oldRole.getName(), oldRole.getDescription());
+	}
+
+	/**
+	 * Copies the oldAddressee and returns a new one.
+	 * 
+	 * @param oldAddressee
+	 *            The Addressee to copy.
+	 * @return The new {@link Addressee}.
+	 */
+	public static Addressee copy(Addressee oldAddressee)
+	{
+		Addressee newAddressee = new Addressee(oldAddressee.getName());
+		newAddressee.setDescription(oldAddressee.getDescription());
+		newAddressee.setDefault(oldAddressee.isDefault());
+		return newAddressee;
 	}
 }

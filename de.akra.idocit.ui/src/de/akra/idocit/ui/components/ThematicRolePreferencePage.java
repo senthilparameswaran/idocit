@@ -91,6 +91,8 @@ public class ThematicRolePreferencePage
 		ManageThematicRoleCompositeSelection selection = new ManageThematicRoleCompositeSelection();
 		selection.setActiveThematicRole(!roles.isEmpty() ? roles.get(0) : null);
 		selection.setThematicRoles(roles);
+		selection.setLastSaveTimeThematicRoles(PersistenceService
+				.getLastSaveTimeOfThematicRoles());
 
 		setSelection(selection);
 	}

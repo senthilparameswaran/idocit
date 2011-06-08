@@ -22,7 +22,7 @@ package de.akra.idocit.core.structure;
  * @since 0.0.1
  * @version 0.0.1
  */
-public class Addressee implements DescribedItem, Comparable<Addressee>
+public class Addressee implements DescribedItem
 {
 	private String name = "";
 
@@ -169,25 +169,5 @@ public class Addressee implements DescribedItem, Comparable<Addressee>
 		clone.setDescription(getDescription());
 		clone.setDefault(isDefault());
 		return clone;
-	}
-
-	/**
-	 * Sort by name.
-	 */
-	@Override
-	public int compareTo(Addressee a)
-	{
-		if (this.equals(a))
-		{
-			return 0;
-		}
-
-		int nameCmp = name.compareTo(a.getName());
-		if (nameCmp != 0)
-		{
-			return nameCmp;
-		}
-
-		return 0;
 	}
 }

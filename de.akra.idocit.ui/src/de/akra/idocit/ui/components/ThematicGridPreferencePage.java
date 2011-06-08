@@ -33,6 +33,7 @@ import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.composites.ManageThematicGridsComposite;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeAC;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * A {@link PreferencePage} for {@link ThematicGrid}s.
@@ -67,7 +68,7 @@ public class ThematicGridPreferencePage
 	@Override
 	public boolean isValid()
 	{
-		return true;
+		return !getSelection().isNameExists();
 	}
 
 	/**
@@ -101,6 +102,7 @@ public class ThematicGridPreferencePage
 
 		selection.setThematicGrids(grids);
 		selection.setRoles(roles);
+		selection.setLastSaveTimeThematicRoles(PersistenceService.getLastSaveTimeOfThematicRoles());
 
 		setSelection(selection);
 	}
@@ -113,9 +115,29 @@ public class ThematicGridPreferencePage
 	@Override
 	public boolean performOk()
 	{
-		performApply();
-		boolean saveState = super.performOk();
-		return saveState;
+		if (checkState())
+		{
+			performApply();
+			boolean saveState = super.performOk();
+			return saveState;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if changes can be saved or not.
+	 * 
+	 * @return true, if changes can be saved (all names are unique).
+	 */
+	private boolean checkState()
+	{
+		boolean res = isValid();
+		if (!res)
+		{
+			MessageBoxUtils.openErrorBox(getShell(),
+					"Changes can not be saved. Names must be unique.");
+		}
+		return res;
 	}
 
 	@Override
@@ -137,10 +159,13 @@ public class ThematicGridPreferencePage
 	@Override
 	protected void performApply()
 	{
-		List<ThematicGrid> grids = getSelection().getThematicGrids();
-		PersistenceService.persistThematicGrids(grids);
+		if (checkState())
+		{
+			List<ThematicGrid> grids = getSelection().getThematicGrids();
+			PersistenceService.persistThematicGrids(grids);
 
-		List<ThematicRole> roles = getSelection().getRoles();
-		PersistenceService.persistThematicRoles(roles);
+			List<ThematicRole> roles = getSelection().getRoles();
+			PersistenceService.persistThematicRoles(roles);
+		}
 	}
 }

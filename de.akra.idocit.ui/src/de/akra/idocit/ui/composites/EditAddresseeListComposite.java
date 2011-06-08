@@ -115,8 +115,14 @@ public class EditAddresseeListComposite
 					java.util.List<Addressee> items = selection.getAddressees();
 
 					items.add(newItem);
-
 					selection.setAddressees(items);
+
+					// Changes due to Issue #32
+					java.util.List<Addressee> activeAddressees = new ArrayList<Addressee>(
+							1);
+					activeAddressees.add(newItem);
+					selection.setActiveAddressees(activeAddressees);
+					// End changes due to Issue #32
 					setSelection(selection);
 
 					fireChangeEvent();
@@ -154,11 +160,31 @@ public class EditAddresseeListComposite
 					{
 						// Remove the selected item.
 						java.util.List<Addressee> items = selection.getAddressees();
+
+						// Changes due to Issue #10
+						int nextSelIndex = -1;
+						if (!selection.getActiveAddressees().isEmpty())
+						{
+							nextSelIndex = items.indexOf(selection.getActiveAddressees()
+									.get(0));
+							if (nextSelIndex >= items.size() - 1)
+							{
+								nextSelIndex = items.size() - 2;
+							}
+						}
+						// End changes due to Issue #10
+
 						items.removeAll(selection.getActiveAddressees());
-
 						selection.setAddressees(items);
-						setSelection(selection);
 
+						// Changes due to Issue #10
+						selection
+								.setActiveAddressees(nextSelIndex > -1 ? new ArrayList<Addressee>(
+										items.subList(nextSelIndex, nextSelIndex + 1))
+										: null);
+						// End changes due to Issue #10
+
+						setSelection(selection);
 						fireChangeEvent();
 					}
 					else
@@ -176,7 +202,6 @@ public class EditAddresseeListComposite
 			public void widgetDefaultSelected(SelectionEvent e)
 			{
 				// Nothing to do!
-
 			}
 		};
 
@@ -205,7 +230,6 @@ public class EditAddresseeListComposite
 					selection.setActiveAddressees(new ArrayList<Addressee>());
 				}
 
-				setSelection(selection);
 				fireChangeEvent();
 			}
 

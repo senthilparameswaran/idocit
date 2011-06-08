@@ -18,7 +18,11 @@ package de.akra.idocit.ui.composites;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,6 +32,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -42,11 +47,12 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.services.ThematicGridService;
-import de.akra.idocit.core.structure.DescribedItem;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.utils.DescribedItemNameComparator;
 import de.akra.idocit.ui.Activator;
 import de.akra.idocit.ui.constants.DialogConstants;
+import de.akra.idocit.ui.utils.DescribedItemUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
@@ -60,6 +66,11 @@ public class ManageThematicGridsComposite
 		extends
 		AbsComposite<ManageThematicGridsCompositeAC, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>
 {
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(ManageThematicGridsComposite.class
+			.getName());
 
 	// Widgets
 	private EditThematicGridListComposite editThematicGridListComposite;
@@ -72,6 +83,8 @@ public class ManageThematicGridsComposite
 
 	private Button btnExportGridsHtml;
 
+	private Label errorLabel;
+
 	// Listeners
 	private ISelectionListener<EditThematicGridCompositeSelection> editThematicGridSelectionListener;
 
@@ -82,6 +95,9 @@ public class ManageThematicGridsComposite
 	private SelectionListener btnExportListenerXml;
 
 	private SelectionListener btnExportListenerHtml;
+
+	// globals
+	private Color RED;
 
 	/**
 	 * Constructor.
@@ -112,13 +128,19 @@ public class ManageThematicGridsComposite
 	@Override
 	protected void doCleanUp()
 	{
-		// Nothing to do!
+		RED.dispose();
 	}
 
 	@Override
 	protected void doSetSelection(ManageThematicGridsCompositeSelection oldSelection,
 			ManageThematicGridsCompositeSelection newSelection)
 	{
+		updateRoleList(newSelection);
+
+		errorLabel.setVisible(newSelection.isNameExists());
+
+		/**********************************************************************/
+
 		EditThematicGridListCompositeSelection editItemListCompositeSelection = new EditThematicGridListCompositeSelection();
 		editItemListCompositeSelection.setMinNumberOfItems(1);
 
@@ -134,10 +156,27 @@ public class ManageThematicGridsComposite
 
 		EditThematicGridCompositeSelection editThematicGridCompositeSelection = new EditThematicGridCompositeSelection();
 		editThematicGridCompositeSelection.setRoles(newSelection.getRoles());
-		editThematicGridCompositeSelection.setThematicGrid(newSelection
+		editThematicGridCompositeSelection.setActiveThematicGrid(newSelection
 				.getActiveThematicGrid());
 
 		editThematicGridComposite.setSelection(editThematicGridCompositeSelection);
+	}
+
+	/**
+	 * If the global {@link ThematicRole} list is changed, load them again.
+	 * 
+	 * @param selection
+	 *            The selection object to update.
+	 */
+	private void updateRoleList(ManageThematicGridsCompositeSelection selection)
+	{
+		if (selection.getLastSaveTimeThematicRoles() < PersistenceService
+				.getLastSaveTimeOfThematicRoles())
+		{
+			selection.setLastSaveTimeThematicRoles(PersistenceService
+					.getLastSaveTimeOfThematicRoles());
+			selection.setRoles(PersistenceService.loadThematicRoles());
+		}
 	}
 
 	@Override
@@ -146,8 +185,19 @@ public class ManageThematicGridsComposite
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
+		RED = this.getDisplay().getSystemColor(SWT.COLOR_RED);
+
+		// TODO reduce the used space in UI if the label is not displayed (if possible)
+		errorLabel = new Label(this, SWT.NONE);
+		errorLabel.setVisible(false);
+		errorLabel.setText(DialogConstants.ERR_MSG_NAME_CONFLICT);
+		errorLabel.setForeground(RED);
+		errorLabel.setAlignment(SWT.CENTER);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(errorLabel);
+
 		Group grpEditList = new Group(this, SWT.NONE);
 		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).applyTo(grpEditList);
+
 		GridDataFactory.fillDefaults().grab(false, true).applyTo(grpEditList);
 		grpEditList.setText("Defined Thematic Grids:");
 
@@ -191,7 +241,30 @@ public class ManageThematicGridsComposite
 					PocUIComposite<EditThematicGridCompositeSelection> composite)
 			{
 				ManageThematicGridsCompositeSelection mySelection = getSelection();
-				mySelection.setActiveThematicGrid(selection.getThematicGrid());
+
+				List<ThematicGrid> grids = mySelection.getThematicGrids();
+				boolean foundSameName = DescribedItemUtils
+						.containsName(selection.getActiveThematicGrid(),
+								mySelection.getThematicGrids())
+						&& mySelection.getIndexOfActiveThematicGrid() != DescribedItemUtils
+								.indexOfName(selection.getActiveThematicGrid().getName(),
+										grids);
+
+				getSelection().setNameExists(foundSameName);
+
+				if (!foundSameName)
+				{
+					// replace the edited thematic grid in the global list,
+					// sort the list and remember the new position
+					grids.remove(mySelection.getIndexOfActiveThematicGrid());
+					grids.add(ThematicGridService.copy(selection.getActiveThematicGrid()));
+					Collections.sort(mySelection.getThematicGrids(),
+							DescribedItemNameComparator.getInstance());
+					mySelection.setIndexOfActiveThematicGrid(grids.indexOf(selection
+							.getActiveThematicGrid()));
+				}
+				// keep the copy of the selected grid
+				mySelection.setActiveThematicGrid(selection.getActiveThematicGrid());
 
 				setSelection(mySelection);
 			}
@@ -204,24 +277,30 @@ public class ManageThematicGridsComposite
 					PocUIComposite<EditThematicGridListCompositeSelection> composite)
 			{
 				ManageThematicGridsCompositeSelection mySelection = getSelection();
-				List<ThematicGrid> selectedItems = selection.getActiveItems();
+				mySelection.setNameExists(false);
 
+				List<ThematicGrid> selectedItems = selection.getActiveItems();
 				if ((selectedItems != null) && !selectedItems.isEmpty())
 				{
-					mySelection.setActiveThematicGrid(selectedItems.get(0));
+					// copy grid to notice changes
+					mySelection.setActiveThematicGrid(ThematicGridService
+							.copy(selectedItems.get(0)));
+					// remember the index to replace the changed item in the global list.
+					// the list must be ordered.
+					mySelection.setIndexOfActiveThematicGrid(mySelection
+							.getThematicGrids().indexOf(selectedItems.get(0)));
 				}
 				// Changes due to Issue #10
 				else
 				{
 					mySelection.setActiveThematicGrid(null);
+					mySelection.setIndexOfActiveThematicGrid(-1);
 				}
 				// End changes due to Issue #10
 
-				List<ThematicGrid> grids = new ArrayList<ThematicGrid>();
-				for (DescribedItem item : selection.getItems())
-				{
-					grids.add((ThematicGrid) item);
-				}
+				// TODO why doing a copy?
+				List<ThematicGrid> grids = new ArrayList<ThematicGrid>(
+						selection.getItems());
 				mySelection.setThematicGrids(grids);
 
 				setSelection(mySelection);
@@ -249,13 +328,17 @@ public class ManageThematicGridsComposite
 						ManageThematicGridsCompositeSelection selection = getSelection();
 						List<ThematicGrid> grids = selection.getThematicGrids();
 
+						// Changes due to Issue #32
 						if (grids == null)
 						{
-							grids = new ArrayList<ThematicGrid>();
+							grids = importedGrids;
 						}
-
-						grids.addAll(importedGrids);
-						selection.setThematicGrids(importedGrids);
+						else
+						{
+							grids = mergeGrids(grids, importedGrids);
+						}
+						selection.setThematicGrids(grids);
+						// End changes due to Issue #32
 						// Changes due to Issue #10
 						selection.setActiveThematicGrid(grids.size() > 0 ? grids.get(0)
 								: null);
@@ -269,6 +352,9 @@ public class ManageThematicGridsComposite
 					}
 					catch (IOException ioEx)
 					{
+						log.log(Level.SEVERE,
+								"An error occured while importing thematic grids from the selected resource.",
+								ioEx);
 						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
 								ioEx.getLocalizedMessage(), null);
 						ErrorDialog
@@ -326,6 +412,9 @@ public class ManageThematicGridsComposite
 					}
 					catch (IOException ioEx)
 					{
+						log.log(Level.SEVERE,
+								"An error occured while importing thematic grids from the selected resource.",
+								ioEx);
 						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
 								ioEx.getLocalizedMessage(), null);
 						ErrorDialog
@@ -383,6 +472,9 @@ public class ManageThematicGridsComposite
 					}
 					catch (IOException ioEx)
 					{
+						log.log(Level.SEVERE,
+								"An error occured while importing thematic grids from the selected resource.",
+								ioEx);
 						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
 								ioEx.getLocalizedMessage(), null);
 						ErrorDialog
@@ -399,6 +491,55 @@ public class ManageThematicGridsComposite
 			public void widgetDefaultSelected(SelectionEvent e)
 			{}
 		};
+	}
+
+	/**
+	 * New grids should be inserted into the list of the old grids. If the old grid list
+	 * contains already grids with names that have also new grids, then the user is asked
+	 * if he wants to overwrite the existing grids. The user is asked once for all equal
+	 * grids.<br/>
+	 * If old grids should not be overwritten, only new grids with other names are
+	 * inserted. New grids with same names are skipped.
+	 * 
+	 * @param oldGrids
+	 * @param newGrids
+	 */
+	private List<ThematicGrid> mergeGrids(List<ThematicGrid> oldGrids,
+			List<ThematicGrid> newGrids)
+	{
+		TreeMap<String, ThematicGrid> oldGridMap = new TreeMap<String, ThematicGrid>();
+		for (ThematicGrid oGrid : oldGrids)
+		{
+			oldGridMap.put(oGrid.getName(), oGrid);
+		}
+
+		boolean overwriteGrids = false;
+		boolean asked = false;
+
+		for (ThematicGrid newGrid : newGrids)
+		{
+			if (oldGridMap.containsKey(newGrid.getName()))
+			{
+				if (!asked)
+				{
+					asked = true;
+					overwriteGrids = MessageBoxUtils
+							.openQuestionDialogBox(
+									getShell(),
+									"There exists thematic grids with same names. New imported grids with same names will overwrite the existing grids.");
+				}
+				if (overwriteGrids)
+				{
+					oldGridMap.put(newGrid.getName(), newGrid);
+				}
+			}
+			else
+			{
+				oldGridMap.put(newGrid.getName(), newGrid);
+			}
+		}
+
+		return new ArrayList<ThematicGrid>(oldGridMap.values());
 	}
 
 	@Override

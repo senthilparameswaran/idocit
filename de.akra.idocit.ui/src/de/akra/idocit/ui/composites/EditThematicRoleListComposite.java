@@ -115,17 +115,23 @@ public class EditThematicRoleListComposite
 					java.util.List<ThematicRole> items = selection.getItems();
 
 					items.add(newItem);
-
 					selection.setItems(items);
-					setSelection(selection);
 
+					// Changes due to Issue #32
+					java.util.List<ThematicRole> activeThematicRole = new ArrayList<ThematicRole>(
+							1);
+					activeThematicRole.add(newItem);
+					selection.setActiveItems(activeThematicRole);
+					// End changes due to Issue #32
+
+					setSelection(selection);
 					fireChangeEvent();
 				}
 				else
 				{
 					MessageBoxUtils.openErrorBox(getShell(),
-							"The name of an item has to be unique. There exists already an item with the name "
-									+ newItem.getName());
+							"The name of an item has to be unique. There exists already an item with the name \""
+									+ newItem.getName() + "\"");
 				}
 			}
 
@@ -154,11 +160,30 @@ public class EditThematicRoleListComposite
 					{
 						// Remove the selected item.
 						java.util.List<ThematicRole> items = selection.getItems();
+
+						// Changes due to Issue #10
+						int nextSelIndex = -1;
+						if (!selection.getActiveItems().isEmpty())
+						{
+							nextSelIndex = items.indexOf(selection.getActiveItems()
+									.get(0));
+							if (nextSelIndex >= items.size() - 1)
+							{
+								nextSelIndex = items.size() - 2;
+							}
+						}
+						// End changes due to Issue #10
+
 						items.removeAll(selection.getActiveItems());
-
 						selection.setItems(items);
+						// Changes due to Issue #10
+						selection
+								.setActiveItems(nextSelIndex > -1 ? new ArrayList<ThematicRole>(
+										items.subList(nextSelIndex, nextSelIndex + 1))
+										: null);
+						// End changes due to Issue #10
+						
 						setSelection(selection);
-
 						fireChangeEvent();
 					}
 					else
@@ -176,7 +201,6 @@ public class EditThematicRoleListComposite
 			public void widgetDefaultSelected(SelectionEvent e)
 			{
 				// Nothing to do!
-
 			}
 		};
 
