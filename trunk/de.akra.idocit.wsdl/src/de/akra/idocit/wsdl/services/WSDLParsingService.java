@@ -15,39 +15,23 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.services;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.wsdl.Definition;
 import javax.wsdl.Message;
-import javax.wsdl.Operation;
 import javax.wsdl.Part;
-import javax.wsdl.PortType;
 import javax.wsdl.Types;
-import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.schema.Schema;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import de.akra.idocit.wsdl.structure.WsdlContent;
-import de.akra.idocit.wsdl.structure.WsdlMetadata;
-import de.akra.idocit.wsdl.structure.WsdlParsingResult;
+import de.akra.idocit.core.structure.Delimiters;
 
 /**
  * Provides operations for the extraction of information from WSDL-files.
@@ -58,7 +42,6 @@ import de.akra.idocit.wsdl.structure.WsdlParsingResult;
 public final class WSDLParsingService {
 
 	// Constants
-	private static final Logger logger = Logger.getLogger(WSDLParsingService.class.getName());
 	private static final String ANONYMOUS_TYPE_NAME = "anonymous";
 	private static final String[] SIMPLE_XML_TYPES = { "string", "normalizedString", "token", "base64Binary", "hexBinary", "integer",
 			"positiveInteger", "negativeInteger", "nonNegativeInteger", "nonPositiveInteger", "long", "unsignedLong", "int", "unsignedInt", "short",
@@ -123,7 +106,7 @@ public final class WSDLParsingService {
 	 * 
 	 * @return The {@link List} of type paths
 	 */
-	public static List<String> extractRoles(Message wsdlMessage, Types types) {
+	public static List<String> extractRoles(Message wsdlMessage, Types types, Delimiters delimiters) {
 		List<String> result = new ArrayList<String>();
 
 		// For each Part ...
@@ -164,7 +147,7 @@ public final class WSDLParsingService {
 
 					// ... and extract its flat structure.
 					if (typeNode != null) {
-						List<String> childPaths = extractFlatMessageStructure(typeNode, schemata, new HashSet<String>());
+						List<String> childPaths = extractFlatMessageStructure(typeNode, schemata, new HashSet<String>(), delimiters);
 
 						for (String childPpath : childPaths) {
 							result.add(path + childPpath);
@@ -220,8 +203,6 @@ public final class WSDLParsingService {
 
 	private static String getNameAttribute(Node tree) {
 		if (tree.getAttributes() != null) {
-			// String namespace = (tree.getNamespaceURI() != null) ?
-			// tree.getNamespaceURI() + ":": "";
 			Node name = tree.getAttributes().getNamedItem("name");
 
 			return (name != null) ? name.getNodeValue() : ANONYMOUS_TYPE_NAME;
@@ -279,10 +260,10 @@ public final class WSDLParsingService {
 	 * 
 	 * @return The flat-message structure
 	 */
-	private static List<String> extractFlatMessageStructure(Node node, List<Node> schemata, Set<String> visitedTypes) {
+	private static List<String> extractFlatMessageStructure(Node node, List<Node> schemata, Set<String> visitedTypes, Delimiters delimiters) {
 		List<String> result = new ArrayList<String>();
 		// At first derive the type name ...
-		String typeName = deriveTypeName(node);
+		String typeName = deriveTypeName(node, delimiters);
 		boolean isVisitedType = visitedTypes.contains(typeName);
 
 		visitedTypes.add(typeName);
@@ -291,16 +272,14 @@ public final class WSDLParsingService {
 		if (isSimpleType(typeName)) {
 			// Ok, we have to add this element to our result.
 			String elementName = getNameAttribute(node);
-			String namespace = (node.getNamespaceURI() != null) ? node.getNamespaceURI() + ":" : "";
 
-			result.add(namespace + ":" + elementName + "(" + typeName + ")");
+			result.add(elementName + "(" + typeName + ")");
 			// 2nd case: do we have a recursive type definition?
 		} else if (isVisitedType && !ANONYMOUS_TYPE_NAME.equals(typeName)) {
 			// Ok, we have to add this element to our result and stop recursion.
 			String elementName = getNameAttribute(node);
-			String namespace = (node.getNamespaceURI() != null) ? node.getNamespaceURI() + ":" : "";
 
-			result.add(namespace + ":" + elementName + '(' + typeName + "[recursion])");
+			result.add(elementName + '(' + typeName + "[recursion])");
 		} else {
 			// No? Well, then we have to analyse all child-nodes.
 			List<String> allChildPaths = new ArrayList<String>();
@@ -313,7 +292,7 @@ public final class WSDLParsingService {
 				for (int i = 0; i < childNodes.getLength(); i++) {
 					Node childNode = childNodes.item(i);
 
-					allChildPaths.addAll(extractFlatMessageStructure(childNode, schemata, visitedTypes));
+					allChildPaths.addAll(extractFlatMessageStructure(childNode, schemata, visitedTypes, delimiters));
 				}
 			} else {
 				int i = 0;
@@ -324,7 +303,7 @@ public final class WSDLParsingService {
 				}
 
 				if (typeDeclarationNode != null) {
-					allChildPaths.addAll(extractFlatMessageStructure(typeDeclarationNode, schemata, visitedTypes));
+					allChildPaths.addAll(extractFlatMessageStructure(typeDeclarationNode, schemata, visitedTypes, delimiters));
 				}
 			}
 
@@ -332,7 +311,6 @@ public final class WSDLParsingService {
 			if (isElementOrComplexType(node)) {
 				// Parse only valid elements with a name.
 				String elementName = getNameAttribute(node);
-				String namespace = (node.getNamespaceURI() != null) ? node.getNamespaceURI() + ":" : "";
 
 				// ... and concat them with the current element- and
 				// typename.
@@ -341,13 +319,13 @@ public final class WSDLParsingService {
 						if (isNamedComplexType(node)) {
 							result.add(childPath);
 						} else {
-							result.add(namespace + ":" + elementName + "(" + typeName + ")" + "." + childPath);
+							result.add(elementName + "(" + typeName + ")" + delimiters.pathDelimiter + childPath);
 						}
 					}
 				} else if (isSimpleType(typeDeclarationNode)) {
-					result.add(namespace + ":" + elementName + "(" + getNameAttribute(typeDeclarationNode) + ")");
+					result.add(elementName + "(" + getNameAttribute(typeDeclarationNode) + ")");
 				} else {
-					result.add(namespace + ":" + elementName + "(no_definition)");
+					result.add(elementName + "(no_definition)");
 				}
 			} else {
 				return allChildPaths;
@@ -367,7 +345,7 @@ public final class WSDLParsingService {
 	 * 
 	 * @return The type of the given node.
 	 */
-	private static String deriveTypeName(Node node) {
+	private static String deriveTypeName(Node node, Delimiters delimiters) {
 		String typeName = null;
 		String nodeName = String.valueOf(node.getLocalName()).toLowerCase();
 
@@ -379,206 +357,11 @@ public final class WSDLParsingService {
 			typeName = node.getAttributes().getNamedItem("type").getNodeValue();
 		}
 
-		if (typeName.indexOf(':') > -1) {
-			return typeName.split(":")[1];
+		if (typeName.indexOf(delimiters.namespaceDelimiter) > -1) {
+			return typeName.split(delimiters.namespaceDelimiter)[1];
 		} else {
 			return typeName;
 		}
-	}
-
-	private static Map<String, List<Operation>> extractPortTypes(Definition def) {
-		Map<String, List<Operation>> portTypes = new HashMap<String, List<Operation>>();
-
-		if (def.getPortTypes() != null) {
-			for (Object portTypeObj : def.getPortTypes().values()) {
-				PortType portType = (PortType) portTypeObj;
-				List<Operation> operationIdentifiers = new ArrayList<Operation>();
-
-				for (Object operationObj : portType.getOperations()) {
-					operationIdentifiers.add((Operation) operationObj);
-				}
-
-				portTypes.put(portType.getQName().getLocalPart(), operationIdentifiers);
-			}
-		}
-
-		return portTypes;
-	}
-
-	private static List<WsdlMetadata> convertToMetadata(Map<String, List<Operation>> portTypes, int startId, String wsdlFilename, Types types) {
-		List<WsdlMetadata> result = new ArrayList<WsdlMetadata>();
-		int id = startId;
-
-		for (Entry<String, List<Operation>> entry : portTypes.entrySet()) {
-			for (Operation operation : entry.getValue()) {
-				WsdlMetadata metadata = new WsdlMetadata();
-
-				metadata.setId(id);
-				metadata.setOperationIdentifier(operation.getName());
-				metadata.setPortTypeName(entry.getKey());
-				metadata.setWsdlFilename(wsdlFilename);
-
-				if (operation.getInput() != null) {
-					metadata.setInputMessagePaths(extractRoles(operation.getInput().getMessage(), types));
-				}
-
-				if (operation.getOutput() != null) {
-					metadata.setOutputMessagePaths(extractRoles(operation.getOutput().getMessage(), types));
-				}
-				id++;
-				result.add(metadata);
-			}
-		}
-
-		return result;
-	}
-
-	private static WsdlContent createPortType(List<WsdlMetadata> metadata) {
-		WsdlContent portType = new WsdlContent();
-
-		for (WsdlMetadata wsdlMetadata : metadata) {
-			portType.setPortTypeName(wsdlMetadata.getPortTypeName());
-			portType.addOperation(wsdlMetadata.getOperationIdentifier());
-			portType.addMessagePaths(wsdlMetadata.getInputMessagePaths());
-			portType.addMessagePaths(wsdlMetadata.getOutputMessagePaths());
-		}
-
-		return portType;
-	}
-
-	/**
-	 * Returns the {@link WsdlParsingResult} for the given array of
-	 * <code>wsdlFiles</code> .
-	 * 
-	 * @param wsdlFiles
-	 *            The WSDL-files to extract the {@link WsdlMetadata} from
-	 * 
-	 * @return The {@link WsdlParsingResult}
-	 * 
-	 * @throws WSDLException
-	 * @see In case of an {@link WSDLException} see
-	 *      {@link WSDLFactory#newInstance() #newWSDLReader()}
-	 */
-	public static WsdlParsingResult extractMetadata(File[] wsdlFiles) throws WSDLException {
-		WsdlParsingResult result = new WsdlParsingResult();
-		List<WsdlMetadata> metadata = new ArrayList<WsdlMetadata>();
-		List<String> doublePortTypes = new ArrayList<String>();
-		List<String> unparseableWsdlFiles = new ArrayList<String>();
-		int id = 0;
-		Set<WsdlContent> parsedPortTypes = new HashSet<WsdlContent>();
-		int fileNo = 0;
-		WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
-
-		// For each WSDL-file ...
-		for (File wsdlFile : wsdlFiles) {
-			try {
-				// ... parse it and ...
-				System.out.println("Parsing file no. " + fileNo + " of " + wsdlFiles.length + " files.");
-				Definition def = reader.readWSDL(wsdlFile.getAbsolutePath());
-				Map<String, List<Operation>> portTypes = extractPortTypes(def);
-				List<WsdlMetadata> extractedMetadata = convertToMetadata(portTypes, id, wsdlFile.getName(), def.getTypes());
-				WsdlContent portType = createPortType(extractedMetadata);
-
-				// Each interface has to be analysed only one time!
-				if (!parsedPortTypes.contains(portType)) {
-					// ... extract its Porttypes.
-					metadata.addAll(extractedMetadata);
-					id += extractedMetadata.size();
-
-					parsedPortTypes.add(portType);
-				} else {
-					doublePortTypes.add(wsdlFile.getAbsolutePath());
-				}
-			} catch (WSDLException wsdlEx) {
-				unparseableWsdlFiles.add(wsdlFile.getAbsolutePath());
-				// We catch the NPE, because it could occur in the WSDLReader.
-			} catch (NullPointerException npe) {
-				unparseableWsdlFiles.add(wsdlFile.getAbsolutePath());
-			}
-
-			fileNo++;
-		}
-
-		result.setUnparseableWsdlFiles(unparseableWsdlFiles);
-		result.setWsdlMetadata(metadata);
-		result.setDoublePortTypes(doublePortTypes);
-		result.setNumberOfWsdlFiles(wsdlFiles.length);
-
-		return result;
-	}
-
-	public static List<String> getOperationLabels(List<File> validWsdls) throws ParserConfigurationException, SAXException, IOException {
-		List<String> operationNames = new ArrayList<String>();
-		int currentWsdlNumber = 1;
-		int numberOfWsdls = validWsdls.size();
-
-		logger.info("Starting extraction of operation labels ...");
-		logger.info("Processing " + numberOfWsdls + " files");
-
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser saxParser = factory.newSAXParser();
-
-		for (File wsdlFile : validWsdls) {
-			if (wsdlFile.isFile()) {
-				logger.info("Analyzing " + wsdlFile.getAbsolutePath() + "(" + currentWsdlNumber + " of " + numberOfWsdls + ")");
-				List<String> operationLabels = getOperationLabelsFromWsdlFile(saxParser, wsdlFile);
-
-				if (operationLabels.size() > 0) {
-					logger.info(operationLabels.size() + " operation labels found");
-					operationNames.addAll(operationLabels);
-				} else {
-					logger.info("No operation labels found");
-				}
-
-				currentWsdlNumber++;
-			}
-		}
-
-		logger.info(operationNames.size() + " operation labels have been extracted.");
-		logger.info("Finished extraction of operation labels ...");
-
-		return operationNames;
-	}
-
-	public static List<String> getPortTypeLabels(List<File> validWsdls) throws ParserConfigurationException, SAXException, IOException {
-		List<String> portTypeNames = new ArrayList<String>();
-		int currentWsdlNumber = 1;
-		int numberOfWsdls = validWsdls.size();
-
-		logger.info("Starting extraction of PortType labels ...");
-		logger.info("Processing " + numberOfWsdls + " files");
-
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser saxParser = factory.newSAXParser();
-
-		for (File wsdlFile : validWsdls) {
-			logger.info("Analyzing " + wsdlFile.getAbsolutePath() + "(" + currentWsdlNumber + " of " + numberOfWsdls + ")");
-			WsdlDocumentHandler documentHandler = new WsdlDocumentHandler();
-			saxParser.parse(wsdlFile, documentHandler);
-			List<String> portTypeLabels = documentHandler.getPortTypeLabels();
-
-			if (portTypeLabels.size() > 0) {
-				logger.info(portTypeLabels.size() + " PortType labels found");
-				portTypeNames.addAll(portTypeLabels);
-			} else {
-				logger.info("No PortType labels found");
-			}
-
-			currentWsdlNumber++;
-		}
-
-		logger.info(portTypeNames.size() + " operation labels have been extracted.");
-		logger.info("Finished extraction of operation labels ...");
-
-		return portTypeNames;
-	}
-
-	public static List<String> getOperationLabelsFromWsdlFile(SAXParser saxParser, File wsdlFile) throws SAXException, IOException {
-		WsdlDocumentHandler documentHandler = new WsdlDocumentHandler();
-		saxParser.parse(wsdlFile, documentHandler);
-
-		List<String> operationLabels = documentHandler.getOperationLabels();
-		return operationLabels;
 	}
 
 }

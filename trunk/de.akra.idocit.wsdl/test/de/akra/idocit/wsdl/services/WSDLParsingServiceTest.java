@@ -31,6 +31,8 @@ import javax.xml.namespace.QName;
 
 import org.junit.Test;
 
+import de.akra.idocit.core.structure.Delimiters;
+
 /**
  * Tests for {@link WSDLParsingService}.
  * 
@@ -100,24 +102,32 @@ public class WSDLParsingServiceTest
 		WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
 		Definition def = reader.readWSDL("test/source/wsdl_46001");
 
+		Delimiters delimiters = new Delimiters();
+		delimiters.namespaceDelimiter = ":";
+		delimiters.pathDelimiter = ".";
+		delimiters.typeDelimiter = ".";
+
 		{
 			Message message = def.getMessage(new QName("http://tempuri.org/",
 					"GetCompletionListSoapIn"));
-			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes());
+			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes(),
+					delimiters);
 			logList(roles);
 			assertEquals(getReferenceRoles(), roles);
 		}
 		{
 			Message message = def.getMessage(new QName("http://tempuri.org/",
 					"GetCompletionListSoapInSimple"));
-			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes());
+			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes(),
+					delimiters);
 			logList(roles);
 			assertEquals(getReferenceRoles2(), roles);
 		}
 		{
 			Message message = def.getMessage(new QName("http://tempuri.org/",
 					"GetCompletionListSoapInComplex"));
-			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes());
+			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes(),
+					delimiters);
 			logList(roles);
 			assertEquals(getReferenceRoles3(), roles);
 		}
