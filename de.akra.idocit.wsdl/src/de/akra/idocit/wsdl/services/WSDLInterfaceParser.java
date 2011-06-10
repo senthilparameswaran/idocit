@@ -285,7 +285,7 @@ public class WSDLInterfaceParser
 		//TODO remove time counter
 		long start = System.currentTimeMillis();
 		List<String> rolePaths = WSDLParsingService.extractRoles(message,
-				wsdlDefinition.getTypes());
+				wsdlDefinition.getTypes(), delimiters);
 		long end = System.currentTimeMillis();
 		timeCounter += end-start;
 
