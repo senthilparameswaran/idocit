@@ -264,12 +264,13 @@ public final class WSDLParsingService {
 		List<String> result = new ArrayList<String>();
 		// At first derive the type name ...
 		String typeName = deriveTypeName(node, delimiters);
+		boolean isSimpleType = isSimpleType(typeName);
 		boolean isVisitedType = visitedTypes.contains(typeName);
 
 		visitedTypes.add(typeName);
 
 		// ... and check if we have a simple type. (1st case)
-		if (isSimpleType(typeName)) {
+		if (isSimpleType) {
 			// Ok, we have to add this element to our result.
 			String elementName = getNameAttribute(node);
 
