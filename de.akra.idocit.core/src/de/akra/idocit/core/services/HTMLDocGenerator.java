@@ -154,11 +154,11 @@ public class HTMLDocGenerator
 			htmlDoc.append("<ul style=\"list-style-type:none\">\n");
 			htmlDoc.append("<li><h5>Output</h5></li>\n");
 			htmlDoc.append("<li>");
-			documentations2HTML(htmlDoc, operation.getInputParameters()
+			documentations2HTML(htmlDoc, operation.getOutputParameters()
 					.getDocumentations());
 			htmlDoc.append("</li>");
 
-			for (Parameter p : operation.getInputParameters().getParameters())
+			for (Parameter p : operation.getOutputParameters().getParameters())
 			{
 				htmlDoc.append("<li>");
 				htmlDoc.append(p.getDisplayName());
