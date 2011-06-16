@@ -202,6 +202,7 @@ public class DisplayRecommendedRolesComposite
 						{
 							// role is mandatory and not associated
 							roleItem.setForeground(RED);
+							roleItem.setFont(boldFont);
 						}
 						else
 						{
