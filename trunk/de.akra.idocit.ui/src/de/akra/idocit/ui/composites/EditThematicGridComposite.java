@@ -198,10 +198,12 @@ public class EditThematicGridComposite
 	protected void doSetSelection(EditThematicGridCompositeSelection oldSelection,
 			EditThematicGridCompositeSelection newSelection)
 	{
-		if (!newSelection.equals(oldSelection) && newSelection.getActiveThematicGrid() != null)
+		if (!newSelection.equals(oldSelection)
+				&& newSelection.getActiveThematicGrid() != null)
 		{
 			String newName = newSelection.getActiveThematicGrid().getName();
-			String oldName = (oldSelection != null && oldSelection.getActiveThematicGrid() != null) ? oldSelection
+			String oldName = (oldSelection != null && oldSelection
+					.getActiveThematicGrid() != null) ? oldSelection
 					.getActiveThematicGrid().getName() : null;
 
 			if (!newName.equals(oldName))
@@ -211,8 +213,8 @@ public class EditThematicGridComposite
 
 			String newDescription = newSelection.getActiveThematicGrid().getDescription();
 			String oldDescription = (oldSelection != null && oldSelection
-					.getActiveThematicGrid() != null) ? oldSelection.getActiveThematicGrid()
-					.getDescription() : null;
+					.getActiveThematicGrid() != null) ? oldSelection
+					.getActiveThematicGrid().getDescription() : null;
 
 			if (!newDescription.equals(oldDescription))
 			{
@@ -220,18 +222,21 @@ public class EditThematicGridComposite
 			}
 
 			Set<String> newVerbs = newSelection.getActiveThematicGrid().getVerbs();
-			Set<String> oldVerbs = (oldSelection != null) ? oldSelection
+			Set<String> oldVerbs = (oldSelection != null && oldSelection
+					.getActiveThematicGrid() != null) ? oldSelection
 					.getActiveThematicGrid().getVerbs() : null;
 
 			if (!newVerbs.equals(oldVerbs))
-			{}
-			txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newVerbs));
+			{
+				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newVerbs));
+			}
 
 			List<ThematicRole> newRoles = newSelection.getRoles();
 			List<ThematicRole> oldRoles = (oldSelection != null) ? oldSelection
 					.getRoles() : null;
 
-			if (!newRoles.equals(oldRoles))
+			// rebuild table if role list differs or the table is not initialized
+			if (!newRoles.equals(oldRoles) || items == null)
 			{
 				tabRoles.clearAll();
 				if (items != null)
@@ -262,9 +267,10 @@ public class EditThematicGridComposite
 				}
 			}
 			// Changes due to Issue #27
-			else{
+			else
+			{
 				// uncheck all items in the table and set status to default
-				for(int i = 0; i < items.length; ++i)
+				for (int i = 0; i < items.length; ++i)
 				{
 					items[i].setChecked(false);
 					items[i].setText(ROLE_TABLE_COL_STATUS, STATUS_MANDATORY);
@@ -272,8 +278,8 @@ public class EditThematicGridComposite
 			}
 			// End changes due to Issue #27
 
-			Map<ThematicRole, Boolean> newSelectedRoles = newSelection.getActiveThematicGrid()
-					.getRoles();
+			Map<ThematicRole, Boolean> newSelectedRoles = newSelection
+					.getActiveThematicGrid().getRoles();
 			List<ThematicRole> roles = newSelection.getRoles();
 
 			int i = 0;
@@ -333,7 +339,7 @@ public class EditThematicGridComposite
 				ThematicGrid grid = selection.getActiveThematicGrid();
 				grid.setDescription(txtDescription.getText());
 				selection.setActiveThematicGrid(grid);
-				
+
 				fireChangeEvent();
 			}
 		};

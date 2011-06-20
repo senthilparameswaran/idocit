@@ -16,13 +16,11 @@
 package de.akra.idocit.wsdl.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import javax.wsdl.Definition;
 import javax.wsdl.Fault;
@@ -289,9 +287,6 @@ public class WSDLInterfaceParser
 		long end = System.currentTimeMillis();
 		timeCounter += end-start;
 
-		// TODO delete this if WSDLParsingService is finished
-		rolePaths = reformatRolePaths(rolePaths);
-
 		if (!rolePaths.isEmpty())
 		{
 			// the WSDLMessage represents an embedded message of an Operation
@@ -344,29 +339,6 @@ public class WSDLInterfaceParser
 			}
 		}
 		return wsdlMessage;
-	}
-
-	/**
-	 * TODO this is only a temporary wrapper, because the WSDLParsingService is not
-	 * finished yet.
-	 */
-	private List<String> reformatRolePaths(List<String> rolePaths)
-	{
-		List<String> newPaths = Collections.emptyList();
-		if (!rolePaths.isEmpty())
-		{
-			newPaths = new ArrayList<String>();
-			for (String path : rolePaths)
-			{
-				String newPath = path
-						.replaceAll(Pattern.quote("."), delimiters.pathDelimiter)
-						.replaceAll(Pattern.quote("("), delimiters.typeDelimiter)
-						.replaceAll(Pattern.quote(":"), delimiters.namespaceDelimiter)
-						.replaceAll(Pattern.quote(")"), "");
-				newPaths.add(newPath);
-			}
-		}
-		return newPaths;
 	}
 
 	/**
