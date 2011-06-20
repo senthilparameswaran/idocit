@@ -203,7 +203,9 @@ public class DocumentationGenerator
 				element.appendChild(domDocument.createElement(XML_TAG_BR));
 
 				// if CR and LF are together, replace it only once
-				if (text.charAt(i + 1) == '\n')
+				// Changes due to Issue #2
+				if ((text.length() > i + 1) && text.charAt(i + 1) == '\n')
+				// End changes due to Issue #2
 				{
 					i++;
 				}
@@ -218,7 +220,9 @@ public class DocumentationGenerator
 				element.appendChild(domDocument.createElement(XML_TAG_BR));
 
 				// if CR and LF are together, replace it only once
-				if (text.charAt(i + 1) == '\r')
+				// Changes due to Issue #2
+				if ((text.length() > i + 1) && text.charAt(i + 1) == '\r')
+				// End changes due to Issue #2
 				{
 					i++;
 				}
