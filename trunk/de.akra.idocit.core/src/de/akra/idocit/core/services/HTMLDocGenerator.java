@@ -61,11 +61,11 @@ public class HTMLDocGenerator
 	private void generateHTMLBody(StringBuffer htmlDoc)
 	{
 		htmlDoc.append("<body>\n");
-		htmlDoc.append("<h1>Content</h1>\n");
-		htmlDoc.append("<pre>\n");
-		generateIndex(htmlDoc);
-		htmlDoc.append("</pre>\n");
-		htmlDoc.append("<hr width=\"100%\">");
+//		htmlDoc.append("<h1>Content</h1>\n");
+//		htmlDoc.append("<pre>\n");
+//		generateIndex(htmlDoc);
+//		htmlDoc.append("</pre>\n");
+//		htmlDoc.append("<hr width=\"100%\">");
 
 		htmlDoc.append("<h1>");
 		htmlDoc.append(artifact.getDisplayName());
@@ -248,7 +248,7 @@ public class HTMLDocGenerator
 	 * @param level
 	 *            The tree level (indentation of the line).
 	 */
-	public void buildHierarchy(StringBuffer result, SignatureElement sigElem, int level)
+	private void buildHierarchy(StringBuffer result, SignatureElement sigElem, int level)
 	{
 		if (sigElem != null)
 		{
