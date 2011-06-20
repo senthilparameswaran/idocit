@@ -67,8 +67,8 @@ public class WSDLParser implements Parser
 		delimiters = new Delimiters();
 		delimiters.pathDelimiter = ";";
 		// TODO maybe '}' as namespace delimiter?
-		delimiters.namespaceDelimiter = ":";
-		delimiters.typeDelimiter = ".";
+		delimiters.namespaceDelimiter = "#";
+		delimiters.typeDelimiter = "+";
 	}
 
 	/**
