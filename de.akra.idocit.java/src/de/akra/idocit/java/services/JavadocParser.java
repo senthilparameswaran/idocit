@@ -25,6 +25,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Javadoc;
+import org.eclipse.jdt.core.dom.MemberRef;
+import org.eclipse.jdt.core.dom.MethodRef;
+import org.eclipse.jdt.core.dom.MethodRefParameter;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
@@ -120,6 +123,7 @@ public class JavadocParser
 	 *            should be skipped. Therefore the <code>offset</code> should be 1.
 	 * @return The text from the <code>fragments</code>.
 	 */
+	@SuppressWarnings("unchecked")
 	private static String readFragments(List<ASTNode> fragments, int offset)
 	{
 		StringBuffer html = new StringBuffer();
@@ -143,24 +147,71 @@ public class JavadocParser
 			}
 			case ASTNode.METHOD_REF:
 			{
-				// TODO handle more fragments
-				logger.log(Level.INFO,
-						"Unhandled fragement in Javadoc: ASTNode.METHOD_REF -> "
-								+ fragment.toString());
+				MethodRef mRef = (MethodRef) fragment;
+				if (mRef.getQualifier() != null)
+				{
+					Name qualifier = mRef.getQualifier();
+					html.append(qualifier.getFullyQualifiedName());
+				}
+
+				html.append('#');
+				html.append(mRef.getName().getIdentifier());
+				html.append('(');
+
+				// write parameter list
+				List<MethodRefParameter> mRefParameters = (List<MethodRefParameter>) mRef
+						.parameters();
+				for (MethodRefParameter mRefParam : mRefParameters)
+				{
+					html.append(ReflectionHelper.getIdentifierFrom(mRefParam.getType()));
+					if (mRefParam.isVarargs())
+					{
+						html.append("...");
+					}
+					if (mRefParam.getName() != null)
+					{
+						html.append(' ');
+						html.append(mRefParam.getName().getFullyQualifiedName());
+					}
+					html.append(',');
+				}
+				if (!mRefParameters.isEmpty())
+				{
+					// remove last comma
+					html.deleteCharAt(html.length() - 1);
+				}
+
+				html.append(')');
 				break;
 			}
 			case ASTNode.MEMBER_REF:
 			{
-				logger.log(Level.INFO,
-						"Unhandled fragement in Javadoc: ASTNode.MEMBER_REF -> "
-								+ fragment.toString());
+				MemberRef mRef = (MemberRef) fragment;
+				if (mRef.getQualifier() != null)
+				{
+					Name qualifier = mRef.getQualifier();
+					html.append(qualifier.getFullyQualifiedName());
+				}
+				html.append('#');
+				html.append(mRef.getName().getIdentifier());
 				break;
 			}
 			case ASTNode.TAG_ELEMENT:
 			{
-				logger.log(Level.INFO,
-						"Unhandled fragement in Javadoc: ASTNode.TAG_ELEMENT -> "
-								+ fragment.toString());
+				TagElement tagElem = (TagElement) fragment;
+				if (tagElem.isNested())
+				{
+					html.append('{');
+				}
+
+				html.append(tagElem.getTagName());
+				html.append(' ');
+				html.append(readFragments((List<ASTNode>) tagElem.fragments(), 0));
+
+				if (tagElem.isNested())
+				{
+					html.append('}');
+				}
 				break;
 			}
 			}
@@ -168,5 +219,4 @@ public class JavadocParser
 
 		return html.toString();
 	}
-
 }
