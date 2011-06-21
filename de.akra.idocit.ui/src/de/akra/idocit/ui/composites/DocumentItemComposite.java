@@ -752,7 +752,7 @@ public class DocumentItemComposite
 	private void appendRemoveAddresseeTab()
 	{
 		removeAddresseeTab = new TabItem(addresseeTabFolder, SWT.CENTER);
-		removeAddresseeTab.setText("   —");
+		removeAddresseeTab.setText("   \u2014"); // Unicode em dash
 		removeAddresseeTab.setToolTipText("Remove Addressee");
 	}
 
