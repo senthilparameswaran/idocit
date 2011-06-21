@@ -44,7 +44,8 @@ public final class WSDLParsingService
 	private static final String TYPE_NAME_NO_DEFINITION = "no_definition";
 	private static final String TYPE_NAME_RECURSION = "[recursion]";
 	private static final String TYPE_NAME_ANONYMOUS = "anonymous";
-	
+
+	private static final String XML_NS_DELIMITER = ":";
 	private static final String XML_ATTRIBUTE_TYPE = "type";
 	private static final String XML_SIMPLETYPE = "simpletype";
 	private static final String XML_COMPLEXTYPE = "complextype";
@@ -257,13 +258,13 @@ public final class WSDLParsingService
 
 	private static boolean isElementOrComplexType(Node tree)
 	{
-		return XML_ELEMENT.equals(String.valueOf(tree.getLocalName()).toLowerCase())
+		return XML_ELEMENT.equalsIgnoreCase(String.valueOf(tree.getLocalName()))
 				|| isNamedComplexType(tree);
 	}
 
 	private static boolean isNamedComplexType(Node tree)
 	{
-		return XML_COMPLEXTYPE.equals(String.valueOf(tree.getLocalName()).toLowerCase())
+		return XML_COMPLEXTYPE.equalsIgnoreCase(String.valueOf(tree.getLocalName()))
 				&& (tree.getAttributes() != null) && (getNameAttribute(tree) != null);
 	}
 
@@ -279,9 +280,9 @@ public final class WSDLParsingService
 	 */
 	private static boolean isSimpleType(String typeName)
 	{
-		String lcTypeName = String.valueOf(typeName).toLowerCase();
+		String lcTypeName = String.valueOf(typeName);
 
-		if (XML_SIMPLETYPE.equals(lcTypeName))
+		if (XML_SIMPLETYPE.equalsIgnoreCase(lcTypeName))
 		{
 			return true;
 		}
@@ -289,7 +290,7 @@ public final class WSDLParsingService
 		{
 			for (String simpleType : SIMPLE_XML_TYPES)
 			{
-				if (simpleType.toLowerCase().equals(lcTypeName))
+				if (simpleType.equalsIgnoreCase(lcTypeName))
 				{
 					return true;
 				}
@@ -338,7 +339,8 @@ public final class WSDLParsingService
 			// Ok, we have to add this element to our result and stop recursion.
 			String elementName = getNameAttribute(node);
 
-			result.add(elementName + delimiters.typeDelimiter + typeName + TYPE_NAME_RECURSION);
+			result.add(elementName + delimiters.typeDelimiter + typeName
+					+ TYPE_NAME_RECURSION);
 		}
 		else
 		{
@@ -407,7 +409,8 @@ public final class WSDLParsingService
 				}
 				else
 				{
-					result.add(elementName + delimiters.typeDelimiter + TYPE_NAME_NO_DEFINITION);
+					result.add(elementName + delimiters.typeDelimiter
+							+ TYPE_NAME_NO_DEFINITION);
 				}
 			}
 			else
@@ -432,25 +435,26 @@ public final class WSDLParsingService
 	private static String deriveTypeName(Node node, Delimiters delimiters)
 	{
 		String typeName = null;
-		String nodeName = String.valueOf(node.getLocalName()).toLowerCase();
+		String nodeName = String.valueOf(node.getLocalName());
 
 		if ((node.getAttributes() == null)
 				|| (node.getAttributes().getNamedItem(XML_ATTRIBUTE_TYPE) == null))
 		{
 			typeName = TYPE_NAME_ANONYMOUS;
 		}
-		else if (XML_SIMPLETYPE.equals(nodeName))
+		else if (XML_SIMPLETYPE.equalsIgnoreCase(nodeName))
 		{
 			return nodeName;
 		}
 		else
 		{
-			typeName = node.getAttributes().getNamedItem(XML_ATTRIBUTE_TYPE).getNodeValue();
+			typeName = node.getAttributes().getNamedItem(XML_ATTRIBUTE_TYPE)
+					.getNodeValue();
 		}
 
-		if (typeName.indexOf(delimiters.namespaceDelimiter) > -1)
+		if (typeName.indexOf(XML_NS_DELIMITER) > -1)
 		{
-			return typeName.split(delimiters.namespaceDelimiter)[1];
+			return typeName.split(XML_NS_DELIMITER)[1];
 		}
 		else
 		{
