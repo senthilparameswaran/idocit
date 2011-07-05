@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="de.akra.idocit.nlp.stanford.feature"
+      label="IDocIt! Stanford-NLP-Plugin"
+      version="0.0.1"
+      provider-name="AKRA GmbH">
+
+   <description url="http://code.google.com/p/idocit/">
+      IDocIt! Stanford-NLP-Plugin
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <plugin
+         id="de.akra.idocit.nlp.stanford"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

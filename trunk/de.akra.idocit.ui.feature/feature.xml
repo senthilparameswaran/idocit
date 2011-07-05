@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="de.akra.idocit.ui.feature"
+      label="iDocIt! UI"
+      version="0.0.1"
+      provider-name="AKRA GmbH">
+
+   <description url="http://code.google.com/p/idocit/">
+      iDocIt! UI
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="de.akra.idocit.core.feature" version="0.0.1"/>
+   </requires>
+
+   <plugin
+         id="de.akra.idocit.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
