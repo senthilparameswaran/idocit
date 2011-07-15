@@ -36,6 +36,6 @@ import de.akra.idocit.core.structure.ParameterTest;
 @Suite.SuiteClasses({ DocumentationTest.class, InterfaceArtifactTest.class,
 		InterfaceTest.class, OperationTest.class, ParameterTest.class,
 		HTMLDocGeneratorTest.class, ParsingServiceTest.class })
-public class AllTests {
+public class AllIDocItCoreTests {
 
 }
