@@ -1,4 +1,4 @@
-#summary This page describes our test-concept.
+#summary This page describes our test-philosophy and -concept.
 
 == Our general philosophy ==
 
