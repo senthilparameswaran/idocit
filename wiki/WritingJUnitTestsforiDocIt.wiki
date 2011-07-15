@@ -2,9 +2,9 @@
 
 == Our general philosophy ==
 
-* Tests are as important as productive code! Therefore we write tests with the same quality as the productive code.
+  * Tests are as important as productive code! Therefore we write tests with the same quality as the productive code.
 
-* If the productive code changes (e.g. due to a refactoring), also the test code changes.
+  * If the productive code changes (e.g. due to a refactoring), also the test code changes.
 
 == How to run the tests of iDocIt's projects? ==
 
