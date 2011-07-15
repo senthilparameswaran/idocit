@@ -15,9 +15,13 @@
  *******************************************************************************/
 package de.akra.idocit.ui.actions;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IResourceActionFilter;
 
+import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.ParsingService;
 
 /**
@@ -32,6 +36,11 @@ public class IDocItActionFilter implements IResourceActionFilter
 {
 	private static IDocItActionFilter instance;
 
+	/**
+	 * Logger.
+	 */
+	private static Logger logger = Logger.getLogger(IDocItActionFilter.class.getName());
+	
 	/**
 	 * @return the singleton instance of IDocItActionFilter.
 	 */
@@ -57,8 +66,15 @@ public class IDocItActionFilter implements IResourceActionFilter
 		{
 			IFile file = (IFile) target;
 			String type = file.getFileExtension();
-			return (type != null) && ParsingService.isSupported(type);
+			try {
+				return (type != null) && ParsingService.isSupported(type);
+			} catch (UnitializedIDocItException e) {
+				logger.log(Level.WARNING, "Could not test the attributes, becaue the ParsingService seems not to be initialized.", e);
+				
+				return false;
+			}
 		}
+		
 		return false;
 	}
 
