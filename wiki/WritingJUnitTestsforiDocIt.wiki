@@ -14,5 +14,8 @@ Start the test suite de.akra.idocit.core.AllIDocItCoreTests which is stored in t
 *de.akra.idocit.java:*
 Start the test suite de.akra.idocit.java.AllIDocItJavaTests which is stored in the "test"-source folder *as JUnit Plugin Test*.
 
+*de.akra.idocit.wsdl:*
+Start the test suite de.akra.idocit.java.AllIDocItJavaTests which is stored in the "test"-source folder *as JUnit Plugin Test*.
+
 == Anything to consider for new tests? ==
 Yes, please add each new test-class to the test suite of the project.
