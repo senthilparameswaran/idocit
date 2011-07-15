@@ -7,7 +7,7 @@ This document describes the iDocIt! milestones, their objectives and release dat
 
 ==Milestone #1==
 
-*Planned release date:* 2011/07/01
+*Planned release date:* <strike>2011/07/01</strike> 2011/07/16
 
 *Objectives:*
  * idocit! runs in a stable and easy to use manner
