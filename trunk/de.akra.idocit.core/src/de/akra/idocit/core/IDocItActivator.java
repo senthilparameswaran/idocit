@@ -39,6 +39,8 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
+import de.akra.idocit.core.services.EclipseParsingServiceInitializer;
+import de.akra.idocit.core.services.ParsingService;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.services.ServiceManager;
 import de.akra.idocit.core.structure.Addressee;
@@ -230,6 +232,10 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 				if (taggingService != null)
 				{
 					fireChangeEvent(true);
+					
+					// Registered Parsers
+					ParsingService.init(new EclipseParsingServiceInitializer());
+					
 					try
 					{
 						IPreferenceStore store = PlatformUI.getPreferenceStore();
@@ -247,7 +253,6 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 						// PoS-Tagger
 						taggingService.init(store
 								.getString(PreferenceStoreConstants.TAGGER_MODEL_FILE));
-
 					}
 					catch (FileNotFoundException e)
 					{
