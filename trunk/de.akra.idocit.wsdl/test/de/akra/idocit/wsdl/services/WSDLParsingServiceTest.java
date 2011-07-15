@@ -52,8 +52,8 @@ public class WSDLParsingServiceTest
 	{
 		List<String> roles = new ArrayList<String>();
 
-		roles.add("GetCompletionListSoapInComplex.parameters(GetCompletionListComplex).GetCompletionListComplex(MyComplexType).prefixText(string)");
-		roles.add("GetCompletionListSoapInComplex.parameters(GetCompletionListComplex).GetCompletionListComplex(MyComplexType).count(int)");
+		roles.add("GetCompletionListSoapInComplex.parameters.GetCompletionListComplex.GetCompletionListComplex.MyComplexType.prefixText.string");
+		roles.add("GetCompletionListSoapInComplex.parameters.GetCompletionListComplex.GetCompletionListComplex.MyComplexType.count.int");
 
 		return roles;
 	}
@@ -62,7 +62,7 @@ public class WSDLParsingServiceTest
 	{
 		List<String> roles = new ArrayList<String>();
 
-		roles.add("GetCompletionListSoapInSimple.id(int)");
+		roles.add("GetCompletionListSoapInSimple.id.int");
 
 		return roles;
 	}
@@ -71,8 +71,8 @@ public class WSDLParsingServiceTest
 	{
 		List<String> roles = new ArrayList<String>();
 
-		roles.add("GetCompletionListSoapIn.parameters(GetCompletionList).GetCompletionList(anonymous).prefixText(string)");
-		roles.add("GetCompletionListSoapIn.parameters(GetCompletionList).GetCompletionList(anonymous).count(int)");
+		roles.add("GetCompletionListSoapIn.parameters.GetCompletionList.GetCompletionList.anonymous.prefixText.string");
+		roles.add("GetCompletionListSoapIn.parameters.GetCompletionList.GetCompletionList.anonymous.count.int");
 
 		return roles;
 	}

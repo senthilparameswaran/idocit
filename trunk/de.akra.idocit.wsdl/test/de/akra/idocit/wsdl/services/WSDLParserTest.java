@@ -108,7 +108,6 @@ public class WSDLParserTest
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
 	public void testParseWsdl_100001WSDL() throws Exception
 	{
 		/*
