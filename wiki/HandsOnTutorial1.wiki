@@ -4,7 +4,7 @@
 <wiki:toc max_depth="3" />
 
 =Prerequisites:=
- * You can [http://code.google.com/p/idocit/downloads/list download] an undocumented and documented version of the WSDL-artefact used in this tutorial in the Download-section. 
+ * You can install iDocIt! via our Update Site http://idocit.googlecode.com/svn/updatesite/.
  * We assume that you have successfully installed iDocIt! and use it in its default configuration. 
 
 So, what are we going to learn in this session? 
