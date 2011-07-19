@@ -9,7 +9,22 @@
  * Stanford PoS-Tagger-Models Basic Version 3.0.1 [http://nlp.stanford.edu/software/tagger.shtml Download]
 
 *Installation:*
- # Install iDocIt! via our Update Site http://idocit.googlecode.com/svn/updatesite/. Depending on your requirements you may need also de.akra.idocit.wsdl (Plugin with WSDL Support) or de.akra.idocit.java (Plugin with Java Support).
+ # Select the entry „Help“ > „Install new software ...“ in your main menubar of Eclipse.
+ # Click the „Add“-button to create a new Update Site for iDocIt!.
+ # Enter „“ as name and „iDocIt Update Site“ and „http://idocit.googlecode.com/svn/updatesite“ as location and click „OK“.
+ # Select the iDocIt!-plugins you want to install. You need everything except the Java- and WSDL-support. From these plugins you have to select the language you need.
+ # Click „Next“ twice.
+ # Accept the licence agreements and click „Finish“.
+ # Accept the unsigned JARs by clicking „OK“ in the upcoming message box.
+ # Restart your Eclipse.
+
+Congratulations, your iDocIt! plugin is now up and running :). Now you have to setup the verb-dictionary WordNet and the Part-of-Speech-tagger Stanford Tagger. 
+
  # Extract the Wordnet and PoS-Tagger into a special folder on your disk drive.
 
+= Configuration = 
 *Please note:* have a look at our [HandsOnTutorial1] to see how iDocIt could be customized and configured.
+
+= How to open iDocIt? =
+ # Select the interface-file you want to document in the view „Package Explorer“.
+ # In case of a WSDL-file right-click the file and choose the enty „iDocIt!“ from the context menu. In any other case choose the entry „Open with ...“, „Other“ and then select „iDocIt“ from the list of editors. Confirm your selection by clicking the „OK“-button.
