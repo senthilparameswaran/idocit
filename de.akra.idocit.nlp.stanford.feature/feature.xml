@@ -703,6 +703,15 @@ Public License instead of this License.  But first, please read
 &lt;http://www.gnu.org/philosophy/why-not-lgpl.html&gt;.
    </license>
 
+   <url>
+      <update url="http://idocit.googlecode.com/svn/updatesite/"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.6.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+   </requires>
+
    <plugin
          id="de.akra.idocit.nlp.stanford"
          download-size="0"
