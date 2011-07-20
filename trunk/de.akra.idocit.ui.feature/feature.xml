@@ -229,8 +229,18 @@ limitations under the License.
    limitations under the License.
    </license>
 
+   <url>
+      <update url="http://idocit.googlecode.com/svn/updatesite/"/>
+   </url>
+
    <requires>
       <import feature="de.akra.idocit.core.feature" version="0.0.1"/>
+      <import plugin="de.akra.idocit.core" version="0.0.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.junit4" version="4.8.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="3.6.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.6.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
