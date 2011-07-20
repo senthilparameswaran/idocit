@@ -11,11 +11,11 @@
 *Installation:*
  # Select the entry „Help“ > „Install new software ...“ in your main menubar of Eclipse.
  # Click the „Add“-button to create a new Update Site for iDocIt!.
- # Enter „“ as name and „iDocIt Update Site“ and „http://idocit.googlecode.com/svn/updatesite“ as location and click „OK“.
- # Select the iDocIt!-plugins you want to install. You need everything except the Java- and WSDL-support. From these plugins you have to select the language you need.
+ # Enter „“ as name and „iDocIt Update Site“ and „http://idocit.googlecode.com/svn/updatesite“ as location and click „OK“. http://idocit.googlecode.com/svn/images/updatesite.png
+ # Select the iDocIt!-plugins you want to install. You need everything except the Java- and WSDL-support. From these plugins you have to select the language you need. http://idocit.googlecode.com/svn/images/select_components.png
  # Click „Next“ twice.
  # Accept the licence agreements and click „Finish“.
- # Accept the unsigned JARs by clicking „OK“ in the upcoming message box.
+ # Accept the unsigned JARs by clicking „OK“ in the upcoming message box. http://idocit.googlecode.com/svn/images/security_warning.png
  # Restart your Eclipse.
 
 Congratulations, your iDocIt! plugin is now up and running :). Now you have to setup the verb-dictionary Word Net and the Part-of-Speech-tagger Stanford Tagger. 
