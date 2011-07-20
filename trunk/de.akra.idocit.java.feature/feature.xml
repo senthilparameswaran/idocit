@@ -233,4 +233,11 @@ limitations under the License.
       <import feature="de.akra.idocit.core.feature" version="0.0.1"/>
    </requires>
 
+   <plugin
+         id="de.akra.idocit.java"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
