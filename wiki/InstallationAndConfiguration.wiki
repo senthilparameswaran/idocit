@@ -18,7 +18,7 @@
  # Accept the unsigned JARs by clicking „OK“ in the upcoming message box.
  # Restart your Eclipse.
 
-Congratulations, your iDocIt! plugin is now up and running :). Now you have to setup the verb-dictionary WordNet and the Part-of-Speech-tagger Stanford Tagger. 
+Congratulations, your iDocIt! plugin is now up and running :). Now you have to setup the verb-dictionary Word Net and the Part-of-Speech-tagger Stanford Tagger. 
 
  # Extract the Wordnet and PoS-Tagger into a special folder on your disk drive.
 
