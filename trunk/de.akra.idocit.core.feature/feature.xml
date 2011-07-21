@@ -2,7 +2,7 @@
 <feature
       id="de.akra.idocit.core.feature"
       label="iDocIt! Core"
-      version="0.0.1"
+      version="0.0.2"
       provider-name="AKRA GmbH">
 
    <description url="http://code.google.com/p/idocit/">
@@ -234,12 +234,10 @@
    </url>
 
    <requires>
-      <import feature="de.akra.idocit.nlp.stanford.feature" version="0.0.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.junit4" version="4.8.1" match="greaterOrEqual"/>
-      <import plugin="de.akra.idocit.nlp.stanford" version="0.0.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi.services" version="3.2.100" match="greaterOrEqual"/>
    </requires>
 
