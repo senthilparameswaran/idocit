@@ -31,7 +31,4 @@ public final class PreferenceStoreConstants
 
 	public static final String VERBCLASS_ROLE_MAPPING = "de.akra.idocit.ui.VerbclassRoleMapping";
 
-	public static final String WORDNET_PATH = "de.akra.idocit.ui.WordNet";
-
-	public static final String TAGGER_MODEL_FILE = "de.akra.idocit.ui.TaggerModel";
 }
