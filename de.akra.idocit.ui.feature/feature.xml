@@ -2,7 +2,7 @@
 <feature
       id="de.akra.idocit.ui.feature"
       label="iDocIt! UI"
-      version="0.0.1"
+      version="0.0.2"
       provider-name="AKRA GmbH">
 
    <description url="http://code.google.com/p/idocit/">
