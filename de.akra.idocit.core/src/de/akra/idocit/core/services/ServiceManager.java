@@ -15,10 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.core.services;
 
-import de.akra.idocit.nlp.stanford.services.WSDLTaggingService;
 
-public class ServiceManager
-{
+public class ServiceManager {
 	private static final ServiceManager instance = new ServiceManager();
 
 	private ParsingService parsingService = new ParsingService();
@@ -27,40 +25,23 @@ public class ServiceManager
 
 	private ThematicGridService thematicGridService = new ThematicGridService();
 
-	private WSDLTaggingService wsdlTaggingService = null;
-
-	private ServiceManager()
-	{
+	private ServiceManager() {
 
 	}
 
-	public WSDLTaggingService getWsdlTaggingService()
-	{
-		return wsdlTaggingService;
-	}
-
-	public void setWsdlTaggingService(WSDLTaggingService wsdlTaggingService)
-	{
-		this.wsdlTaggingService = wsdlTaggingService;
-	}
-
-	public static ServiceManager getInstance()
-	{
+	public static ServiceManager getInstance() {
 		return instance;
 	}
 
-	public ParsingService getParsingService()
-	{
+	public ParsingService getParsingService() {
 		return parsingService;
 	}
 
-	public PersistenceService getPersistenceService()
-	{
+	public PersistenceService getPersistenceService() {
 		return persistenceService;
 	}
 
-	public ThematicGridService getThematicGridService()
-	{
+	public ThematicGridService getThematicGridService() {
 		return thematicGridService;
 	}
 }

@@ -15,14 +15,11 @@
  *******************************************************************************/
 package de.akra.idocit.ui.components;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -41,7 +38,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 import de.akra.idocit.core.IDocItActivator;
-import de.akra.idocit.core.constants.PreferenceStoreConstants;
 
 /**
  * A {@link PreferencePage} for the iDocIt! settings.
@@ -59,10 +55,6 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 
 	// Widgets and field editors
 	private Label lblWordNetLink;
-
-	private DirectoryFieldEditor wordnetPathEditor;
-
-	private FileFieldEditor taggerModelEditor;
 
 	// Listeners
 	private MouseListener wordnetLinkMouseListener;
@@ -147,16 +139,6 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors()
 	{
-		wordnetPathEditor = new DirectoryFieldEditor(
-				PreferenceStoreConstants.WORDNET_PATH, "WordNet Path:",
-				getFieldEditorParent());
-
-		taggerModelEditor = new FileFieldEditor(
-				PreferenceStoreConstants.TAGGER_MODEL_FILE, "PoS-Tagger Model:",
-				getFieldEditorParent());
-
-		addField(wordnetPathEditor);
-		addField(taggerModelEditor);
 	}
 
 	/**
@@ -182,38 +164,6 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	}
 
 	/**
-	 * Makes a {@link File} from the path in the tagger model field.
-	 * 
-	 * @return {@link File} pointing to the tagger model.
-	 */
-	public File getChoosenPoSTaggerModelFile()
-	{
-		return new File(taggerModelEditor.getStringValue());
-	}
-
-	/**
-	 * Makes a {@link File} from the path in the WordNet dictionary field.
-	 * 
-	 * @return {@link File} pointing to the WordNet dictionary.
-	 */
-	public File getChoosenWordnetInstallation()
-	{
-		String choosenPath = wordnetPathEditor.getStringValue();
-
-		if (choosenPath.endsWith(File.separator))
-		{
-			choosenPath += WORDNET_REFERENCE_FILE_NAME;
-		}
-		else
-		{
-			choosenPath += File.separator + WORDNET_REFERENCE_FILE_NAME;
-		}
-
-		File wordNetInstallation = new File(choosenPath);
-		return wordNetInstallation;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -229,29 +179,8 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public boolean isValid()
 	{
-		return getChoosenWordnetInstallation().exists()
-				&& getChoosenPoSTaggerModelFile().exists();
+		return true;
 	}
-
-//	@Override
-//	public boolean okToLeave()
-//	{
-//		String info = null;
-//		if (!getChoosenWordnetInstallation().exists())
-//		{
-//			info = "The choosen directory does not contain a valid WordNet-Installation.";
-//		}
-//		else if (!getChoosenPoSTaggerModelFile().exists())
-//		{
-//			info = "The choosen model file for the Part-of-Speech-tagger does not exist.";
-//		}
-//		if (info != null)
-//		{
-//			// return true, if user clicked on No. Then he wants to leave the page.
-//			return !MessageBoxUtils.openYesNoWarningDialogBox(getShell(), info+"\n\nWithout correct settings iDocIt! will not work.\nDo you want to stay on the page and correct the settings?" );
-//		}
-//		return true;
-//	}
 
 	@Override
 	public boolean performOk()

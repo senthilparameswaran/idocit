@@ -238,7 +238,7 @@ public class StringUtils
 		return colonFreeSentences;
 	}
 
-	private static String addBlanksToCamelSyntax(String camelSyntaxLabel)
+	public static String addBlanksToCamelSyntax(String camelSyntaxLabel)
 	{
 		StringBuffer labelWithBlanks = new StringBuffer();
 

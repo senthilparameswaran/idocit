@@ -15,8 +15,10 @@
  *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -39,6 +41,7 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.ThematicGridService;
+import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.Documentation;
 import de.akra.idocit.core.structure.InterfaceArtifact;
 import de.akra.idocit.core.structure.Parameter;
@@ -367,6 +370,10 @@ public class EditArtifactDocumentationComposite
 			groupDocumentItemListComposite.setText(String
 					.format(GROUP_TITLE_DOCUMENT_SIGNATURE_ELEMENT,
 							NO_SIGNATURE_ELEMENT_SELECTED));
+			
+			docItemListSelection.setDocumentations(new ArrayList<Documentation>());
+			docItemListSelection.setActiveAddressees(new ArrayList<Integer>());
+			docItemListSelection.setDisplayedAddresseesOfDocumentations(new ArrayList<List<Addressee>>());
 		}
 
 		documentItemListComposite.setSelection(docItemListSelection);
