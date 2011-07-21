@@ -50,11 +50,6 @@ By using the thematic grid of the verb used in the operation’s identifier and 
 
 =Basic Configuration and Customization of iDocIt! =
 
-== Basic Setup ==
-Open the "iDocIt!"-Preference Page.
- * As *Wordnet Path* enter the path to the subdirectory "dict" of your Wordnet-installation, e.g. "/home/myusername/wordnet/dict"
- * We have achieved the best PoS-tagging results for english identifiers by using the model "left3words-distsim-wsj-0-18.tagger" as *PoS-Tagger Model*. Enter the complete path with the filename of the model here, e.g. "/home/myusername/tagger/left3words-distsim-wsj-0-18.tagger".
-
 == Addressees ==
 
 You can specify the groups of groups of addressees of you API documentation via the corresponding Preference Page.
