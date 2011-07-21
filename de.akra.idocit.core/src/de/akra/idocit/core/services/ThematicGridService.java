@@ -79,15 +79,19 @@ public class ThematicGridService {
 				.addBlanksToCamelSyntax(identifier);
 
 		// Identify the verb.
-		String verb = sentenceIdentifier.split(" ")[0];
+		String[] words = sentenceIdentifier.split(" ");
+		if (words.length > 0) {
+			String verb = words[0].toLowerCase();
 
-		// Classify the verb.
-		List<ThematicGrid> matchingVerbClasses = findMatchingGrids(verb);
+			// Classify the verb.
+			List<ThematicGrid> matchingVerbClasses = findMatchingGrids(verb);
 
-		if (!matchingVerbClasses.isEmpty()) {
-			// Lookup the recommended arguments and modificators.
-			for (ThematicGrid verbClass : matchingVerbClasses) {
-				matchingRoles.put(verbClass.getName(), verbClass.getRoles());
+			if (!matchingVerbClasses.isEmpty()) {
+				// Lookup the recommended arguments and modificators.
+				for (ThematicGrid verbClass : matchingVerbClasses) {
+					matchingRoles
+							.put(verbClass.getName(), verbClass.getRoles());
+				}
 			}
 		}
 
