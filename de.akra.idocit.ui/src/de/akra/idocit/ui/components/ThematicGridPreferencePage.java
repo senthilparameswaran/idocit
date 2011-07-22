@@ -27,6 +27,7 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
+import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.structure.ThematicGrid;
 import de.akra.idocit.core.structure.ThematicRole;
@@ -90,21 +91,29 @@ public class ThematicGridPreferencePage
 
 	private void loadPreferences()
 	{
-		List<ThematicGrid> grids = PersistenceService.loadThematicGrids();
-		List<ThematicRole> roles = PersistenceService.loadThematicRoles();
-
-		ManageThematicGridsCompositeSelection selection = new ManageThematicGridsCompositeSelection();
-
-		if (!grids.isEmpty())
+		try
 		{
-			selection.setActiveThematicGrid(grids.get(0));
+			List<ThematicGrid> grids = PersistenceService.loadThematicGrids();
+			List<ThematicRole> roles = PersistenceService.loadThematicRoles();
+
+			ManageThematicGridsCompositeSelection selection = new ManageThematicGridsCompositeSelection();
+
+			if (!grids.isEmpty())
+			{
+				selection.setActiveThematicGrid(grids.get(0));
+			}
+
+			selection.setThematicGrids(grids);
+			selection.setRoles(roles);
+			selection.setLastSaveTimeThematicRoles(PersistenceService
+					.getLastSaveTimeOfThematicRoles());
+
+			setSelection(selection);
 		}
-
-		selection.setThematicGrids(grids);
-		selection.setRoles(roles);
-		selection.setLastSaveTimeThematicRoles(PersistenceService.getLastSaveTimeOfThematicRoles());
-
-		setSelection(selection);
+		catch (UnitializedIDocItException unInitEx)
+		{
+			setErrorMessage("iDocIt! has not been initialized completly yet. Please close this preference page and try again in a few seconds.");
+		}
 	}
 
 	/*
