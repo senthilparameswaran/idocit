@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: iDocIt! GUI
 Bundle-SymbolicName: de.akra.idocit.ui; singleton:=true
-Bundle-Version: 0.0.2
+Bundle-Version: 0.0.3
 Bundle-Activator: de.akra.idocit.ui.Activator
 Require-Bundle: de.akra.idocit.core;bundle-version="0.0.1",
  org.eclipse.ui,

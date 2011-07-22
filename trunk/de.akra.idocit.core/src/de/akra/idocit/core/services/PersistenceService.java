@@ -45,6 +45,7 @@ import com.thoughtworks.xstream.XStreamException;
 
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
+import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
 import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.InterfaceArtifact;
@@ -88,6 +89,7 @@ public class PersistenceService
 	public static void init(InputStream defaultGrids)
 	{
 		defaultThematicGrids = defaultGrids;
+		logger.info("The PersistenceService is now initialized with an input-stream to the default thematic grids.");
 	}
 
 	/**
@@ -435,9 +437,14 @@ public class PersistenceService
 	 * for iDocIt!.
 	 * 
 	 * @return List of {@link ThematicGrid}s.
+	 * 
+	 * @throws UnitializedIDocItException
+	 *             If the default grids should be loaded, but their input-stream has not
+	 *             been initialized yet via {@link PersistenceService#init(InputStream)}.
 	 */
 	@SuppressWarnings("unchecked")
 	public static List<ThematicGrid> loadThematicGrids()
+			throws UnitializedIDocItException
 	{
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 		String verbClassRoleAssocsXML = prefStore
@@ -461,8 +468,16 @@ public class PersistenceService
 		}
 		else
 		{
-			return (List<ThematicGrid>) configureXStreamForThematicGrid().fromXML(
-					defaultThematicGrids);
+			if (defaultThematicGrids != null)
+			{
+				return (List<ThematicGrid>) configureXStreamForThematicGrid().fromXML(
+						defaultThematicGrids);
+			}
+			else
+			{
+				throw new UnitializedIDocItException(
+						"The PersistenceService has not been initialized yet. The required input-stream to the default thematic roles is still null.");
+			}
 		}
 	}
 
@@ -652,7 +667,7 @@ public class PersistenceService
 			}
 		}
 	}
-	
+
 	/**
 	 * @return the lAST_SAVE_TIME_OF_THEMATIC_GRIDS
 	 */
