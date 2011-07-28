@@ -20,7 +20,7 @@
 	<groupId>de.akra.idocit</groupId>
 	<artifactId>de.akra.idocit.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<name>iDocIt! GUI</name>
 
 	<dependencies>
