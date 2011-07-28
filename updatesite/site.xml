@@ -9,8 +9,12 @@
    <feature url="features/de.akra.idocit.wsdl.feature_0.0.1.jar" id="de.akra.idocit.wsdl.feature" version="0.0.1">
       <category name="de.akra.idocit"/>
    </feature>
-   <feature url="features/de.akra.idocit.core.feature_0.0.3.jar" id="de.akra.idocit.core.feature" version="0.0.3"/>
-   <feature url="features/de.akra.idocit.ui.feature_0.0.3.jar" id="de.akra.idocit.ui.feature" version="0.0.3"/>
+   <feature url="features/de.akra.idocit.core.feature_0.0.3.jar" id="de.akra.idocit.core.feature" version="0.0.3">
+      <category name="de.akra.idocit"/>
+   </feature>
+   <feature url="features/de.akra.idocit.ui.feature_0.0.3.jar" id="de.akra.idocit.ui.feature" version="0.0.3">
+      <category name="de.akra.idocit"/>
+   </feature>
    <category-def name="de.akra.idocit" label="iDocIt!">
       <description>
          iDocIt! is an Eclipse-based editor for API documentation. It applies the linguistic concept of thematic roles to API documentation.
