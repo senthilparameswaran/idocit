@@ -140,14 +140,14 @@ public class EditThematicGridComposite
 
 		txtVerbs = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(txtVerbs);
+		GridDataFactory.fillDefaults().hint(500, 120).grab(true, true).applyTo(txtVerbs);
 
 		Label lblRoles = new Label(this, SWT.NONE);
 		lblRoles.setText("Associated Thematic Roles:");
 
 		tabRoles = new Table(this, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL
 				| SWT.FULL_SELECTION);
-		GridDataFactory.fillDefaults().hint(200, 0).grab(true, true).applyTo(tabRoles);
+		GridDataFactory.fillDefaults().hint(500, 200).grab(true, true).applyTo(tabRoles);
 		tabRoles.setHeaderVisible(true);
 		tabRoles.setToolTipText("Use the context menu to change the status.");
 
