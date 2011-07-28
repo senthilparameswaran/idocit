@@ -87,7 +87,7 @@ public class EditThematicGridListComposite
 		lblEmpty.setText("");
 
 		itemList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(itemList);
+		GridDataFactory.fillDefaults().hint(300, 600).grab(true, true).span(2, 1).applyTo(itemList);
 
 		btnAdd = new Button(this, SWT.PUSH);
 		btnAdd.setText("Add Item");

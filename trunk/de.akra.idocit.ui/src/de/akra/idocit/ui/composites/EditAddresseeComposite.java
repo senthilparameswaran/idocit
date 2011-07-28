@@ -92,7 +92,7 @@ public class EditAddresseeComposite
 
 		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(txtDescription);
+		GridDataFactory.fillDefaults().hint(300,600).grab(true, true).applyTo(txtDescription);
 		
 		Label lblDefault = new Label(this, SWT.NONE);
 		lblDefault.setText("Default:");
