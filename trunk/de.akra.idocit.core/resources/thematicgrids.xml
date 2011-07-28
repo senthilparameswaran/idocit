@@ -1,725 +1,1261 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Copyright 2011 AKRA GmbH
-   
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-   
-    http://www.apache.org/licenses/LICENSE-2.0
-   
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
- -->
+<!-- Copyright 2011 AKRA GmbH Licensed under the Apache License, Version 
+	2.0 (the "License"); you may not use this file except in compliance with 
+	the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
 <list>
-  <thematicGrid>
-    <name>Describing Operations</name>
-    <description>Bases on VerbNet class characterize-29.2</description>
-    <verbs>
-      <string>describe</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole>
-          <name>YES-NO-ANSWER</name>
-          <description>The boolean-result of an ACTION</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>DESTINATION</name>
-          <description>A destination for an object associated with the component</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>PRIMARY_KEY</name>
-          <description>The entity that uniquely identifies the OBJECT</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>FORMAT</name>
-          <description>Data format of the OBJECT, ATTRIBUTE, METADATA, etc.</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>OBJECT</name>
-          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>COMPARISON</name>
-          <description>The entity compared with the main OBJECT</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>PURPOSE</name>
-          <description>Either the reason for an action or some complementary functionality of the component</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Checking Operations</name>
-    <description>Bases on the VerbNet classes sight-30.2, peer-30.2 and investigate-35.4</description>
-    <verbs/>
-    <roles>
-      <entry>
-        <thematicRole>
-          <name>SOURCE</name>
-          <description>The origin of an object associated to the component</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>ALGORITHM</name>
-          <description>Set of instructions to perform the ACTION</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>RULE</name>
-          <description>Defines how decisions were made by the ACTION</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>REPORT</name>
-          <description>Additional detailed information on the ACTION</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Converting Operations</name>
-    <description>Bases on the VerbNet classes convert-26.6.2 and Turn-26.6.1</description>
-    <verbs>
-      <string>get</string>
-      <string>convert</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole>
-          <name>ACCESS</name>
-          <description>How the OBJECT of the ACTION could accessed</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>SOURCE_FORMAT</name>
-          <description>The FORMAT of the input(s) of an ACTION</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>DESTINATION_FORMAT</name>
-          <description>The FORMAT of the output(s) of an ACTION</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>INSTRUMENT</name>
-          <description>The entity with which or through which an action is performed</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>UNIT</name>
-          <description>The unit another entity is described with</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Crawling Operations</name>
-    <description>Bases on the VerbNet class swarm-47.5.1</description>
-    <verbs/>
-    <roles>
-      <entry>
-        <thematicRole>
-          <name>ATTRIBUTE</name>
-          <description>An attribute which will be part of the resulting OBJECT</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>LOCATION</name>
-          <description>Where an action occurs or the entity used as a medium for an action</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>TIME_TO_LIVE</name>
-          <description>Time frame the action has to finish in</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[7]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[7]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Creating Operations</name>
-    <description>Bases on the VerbNet classes create-26.4 and engender-27</description>
-    <verbs/>
-    <roles>
-      <entry>
-        <thematicRole>
-          <name>OWNER</name>
-          <description>The entity the OBJECT belongs to.</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>NAME</name>
-          <description>Non-numerical identifier of the OBJECT</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[7]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Duplicating Operations</name>
-    <description>Bases on the VerbNet class transcribe-25.4</description>
-    <verbs/>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[7]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Establishing Operations</name>
-    <description>Bases on the VerbNet class establish-55.5</description>
-    <verbs>
-      <string>establish</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole>
-          <name>PARTICIPANT</name>
-          <description>Other participants of the ACTION beside the AGENT</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[5]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry[5]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Getting Operations</name>
-    <description>ss</description>
-    <verbs>
-      <string>get</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[3]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[3]/roles/entry[8]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Mathematical Operations</name>
-    <description>Bases on the VerbNet class multiply-108</description>
-    <verbs>
-      <string>calculate</string>
-      <string>compute</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>ORDERING</name>
-          <description>The ordering of the returned OBJECTs</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>OPERAND</name>
-          <description>Argument of the ACTION</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Mixing Operations</name>
-    <description>sss</description>
-    <verbs>
-      <string>add</string>
-      <string>mix</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>LIMIT</name>
-          <description>The entity used to limit the ACTION space (e.g. maximum number of OBJECTs to return)</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Notifying Operations</name>
-    <description>ddd</description>
-    <verbs>
-      <string>notify</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Putting Operations</name>
-    <description>fff</description>
-    <verbs>
-      <string>put</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Removing Operations</name>
-    <description>Bases on the VerbNet classes remove-10.1 and destoy-44</description>
-    <verbs>
-      <string>remove</string>
-      <string>delete</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[10]/roles/entry[5]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Searching Operations</name>
-    <description>Bases on the VerbNet class Search-35.2</description>
-    <verbs>
-      <string>get</string>
-      <string>search</string>
-      <string>find</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[9]/roles/entry[2]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Starting Operations</name>
-    <description>ddd</description>
-    <verbs>
-      <string>start</string>
-      <string>begin</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry[4]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Substituting Operations</name>
-    <description>Bases on VerbNet class exchange-13.6</description>
-    <verbs>
-      <string>substitute</string>
-      <string>exchange</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[4]/roles/entry[4]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Throwing Operations</name>
-    <description>Bases on VerbNet class throw-17.1</description>
-    <verbs>
-      <string>throw</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Obtaining Operations</name>
-    <description>Bases on the VerbNet class obtain-13.5.2</description>
-    <verbs>
-      <string>select</string>
-      <string>purchase</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
-  <thematicGrid>
-    <name>Sending Operations</name>
-    <description>Bases on VerbNet class send-11.1</description>
-    <verbs>
-      <string>port</string>
-      <string>convey</string>
-      <string>transfer</string>
-      <string>post</string>
-      <string>deliver</string>
-      <string>transport</string>
-      <string>return</string>
-      <string>shunt</string>
-      <string>dispatch</string>
-      <string>shift</string>
-      <string>pass</string>
-    </verbs>
-    <roles>
-      <entry>
-        <thematicRole>
-          <name>SOURCE</name>
-          <description>The origin of an object associated to the component</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>DESTINATION</name>
-          <description>A destination for an object associated with the component</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>COMPARISON</name>
-          <description>The entity compared with the main OBJECT</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>FORMAT</name>
-          <description>Data format of the OBJECT, ATTRIBUTE, METADATA, etc.</description>
-        </thematicRole>
-        <boolean>false</boolean>f
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>INSTRUMENT</name>
-          <description>The entity with which or through which an action is performed</description>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>OBJECT</name>
-          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-    </roles>
-  </thematicGrid>
+	<thematicGrid>
+		<name>Describing Operations</name>
+		<description>Bases on VerbNet class characterize-29.2</description>
+		<verbs>
+			<string>remember</string>
+			<string>detail</string>
+			<string>reveal</string>
+			<string>bill</string>
+			<string>count</string>
+			<string>visualize</string>
+			<string>portray</string>
+			<string>accept</string>
+			<string>interpret</string>
+			<string>perceive</string>
+			<string>redraw</string>
+			<string>typecast</string>
+			<string>classify</string>
+			<string>pigeonhole</string>
+			<string>rank</string>
+			<string>judge</string>
+			<string>stereotype</string>
+			<string>envisage</string>
+			<string>describe</string>
+			<string>adopt</string>
+			<string>report</string>
+			<string>recast</string>
+			<string>characterize</string>
+			<string>hail</string>
+			<string>certify</string>
+			<string>define</string>
+			<string>depict</string>
+			<string>imagine</string>
+			<string>select</string>
+			<string>identify</string>
+			<string>class</string>
+			<string>regard</string>
+			<string>paint</string>
+			<string>diagnose</string>
+			<string>know</string>
+			<string>represent</string>
+			<string>picture</string>
+			<string>cast</string>
+			<string>see</string>
+			<string>take</string>
+			<string>envision</string>
+			<string>recollect</string>
+			<string>praise</string>
+			<string>peg</string>
+			<string>view</string>
+			<string>specify</string>
+			<string>conceive</string>
+			<string>treat</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole>
+					<name>YES-NO-ANSWER</name>
+					<description>The boolean-result of an ACTION</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>DESTINATION</name>
+					<description>A destination for an object associated with the
+						component</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>PRIMARY_KEY</name>
+					<description>The entity that uniquely identifies the OBJECT
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>FORMAT</name>
+					<description>Data format of the OBJECT, ATTRIBUTE, METADATA, etc.
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>OBJECT</name>
+					<description>The object, target or result of an action. It can also
+						reference the system implementing a described functionality
+					</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>COMPARISON</name>
+					<description>The entity compared with the main OBJECT</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>PURPOSE</name>
+					<description>Either the reason for an action or some complementary
+						functionality of the component</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Checking Operations</name>
+		<description>Bases on the VerbNet classes sight-30.2, peer-30.3 and
+			investigate-35.4</description>
+		<verbs>
+			<string>examine</string>
+			<string>attend</string>
+			<string>test</string>
+			<string>spy</string>
+			<string>stare</string>
+			<string>study</string>
+			<string>spot</string>
+			<string>eavesdrop</string>
+			<string>survey</string>
+			<string>eye</string>
+			<string>gape</string>
+			<string>monitor</string>
+			<string>make_out</string>
+			<string>glance</string>
+			<string>watch</string>
+			<string>discover</string>
+			<string>regard</string>
+			<string>investigate</string>
+			<string>scent</string>
+			<string>ransack</string>
+			<string>canvass</string>
+			<string>leer</string>
+			<string>frisk</string>
+			<string>view</string>
+			<string>sniff</string>
+			<string>tap</string>
+			<string>inspect</string>
+			<string>raid</string>
+			<string>explore</string>
+			<string>scrutinize</string>
+			<string>perceive</string>
+			<string>witness</string>
+			<string>sight</string>
+			<string>quiz</string>
+			<string>descry</string>
+			<string>recognize</string>
+			<string>gawk</string>
+			<string>espy</string>
+			<string>peek</string>
+			<string>experience</string>
+			<string>listen</string>
+			<string>note</string>
+			<string>peer</string>
+			<string>look</string>
+			<string>overhear</string>
+			<string>peep</string>
+			<string>check</string>
+			<string>glare</string>
+			<string>glimpse</string>
+			<string>peruse</string>
+			<string>savor</string>
+			<string>observe</string>
+			<string>goggle</string>
+			<string>gaze</string>
+			<string>snoop</string>
+			<string>squint</string>
+			<string>scan</string>
+			<string>riffle</string>
+			<string>ogle</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole>
+					<name>SOURCE</name>
+					<description>The origin of an object associated to the component
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>ALGORITHM</name>
+					<description>Set of instructions to perform the ACTION
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>RULE</name>
+					<description>Defines how decisions were made by the ACTION
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>REPORT</name>
+					<description>Additional detailed information on the ACTION
+					</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Converting Operations</name>
+		<description>Bases on the VerbNet classes convert-26.6.2 and
+			Turn-26.6.1</description>
+		<verbs>
+			<string>get</string>
+			<string>convert</string>
+			<string>transform</string>
+			<string>turn</string>
+			<string>metamorphose</string>
+			<string>change</string>
+			<string>deform</string>
+			<string>translate</string>
+			<string>transmute</string>
+			<string>alter</string>
+			<string>mutate</string>
+			<string>get down</string>
+			<string>turn</string>
+			<string>get</string>
+			<string>get around</string>
+			<string>return</string>
+			<string>convert</string>
+			<string>switch</string>
+			<string>move over</string>
+			<string>go back</string>
+			<string>settle down</string>
+			<string>revert</string>
+			<string>take</string>
+			<string>fall</string>
+			<string>come around</string>
+			<string>resort</string>
+			<string>change_over</string>
+			<string>shift</string>
+			<string>switch_over</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole>
+					<name>ACCESS</name>
+					<description>How the OBJECT of the ACTION could accessed
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>SOURCE_FORMAT</name>
+					<description>The FORMAT of the input(s) of an ACTION</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>DESTINATION_FORMAT</name>
+					<description>The FORMAT of the output(s) of an ACTION</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>INSTRUMENT</name>
+					<description>The entity with which or through which an action is
+						performed</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>UNIT</name>
+					<description>The unit another entity is described with
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Crawling Operations</name>
+		<description>Bases on the VerbNet class swarm-47.5.1</description>
+		<verbs>
+			<string>throng</string>
+			<string>creep</string>
+			<string>teem</string>
+			<string>swim</string>
+			<string>crawl</string>
+			<string>abound</string>
+			<string>run</string>
+			<string>swarm</string>
+			<string>hop</string>
+			<string>bustle</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole>
+					<name>ATTRIBUTE</name>
+					<description>An attribute which will be part of the resulting
+						OBJECT</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>LOCATION</name>
+					<description>Where an action occurs or the entity used as a medium
+						for an action</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>TIME_TO_LIVE</name>
+					<description>Time frame the action has to finish in</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[7]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[7]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Creating Operations</name>
+		<description>Bases on the VerbNet classes create-26.4 and engender-27
+		</description>
+		<verbs>
+			<string>model</string>
+			<string>cause</string>
+			<string>formulate</string>
+			<string>generate</string>
+			<string>recreate</string>
+			<string>improvise</string>
+			<string>reconstitute</string>
+			<string>organize</string>
+			<string>stage</string>
+			<string>spawn</string>
+			<string>style</string>
+			<string>instigate</string>
+			<string>invent</string>
+			<string>compose</string>
+			<string>compute</string>
+			<string>dig</string>
+			<string>publish</string>
+			<string>derive</string>
+			<string>rebuild</string>
+			<string>rearrange</string>
+			<string>engender</string>
+			<string>kindle</string>
+			<string>conjure</string>
+			<string>reorganize</string>
+			<string>form</string>
+			<string>lay</string>
+			<string>coin</string>
+			<string>mint</string>
+			<string>contrive</string>
+			<string>sire</string>
+			<string>shape</string>
+			<string>create</string>
+			<string>spark</string>
+			<string>concoct</string>
+			<string>incite</string>
+			<string>schedule</string>
+			<string>manufacture</string>
+			<string>bring_about</string>
+			<string>set_off</string>
+			<string>construct</string>
+			<string>fabricate</string>
+			<string>provoke</string>
+			<string>beget</string>
+			<string>design</string>
+			<string>synthesize</string>
+			<string>produce</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole>
+					<name>OWNER</name>
+					<description>The entity the OBJECT belongs to.</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>NAME</name>
+					<description>Non-numerical identifier of the OBJECT</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[7]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Duplicating Operations</name>
+		<description>Bases on the VerbNet class transcribe-25.4</description>
+		<verbs>
+			<string>film</string>
+			<string>tally_up</string>
+			<string>transcribe</string>
+			<string>photograph</string>
+			<string>duplicate</string>
+			<string>televise</string>
+			<string>tape</string>
+			<string>photocopy</string>
+			<string>type</string>
+			<string>forge</string>
+			<string>record</string>
+			<string>document</string>
+			<string>tally</string>
+			<string>imitate</string>
+			<string>microfilm</string>
+			<string>chronicle</string>
+			<string>copy</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[7]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Establishing Operations</name>
+		<description>Bases on the VerbNet class establish-55.5</description>
+		<verbs>
+			<string>constitute</string>
+			<string>plant</string>
+			<string>simulate</string>
+			<string>innovate</string>
+			<string>open_up</string>
+			<string>pioneer</string>
+			<string>introduce</string>
+			<string>originate</string>
+			<string>machinate</string>
+			<string>launch</string>
+			<string>organize</string>
+			<string>synthesise</string>
+			<string>stage</string>
+			<string>open</string>
+			<string>instigate</string>
+			<string>initiate</string>
+			<string>implement</string>
+			<string>fake</string>
+			<string>strike up</string>
+			<string>establish</string>
+			<string>format</string>
+			<string>prepare</string>
+			<string>arrange</string>
+			<string>institute</string>
+			<string>mount</string>
+			<string>feign</string>
+			<string>devise</string>
+			<string>bring about</string>
+			<string>found</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole>
+					<name>PARTICIPANT</name>
+					<description>Other participants of the ACTION beside the AGENT
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[5]/roles/entry[5]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[4]/roles/entry[5]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Getting Operations</name>
+		<description>Based on VerbNet class get-13.5.1</description>
+		<verbs>
+			<string>call</string>
+			<string>procure</string>
+			<string>phone</string>
+			<string>save</string>
+			<string>buy</string>
+			<string>pull</string>
+			<string>catch</string>
+			<string>score</string>
+			<string>secure</string>
+			<string>pluck</string>
+			<string>reach</string>
+			<string>conserve</string>
+			<string>order</string>
+			<string>gather</string>
+			<string>rent</string>
+			<string>pick</string>
+			<string>choose</string>
+			<string>hire</string>
+			<string>find</string>
+			<string>attain</string>
+			<string>steal</string>
+			<string>fetch</string>
+			<string>charter</string>
+			<string>slaughter</string>
+			<string>get</string>
+			<string>vote</string>
+			<string>win</string>
+			<string>gain</string>
+			<string>shoot</string>
+			<string>lease</string>
+			<string>book</string>
+			<string>cash</string>
+			<string>reserve</string>
+			<string>earn</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[3]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[3]/roles/entry[8]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Mathematical Operations</name>
+		<description>Bases on the VerbNet class multiply-108</description>
+		<verbs>
+			<string>calculate</string>
+			<string>compute</string>
+			<string>inerpolate</string>
+			<string>subtract</string>
+			<string>tally</string>
+			<string>count</string>
+			<string>deduct</string>
+			<string>factor out</string>
+			<string>extrapolate</string>
+			<string>sum</string>
+			<string>multiply</string>
+			<string>divide</string>
+			<string>add</string>
+			<string>average</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>ORDERING</name>
+					<description>The ordering of the returned OBJECTs</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>OPERAND</name>
+					<description>Argument of the ACTION</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Mixing Operations</name>
+		<description>Based on VerbNet class mix-22.1</description>
+		<verbs>
+			<string>mingle</string>
+			<string>compound</string>
+			<string>connect</string>
+			<string>pair</string>
+			<string>tie</string>
+			<string>link</string>
+			<string>merge</string>
+			<string>add</string>
+			<string>network</string>
+			<string>intermix</string>
+			<string>pool</string>
+			<string>scramble</string>
+			<string>blend</string>
+			<string>combine</string>
+			<string>unite</string>
+			<string>coalesce</string>
+			<string>admix</string>
+			<string>fuse</string>
+			<string>consolidate</string>
+			<string>tumble</string>
+			<string>join</string>
+			<string>amalgamate</string>
+			<string>meld</string>
+			<string>cream</string>
+			<string>mix</string>
+			<string>commingle</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>LIMIT</name>
+					<description>The entity used to limit the ACTION space (e.g.
+						maximum number of OBJECTs to return)</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Notifying Operations</name>
+		<description>Based on VerbNet class tell-37.2</description>
+		<verbs>
+			<string>update</string>
+			<string>inform</string>
+			<string>apprise</string>
+			<string>notify</string>
+			<string>advise</string>
+			<string>tell</string>
+			<string>acquaint</string>
+			<string>remind</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[4]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Putting Operations</name>
+		<description>Based on VerbNet class put-9.1</description>
+		<verbs>
+			<string>plant</string>
+			<string>install</string>
+			<string>position</string>
+			<string>stick</string>
+			<string>put</string>
+			<string>stash</string>
+			<string>park</string>
+			<string>station</string>
+			<string>deposit</string>
+			<string>set</string>
+			<string>implant</string>
+			<string>bury</string>
+			<string>stow</string>
+			<string>superimpose</string>
+			<string>embed</string>
+			<string>sling</string>
+			<string>situate</string>
+			<string>arrange</string>
+			<string>mount</string>
+			<string>immerse</string>
+			<string>insert</string>
+			<string>place</string>
+			<string>lodge</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[4]/roles/entry/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Removing Operations</name>
+		<description>Bases on the VerbNet classes remove-10.1 and destoy-44
+		</description>
+		<verbs>
+			<string>roust</string>
+			<string>waste</string>
+			<string>shoo</string>
+			<string>evict</string>
+			<string>efface</string>
+			<string>undo</string>
+			<string>ruin</string>
+			<string>shatter</string>
+			<string>desecrate</string>
+			<string>vaporize</string>
+			<string>draw</string>
+			<string>level</string>
+			<string>partition</string>
+			<string>mutilate</string>
+			<string>devastate</string>
+			<string>ravage</string>
+			<string>unmake</string>
+			<string>discharge</string>
+			<string>wrench</string>
+			<string>lop</string>
+			<string>damage</string>
+			<string>extract</string>
+			<string>excommunicate</string>
+			<string>dislodge</string>
+			<string>annihilate</string>
+			<string>winkle</string>
+			<string>raze</string>
+			<string>extirpate</string>
+			<string>abolish</string>
+			<string>eliminate</string>
+			<string>exterminate</string>
+			<string>remove</string>
+			<string>obliterate</string>
+			<string>blitz</string>
+			<string>ostracize</string>
+			<string>deduct</string>
+			<string>disengage</string>
+			<string>eject</string>
+			<string>destroy</string>
+			<string>extrude</string>
+			<string>withdraw</string>
+			<string>delete</string>
+			<string>retract</string>
+			<string>abstract</string>
+			<string>depose</string>
+			<string>separate</string>
+			<string>pry</string>
+			<string>disgorge</string>
+			<string>excise</string>
+			<string>expel</string>
+			<string>wreck</string>
+			<string>cull</string>
+			<string>oust</string>
+			<string>uproot</string>
+			<string>sever</string>
+			<string>eradicate</string>
+			<string>reap</string>
+			<string>demolish</string>
+			<string>maim</string>
+			<string>subtract</string>
+			<string>omit</string>
+			<string>decimate</string>
+			<string>disfigure</string>
+			<string>dismiss</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[10]/roles/entry[5]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Searching Operations</name>
+		<description>Bases on the VerbNet class Search-35.2</description>
+		<verbs>
+			<string>get</string>
+			<string>patrol</string>
+			<string>shop</string>
+			<string>scavenge</string>
+			<string>advertise</string>
+			<string>rake</string>
+			<string>prospect</string>
+			<string>probe</string>
+			<string>excavate</string>
+			<string>search</string>
+			<string>dredge</string>
+			<string>find</string>
+			<string>scour</string>
+			<string>scout</string>
+			<string>check</string>
+			<string>watch</string>
+			<string>drag</string>
+			<string>dive</string>
+			<string>sift</string>
+			<string>comb</string>
+			<string>trawl</string>
+			<string>quarry</string>
+			<string>troll</string>
+			<string>plumb</string>
+			<string>prowl</string>
+			<string>rifle</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[2]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[9]/roles/entry[2]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Starting Operations</name>
+		<description>Based on VerbNet class begin-55.1.</description>
+		<verbs>
+			<string>start off</string>
+			<string>resume</string>
+			<string>commence</string>
+			<string>start</string>
+			<string>proceed</string>
+			<string>pledge</string>
+			<string>recommence</string>
+			<string>undertake</string>
+			<string>go on</string>
+			<string>begin</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[4]/roles/entry[4]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Substituting Operations</name>
+		<description>Bases on VerbNet class exchange-13.6</description>
+		<verbs>
+			<string>replace</string>
+			<string>trade</string>
+			<string>change</string>
+			<string>switch</string>
+			<string>substitute</string>
+			<string>swap</string>
+			<string>barter</string>
+			<string>exchange</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[4]/roles/entry[4]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Throwing Operations</name>
+		<description>Bases on VerbNet class throw-17.1</description>
+		<verbs>
+			<string>kick</string>
+			<string>punt</string>
+			<string>chuck</string>
+			<string>launch</string>
+			<string>discard</string>
+			<string>shove</string>
+			<string>tip</string>
+			<string>catapult</string>
+			<string>lob</string>
+			<string>throw</string>
+			<string>knock</string>
+			<string>hit</string>
+			<string>loft</string>
+			<string>flip</string>
+			<string>fling</string>
+			<string>flick</string>
+			<string>bunt</string>
+			<string>smash</string>
+			<string>fire</string>
+			<string>pass</string>
+			<string>sling</string>
+			<string>nudge</string>
+			<string>slap</string>
+			<string>cast</string>
+			<string>shoot</string>
+			<string>bat</string>
+			<string>hurl</string>
+			<string>toss</string>
+			<string>tap</string>
+			<string>pitch</string>
+			<string>bash</string>
+			<string>slam</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[2]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Obtaining Operations</name>
+		<description>Bases on the VerbNet class obtain-13.5.2</description>
+		<verbs>
+			<string>select</string>
+			<string>acquire</string>
+			<string>grab</string>
+			<string>appropriate</string>
+			<string>select</string>
+			<string>seize</string>
+			<string>accept</string>
+			<string>purchase</string>
+			<string>inherit</string>
+			<string>recover</string>
+			<string>borrow</string>
+			<string>snatch</string>
+			<string>cadge</string>
+			<string>obtain</string>
+			<string>regain</string>
+			<string>retrieve</string>
+			<string>exact</string>
+			<string>accrue</string>
+			<string>receive</string>
+			<string>accumulate</string>
+			<string>collect</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid[2]/roles/entry/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole
+					reference="../../../../thematicGrid[2]/roles/entry[3]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[5]/thematicRole" />
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole reference="../../../../thematicGrid/roles/entry[6]/thematicRole" />
+				<boolean>false</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
+	<thematicGrid>
+		<name>Sending Operations</name>
+		<description>Bases on VerbNet class send-11.1</description>
+		<verbs>
+			<string>port</string>
+			<string>send</string>
+			<string>ship</string>
+			<string>express</string>
+			<string>UPS</string>
+			<string>hand</string>
+			<string>convey</string>
+			<string>forward</string>
+			<string>deliver</string>
+			<string>transport</string>
+			<string>dispatch</string>
+			<string>transmit</string>
+			<string>pass_on</string>
+			<string>mail</string>
+			<string>transfer</string>
+			<string>post</string>
+			<string>smuggle</string>
+			<string>wire</string>
+			<string>return</string>
+			<string>slip</string>
+			<string>FedEx</string>
+			<string>pass</string>
+			<string>airmail</string>
+			<string>shunt</string>
+			<string>sneak</string>
+			<string>shift</string>
+		</verbs>
+		<roles>
+			<entry>
+				<thematicRole>
+					<name>SOURCE</name>
+					<description>The origin of an object associated to the component
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>DESTINATION</name>
+					<description>A destination for an object associated with the
+						component</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>COMPARISON</name>
+					<description>The entity compared with the main OBJECT</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>FORMAT</name>
+					<description>Data format of the OBJECT, ATTRIBUTE, METADATA, etc.
+					</description>
+				</thematicRole>
+				<boolean>false</boolean>
+				f
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>INSTRUMENT</name>
+					<description>The entity with which or through which an action is
+						performed</description>
+				</thematicRole>
+				<boolean>false</boolean>
+			</entry>
+			<entry>
+				<thematicRole>
+					<name>OBJECT</name>
+					<description>The object, target or result of an action. It can also
+						reference the system implementing a described functionality
+					</description>
+				</thematicRole>
+				<boolean>true</boolean>
+			</entry>
+		</roles>
+	</thematicGrid>
 </list>
