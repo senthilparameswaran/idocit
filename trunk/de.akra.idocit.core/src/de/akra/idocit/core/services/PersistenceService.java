@@ -470,8 +470,13 @@ public class PersistenceService
 		{
 			if (defaultThematicGrids != null)
 			{
-				return (List<ThematicGrid>) configureXStreamForThematicGrid().fromXML(
+				List<ThematicGrid> defaultGrids = (List<ThematicGrid>) configureXStreamForThematicGrid().fromXML(
 						defaultThematicGrids);
+				
+				// Keep the default grids in preference store for the next time.
+				persistThematicGrids(defaultGrids);
+				
+				return defaultGrids;
 			}
 			else
 			{
