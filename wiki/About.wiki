@@ -22,6 +22,6 @@ Kipper, Karin, Anna Korhonen, Neville Ryant, Martha Palmer. "A Large-scale Class
 
 Paul and his colleagues (Felix Bachmann, Len Bass, David Garlan, James Ivers, Reed Little, Robert Nord and Judith Stafford) describe different groups of stakeholders of interface documentation in their great book <a href="http://www.informit.com/store/product.aspx?isbn=0201703726">"Documenting Software Architectures - Views and Beyond"</a> (page 237 and following). The groups of stakeholders described there have been used as default addressees within iDocIt!.
 
-
 <u>Reference:</u>
+
 Documenting Software Architectures: Views and Beyond, with F. Bachmann, L. Bass, D. Garlan, J. Ivers, R. Little, R. Nord, and J. Stafford, Addison Wesley Longman, 560 pages, September 2002.
