@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import junit.framework.Assert;
+
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
@@ -46,6 +48,7 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.Delimiters;
@@ -65,12 +68,78 @@ public class JavadocGeneratorTest
 {
 	private static Logger logger = Logger.getLogger(JavadocGeneratorTest.class.getName());
 
-	private Document document;
+	private static final String lineSeparator = "\n";
+
+	/**
+	 * The result "@paramperson" is correct because javadoc.toString() does not write a
+	 * space between them. But if it is written into a file it is correct "@param person".
+	 * The same applies to "@return".
+	 */
+	private static final String EXPECTED_JAVADOC = "/** "
+			+ lineSeparator
+			+ " * <table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ lineSeparator
+			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Manager</b>:</td><td>Documenation for managers.</td></tr>"
+			+ lineSeparator
+			+ "</table>"
+			+ lineSeparator
+			+ " * "
+			+ lineSeparator
+			+ "<br /><table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ lineSeparator
+			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Manager</b>:</td><td>Documenation for managers.</td></tr>"
+			+ lineSeparator
+			+ "</table>"
+			+ lineSeparator
+			+ " * @paramperson"
+			+ lineSeparator
+			+ " * "
+			+ lineSeparator
+			+ "<br /><table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ lineSeparator
+			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Manager</b>:</td><td>Documenation for managers.</td></tr>"
+			+ lineSeparator
+			+ "</table>"
+			+ lineSeparator
+			+ " * "
+			+ lineSeparator
+			+ "<br /><table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ lineSeparator
+			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Manager</b>:</td><td>Documenation for managers.</td></tr>"
+			+ lineSeparator
+			+ "</table>"
+			+ lineSeparator
+			+ " * @return<table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>double:double</td></tr>"
+			+ lineSeparator
+			+ "<tr><td>Role:</td><td>RESULT</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Developer</b>:</td><td>Developer: Result as floating-point number.</td></tr>"
+			+ lineSeparator
+			+ "<tr><td><b>Manager</b>:</td><td>Manager: Result as floating-point number.</td></tr>"
+			+ lineSeparator + "</table>" + lineSeparator + " */" + lineSeparator;
 
 	/**
 	 * The delimiters for Java.
 	 */
 	private static Delimiters delimiters = new Delimiters();
+
+	private Document document;
 
 	/**
 	 * Initialization method.
@@ -78,6 +147,7 @@ public class JavadocGeneratorTest
 	@Before
 	public void init()
 	{
+		// must be the same delimiters as in JavaParser
 		delimiters.pathDelimiter = "/";
 		delimiters.namespaceDelimiter = ".";
 		delimiters.typeDelimiter = ":";
@@ -89,7 +159,7 @@ public class JavadocGeneratorTest
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	@Ignore
+	@Test
 	public void testGeneradeJavadoc() throws FileNotFoundException, IOException
 	{
 		CompilationUnit cu = createCompilationUnit("test/source/ParsingService.java");
@@ -98,26 +168,29 @@ public class JavadocGeneratorTest
 		AST ast = absTypeDecl.getAST();
 		Javadoc javadoc = ast.newJavadoc();
 
-		List<Documentation> documentations = createDocumentations();
+		List<Documentation> documentations = createParamDocumentations();
 		JavadocGenerator.appendDocsToJavadoc(documentations, null, null, javadoc);
 		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_PARAM,
 				"person", javadoc);
+		JavadocGenerator.appendDocsToJavadoc(createReturnDocumentations(),
+				TagElement.TAG_RETURN, null, javadoc);
 
-		logger.log(Level.INFO, javadoc.toString());
+//		logger.info(javadoc.toString());
+
+		Assert.assertEquals(EXPECTED_JAVADOC, javadoc.toString());
 	}
 
 	/**
 	 * Test for
 	 * {@link JavaInterfaceGenerator#updateJavadocInAST(de.akra.idocit.java.structure.JavaInterfaceArtifact)}
-	 * .
+	 * . Creates a Javadoc and writes it into a Java source file.
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	@Ignore
+	@Test
 	public void testJavaInterfaceGenerator() throws FileNotFoundException, IOException
 	{
-
 		CompilationUnit cu = createCompilationUnit("test/source/ParsingService.java");
 		cu.recordModifications();
 
@@ -126,7 +199,11 @@ public class JavadocGeneratorTest
 
 		List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
 		JavadocTagElement tagElem = new JavadocTagElement(TagElement.TAG_PARAM,
-				"paramName", createDocumentations());
+				"paramName", createParamDocumentations());
+		jDocTags.add(tagElem);
+
+		tagElem = new JavadocTagElement(TagElement.TAG_RETURN, null,
+				createReturnDocumentations());
 		jDocTags.add(tagElem);
 
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
@@ -135,11 +212,20 @@ public class JavadocGeneratorTest
 
 		cu.rewrite(document, null);
 
-		logger.log(Level.INFO, javadoc.toString());
-		logger.log(Level.INFO, cu.toString());
+		TypeDeclaration newTypeDecl = (TypeDeclaration) cu.types().get(0);
+
+//		logger.log(Level.INFO, javadoc.toString());
+//		logger.log(Level.INFO, cu.toString());
+
+		Assert.assertTrue(
+				"The written Javadoc in the CompilationUnit is not the same as the created Javadoc.",
+				cu.toString().contains(javadoc.toString()));
+		Assert.assertEquals(javadoc, newTypeDecl.getJavadoc());
 	}
 
 	/**
+	 * This is not a real unit test. It is a trial to use the ITextFileBufferManager to
+	 * save the changes in a CompilationUnit.<br />
 	 * Test for
 	 * {@link JavaInterfaceGenerator#updateJavadocInAST(de.akra.idocit.java.structure.JavaInterfaceArtifact)}
 	 * .
@@ -165,7 +251,7 @@ public class JavadocGeneratorTest
 
 		List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
 		JavadocTagElement tagElem = new JavadocTagElement(TagElement.TAG_PARAM,
-				"paramName", createDocumentations());
+				"paramName", createParamDocumentations());
 		jDocTags.add(tagElem);
 
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
@@ -350,30 +436,42 @@ public class JavadocGeneratorTest
 	}
 
 	/**
-	 * Create a list of {@link Documentation}s for testing.
+	 * Create a list of {@link Documentation}s for a method parameter.
 	 * 
 	 * @return List<Documentation>
 	 */
-	private static List<Documentation> createDocumentations()
+	private static List<Documentation> createParamDocumentations()
 	{
 		List<Documentation> documentations = new ArrayList<Documentation>();
-		documentations.add(createDocumentation());
-		documentations.add(createDocumentation());
+		documentations.add(createParamDocumentation());
+		documentations.add(createParamDocumentation());
 		return documentations;
 	}
 
 	/**
-	 * Create a test Documentation.
+	 * Create a list with one {@link Documentation} for a method return value.
+	 * 
+	 * @return List<Documentation>
+	 */
+	private static List<Documentation> createReturnDocumentations()
+	{
+		List<Documentation> documentations = new ArrayList<Documentation>();
+		documentations.add(createReturnDocumentation());
+		return documentations;
+	}
+
+	/**
+	 * Create a test Documentation for a method parameter.
 	 * 
 	 * @return a new Documentation with some constant values.
 	 */
-	private static Documentation createDocumentation()
+	private static Documentation createParamDocumentation()
 	{
 		Documentation newDoc = new Documentation();
 		newDoc.setScope(Scope.EXPLICIT);
 		newDoc.setThematicRole(new ThematicRole("OBJECT"));
 
-		newDoc.setSignatureElementIdentifier("/person:Person/name:java.lang.String");
+		newDoc.setSignatureElementIdentifier("person:Person/name:java.lang.String");
 
 		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
 		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
@@ -385,6 +483,37 @@ public class JavadocGeneratorTest
 		addresseeSequence.add(developer);
 
 		docMap.put(manager, "Documenation for managers.");
+		addresseeSequence.add(manager);
+
+		newDoc.setDocumentation(docMap);
+		newDoc.setAddresseeSequence(addresseeSequence);
+
+		return newDoc;
+	}
+
+	/**
+	 * Create a test Documentation for a method return value.
+	 * 
+	 * @return a new Documentation with some constant values.
+	 */
+	private static Documentation createReturnDocumentation()
+	{
+		Documentation newDoc = new Documentation();
+		newDoc.setScope(Scope.EXPLICIT);
+		newDoc.setThematicRole(new ThematicRole("RESULT"));
+
+		newDoc.setSignatureElementIdentifier("double:double");
+
+		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
+		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
+
+		Addressee developer = new Addressee("Developer");
+		Addressee manager = new Addressee("Manager");
+
+		docMap.put(developer, "Developer: Result as floating-point number.");
+		addresseeSequence.add(developer);
+
+		docMap.put(manager, "Manager: Result as floating-point number.");
 		addresseeSequence.add(manager);
 
 		newDoc.setDocumentation(docMap);

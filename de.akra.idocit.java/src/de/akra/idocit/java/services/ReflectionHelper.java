@@ -16,8 +16,10 @@
 package de.akra.idocit.java.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +40,7 @@ import de.akra.idocit.core.structure.SignatureElement;
 import de.akra.idocit.java.structure.JavaParameter;
 
 /**
- * Amongst others some useful methods to reflect classes.
+ * Amongst others, some useful methods to reflect classes.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
@@ -59,6 +61,21 @@ public class ReflectionHelper
 	private static final String SETTER_PREFIX = "set";
 
 	/**
+	 * Set of already reflected types. If a type is already in the set, stop reflection to
+	 * avoid infinite loops.
+	 */
+	private Set<String> reflectedTypes;
+
+	/**
+	 * Resets the set {@link #reflectedTypes}. Must be invoked before starting the type
+	 * reflection.
+	 */
+	private void resetReflectedTypes()
+	{
+		this.reflectedTypes = new HashSet<String>();
+	}
+
+	/**
 	 * Reflects the type <code>typeBinding</code> and mapped it into a
 	 * {@link JavaParameter} structure which is returned.
 	 * 
@@ -73,7 +90,17 @@ public class ReflectionHelper
 	 *            The qualified identifier of the parameter that should be reflected.
 	 * @return The reflected object structure as {@link JavaParameter}.
 	 */
-	public static JavaParameter reflectParameter(SignatureElement parent,
+	public JavaParameter reflectParameter(SignatureElement parent,
+			ITypeBinding typeBinding, String identifier, String qualifiedIdentifier)
+	{
+		resetReflectedTypes();
+		return doReflectParameter(parent, typeBinding, identifier, qualifiedIdentifier);
+	}
+
+	/**
+	 * @see #reflectParameter(SignatureElement, ITypeBinding, String, String)
+	 */
+	private JavaParameter doReflectParameter(SignatureElement parent,
 			ITypeBinding typeBinding, String identifier, String qualifiedIdentifier)
 	{
 		JavaParameter returnParameter = new JavaParameter(parent);
@@ -85,30 +112,84 @@ public class ReflectionHelper
 		qTypeName = qTypeName != null ? qTypeName : typeBinding.getName();
 		returnParameter.setQualifiedDataTypeName(qTypeName);
 
-		List<IVariableBinding> accessableAttributes = findAttributesWithPublicGetterOrSetter(
-				typeBinding.getDeclaredFields(), typeBinding.getDeclaredMethods());
-
-		for (IVariableBinding attribute : accessableAttributes)
+		if (!reflectedTypes.contains(qTypeName))
 		{
-			// TODO stop infinite loop
-			returnParameter.addParameter(reflectParameter(
-					returnParameter,
-					attribute.getType(),
-					attribute.getName(),
-					qTypeName + JavaParser.delimiters.namespaceDelimiter
-							+ attribute.getName()));
+			reflectedTypes.add(qTypeName);
+			List<IVariableBinding> accessableAttributes = findAttributesWithPublicGetterOrSetter(
+					typeBinding.getDeclaredFields(), typeBinding.getDeclaredMethods());
+
+			for (IVariableBinding attribute : accessableAttributes)
+			{
+				returnParameter.addParameter(doReflectParameter(
+						returnParameter,
+						attribute.getType(),
+						attribute.getName(),
+						qTypeName + JavaParser.delimiters.namespaceDelimiter
+								+ attribute.getName()));
+			}
+
+			// check super classes for attributes with public getter or setter
+			ITypeBinding superType = typeBinding.getSuperclass();
+
+			if (superType != null
+					&& !superType.getQualifiedName().equals(Object.class.getName()))
+			{
+				returnParameter.addParameter(doReflectParameter(returnParameter,
+						superType, SUPER_CLASS_IDENTIFIER, SUPER_CLASS_IDENTIFIER));
+			}
+			
+			// remove type again, because reflecting this type ends
+			reflectedTypes.remove(qTypeName);
+		}
+		else
+		{
+			logger.fine("Recursion terminated for type \"" + qTypeName + "\"");
 		}
 
-		// check super classes for attributes with public getter or setter
-		ITypeBinding superType = typeBinding.getSuperclass();
+		return returnParameter;
+	}
 
-		if (superType != null
-				&& !superType.getQualifiedName().equals(Object.class.getName()))
+	/**
+	 * Tries to reflects the Type <code>type</code> and maps it into a
+	 * {@link JavaParameter} structure which is returned.
+	 * 
+	 * @param parent
+	 *            The parent for the new {@link JavaParameter}.
+	 * @param type
+	 *            The {@link Type} belonging to the parameter that should be reflected.
+	 * @param identifier
+	 *            The identifier of the parameter that should be reflected.
+	 * @param qualifiedIdentifier
+	 *            The qualified identifier of the parameter that should be reflected.
+	 * @return The reflected object structure as {@link JavaParameter}.
+	 */
+	public JavaParameter reflectParameter(SignatureElement parent, Type type,
+			String identifier, String qualifiedIdentifier)
+	{
+		resetReflectedTypes();
+		return doReflectParameter(parent, type, identifier, qualifiedIdentifier);
+	}
+
+	/**
+	 * @see #reflectParameter(SignatureElement, Type, String, String)
+	 */
+	private JavaParameter doReflectParameter(SignatureElement parent, Type type,
+			String identifier, String qualifiedIdentifier)
+	{
+		// try to resolve binding on Type
+		ITypeBinding typeBinding = type.resolveBinding();
+		if (typeBinding != null)
 		{
-			returnParameter.addParameter(reflectParameter(returnParameter, superType,
-					SUPER_CLASS_IDENTIFIER, SUPER_CLASS_IDENTIFIER));
+			return doReflectParameter(parent, typeBinding, identifier,
+					qualifiedIdentifier);
 		}
 
+		JavaParameter returnParameter = new JavaParameter(parent);
+		returnParameter.setIdentifier(identifier);
+		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
+		String typeName = getIdentifierFrom(type);
+		returnParameter.setDataTypeName(typeName);
+		returnParameter.setQualifiedDataTypeName(typeName);
 		return returnParameter;
 	}
 
