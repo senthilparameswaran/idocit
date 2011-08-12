@@ -33,8 +33,10 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
@@ -99,6 +101,11 @@ public class JavaInterfaceParser
 	private Delimiters delimiters;
 
 	/**
+	 * Helper to traverse the data type structure.
+	 */
+	private ReflectionHelper reflectionHelper;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param compilationUnit
@@ -114,6 +121,7 @@ public class JavaInterfaceParser
 		this.compilationUnit = compilationUnit;
 		this.artifactName = artifactName;
 		this.delimiters = delimiters;
+		this.reflectionHelper = new ReflectionHelper();
 	}
 
 	/**
@@ -133,8 +141,8 @@ public class JavaInterfaceParser
 		JavaInterfaceArtifact artifact = (JavaInterfaceArtifact) processCompilationUnit(
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, compilationUnit);
 
-		artifact.setOriginalDocument(((ICompilationUnit) compilationUnit.getJavaElement())
-				.getSource());
+		ICompilationUnit cu = (ICompilationUnit) compilationUnit.getJavaElement();
+		artifact.setOriginalDocument(cu.getSource());
 
 		return artifact;
 	}
@@ -399,7 +407,7 @@ public class JavaInterfaceParser
 
 			ObjectStructureUtils.setParametersPaths(delimiters,
 					outputParameters.getQualifiedIdentifier(), returnType);
-			
+
 			attachDocsToParameters(documentations, outputParameters);
 			method.setOutputParameters(outputParameters);
 		}
@@ -503,10 +511,25 @@ public class JavaInterfaceParser
 	private JavaParameter processParameter(SignatureElement parent,
 			SingleVariableDeclaration variableDeclaration)
 	{
-		JavaParameter containingAttributes = ReflectionHelper.reflectParameter(parent,
-				variableDeclaration.resolveBinding().getType(), variableDeclaration
-						.getName().getIdentifier(), variableDeclaration.getName()
-						.getFullyQualifiedName());
+		JavaParameter containingAttributes = null;
+
+		IVariableBinding resolvedBinding = variableDeclaration.resolveBinding();
+		if (resolvedBinding != null)
+		{
+			ITypeBinding typeBinding = resolvedBinding.getType();
+			containingAttributes = reflectionHelper.reflectParameter(parent, typeBinding,
+					variableDeclaration.getName().getIdentifier(), variableDeclaration
+							.getName().getFullyQualifiedName());
+		}
+		else
+		{
+			// if resolveBinding() gives no result try variableDeclaration.getType()
+			// and work with that Type.
+			Type type = variableDeclaration.getType();
+			containingAttributes = reflectionHelper.reflectParameter(parent, type,
+					variableDeclaration.getName().getIdentifier(), variableDeclaration
+							.getName().getFullyQualifiedName());
+		}
 
 		return containingAttributes;
 	}
@@ -532,16 +555,41 @@ public class JavaInterfaceParser
 
 		for (Name name : thrownExceptions)
 		{
-			ITypeBinding typeBinding = name.resolveTypeBinding();
 			JavaParameter exception = new JavaParameter(exceptions);
-			exception.setIdentifier(typeBinding.getName());
-			exception.setQualifiedIdentifier(typeBinding.getQualifiedName());
-			exception.setDataTypeName(typeBinding.getName());
-			exception.setQualifiedDataTypeName(typeBinding.getQualifiedName());
+			ITypeBinding typeBinding = name.resolveTypeBinding();
+			if (typeBinding != null)
+			{
+				// TODO should be the inner structure of Exceptions be documentable? It
+				// might be make sense for custom Exceptions.
+				exception.setIdentifier(typeBinding.getName());
+				exception.setQualifiedIdentifier(typeBinding.getQualifiedName());
+				exception.setDataTypeName(typeBinding.getName());
+				exception.setQualifiedDataTypeName(typeBinding.getQualifiedName());
+			}
+			else
+			{
+				String identifier;
+				String qIdentifier = name.getFullyQualifiedName();
+
+				if (name.isQualifiedName())
+				{
+					QualifiedName qName = (QualifiedName) name;
+					identifier = qName.getName().getIdentifier();
+				}
+				else
+				{
+					SimpleName sName = (SimpleName) name;
+					identifier = sName.getIdentifier();
+				}
+				exception.setIdentifier(identifier);
+				exception.setQualifiedIdentifier(qIdentifier);
+				exception.setDataTypeName(identifier);
+				exception.setQualifiedDataTypeName(qIdentifier);
+			}
 
 			ObjectStructureUtils.setParametersPaths(delimiters,
 					exceptions.getQualifiedIdentifier(), exception);
-			
+
 			exceptions.addParameter(exception);
 		}
 		return exceptions;
@@ -565,11 +613,23 @@ public class JavaInterfaceParser
 		if (type != null)
 		{
 			ITypeBinding typeBinding = type.resolveBinding();
-			String identifier = typeBinding.getName();
-			if (!identifier.equals(RETURN_TYPE_VOID))
+			if (typeBinding != null)
 			{
-				returnType = ReflectionHelper.reflectParameter(parent, typeBinding,
-						identifier, typeBinding.getQualifiedName());
+				String identifier = typeBinding.getName();
+				if (!identifier.equals(RETURN_TYPE_VOID))
+				{
+					returnType = reflectionHelper.reflectParameter(parent, typeBinding,
+							identifier, typeBinding.getQualifiedName());
+				}
+			}
+			else
+			{
+				String identifier = ReflectionHelper.getIdentifierFrom(type);
+				if (!identifier.equals(RETURN_TYPE_VOID))
+				{
+					returnType = reflectionHelper.reflectParameter(parent, type,
+							identifier, identifier);
+				}
 			}
 		}
 		return returnType;

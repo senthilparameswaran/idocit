@@ -38,16 +38,15 @@ import org.xml.sax.SAXException;
 import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.core.structure.Documentation;
 import de.akra.idocit.core.structure.Scope;
-import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 
 /**
  * Tests for {@link JavadocParser}.
  * <p>
- * Initialize in {@link ObjectStructureUtils} the private attributes
- * <code>supportedAddressees</code> and <code>supportedThematicRoles</code> with
- * {@link Collections#emptyList()}, because the Eclipse Workspace is not available in
- * JUnit Test.
+ * Run this test as JUnit Plug-in Test or initialize in {@link ObjectStructureUtils} the
+ * private attributes <code>supportedAddressees</code> and
+ * <code>supportedThematicRoles</code> with {@link Collections#emptyList()}, because the
+ * Eclipse Workspace is not available in JUnit Test.
  * </p>
  * 
  * @author Dirk Meier-Eickhoff
@@ -65,28 +64,30 @@ public class JavadocParserTest
 	 * @throws ParserConfigurationException
 	 */
 	@Test
-	public void test() throws SAXException, IOException, ParserConfigurationException
+	public void testParse() throws SAXException, IOException,
+			ParserConfigurationException
 	{
 		@SuppressWarnings("deprecation")
 		AST a = new AST();
 		Javadoc javadoc = a.newJavadoc();
 
-		List<Documentation> documentations = createDocumentations();
-		JavadocGenerator.appendDocsToJavadoc(documentations, null, null, javadoc);
-		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_PARAM,
+		List<Documentation> paramDocumentations = createParamDocumentations();
+		List<Documentation> returnDocumentations = createReturnDocumentations();
+		JavadocGenerator.appendDocsToJavadoc(paramDocumentations, null, null, javadoc);
+		JavadocGenerator.appendDocsToJavadoc(paramDocumentations, TagElement.TAG_PARAM,
 				"person", javadoc);
-		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_RETURN, null,
-				javadoc);
-		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_THROWS,
+		JavadocGenerator.appendDocsToJavadoc(returnDocumentations, TagElement.TAG_RETURN,
+				null, javadoc);
+		JavadocGenerator.appendDocsToJavadoc(paramDocumentations, TagElement.TAG_THROWS,
 				"IllegalArgException", javadoc);
 
 		// add the number of used documentations to this list, to make an assertion
 		List<Documentation> allUsedDocs = new ArrayList<Documentation>(
-				documentations.size() * 4);
-		allUsedDocs.addAll(documentations);
-		allUsedDocs.addAll(documentations);
-		allUsedDocs.addAll(documentations);
-		allUsedDocs.addAll(documentations);
+				paramDocumentations.size() * 4);
+		allUsedDocs.addAll(paramDocumentations);
+		allUsedDocs.addAll(paramDocumentations);
+		allUsedDocs.addAll(returnDocumentations);
+		allUsedDocs.addAll(paramDocumentations);
 
 		logger.log(Level.INFO, javadoc.toString());
 
@@ -103,11 +104,23 @@ public class JavadocParserTest
 	 * 
 	 * @return List<Documentation>
 	 */
-	private static List<Documentation> createDocumentations()
+	private static List<Documentation> createParamDocumentations()
 	{
 		List<Documentation> documentations = new ArrayList<Documentation>();
-		documentations.add(createDocumentation());
-		documentations.add(createDocumentation());
+		documentations.add(createParamDocumentation());
+		documentations.add(createParamDocumentation());
+		return documentations;
+	}
+
+	/**
+	 * Create a list with one {@link Documentation} for a method return value.
+	 * 
+	 * @return List<Documentation>
+	 */
+	private static List<Documentation> createReturnDocumentations()
+	{
+		List<Documentation> documentations = new ArrayList<Documentation>();
+		documentations.add(createReturnDocumentation());
 		return documentations;
 	}
 
@@ -116,24 +129,55 @@ public class JavadocParserTest
 	 * 
 	 * @return a new Documentation with some constant values.
 	 */
-	private static Documentation createDocumentation()
+	private static Documentation createParamDocumentation()
 	{
 		Documentation newDoc = new Documentation();
 		newDoc.setScope(Scope.EXPLICIT);
-		newDoc.setThematicRole(new ThematicRole("OBJECT"));
+		newDoc.setThematicRole(ObjectStructureUtils.findThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("/person:Person/name:java.lang.String");
 
 		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
 		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
 
-		Addressee developer = new Addressee("Developer");
-		Addressee manager = new Addressee("Manager");
+		Addressee developer = ObjectStructureUtils.findAddressee("Developer");
+		Addressee manager = ObjectStructureUtils.findAddressee("Manager");
 
 		docMap.put(developer, "Documenation for developers.");
 		addresseeSequence.add(developer);
 
 		docMap.put(manager, "Documenation for managers.");
+		addresseeSequence.add(manager);
+
+		newDoc.setDocumentation(docMap);
+		newDoc.setAddresseeSequence(addresseeSequence);
+
+		return newDoc;
+	}
+
+	/**
+	 * Create a test Documentation for a method return value.
+	 * 
+	 * @return a new Documentation with some constant values.
+	 */
+	private static Documentation createReturnDocumentation()
+	{
+		Documentation newDoc = new Documentation();
+		newDoc.setScope(Scope.EXPLICIT);
+		newDoc.setThematicRole(ObjectStructureUtils.findThematicRole("RESULT"));
+
+		newDoc.setSignatureElementIdentifier("double:double");
+
+		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
+		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
+
+		Addressee developer = ObjectStructureUtils.findAddressee("Developer");
+		Addressee manager = ObjectStructureUtils.findAddressee("Manager");
+
+		docMap.put(developer, "Developer: Result as floating-point number.");
+		addresseeSequence.add(developer);
+
+		docMap.put(manager, "Manager: Result as floating-point number.");
 		addresseeSequence.add(manager);
 
 		newDoc.setDocumentation(docMap);

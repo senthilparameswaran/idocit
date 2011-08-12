@@ -71,13 +71,15 @@ public class HTMLTableParser
 	public static List<Documentation> convertJavadocToDocumentations(String html)
 			throws SAXException, IOException, ParserConfigurationException
 	{
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser saxParser = factory.newSAXParser();
+		StringBuilder xml = new StringBuilder(XML_HEADER.length()
+				+ XML_ROOT_START.length() + html.length() + XML_ROOT_END.length());
+		xml.append(XML_HEADER).append(XML_ROOT_START).append(html).append(XML_ROOT_END);
 
-		html = XML_HEADER + XML_ROOT_START + html + XML_ROOT_END;
 		HTMLTableHandler handler = new HTMLTableHandler();
 
-		saxParser.parse(new ByteArrayInputStream(html.getBytes()), handler);
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		SAXParser saxParser = factory.newSAXParser();
+		saxParser.parse(new ByteArrayInputStream(xml.toString().getBytes()), handler);
 
 		return handler.getDocumentations();
 	}
