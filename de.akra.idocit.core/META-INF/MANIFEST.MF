@@ -23,7 +23,7 @@ Export-Package: de.akra.idocit.common.services,
  de.akra.idocit.core.extensions;uses:="de.akra.idocit.core.structure,org.eclipse.core.resources",
  de.akra.idocit.core.listeners,
  de.akra.idocit.core.services,
- de.akra.idocit.core.utils;uses:="de.akra.idocit.core.structure"
+ de.akra.idocit.core.utils
 Bundle-ClassPath: 
  .,
  lib/xstream-1.3.jar,
