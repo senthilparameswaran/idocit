@@ -21,10 +21,10 @@ import java.util.List;
 
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.SignatureElement;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Selection for {@link DocumentItemListComposite}.

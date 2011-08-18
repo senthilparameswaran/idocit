@@ -25,10 +25,10 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IFile;
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
-import de.akra.idocit.core.structure.Delimiters;
-import de.akra.idocit.core.structure.InterfaceArtifact;
 
 /**
  * Tests for {@link ParsingService}.

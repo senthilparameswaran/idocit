@@ -8,22 +8,22 @@ import java.util.Vector;
 
 import org.junit.Test;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Delimiters;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.Interface;
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.Operation;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.Scope;
-import de.akra.idocit.core.structure.SignatureElement;
-import de.akra.idocit.core.structure.ThematicRole;
-import de.akra.idocit.core.structure.impl.TestInterface;
-import de.akra.idocit.core.structure.impl.TestInterfaceArtifact;
-import de.akra.idocit.core.structure.impl.TestOperation;
-import de.akra.idocit.core.structure.impl.TestParameter;
-import de.akra.idocit.core.structure.impl.TestParameters;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.Scope;
+import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.structure.impl.TestInterface;
+import de.akra.idocit.common.structure.impl.TestInterfaceArtifact;
+import de.akra.idocit.common.structure.impl.TestOperation;
+import de.akra.idocit.common.structure.impl.TestParameter;
+import de.akra.idocit.common.structure.impl.TestParameters;
 
 /**
  * Tests for {@link HTMLDocGenerator}.

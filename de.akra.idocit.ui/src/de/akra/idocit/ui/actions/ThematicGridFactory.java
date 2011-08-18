@@ -18,9 +18,9 @@ package de.akra.idocit.ui.actions;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import de.akra.idocit.core.structure.DescribedItem;
-import de.akra.idocit.core.structure.ThematicGrid;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.DescribedItem;
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Factory for {@link ThematicGrid}s.

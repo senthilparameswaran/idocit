@@ -32,12 +32,12 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.EclipseParsingServiceInitializer;
 import de.akra.idocit.core.services.ParsingService;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.ThematicRole;
 
 /**
  * The {@link IStartup} of iDocIt!.

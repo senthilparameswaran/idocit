@@ -15,7 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.ui.actions;
 
-import de.akra.idocit.core.structure.DescribedItem;
+import de.akra.idocit.common.structure.DescribedItem;
 
 /**
  * Abstract item factory for {@link DescribedItem}s.

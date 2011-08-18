@@ -26,9 +26,9 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.DocumentItemListComposite;
 import de.akra.idocit.ui.composites.DocumentItemListCompositeSelection;
 

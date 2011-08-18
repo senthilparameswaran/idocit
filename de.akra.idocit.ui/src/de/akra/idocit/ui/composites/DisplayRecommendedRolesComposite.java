@@ -41,7 +41,7 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Composite with the {@link List} of recommended {@link ThematicRole}s. The list is only

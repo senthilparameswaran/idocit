@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.common.structure.Addressee;
 
 /**
  * Selection / state for {@link EditAddresseeListComposite}.

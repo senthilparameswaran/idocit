@@ -17,8 +17,8 @@ package de.akra.idocit.wsdl.structure;
 
 import javax.wsdl.Message;
 
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * Representation for a parameter in a {@link Message}.

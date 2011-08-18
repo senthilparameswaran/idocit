@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.Scope;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Scope;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Helper to create a {@link Documentation} for testing.

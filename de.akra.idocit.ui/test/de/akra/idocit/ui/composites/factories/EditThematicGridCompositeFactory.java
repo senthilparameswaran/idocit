@@ -29,8 +29,8 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.ICompositeFactory;
 
-import de.akra.idocit.core.structure.ThematicGrid;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.EditThematicGridComposite;
 import de.akra.idocit.ui.composites.EditThematicGridCompositeSelection;
 

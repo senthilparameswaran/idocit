@@ -17,8 +17,8 @@ package de.akra.idocit.ui.composites;
 
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.DescribedItem;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.DescribedItem;
 
 /**
  * Selection / state for {@link EditAddresseeComposite}.

@@ -18,8 +18,8 @@ package de.akra.idocit.wsdl.structure;
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 
-import de.akra.idocit.core.structure.Interface;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * A representation of a WSDL {@link PortType}. A {@link PortType} has no inner

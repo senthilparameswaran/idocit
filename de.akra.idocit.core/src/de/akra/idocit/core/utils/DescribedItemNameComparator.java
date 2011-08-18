@@ -17,8 +17,10 @@ package de.akra.idocit.core.utils;
 
 import java.util.Comparator;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.DescribedItem;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.DescribedItem;
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Name comparator for {@link DescribedItem}s.

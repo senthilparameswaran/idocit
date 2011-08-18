@@ -28,8 +28,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
 
 /**
  * Generates documentation elements from <code>SignatureElements</code> and

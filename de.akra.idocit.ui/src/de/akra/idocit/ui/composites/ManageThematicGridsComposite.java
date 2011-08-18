@@ -45,10 +45,10 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.common.services.ThematicGridService;
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.services.ThematicGridService;
-import de.akra.idocit.core.structure.ThematicGrid;
-import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.core.utils.DescribedItemNameComparator;
 import de.akra.idocit.ui.Activator;
 import de.akra.idocit.ui.constants.DialogConstants;

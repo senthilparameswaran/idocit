@@ -24,10 +24,10 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.Scope;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Scope;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Tests for {@link Documentation}.

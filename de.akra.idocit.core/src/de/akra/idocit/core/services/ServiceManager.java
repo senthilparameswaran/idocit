@@ -15,6 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.core.services;
 
+import de.akra.idocit.common.services.ThematicGridService;
+
 
 public class ServiceManager {
 	private static final ServiceManager instance = new ServiceManager();

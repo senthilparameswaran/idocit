@@ -21,7 +21,7 @@ import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
 
-import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.ui.composites.SelectSignatureElementComposite;
 import de.akra.idocit.ui.composites.SelectSignatureElementCompositeRC;
 import de.akra.idocit.ui.composites.SelectSignatureElementCompositeSelection;

@@ -30,7 +30,7 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.common.structure.Delimiters;
 
 /**
  * Provides operations for the extraction of information from WSDL-files.

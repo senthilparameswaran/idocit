@@ -18,8 +18,8 @@ package de.akra.idocit.ui.composites;
 import org.eclipse.swt.widgets.Tree;
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * Selection for {@link SelectSignatureElementComposite}.

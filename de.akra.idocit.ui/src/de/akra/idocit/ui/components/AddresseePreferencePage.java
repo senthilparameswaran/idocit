@@ -29,8 +29,8 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
+import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.structure.Addressee;
 import de.akra.idocit.ui.composites.ManageAddresseeComposite;
 import de.akra.idocit.ui.composites.ManageAddresseeCompositeSelection;
 

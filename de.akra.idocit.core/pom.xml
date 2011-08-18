@@ -28,4 +28,12 @@
 		<groupId>de.akra.idocit</groupId>
 		<artifactId>parent</artifactId>
 	</parent>
+	<dependencies>
+		<dependency>
+      		<groupId>de.akra.idocit</groupId>
+      		<artifactId>de.akra.idocit.common</artifactId>
+      		<version>0.0.1</version>
+      		<scope>provided</scope>
+    	</dependency>
+	</dependencies>
 </project>

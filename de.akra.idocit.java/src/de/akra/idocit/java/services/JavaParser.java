@@ -32,9 +32,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
+import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.extensions.Parser;
-import de.akra.idocit.core.structure.Delimiters;
-import de.akra.idocit.core.structure.InterfaceArtifact;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 
 /**
