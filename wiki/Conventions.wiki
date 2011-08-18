@@ -52,8 +52,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 }}}
 
-*Please note:* Yet the copyright tool could only store one of the headers above. If your changes affect projects of both licences, you have to change the copyright-template manually.
-
 ====How to use the Copyright Tool?====
  # Right click the resource you want to add the copyright headers to.
  # Select item "Fix copyrights" from the context-menu.
