@@ -2,7 +2,7 @@
 <feature
       id="de.akra.idocit.wsdl.feature"
       label="iDocIt! WSDL Support"
-      version="0.0.1"
+      version="0.0.2"
       provider-name="ARKA GmbH">
 
    <description url="http://code.google.com/p/idocit/">
