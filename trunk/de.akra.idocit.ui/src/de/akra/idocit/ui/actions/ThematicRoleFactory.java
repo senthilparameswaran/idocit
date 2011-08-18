@@ -15,7 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.ui.actions;
 
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Factory for {@link ThematicRole}s.

@@ -18,13 +18,13 @@ package de.akra.idocit.core;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import de.akra.idocit.common.structure.DocumentationTest;
+import de.akra.idocit.common.structure.InterfaceArtifactTest;
+import de.akra.idocit.common.structure.InterfaceTest;
+import de.akra.idocit.common.structure.OperationTest;
+import de.akra.idocit.common.structure.ParameterTest;
 import de.akra.idocit.core.services.HTMLDocGeneratorTest;
 import de.akra.idocit.core.services.ParsingServiceTest;
-import de.akra.idocit.core.structure.DocumentationTest;
-import de.akra.idocit.core.structure.InterfaceArtifactTest;
-import de.akra.idocit.core.structure.InterfaceTest;
-import de.akra.idocit.core.structure.OperationTest;
-import de.akra.idocit.core.structure.ParameterTest;
 
 /**
  * All tests.

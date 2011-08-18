@@ -39,15 +39,17 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.common.services.ThematicGridService;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
-import de.akra.idocit.core.services.ThematicGridService;
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.SignatureElement;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -426,7 +428,8 @@ public class EditArtifactDocumentationComposite
 			// Changes due to Issue #23
 			try
 			{
-				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier());
+				List<ThematicGrid> thematicGrids = PersistenceService.loadThematicGrids();
+				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier(), thematicGrids);
 			}
 			catch (UnitializedIDocItException unEx)
 			{

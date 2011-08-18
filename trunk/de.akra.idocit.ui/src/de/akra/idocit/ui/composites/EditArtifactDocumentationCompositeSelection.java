@@ -29,13 +29,12 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IFile;
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.Operation;
-import de.akra.idocit.core.structure.SignatureElement;
-import de.akra.idocit.core.structure.ThematicGrid;
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Selection for {@link EditArtifactDocumentationComposite}.

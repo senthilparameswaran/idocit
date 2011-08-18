@@ -24,10 +24,9 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.utils.TestUtils;
 
 /**

@@ -24,9 +24,9 @@ import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
 
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.Parameters;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;

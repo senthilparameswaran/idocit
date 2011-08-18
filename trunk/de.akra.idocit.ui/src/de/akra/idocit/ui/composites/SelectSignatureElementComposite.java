@@ -42,12 +42,12 @@ import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.core.structure.Interface;
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.Operation;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * The composite with a {@link TreeViewer} in which the {@link SignatureElement} can be

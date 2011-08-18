@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 
 import org.junit.Test;
 
-import de.akra.idocit.core.structure.Delimiters;
+import de.akra.idocit.common.structure.Delimiters;
 
 /**
  * Tests for {@link WSDLParsingService}.

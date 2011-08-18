@@ -15,7 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.ui.actions;
 
-import de.akra.idocit.core.structure.Addressee;
+import de.akra.idocit.common.structure.Addressee;
 
 /**
  * Factory for {@link Addressee}s.

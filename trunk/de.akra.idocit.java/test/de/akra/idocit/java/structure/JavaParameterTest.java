@@ -19,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * @author Dirk Meier-Eickhoff

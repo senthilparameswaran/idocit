@@ -43,8 +43,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import de.akra.idocit.core.structure.Delimiters;
-import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.core.utils.TestUtils;
 

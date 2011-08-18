@@ -20,12 +20,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import de.akra.idocit.core.structure.Interface;
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.Operation;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * Some useful methods for tests.

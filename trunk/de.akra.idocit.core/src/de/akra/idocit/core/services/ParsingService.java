@@ -17,9 +17,9 @@ package de.akra.idocit.core.services;
 
 import java.util.Map;
 
+import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
-import de.akra.idocit.core.structure.Delimiters;
 
 /**
  * The ParsingService is a "factory" for supported {@link Parser}s. It fetches

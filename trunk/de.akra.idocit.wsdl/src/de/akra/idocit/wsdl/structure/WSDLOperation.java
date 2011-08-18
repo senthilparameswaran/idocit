@@ -18,8 +18,8 @@ package de.akra.idocit.wsdl.structure;
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 
-import de.akra.idocit.core.structure.Operation;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * A representation of a WSDL {@link javax.wsdl.Operation}.

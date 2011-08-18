@@ -46,9 +46,9 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.core.structure.ThematicGrid;
-import de.akra.idocit.core.structure.ThematicRole;
-import de.akra.idocit.core.utils.StringUtils;
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Composite to edit a {@link ThematicGrid}.

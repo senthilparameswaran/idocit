@@ -33,14 +33,14 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
-import de.akra.idocit.core.structure.Delimiters;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.Interface;
-import de.akra.idocit.core.structure.Operation;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.ParameterPathElement;
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.ParameterPathElement;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;

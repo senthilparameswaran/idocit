@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.core.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicGrid;
 
 /**
  * Selection / state for {@link EditThematicGridListComposite}.

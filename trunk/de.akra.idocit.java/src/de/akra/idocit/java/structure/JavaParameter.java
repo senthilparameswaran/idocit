@@ -15,8 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.java.structure;
 
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * Representation of a single Java parameter, return type or thrown exception.<br />

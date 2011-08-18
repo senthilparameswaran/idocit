@@ -29,8 +29,8 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.composites.ManageThematicRoleComposite;
 import de.akra.idocit.ui.composites.ManageThematicRoleCompositeSelection;
 

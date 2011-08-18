@@ -17,7 +17,7 @@ package de.akra.idocit.ui.composites;
 
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Selection / state for {@link EditThematicRoleComposite}.

@@ -26,11 +26,11 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
+import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.structure.ThematicGrid;
-import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.composites.ManageThematicGridsComposite;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeAC;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;

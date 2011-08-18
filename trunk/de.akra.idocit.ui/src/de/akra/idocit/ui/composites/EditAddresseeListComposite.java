@@ -31,8 +31,8 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.DescribedItem;
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.DescribedItem;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 

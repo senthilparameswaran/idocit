@@ -36,10 +36,10 @@ import org.w3c.dom.Element;
 import com.ibm.wsdl.Constants;
 import com.ibm.wsdl.util.xml.DOMUtils;
 
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLMessage;

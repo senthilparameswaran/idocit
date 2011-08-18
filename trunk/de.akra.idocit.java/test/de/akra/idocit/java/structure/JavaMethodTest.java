@@ -22,10 +22,10 @@ import java.util.Vector;
 
 import org.junit.Test;
 
-import de.akra.idocit.core.structure.Operation;
-import de.akra.idocit.core.structure.Parameter;
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * Tests for {@link Operation}.

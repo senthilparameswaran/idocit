@@ -36,7 +36,7 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.WildcardType;
 
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.java.structure.JavaParameter;
 
 /**

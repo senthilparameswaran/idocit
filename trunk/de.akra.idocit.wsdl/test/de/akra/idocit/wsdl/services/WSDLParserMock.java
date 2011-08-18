@@ -30,7 +30,7 @@ import javax.wsdl.xml.WSDLWriter;
 
 import org.eclipse.core.resources.IFile;
 
-import de.akra.idocit.core.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 
 /**

@@ -20,8 +20,8 @@ import javax.wsdl.Input;
 import javax.wsdl.Output;
 import javax.wsdl.WSDLElement;
 
-import de.akra.idocit.core.structure.Parameters;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * This is a representation of an {@link Input}, {@link Output} or {@link Fault} element

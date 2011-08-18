@@ -17,8 +17,8 @@ package de.akra.idocit.wsdl.structure;
 
 import javax.wsdl.Definition;
 
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.SignatureElement;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * The interface structure (artifact) for an WSDL file.

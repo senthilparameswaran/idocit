@@ -35,10 +35,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.services.HTMLDocGenerator;
 import de.akra.idocit.core.services.ParsingService;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.structure.InterfaceArtifact;
 import de.akra.idocit.ui.components.DocumentationEditor;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 

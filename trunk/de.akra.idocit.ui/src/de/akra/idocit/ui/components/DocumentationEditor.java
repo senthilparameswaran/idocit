@@ -16,10 +16,7 @@
 package de.akra.idocit.ui.components;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,14 +44,13 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsEditorPart;
 
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.structure.Addressee;
-import de.akra.idocit.core.structure.Documentation;
-import de.akra.idocit.core.structure.InterfaceArtifact;
-import de.akra.idocit.core.structure.SignatureElement;
-import de.akra.idocit.core.structure.ThematicRole;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeSelection;
 import de.akra.idocit.ui.constants.DialogConstants;

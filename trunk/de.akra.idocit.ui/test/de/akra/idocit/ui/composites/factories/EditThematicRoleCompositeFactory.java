@@ -20,7 +20,7 @@ import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.ICompositeFactory;
 
-import de.akra.idocit.core.structure.ThematicRole;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.EditThematicRoleComposite;
 import de.akra.idocit.ui.composites.EditThematicRoleCompositeSelection;
 
