@@ -3,16 +3,16 @@
    <description name="iDocIt! Update Site" url="http://idocit.googlecode.com/svn/updatesite/">
       iDocIt! is an Eclipse-based editor for API documentation. It analyses the identifiers of an interface and suggests aspects to document based on this analysis. By applying this approach it helps to write more complete high quality API-documentation. It currently supports WSDL- and Java-interfaces and could easily be extended with more languages.
    </description>
-   <feature url="features/de.akra.idocit.core.feature_0.0.3.jar" id="de.akra.idocit.core.feature" version="0.0.3">
+   <feature url="features/de.akra.idocit.core.feature_0.0.4.jar" id="de.akra.idocit.core.feature" version="0.0.4">
       <category name="de.akra.idocit"/>
    </feature>
-   <feature url="features/de.akra.idocit.java.feature_0.0.1.jar" id="de.akra.idocit.java.feature" version="0.0.1">
+   <feature url="features/de.akra.idocit.java.feature_0.0.2.jar" id="de.akra.idocit.java.feature" version="0.0.2">
       <category name="de.akra.idocit"/>
    </feature>
-   <feature url="features/de.akra.idocit.ui.feature_0.0.3.jar" id="de.akra.idocit.ui.feature" version="0.0.3">
+   <feature url="features/de.akra.idocit.ui.feature_0.0.4.jar" id="de.akra.idocit.ui.feature" version="0.0.4">
       <category name="de.akra.idocit"/>
    </feature>
-   <feature url="features/de.akra.idocit.wsdl.feature_0.0.1.jar" id="de.akra.idocit.wsdl.feature" version="0.0.1">
+   <feature url="features/de.akra.idocit.wsdl.feature_0.0.2.jar" id="de.akra.idocit.wsdl.feature" version="0.0.2">
       <category name="de.akra.idocit"/>
    </feature>
    <category-def name="de.akra.idocit" label="iDocIt!">
