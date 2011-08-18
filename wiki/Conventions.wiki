@@ -34,6 +34,7 @@ For projects:
  * de.akra.idocit.ui
  * de.akra.idocit.java
  * de.akra.idocit.wsdl
+ * de.akra.idocit.common
 
 {{{
 Copyright 2011 AKRA GmbH
