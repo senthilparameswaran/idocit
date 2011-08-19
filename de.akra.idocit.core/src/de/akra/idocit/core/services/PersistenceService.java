@@ -43,6 +43,7 @@ import org.eclipse.ui.PlatformUI;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 
+import de.akra.idocit.common.factories.XStreamFactory;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.ThematicGrid;
@@ -67,10 +68,6 @@ public class PersistenceService
 	/*
 	 * Constants
 	 */
-	private static final String XML_ALIAS_THEMATIC_GRID = "thematicGrid";
-
-	private static final String XML_ALIAS_THEMATIC_ROLE = "thematicRole";
-
 	private static final String XML_ALIAS_ADDRESSEE = "addressee";
 
 	private static final int MAX_CHARACTERS_PER_DESCRIPTION_LINE = 80;
@@ -188,21 +185,6 @@ public class PersistenceService
 						.getString(PreferenceStoreConstants.THEMATIC_ROLES));
 	}
 
-	private static XStream configureXStreamForThematicGrid()
-	{
-		XStream stream = new XStream();
-		stream.alias(XML_ALIAS_THEMATIC_GRID, ThematicGrid.class);
-		stream.alias(XML_ALIAS_THEMATIC_ROLE, ThematicRole.class);
-		return stream;
-	}
-
-	private static XStream configureXStreamForThematicRoles()
-	{
-		XStream stream = new XStream();
-		stream.alias(XML_ALIAS_THEMATIC_ROLE, ThematicRole.class);
-		return stream;
-	}
-
 	private static XStream configureXStreamForAddressee()
 	{
 		XStream stream = new XStream();
@@ -293,7 +275,7 @@ public class PersistenceService
 	{
 		// TODO delete old entries from preference store
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = configureXStreamForThematicRoles();
+		XStream stream = XStreamFactory.configureXStreamForThematicRoles();
 		Collections.sort(roles, DescribedItemNameComparator.getInstance());
 
 		for (ThematicRole role : roles)
@@ -401,7 +383,7 @@ public class PersistenceService
 	public static List<ThematicRole> loadThematicRoles()
 	{
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = configureXStreamForThematicRoles();
+		XStream stream = XStreamFactory.configureXStreamForThematicRoles();
 		List<ThematicRole> roles = new ArrayList<ThematicRole>();
 
 		String prefVal = prefStore.getString(PreferenceStoreConstants.THEMATIC_ROLES);
@@ -455,7 +437,7 @@ public class PersistenceService
 		{
 			try
 			{
-				return (List<ThematicGrid>) configureXStreamForThematicGrid().fromXML(
+				return (List<ThematicGrid>) XStreamFactory.configureXStreamForThematicGrid().fromXML(
 						verbClassRoleAssocsXML);
 			}
 			catch (XStreamException e)
@@ -470,7 +452,7 @@ public class PersistenceService
 		{
 			if (defaultThematicGrids != null)
 			{
-				List<ThematicGrid> defaultGrids = (List<ThematicGrid>) configureXStreamForThematicGrid().fromXML(
+				List<ThematicGrid> defaultGrids = (List<ThematicGrid>) XStreamFactory.configureXStreamForThematicGrid().fromXML(
 						defaultThematicGrids);
 				
 				// Keep the default grids in preference store for the next time.
@@ -495,7 +477,7 @@ public class PersistenceService
 	public static void persistThematicGrids(List<ThematicGrid> verbClassRoleAssociations)
 	{
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		String verbClassRoleAssocsXML = configureXStreamForThematicGrid().toXML(
+		String verbClassRoleAssocsXML = XStreamFactory.configureXStreamForThematicGrid().toXML(
 				verbClassRoleAssociations);
 
 		prefStore.putValue(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING,
@@ -517,7 +499,7 @@ public class PersistenceService
 	public static void exportThematicGridsAsXml(final File destination,
 			List<ThematicGrid> grids) throws IOException
 	{
-		XStream lvXStream = configureXStreamForThematicGrid();
+		XStream lvXStream = XStreamFactory.configureXStreamForThematicGrid();
 		Writer lvWriter = null;
 
 		try
@@ -552,7 +534,7 @@ public class PersistenceService
 
 		try
 		{
-			XStream xmlStream = configureXStreamForThematicGrid();
+			XStream xmlStream = XStreamFactory.configureXStreamForThematicGrid();
 			reader = new BufferedReader(new FileReader(source));
 			grids = (List<ThematicGrid>) xmlStream.fromXML(reader);
 		}

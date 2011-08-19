@@ -189,4 +189,40 @@ public class ThematicGridService
 
 		return newGrid;
 	}
+	
+	/**
+	 * Finds all verbs from the given thematic grids which occur in more than one grid. The resulting
+	 * map contains the found verbs as keys and the sets of thematic grids in which the verbs occur as 
+	 * values.
+	 * 
+	 * @param thematicGrids
+	 * 	The thematic grids to look in for ambigious verbs (SOURCE)
+	 * 
+	 * @return see above
+	 */
+	public static Map<String, Set<ThematicGrid>> findAmbigiousVerbs(List<ThematicGrid> thematicGrids){
+		Map<String, Set<ThematicGrid>> ambigiousVerbs = new HashMap<String, Set<ThematicGrid>>();
+		
+		for(ThematicGrid thematicGrid : thematicGrids) {
+			Set<String> verbs = thematicGrid.getVerbs();
+			
+			for(String verb : verbs) {
+				Set<ThematicGrid> gridsWithVerb = ambigiousVerbs.get(verb);
+				
+				if(gridsWithVerb == null) {
+					 gridsWithVerb = new HashSet<ThematicGrid>();
+				}
+				
+				List<ThematicGrid> matchingGrids = findMatchingGrids(verb, thematicGrids);
+				
+				for(ThematicGrid matchingGrid : matchingGrids) {
+					gridsWithVerb.add(matchingGrid);
+				}
+				
+				ambigiousVerbs.put(verb, gridsWithVerb);
+			}
+		}
+		
+		return ambigiousVerbs;
+	}
 }
