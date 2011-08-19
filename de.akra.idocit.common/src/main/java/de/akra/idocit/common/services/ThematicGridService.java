@@ -207,19 +207,21 @@ public class ThematicGridService
 			Set<String> verbs = thematicGrid.getVerbs();
 			
 			for(String verb : verbs) {
-				Set<ThematicGrid> gridsWithVerb = ambigiousVerbs.get(verb);
-				
-				if(gridsWithVerb == null) {
-					 gridsWithVerb = new HashSet<ThematicGrid>();
-				}
-				
 				List<ThematicGrid> matchingGrids = findMatchingGrids(verb, thematicGrids);
 				
-				for(ThematicGrid matchingGrid : matchingGrids) {
-					gridsWithVerb.add(matchingGrid);
+				if(matchingGrids.size() > 1) {
+					Set<ThematicGrid> gridsWithVerb = ambigiousVerbs.get(verb);
+					
+					if(gridsWithVerb == null) {
+						 gridsWithVerb = new HashSet<ThematicGrid>();
+					}
+					
+					for(ThematicGrid matchingGrid : matchingGrids) {
+						gridsWithVerb.add(matchingGrid);
+					}
+					
+					ambigiousVerbs.put(verb, gridsWithVerb);
 				}
-				
-				ambigiousVerbs.put(verb, gridsWithVerb);
 			}
 		}
 		
