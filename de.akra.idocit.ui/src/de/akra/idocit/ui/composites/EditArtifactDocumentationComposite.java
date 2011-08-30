@@ -200,7 +200,10 @@ public class EditArtifactDocumentationComposite
 					SelectSignatureElementCompositeSelection selection,
 					PocUIComposite<SelectSignatureElementCompositeSelection> comp)
 			{
-				logger.log(Level.FINEST, comp.toString());
+				// Changes due to Issue #58.
+				logger.log(Level.FINEST,
+						comp != null ? comp.toString() : String.valueOf(null));
+				// End changes due to Issue #58.
 
 				EditArtifactDocumentationCompositeSelection editArtSelection = makeEditArtifactDocumentationCompositeSelectionFrom(getSelection());
 
@@ -223,7 +226,10 @@ public class EditArtifactDocumentationComposite
 			public void selectionChanged(DocumentItemListCompositeSelection selection,
 					PocUIComposite<DocumentItemListCompositeSelection> comp)
 			{
-				logger.log(Level.FINEST, comp.toString());
+				// Changes due to Issue #58.
+				logger.log(Level.FINEST,
+						comp != null ? comp.toString() : String.valueOf(null));
+				// End changes due to Issue #58.
 
 				EditArtifactDocumentationCompositeSelection editArtSelection = makeEditArtifactDocumentationCompositeSelectionFrom(getSelection());
 				SignatureElement selectedSigElem = editArtSelection
@@ -372,10 +378,11 @@ public class EditArtifactDocumentationComposite
 			groupDocumentItemListComposite.setText(String
 					.format(GROUP_TITLE_DOCUMENT_SIGNATURE_ELEMENT,
 							NO_SIGNATURE_ELEMENT_SELECTED));
-			
+
 			docItemListSelection.setDocumentations(new ArrayList<Documentation>());
 			docItemListSelection.setActiveAddressees(new ArrayList<Integer>());
-			docItemListSelection.setDisplayedAddresseesOfDocumentations(new ArrayList<List<Addressee>>());
+			docItemListSelection
+					.setDisplayedAddresseesOfDocumentations(new ArrayList<List<Addressee>>());
 		}
 
 		documentItemListComposite.setSelection(docItemListSelection);
@@ -429,7 +436,8 @@ public class EditArtifactDocumentationComposite
 			try
 			{
 				List<ThematicGrid> thematicGrids = PersistenceService.loadThematicGrids();
-				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier(), thematicGrids);
+				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier(),
+						thematicGrids);
 			}
 			catch (UnitializedIDocItException unEx)
 			{
