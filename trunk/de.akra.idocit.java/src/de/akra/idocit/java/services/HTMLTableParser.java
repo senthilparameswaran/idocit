@@ -58,12 +58,15 @@ public class HTMLTableParser
 	private static Logger logger = Logger.getLogger(HTMLTableParser.class.getName());
 
 	/**
-	 * Parse the <code>html</code> String and converts each table into a
+	 * Parse the <code>html</code> String and converts each iDocIt! comment table into a
 	 * {@link Documentation}.
 	 * 
 	 * @param html
-	 *            HTML tables as string representation from a {@link Javadoc}.
-	 * @return The list of converted {@link Documentation}s.
+	 *            HTML tables as string representation from a {@link Javadoc}. Only tables
+	 *            with the attribute name={@link JavadocGenerator#IDOCIT_HTML_TABLE_NAME}
+	 *            are considered.
+	 * @return The list of converted {@link Documentation}s. If the list is empty, no
+	 *         tables with name={@link JavadocGenerator#IDOCIT_HTML_TABLE_NAME} are found.
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
@@ -97,6 +100,7 @@ public class HTMLTableParser
 		private static final String HTML_TAG_TABLE = "table";
 		private static final String HTML_TAG_TR = "tr";
 		private static final String HTML_TAG_TD = "td";
+		private static final String HTML_ATTRIBUTE_NAME = "name";
 		private static final String ELEMENT = "Element:";
 		private static final String ROLE = "Role:";
 		private static final String SCOPE = "Scope:";
@@ -110,6 +114,11 @@ public class HTMLTableParser
 		 * The current {@link Documentation}.
 		 */
 		private Documentation currentDoc;
+
+		/**
+		 * True, if a iDocIt! table should be parsed.
+		 */
+		private boolean startTableParsing = false;
 
 		private byte currentColumn = 0;
 
@@ -139,6 +148,7 @@ public class HTMLTableParser
 			else if (qName.equals(HTML_TAG_TABLE))
 			{
 				finishCurrentDocumentation();
+				startTableParsing = false;
 			}
 		}
 
@@ -185,7 +195,7 @@ public class HTMLTableParser
 				break;
 			case NONE:
 				// ignore new lines etc.
-				if (!value.matches("^\\s*$"))
+				if (startTableParsing && !value.matches("^\\s*$"))
 				{
 					if (value.equals(ELEMENT))
 					{
@@ -207,7 +217,7 @@ public class HTMLTableParser
 				}
 				break;
 			default:
-				logger.log(Level.SEVERE, "Unknown LAST_VALUE!");
+				logger.log(Level.SEVERE, "Unknown LAST_VALUE! " + lastValue);
 				break;
 			}
 		}
@@ -222,8 +232,13 @@ public class HTMLTableParser
 		{
 			if (qName.equals(HTML_TAG_TABLE))
 			{
-				currentDoc = new Documentation();
-				currentDoc.setScope(Scope.EXPLICIT);
+				String name = attributes.getValue(HTML_ATTRIBUTE_NAME);
+				if (name != null && JavadocGenerator.IDOCIT_HTML_TABLE_NAME.equals(name))
+				{
+					startTableParsing = true;
+					currentDoc = new Documentation();
+					currentDoc.setScope(Scope.EXPLICIT);
+				}
 			}
 			else if (qName.equals(HTML_TAG_TD))
 			{

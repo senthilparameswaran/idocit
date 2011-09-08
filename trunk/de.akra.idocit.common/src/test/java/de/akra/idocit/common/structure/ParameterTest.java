@@ -103,6 +103,7 @@ public class ParameterTest
 		innerParam.setDataTypeName("int");
 		innerParam.setQualifiedDataTypeName("int");
 		innerParam.setIdentifier("id");
+		innerParam.setDocumentationChanged(true);
 		innerParam.setQualifiedIdentifier("id");
 		innerParam.setSignatureElementPath("find.cust(Customer).id(int)");
 		innerParam.addDocpart(DocumentationTest.createDocumentation());

@@ -15,7 +15,11 @@
  *******************************************************************************/
 package de.akra.idocit.java.structure;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TagElement;
 
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.SignatureElement;
@@ -26,7 +30,7 @@ import de.akra.idocit.common.structure.SignatureElement;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class JavaInterface extends Interface
@@ -35,6 +39,14 @@ public class JavaInterface extends Interface
 	 * Reference to the corresponding {@link AbstractTypeDeclaration}.
 	 */
 	private AbstractTypeDeclaration refToASTNode;
+
+	/**
+	 * The list of additional Javadoc tags that are not interpreted by iDocIt! (all tags
+	 * except param, return, throws and the general description). These tags are appended
+	 * at the end to the Javadoc by writing it again. It is only used to keep existing
+	 * tags in Javadoc.
+	 */
+	private List<TagElement> additionalTags = Collections.emptyList();
 
 	/**
 	 * Constructor
@@ -60,6 +72,10 @@ public class JavaInterface extends Interface
 
 	/**
 	 * {@inheritDoc}
+	 * <p>
+	 * <b>Hint:</b> For <code>refToASTNode</code> and <code>additionalTags</code> only the
+	 * references are copied. There will created no deep copy of them!
+	 * </p>
 	 * 
 	 * @see de.akra.idocit.structure.SignatureElement#doCopyTo(de.akra.idocit.structure.SignatureElement)
 	 */
@@ -68,6 +84,7 @@ public class JavaInterface extends Interface
 	{
 		JavaInterface ji = (JavaInterface) signatureElement;
 		ji.setRefToASTNode(refToASTNode);
+		ji.setAdditionalTags(additionalTags);
 	}
 
 	/**
@@ -87,6 +104,16 @@ public class JavaInterface extends Interface
 		this.refToASTNode = refToASTNode;
 	}
 
+	public void setAdditionalTags(List<TagElement> additionalTags)
+	{
+		this.additionalTags = additionalTags;
+	}
+
+	public List<TagElement> getAdditionalTags()
+	{
+		return additionalTags;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -97,6 +124,8 @@ public class JavaInterface extends Interface
 	{
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result
+				+ ((additionalTags == null) ? 0 : additionalTags.hashCode());
 		result = prime * result + ((refToASTNode == null) ? 0 : refToASTNode.hashCode());
 		return result;
 	}
@@ -110,29 +139,43 @@ public class JavaInterface extends Interface
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
 		if (!super.equals(obj))
-		{
 			return false;
-		}
-		if (!(obj instanceof JavaInterface))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		JavaInterface other = (JavaInterface) obj;
+		if (additionalTags == null)
+		{
+			if (other.additionalTags != null)
+				return false;
+		}
+		else if (!additionalTags.equals(other.additionalTags))
+			return false;
 		if (refToASTNode == null)
 		{
 			if (other.refToASTNode != null)
-			{
 				return false;
-			}
 		}
 		else if (!refToASTNode.equals(other.refToASTNode))
-		{
 			return false;
-		}
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("JavaInterface [additionalTags=");
+		builder.append(additionalTags);
+		builder.append(", toString()=");
+		builder.append(super.toString());
+		builder.append("]");
+		return builder.toString();
 	}
 }

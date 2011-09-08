@@ -28,7 +28,7 @@ import de.akra.idocit.common.utils.Preconditions;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public abstract class SignatureElement
@@ -123,6 +123,21 @@ public abstract class SignatureElement
 	private boolean documentationAllowed = true;
 
 	/**
+	 * True, if at least one of this element's {@link Documentation} objects have changed
+	 * or at least one documentation is added or removed. Then the documentations must be
+	 * written into the source file, otherwise the documentations can be ignored if the
+	 * source file is only changed partially and is not written completely new.<br />
+	 * By default <code>documentationChanged</code> is <code>false</code>.
+	 * <p>
+	 * <b>Hint:</b> If the source file is always written new, this flag can be ignored,
+	 * because the documentations must be written in any case.
+	 * </p>
+	 * 
+	 * @since 0.0.2
+	 */
+	private boolean documentationChanged = false;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param parent
@@ -202,6 +217,7 @@ public abstract class SignatureElement
 		signatureElement.setIdentifier(identifier);
 		signatureElement.setQualifiedIdentifier(qualifiedIdentifier);
 		signatureElement.setDocumentationAllowed(documentationAllowed);
+		signatureElement.setDocumentationChanged(documentationChanged);
 		signatureElement.setId(id);
 
 		List<Documentation> newDocparts = Collections.emptyList();
@@ -378,6 +394,28 @@ public abstract class SignatureElement
 		return qualifiedIdentifier;
 	}
 
+	/**
+	 * 
+	 * @return true, if something happens with the the {@link #documentations}.
+	 * @since 0.0.2
+	 */
+	public boolean isDocumentationChanged()
+	{
+		return documentationChanged;
+	}
+
+	/**
+	 * 
+	 * @param documentationChanged
+	 *            set true, if something has happened with the the {@link #documentations}
+	 *            .
+	 * @since 0.0.2
+	 */
+	public void setDocumentationChanged(boolean documentationChanged)
+	{
+		this.documentationChanged = documentationChanged;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -389,9 +427,10 @@ public abstract class SignatureElement
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
+		result = prime * result + (documentationAllowed ? 1231 : 1237);
+		result = prime * result + (documentationChanged ? 1231 : 1237);
 		result = prime * result
 				+ ((documentations == null) ? 0 : documentations.hashCode());
-		result = prime * result + (documentationAllowed ? 1231 : 1237);
 		result = prime * result + id;
 		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
 		result = prime * result
@@ -408,70 +447,46 @@ public abstract class SignatureElement
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
 		if (obj == null)
-		{
 			return false;
-		}
-		if (!(obj instanceof SignatureElement))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		SignatureElement other = (SignatureElement) obj;
 		if (category == null)
 		{
 			if (other.category != null)
-			{
 				return false;
-			}
 		}
 		else if (!category.equals(other.category))
-		{
 			return false;
-		}
+		if (documentationAllowed != other.documentationAllowed)
+			return false;
+		if (documentationChanged != other.documentationChanged)
+			return false;
 		if (documentations == null)
 		{
 			if (other.documentations != null)
-			{
 				return false;
-			}
 		}
 		else if (!documentations.equals(other.documentations))
-		{
 			return false;
-		}
-		if (documentationAllowed != other.documentationAllowed)
-		{
-			return false;
-		}
 		if (id != other.id)
-		{
 			return false;
-		}
 		if (identifier == null)
 		{
 			if (other.identifier != null)
-			{
 				return false;
-			}
 		}
 		else if (!identifier.equals(other.identifier))
-		{
 			return false;
-		}
 		if (qualifiedIdentifier == null)
 		{
 			if (other.qualifiedIdentifier != null)
-			{
 				return false;
-			}
 		}
 		else if (!qualifiedIdentifier.equals(other.qualifiedIdentifier))
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -486,7 +501,7 @@ public abstract class SignatureElement
 		StringBuilder builder = new StringBuilder();
 		builder.append("SignatureElement [id=");
 		builder.append(id);
-		builder.append(", docparts=");
+		builder.append(", documentations=");
 		builder.append(documentations);
 		builder.append(", identifier=");
 		builder.append(identifier);
@@ -496,6 +511,8 @@ public abstract class SignatureElement
 		builder.append(category);
 		builder.append(", documentationAllowed=");
 		builder.append(documentationAllowed);
+		builder.append(", documentationChanged=");
+		builder.append(documentationChanged);
 		builder.append("]");
 		return builder.toString();
 	}

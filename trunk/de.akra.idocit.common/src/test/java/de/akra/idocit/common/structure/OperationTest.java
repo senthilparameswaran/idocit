@@ -112,6 +112,7 @@ public class OperationTest
 		Parameter paramId = new TestParameter(paramCust, "");
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
+		paramId.setDocumentationChanged(true);
 		paramId.setSignatureElementPath("findIn.Cust(Customer).id(int)");
 		paramCust.addParameter(paramId);
 
