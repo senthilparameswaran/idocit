@@ -16,9 +16,21 @@
 package de.akra.idocit.core.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
+import junit.framework.Assert;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
@@ -31,10 +43,42 @@ import de.akra.idocit.common.structure.SignatureElement;
  * Some useful methods for tests.
  * 
  * @author Dirk Meier-Eickhoff
- * 
+ * @version 0.0.2
  */
 public class TestUtils
 {
+	/**
+	 * Creates an Eclipse project "External Files" and links the file
+	 * <code>fileName</code> to the project. Then the file can be used as {@link IFile}.
+	 * 
+	 * @param fileName
+	 *            The path to a file.
+	 * @return {@link IFile} from the <code>fileName</code>.
+	 * @throws CoreException
+	 */
+	public static IFile makeIFileFromFileName(String fileName) throws CoreException
+	{
+		File file = new File(fileName);
+
+		// create project to link source file to it. Is needed to get an IFile.
+		IWorkspace ws = ResourcesPlugin.getWorkspace();
+		IProject project = ws.getRoot().getProject("External Files");
+		if (!project.exists())
+		{
+			project.create(null);
+		}
+		if (!project.isOpen())
+		{
+			project.open(null);
+		}
+
+		IPath location = Path.fromOSString(file.getAbsolutePath());
+		IFile iFile = project.getFile(location.lastSegment());
+		Assert.assertNotNull(iFile);
+		iFile.createLink(location, IResource.NONE, null);
+		return iFile;
+	}
+
 	/**
 	 * Reads the content of the file and returns it as String.
 	 * 
@@ -60,7 +104,7 @@ public class TestUtils
 		reader.close();
 		return fileContent.toString();
 	}
-	
+
 	/**
 	 * Builds the hierarchy tree as string.
 	 * 
@@ -71,7 +115,8 @@ public class TestUtils
 	 * @param level
 	 *            The tree level (indentation of the line).
 	 */
-	public static void buildHierarchy(StringBuffer result, SignatureElement sigElem, int level)
+	public static void buildHierarchy(StringBuffer result, SignatureElement sigElem,
+			int level)
 	{
 		if (sigElem != null)
 		{
@@ -146,5 +191,134 @@ public class TestUtils
 				}
 			}
 		}
+	}
+
+	/**
+	 * A deep toString() implementation for implementations of {@link SignatureElement}s,
+	 * only the <code>id</code> of the signature element is omitted. Use this to test
+	 * equality for two {@link SignatureElement} object structures.
+	 * 
+	 * @param sigElem
+	 *            The {@link SignatureElement} to make a String representation from.
+	 * @return The {@link SignatureElement} as String.
+	 */
+	public static String toStringWithoutId(SignatureElement sigElem)
+	{
+		return doToStringWithoutId(sigElem).toString();
+	}
+
+	/**
+	 * 
+	 * @param sigElem
+	 * @return
+	 * @see #toStringWithoutId(SignatureElement)
+	 */
+	private static StringBuilder doToStringWithoutId(SignatureElement sigElem)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		if (sigElem != null)
+		{
+			builder.append(sigElem.getClass().getSimpleName());
+			builder.append(" [documentations=");
+			builder.append(sigElem.getDocumentations().toString());
+			builder.append(", identifier=");
+			builder.append(sigElem.getIdentifier());
+			builder.append(", qualifiedIdentifier=");
+			builder.append(sigElem.getQualifiedIdentifier());
+			builder.append(", category=");
+			builder.append(sigElem.getCategory());
+			builder.append(", documentationAllowed=");
+			builder.append(sigElem.isDocumentationAllowed());
+			builder.append(", documentationChanged=");
+			builder.append(sigElem.isDocumentationChanged());
+
+			if (sigElem instanceof Parameter)
+			{
+				Parameter param = (Parameter) sigElem;
+				builder.append(", dataTypeName=");
+				builder.append(param.getDataTypeName());
+				builder.append(", qualifiedDataTypeName=");
+				builder.append(param.getQualifiedDataTypeName());
+				builder.append(", signatureElementPath=");
+				builder.append(param.getSignatureElementPath());
+
+				builder.append(", complexType={");
+				if (param.getComplexType() != null)
+				{
+					for (Parameter p : param.getComplexType())
+					{
+						builder.append(doToStringWithoutId(p));
+					}
+				}
+				builder.append("}");
+			}
+			else if (sigElem instanceof Operation)
+			{
+				Operation op = (Operation) sigElem;
+				builder.append(", inputParameters=");
+				builder.append(doToStringWithoutId(op.getInputParameters()));
+				builder.append(", outputParameters=");
+				builder.append(doToStringWithoutId(op.getOutputParameters()));
+
+				builder.append(", exceptions={");
+				for (Parameters paramList : op.getExceptions())
+				{
+					builder.append(doToStringWithoutId(paramList));
+				}
+				builder.append("}");
+			}
+			else if (sigElem instanceof Parameters)
+			{
+				Parameters paramList = (Parameters) sigElem;
+				builder.append(", parameters={");
+				if (paramList.getParameters() != null)
+				{
+					for (Parameter p : paramList.getParameters())
+					{
+						builder.append(doToStringWithoutId(p));
+					}
+				}
+				builder.append("}");
+			}
+			else if (sigElem instanceof Interface)
+			{
+				Interface interf = (Interface) sigElem;
+
+				builder.append(", operations={");
+				if (interf.getOperations() != null)
+				{
+					for (Operation o : interf.getOperations())
+					{
+						builder.append(doToStringWithoutId(o));
+					}
+				}
+				builder.append("}");
+				builder.append(", interfaces={");
+				if (interf.getInnerInterfaces() != null)
+				{
+					for (Interface i : interf.getInnerInterfaces())
+					{
+						builder.append(doToStringWithoutId(i));
+					}
+				}
+				builder.append("}");
+			}
+			else if (sigElem instanceof InterfaceArtifact)
+			{
+				InterfaceArtifact iArtifact = (InterfaceArtifact) sigElem;
+				builder.append(", interfaces={");
+				if (iArtifact.getInterfaces() != null)
+				{
+					for (Interface i : iArtifact.getInterfaces())
+					{
+						builder.append(doToStringWithoutId(i));
+					}
+				}
+				builder.append("}");
+			}
+			builder.append("]");
+		}
+		return builder;
 	}
 }

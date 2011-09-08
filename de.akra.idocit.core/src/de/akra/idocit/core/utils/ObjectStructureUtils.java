@@ -41,7 +41,7 @@ import de.akra.idocit.core.services.PersistenceService;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class ObjectStructureUtils
@@ -147,8 +147,6 @@ public class ObjectStructureUtils
 		}
 
 		Iterator<Parameter> itParam;
-		boolean found = false;
-
 		if (currentElem instanceof Parameter)
 		{
 			itParam = ((Parameter) currentElem).getComplexType().iterator();
@@ -164,6 +162,7 @@ public class ObjectStructureUtils
 			return false;
 		}
 
+		boolean found = false;
 		while (itParam.hasNext() && !found)
 		{
 			Parameter param = itParam.next();
@@ -476,5 +475,94 @@ public class ObjectStructureUtils
 		}
 		logger.log(Level.INFO, "Unknown addressee: " + name);
 		return new Addressee(name);
+	}
+
+	/**
+	 * Checks if the operation's or at least one of it's sub-elements'
+	 * {@link Documentation}s were changed.
+	 * 
+	 * @param operation
+	 *            The {@link Operation} to check.
+	 * @return true, if this operation'' {@link Documentation}s or at least one of the
+	 *         sub-elements' {@link Documentation}s were changed.
+	 * @since 0.0.2
+	 * @see SignatureElement#isDocumentationChanged()
+	 */
+	public static boolean isOperationsDocChanged(Operation operation)
+	{
+		return operation.isDocumentationChanged()
+				|| doIsOperationsDocChanged(operation.getInputParameters())
+				|| doIsOperationsDocChanged(operation.getOutputParameters())
+				|| doIsOperationsDocChanged(operation.getExceptions());
+	}
+
+	/**
+	 * Checks for all {@link Parameters} in the list if at least one {@link Documentation}
+	 * was changed.
+	 * 
+	 * @param parametersList
+	 *            The list of Parameters to check (in general used for the list of
+	 *            exceptions).
+	 * @return true, if at least one signature elements's documentation was changed.
+	 * @since 0.0.2
+	 */
+	private static boolean doIsOperationsDocChanged(
+			List<? extends Parameters> parametersList)
+	{
+		Iterator<? extends Parameters> iter = parametersList.iterator();
+		boolean docChanged = false;
+		while (iter.hasNext() && !docChanged)
+		{
+			Parameters params = iter.next();
+			docChanged = doIsOperationsDocChanged(params);
+		}
+		return docChanged;
+	}
+
+	/**
+	 * Checks if the {@link Parameters}' or at least one sub-elements'
+	 * {@link Documentation} was changed.
+	 * 
+	 * @param currentElem
+	 *            A {@link Parameters} or {@link Parameter} to check if their
+	 *            {@link Documentation}s were changed.
+	 * @return true, if this elements's {@link Documentation}(s) or at least one of the
+	 *         sub-elements' {@link Documentation} were changed.
+	 * @since 0.0.2
+	 */
+	private static boolean doIsOperationsDocChanged(SignatureElement currentElem)
+	{
+		if (currentElem == null)
+		{
+			return false;
+		}
+		else if (currentElem.isDocumentationChanged())
+		{
+			return true;
+		}
+
+		Iterator<Parameter> itParam;
+		if (currentElem instanceof Parameter)
+		{
+			itParam = ((Parameter) currentElem).getComplexType().iterator();
+		}
+		else if (currentElem instanceof Parameters)
+		{
+			itParam = ((Parameters) currentElem).getParameters().iterator();
+		}
+		else
+		{
+			logger.log(Level.SEVERE,
+					"Not expected SignatureElement: " + currentElem.toString());
+			return false;
+		}
+
+		boolean docChanged = false;
+		while (itParam.hasNext() && !docChanged)
+		{
+			Parameter param = itParam.next();
+			docChanged = doIsOperationsDocChanged(param);
+		}
+		return docChanged;
 	}
 }

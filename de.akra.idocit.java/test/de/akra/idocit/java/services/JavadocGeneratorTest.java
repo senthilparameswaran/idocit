@@ -18,6 +18,7 @@ package de.akra.idocit.java.services;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,7 +78,9 @@ public class JavadocGeneratorTest
 	 */
 	private static final String EXPECTED_JAVADOC = "/** "
 			+ lineSeparator
-			+ " * <table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ " * <table name=\"idocit\" border=\"1\" cellspacing=\"0\">"
+			+ lineSeparator
+			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
 			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
 			+ lineSeparator
@@ -89,7 +92,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ " * "
 			+ lineSeparator
-			+ "<br /><table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ "<br /><table name=\"idocit\" border=\"1\" cellspacing=\"0\">"
+			+ lineSeparator
+			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
 			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
 			+ lineSeparator
@@ -103,7 +108,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ " * "
 			+ lineSeparator
-			+ "<br /><table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ "<br /><table name=\"idocit\" border=\"1\" cellspacing=\"0\">"
+			+ lineSeparator
+			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
 			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
 			+ lineSeparator
@@ -115,7 +122,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ " * "
 			+ lineSeparator
-			+ "<br /><table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
+			+ "<br /><table name=\"idocit\" border=\"1\" cellspacing=\"0\">"
+			+ lineSeparator
+			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
 			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
 			+ lineSeparator
@@ -125,7 +134,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ "</table>"
 			+ lineSeparator
-			+ " * @return<table border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>double:double</td></tr>"
+			+ " * @return<table name=\"idocit\" border=\"1\" cellspacing=\"0\">"
+			+ lineSeparator
+			+ "<tr><td>Element:</td><td>double:double</td></tr>"
 			+ lineSeparator
 			+ "<tr><td>Role:</td><td>RESULT</td></tr>"
 			+ lineSeparator
@@ -175,7 +186,7 @@ public class JavadocGeneratorTest
 		JavadocGenerator.appendDocsToJavadoc(createReturnDocumentations(),
 				TagElement.TAG_RETURN, null, javadoc);
 
-//		logger.info(javadoc.toString());
+		// logger.info(javadoc.toString());
 
 		Assert.assertEquals(EXPECTED_JAVADOC, javadoc.toString());
 	}
@@ -206,16 +217,17 @@ public class JavadocGeneratorTest
 				createReturnDocumentations());
 		jDocTags.add(tagElem);
 
+		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
-				typeDecl.getJavadoc(), ast);
+				additionalTags, typeDecl.getJavadoc(), ast);
 		typeDecl.setJavadoc(javadoc);
 
 		cu.rewrite(document, null);
 
 		TypeDeclaration newTypeDecl = (TypeDeclaration) cu.types().get(0);
 
-//		logger.log(Level.INFO, javadoc.toString());
-//		logger.log(Level.INFO, cu.toString());
+		// logger.log(Level.INFO, javadoc.toString());
+		// logger.log(Level.INFO, cu.toString());
 
 		Assert.assertTrue(
 				"The written Javadoc in the CompilationUnit is not the same as the created Javadoc.",
@@ -254,8 +266,9 @@ public class JavadocGeneratorTest
 				"paramName", createParamDocumentations());
 		jDocTags.add(tagElem);
 
+		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
-				ast.newJavadoc(), ast);
+				additionalTags, ast.newJavadoc(), ast);
 
 		rewriter.set(typeDecl, TypeDeclaration.JAVADOC_PROPERTY, javadoc, null);
 
@@ -306,109 +319,6 @@ public class JavadocGeneratorTest
 
 		logger.log(Level.INFO, originalCU);
 		logger.log(Level.INFO, changedCU);
-	}
-
-	/**
-	 * <table border="1">
-	 * <tr>
-	 * <td>Element:</td>
-	 * <td>/person:Person/name:java.lang.String</td>
-	 * </tr>
-	 * <tr>
-	 * <tr>
-	 * <td>Role:</td>
-	 * <td>OBJECT</td>
-	 * </tr>
-	 * <tr>
-	 * <tr>
-	 * <td><b>Developer</b>:</td>
-	 * <td>Documenation for developers.</td>
-	 * </tr>
-	 * <tr>
-	 * <tr>
-	 * <td><b>Manager</b>:</td>
-	 * <td>Documenation for managers.</td>
-	 * </tr>
-	 * <tr>
-	 * </table>
-	 * 
-	 * <br />
-	 * <table border="1">
-	 * <tr>
-	 * <td>Element:</td>
-	 * <td>/person:Person/name:java.lang.String</td>
-	 * </tr>
-	 * <tr>
-	 * <tr>
-	 * <td>Role:</td>
-	 * <td>OBJECT</td>
-	 * </tr>
-	 * <tr>
-	 * <tr>
-	 * <td><b>Developer</b>:</td>
-	 * <td>Documenation for developers.</td>
-	 * </tr>
-	 * <tr>
-	 * <tr>
-	 * <td><b>Manager</b>:</td>
-	 * <td>Documenation for managers.</td>
-	 * </tr>
-	 * <tr>
-	 * </table>
-	 * 
-	 * @param person
-	 * <br />
-	 *            <table border="1">
-	 *            <tr>
-	 *            <td>Element:</td>
-	 *            <td>/person:Person/name:java.lang.String</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <tr>
-	 *            <td>Role:</td>
-	 *            <td>OBJECT</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <tr>
-	 *            <td><b>Developer</b>:</td>
-	 *            <td>Documenation for developers.</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <tr>
-	 *            <td><b>Manager</b>:</td>
-	 *            <td>Documenation for managers.</td>
-	 *            </tr>
-	 *            <tr>
-	 *            </table>
-	 * 
-	 * <br />
-	 *            <table border="1">
-	 *            <tr>
-	 *            <td>Element:</td>
-	 *            <td>/person:Person/name:java.lang.String</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <tr>
-	 *            <td>Role:</td>
-	 *            <td>OBJECT</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <tr>
-	 *            <td><b>Developer</b>:</td>
-	 *            <td>Documenation for developers.</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <tr>
-	 *            <td><b>Manager</b>:</td>
-	 *            <td>Documenation for managers.</td>
-	 *            </tr>
-	 *            <tr>
-	 *            </table>
-	 */
-	@SuppressWarnings("unused")
-	private void t()
-	{
-		// method exists only to see a created javadoc comment
 	}
 
 	/**

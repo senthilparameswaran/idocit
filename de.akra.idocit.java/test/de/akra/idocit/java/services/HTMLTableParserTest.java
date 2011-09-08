@@ -66,7 +66,7 @@ public class HTMLTableParserTest
 		expectedDoc.add(doc);
 		doc.setScope(Scope.IMPLICIT);
 		doc.setSignatureElementIdentifier("filter.id");
-		doc.setThematicRole(ObjectStructureUtils.findThematicRole("CRITERION"));
+		doc.setThematicRole(ObjectStructureUtils.findThematicRole("ATTRIBUTE"));
 
 		Map<Addressee, String> addresseeDocs = new HashMap<Addressee, String>();
 		doc.setDocumentation(addresseeDocs);
@@ -82,7 +82,7 @@ public class HTMLTableParserTest
 
 		// parse html
 		List<Documentation> docs = HTMLTableParser
-				.convertJavadocToDocumentations("<table border=\"1\"><tr><td>Element:</td><td>filter.id</td></tr><tr><td>Role:</td><td>CRITERION</td></tr><tr><td>Scope:</td><td>implicit</td></tr><tr><td><b>Developer</b>:</td><td>The existing documentation: this is a really good filter ;)</td></tr><tr><td><b>Manager</b>:</td><td>Really good info for manager.</td></tr></table>");
+				.convertJavadocToDocumentations("<table name=\"idocit\" border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>filter.id</td></tr><tr><td>Role:</td><td>ATTRIBUTE</td></tr><tr><td>Scope:</td><td>implicit</td></tr><tr><td><b>Developer</b>:</td><td>The existing documentation: this is a really good filter ;)</td></tr><tr><td><b>Manager</b>:</td><td>Really good info for manager.</td></tr></table>");
 
 		Assert.assertEquals(expectedDoc, docs);
 	}

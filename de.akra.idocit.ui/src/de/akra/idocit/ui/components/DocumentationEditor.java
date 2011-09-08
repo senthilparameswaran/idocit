@@ -156,6 +156,7 @@ public class DocumentationEditor
 				PersistenceService.writeInterface(artifact, interfaceFile);
 				initialInterfaceArtifact = (InterfaceArtifact) artifact
 						.copy(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+				getMask().getSelection().resetOriginalDocumentations();
 				firePropertyChange(PROP_DIRTY);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);

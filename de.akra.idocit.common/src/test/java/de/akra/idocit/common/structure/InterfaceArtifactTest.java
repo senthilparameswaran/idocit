@@ -108,6 +108,7 @@ public class InterfaceArtifactTest
 		List<Operation> operations = new Vector<Operation>();
 		Operation op = new TestOperation(interf, "Operation");
 		op.setIdentifier("find");
+		op.setDocumentationChanged(true);
 		operations.add(op);
 		interf.setOperations(operations);
 
@@ -148,6 +149,7 @@ public class InterfaceArtifactTest
 		Parameter paramIdOut = new TestParameter(paramCustOut, "");
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
+		paramIdOut.setDocumentationChanged(true);
 		paramCustOut.addParameter(paramIdOut);
 
 		Parameter paramNameOut = new TestParameter(paramCustOut, "");

@@ -148,6 +148,7 @@ public class InterfaceTest
 		Parameter paramNameOut = new TestParameter(paramCustOut, "");
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
+		paramNameOut.setDocumentationChanged(true);
 		paramNameOut.setSignatureElementPath("findOut.Cust(Customer).name(String)");
 		paramCustOut.addParameter(paramNameOut);
 

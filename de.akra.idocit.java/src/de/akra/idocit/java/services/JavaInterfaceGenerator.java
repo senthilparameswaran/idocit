@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.dom.TagElement;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -37,7 +38,7 @@ import de.akra.idocit.java.structure.JavadocTagElement;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class JavaInterfaceGenerator
@@ -62,28 +63,31 @@ public class JavaInterfaceGenerator
 	 * Apply the changes to the interfaces and inner structure.
 	 * 
 	 * @param interfaces
-	 *            The {@link JavaInterface}s that should be processed.
+	 *            The {@link JavaInterface}s that should be processed. @
 	 */
 	@SuppressWarnings("unchecked")
 	private static void updateInterfaces(List<JavaInterface> interfaces)
 	{
 		for (JavaInterface jInterface : interfaces)
 		{
-			List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
-			JavadocTagElement tagElem = new JavadocTagElement(
-					jInterface.getDocumentations());
-			jDocTags.add(tagElem);
-
-			AbstractTypeDeclaration absTypeDeclaration = jInterface.getRefToASTNode();
-			Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
-					absTypeDeclaration.getJavadoc(), absTypeDeclaration.getAST());
-
-			//TODO keep existing Javadoc that is not from iDocIt! I have to check if the old Javadoc is from iDocIt! Is this behavior needed?
-			// if a existing javadoc was updated it must not be set again!
-			if ((absTypeDeclaration.getJavadoc() == null && javadoc != null)
-					|| (absTypeDeclaration.getJavadoc() != null && javadoc == null))
+			if (jInterface.isDocumentationChanged())
 			{
-				absTypeDeclaration.setJavadoc(javadoc);
+				List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
+				JavadocTagElement tagElem = new JavadocTagElement(
+						jInterface.getDocumentations());
+				jDocTags.add(tagElem);
+
+				AbstractTypeDeclaration absTypeDeclaration = jInterface.getRefToASTNode();
+				Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
+						jInterface.getAdditionalTags(), absTypeDeclaration.getJavadoc(),
+						absTypeDeclaration.getAST());
+
+				// if an existing javadoc was updated it must not be set again!
+				if ((absTypeDeclaration.getJavadoc() == null && javadoc != null)
+						|| (absTypeDeclaration.getJavadoc() != null && javadoc == null))
+				{
+					absTypeDeclaration.setJavadoc(javadoc);
+				}
 			}
 
 			updateMethods((List<JavaMethod>) jInterface.getOperations());
@@ -101,18 +105,21 @@ public class JavaInterfaceGenerator
 	{
 		for (JavaMethod method : methods)
 		{
-			List<JavadocTagElement> jDocTags = createMethodJavadocTagElements(method);
-
-			MethodDeclaration methodDeclaration = method.getRefToASTNode();
-			Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
-					methodDeclaration.getJavadoc(), methodDeclaration.getAST());
-
-			//TODO keep existing Javadoc that is not from iDocIt! I have to check if the old Javadoc is from iDocIt! Is that needed?
-			// if a existing javadoc was updated it must not be set again!
-			if ((methodDeclaration.getJavadoc() == null && javadoc != null)
-					|| (methodDeclaration.getJavadoc() != null && javadoc == null))
+			if (ObjectStructureUtils.isOperationsDocChanged(method))
 			{
-				methodDeclaration.setJavadoc(javadoc);
+				List<JavadocTagElement> jDocTags = createMethodJavadocTagElements(method);
+
+				MethodDeclaration methodDeclaration = method.getRefToASTNode();
+				Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
+						method.getAdditionalTags(), methodDeclaration.getJavadoc(),
+						methodDeclaration.getAST());
+
+				// if an existing Javadoc was updated it must not be set again!
+				if ((methodDeclaration.getJavadoc() == null && javadoc != null)
+						|| (methodDeclaration.getJavadoc() != null && javadoc == null))
+				{
+					methodDeclaration.setJavadoc(javadoc);
+				}
 			}
 		}
 	}
@@ -210,15 +217,19 @@ public class JavaInterfaceGenerator
 	}
 
 	/**
-	 * //TODO an update of the javadoc must be implemented. Now it is always overwritten
-	 * if there are changes.<br>
-	 * Creates a new {@link Javadoc} comment if <code>javadoc == null</code> adds the
-	 * information from the <code>javadocTagElements</code> to
-	 * <code>javadoc == null</code> and returns it.
+	 * Creates a new {@link Javadoc} comment if <code>javadoc == null</code> or clears an
+	 * existing and then adds the information from the <code>javadocTagElements</code> and
+	 * returns it.
+	 * <p>
+	 * <b>Hint:</b> The scope is set to friendly for tests.
+	 * </p>
 	 * 
 	 * @param javadocTagElements
 	 *            list of {@link JavadocTagElement}s to write into the {@link Javadoc}
 	 *            comment.
+	 * @param additionalTags
+	 *            List of additional {@link TagElement}s to append to the Javadoc. It must
+	 *            not be <code>null</code>!
 	 * @param javadoc
 	 *            The existing {@link Javadoc}.
 	 * @param ast
@@ -226,12 +237,13 @@ public class JavaInterfaceGenerator
 	 * @return a new {@link Javadoc} comment if <code>javadoc == null</code>, otherwise
 	 *         the updated <code>javadoc</code>. But if the comment would be empty always
 	 *         <code>null</code> is returned.
+	 * @since 0.0.2
 	 */
-	public static Javadoc createOrUpdateJavadoc(
-			List<JavadocTagElement> javadocTagElements, Javadoc javadoc, AST ast)
+	// Changes due to Issue #62
+	@SuppressWarnings("unchecked")
+	static Javadoc createOrUpdateJavadoc(List<JavadocTagElement> javadocTagElements,
+			List<TagElement> additionalTags, Javadoc javadoc, AST ast)
 	{
-		// TODO an update of the javadoc must be implemented. Now it is always
-		// overwritten and not merged.
 		Javadoc newJavadoc = javadoc;
 		if (newJavadoc == null)
 		{
@@ -248,6 +260,8 @@ public class JavaInterfaceGenerator
 					jTagElem.getTagName(), jTagElem.getParameterName(), newJavadoc);
 		}
 
+		newJavadoc.tags().addAll(additionalTags);
 		return newJavadoc.tags().size() == 0 ? null : newJavadoc;
 	}
+	// End changes due to Issue #62
 }

@@ -84,8 +84,9 @@ public class JavadocTagElement
 	}
 
 	/**
-	 * Check the {@link JavadocTagElement} before writing if it contains some information
-	 * that can be written. If you do not check, empty tags might be added to Javadoc.
+	 * Check the {@link JavadocTagElement} before writing it, if it really contains some
+	 * information that can be written. If you do not check, empty tags might be added to
+	 * Javadoc.
 	 * 
 	 * @return true, if no value is set that should be written to Javadoc.
 	 */
@@ -104,29 +105,11 @@ public class JavadocTagElement
 	}
 
 	/**
-	 * @param tagName
-	 *            the tagName to set
-	 */
-	public void setTagName(String tagName)
-	{
-		this.tagName = tagName;
-	}
-
-	/**
 	 * @return the parameterName
 	 */
 	public String getParameterName()
 	{
 		return parameterName;
-	}
-
-	/**
-	 * @param parameterName
-	 *            the parameterName to set
-	 */
-	public void setParameterName(String parameterName)
-	{
-		this.parameterName = parameterName;
 	}
 
 	/**
@@ -136,14 +119,4 @@ public class JavadocTagElement
 	{
 		return documentations;
 	}
-
-	/**
-	 * @param documentations
-	 *            the documentations to set
-	 */
-	public void setDocumentations(List<Documentation> documentations)
-	{
-		this.documentations = documentations;
-	}
-
 }

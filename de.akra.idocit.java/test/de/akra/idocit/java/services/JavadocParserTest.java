@@ -57,7 +57,7 @@ public class JavadocParserTest
 	private static Logger logger = Logger.getLogger(JavadocParserTest.class.getName());
 
 	/**
-	 * Test for {@link JavadocParser#parse(Javadoc)}.
+	 * Test for {@link JavadocParser#parseIDocItJavadoc(Javadoc)}.
 	 * 
 	 * @throws SAXException
 	 * @throws IOException
@@ -67,8 +67,7 @@ public class JavadocParserTest
 	public void testParse() throws SAXException, IOException,
 			ParserConfigurationException
 	{
-		@SuppressWarnings("deprecation")
-		AST a = new AST();
+		AST a = AST.newAST(AST.JLS3);
 		Javadoc javadoc = a.newJavadoc();
 
 		List<Documentation> paramDocumentations = createParamDocumentations();
@@ -89,12 +88,12 @@ public class JavadocParserTest
 		allUsedDocs.addAll(returnDocumentations);
 		allUsedDocs.addAll(paramDocumentations);
 
-		logger.log(Level.INFO, javadoc.toString());
+		logger.log(Level.FINE, javadoc.toString());
 
-		List<Documentation> convertedDocs = JavadocParser.parse(javadoc);
+		List<Documentation> convertedDocs = JavadocParser.parseIDocItJavadoc(javadoc);
 
-		logger.log(Level.INFO, allUsedDocs.toString());
-		logger.log(Level.INFO, convertedDocs.toString());
+		logger.log(Level.FINE, allUsedDocs.toString());
+		logger.log(Level.FINE, convertedDocs.toString());
 
 		Assert.assertEquals(allUsedDocs, convertedDocs);
 	}
@@ -164,7 +163,7 @@ public class JavadocParserTest
 	{
 		Documentation newDoc = new Documentation();
 		newDoc.setScope(Scope.EXPLICIT);
-		newDoc.setThematicRole(ObjectStructureUtils.findThematicRole("RESULT"));
+		newDoc.setThematicRole(ObjectStructureUtils.findThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("double:double");
 

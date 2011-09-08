@@ -17,16 +17,17 @@ package de.akra.idocit.java.structure;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.TagElement;
 import org.junit.Test;
 
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
-import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
@@ -59,8 +60,8 @@ public class JavaInterfaceArtifactTest
 			InterfaceArtifact copiedArtifact = (InterfaceArtifact) sourceArtifact
 					.copy(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
 
-			logger.log(Level.FINE, sourceArtifact.toString());
-			logger.log(Level.FINE, copiedArtifact.toString());
+			logger.log(Level.INFO, sourceArtifact.toString());
+			logger.log(Level.INFO, copiedArtifact.toString());
 
 			boolean res = sourceArtifact.equals(copiedArtifact);
 			assertEquals(true, res);
@@ -101,15 +102,23 @@ public class JavaInterfaceArtifactTest
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact", null);
 		artifact.setIdentifier("test.java");
 
-		List<Interface> interfaceList = new Vector<Interface>();
-		Interface interf = new JavaInterface(artifact, "Class") {
-		};
+		List<Interface> interfaceList = new ArrayList<Interface>();
+		Interface interf = new JavaInterface(artifact, "Class");
 		interf.setIdentifier("CustomerService");
 		interfaceList.add(interf);
+		interf.setDocumentationChanged(true);
 
-		List<Operation> operations = new Vector<Operation>();
-		Operation op = new JavaMethod(interf, "Method");
+		AST ast = AST.newAST(AST.JLS3);
+		TagElement tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_AUTHOR);
+		
+		List<TagElement> additionalTags = new ArrayList<TagElement>();
+		additionalTags.add(tag);
+		
+		List<JavaMethod> operations = new ArrayList<JavaMethod>();
+		JavaMethod op = new JavaMethod(interf, "Method");
 		op.setIdentifier("find");
+		op.setAdditionalTags(additionalTags);
 		operations.add(op);
 		interf.setOperations(operations);
 
@@ -121,6 +130,7 @@ public class JavaInterfaceArtifactTest
 		op.setInputParameters(inputParameters);
 
 		Parameter paramCust = new JavaParameter(inputParameters);
+		paramCust.setDocumentationChanged(true);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
 		paramCust.setQualifiedDataTypeName("my.package.Customer");
@@ -183,7 +193,7 @@ public class JavaInterfaceArtifactTest
 		/*
 		 * Exception messages
 		 */
-		List<Parameters> exceptions = new Vector<Parameters>();
+		List<Parameters> exceptions = new ArrayList<Parameters>();
 
 		Parameters exception = new JavaParameters(op, "FaultMessage");
 		exception.setIdentifier("fault");

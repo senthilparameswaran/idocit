@@ -59,7 +59,7 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class EditArtifactDocumentationComposite
@@ -211,9 +211,12 @@ public class EditArtifactDocumentationComposite
 						.getSelectedSignatureElement();
 				editArtSelection.setSelectedSignatureElement(selectedSigElem);
 				// Changes due to Issue #21
-				editArtSelection.setOriginalDocumentations(selectedSigElem
-						.getDocumentations());
+				editArtSelection.setCurrentDocumentations(selectedSigElem.getDocumentations());
 				// End changes due to Issue #21
+				// Changes due to Issue #62
+				editArtSelection.putOriginalDocumentations(selectedSigElem.getId(),
+						selectedSigElem.getDocumentations());
+				// End changes due to Issue #62
 				setSelection(editArtSelection);
 
 				fireChangeEvent();
@@ -234,10 +237,18 @@ public class EditArtifactDocumentationComposite
 				EditArtifactDocumentationCompositeSelection editArtSelection = makeEditArtifactDocumentationCompositeSelectionFrom(getSelection());
 				SignatureElement selectedSigElem = editArtSelection
 						.getSelectedSignatureElement();
-				selectedSigElem.setDocumentations(selection.getDocumentations());
+
+				List<Documentation> newDocs = selection.getDocumentations();
+
+				// Changes due to Issue #62
+				// check if it were changed
+				selectedSigElem.setDocumentationChanged(!newDocs.equals(editArtSelection
+						.getOriginalDocumentations(selectedSigElem.getId())));
+				// End changes due to Issue #62
+
+				selectedSigElem.setDocumentations(newDocs);
 				// Changes due to Issue #21
-				editArtSelection.setOriginalDocumentations(selectedSigElem
-						.getDocumentations());
+				editArtSelection.setCurrentDocumentations(newDocs);
 				// End changes due to Issue #21
 
 				// update map with new activeAddressees
@@ -269,14 +280,12 @@ public class EditArtifactDocumentationComposite
 				if (operation != SignatureElement.EMPTY_SIGNATURE_ELEMENT)
 				{
 					// save collapsed grids, if the selected item is an element
-					// of an
-					// operation
+					// of an operation
 					getSelection().putCollapsedThematicGrids(operation.getId(),
 							selection.getCollapsedThematicGridNames());
 
 					// no setSelection() needed, because the state does not
-					// affect other
-					// composites
+					// affect other composites
 					// fireChangeEvent();
 				}
 			}
@@ -306,7 +315,7 @@ public class EditArtifactDocumentationComposite
 		newSelection.setCollapsedThematicGrids(selection.getCollapsedThematicGrids());
 		newSelection.setDisplayedAddresseesForSigElemsDocumentations(selection
 				.getDisplayedAddresseesForSigElemsDocumentations());
-
+		newSelection.setOriginalDocumentations(selection.getOriginalDocumentations());
 		return newSelection;
 	}
 

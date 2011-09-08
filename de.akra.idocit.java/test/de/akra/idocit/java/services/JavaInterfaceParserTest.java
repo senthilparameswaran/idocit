@@ -15,10 +15,11 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,26 +28,37 @@ import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.Assert;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodRef;
+import org.eclipse.jdt.core.dom.MethodRefParameter;
+import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Scope;
+import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.core.utils.TestUtils;
+import de.akra.idocit.java.structure.JavaInterface;
+import de.akra.idocit.java.structure.JavaInterfaceArtifact;
+import de.akra.idocit.java.structure.JavaMethod;
+import de.akra.idocit.java.structure.JavaParameter;
+import de.akra.idocit.java.structure.JavaParameters;
 
 /**
  * Tests for {@link JavaInterfaceParser}.
@@ -68,10 +80,20 @@ public class JavaInterfaceParserTest
 {
 	private static Logger logger = Logger.getLogger(JavaInterfaceParserTest.class
 			.getName());
-
 	private Delimiters delimiters;
 
 	private ASTParser parser;
+
+	/**
+	 * Category constants are copied from {@link JavaInterfaceParser}.
+	 */
+	private static final String CATEGORY_ARTIFACT = "Artifact";
+	private static final String CATEGORY_CLASS = "Class";
+	private static final String CATEGORY_METHOD = "Method";
+	private static final String CATEGORY_CONSTRUCTOR = "Constructor";
+	private static final String CATEGORY_PARAMETERS = "Parameters";
+	private static final String CATEGORY_RETURN_TYPE = "ReturnType";
+	private static final String CATEGORY_THROWS = "Throws";
 
 	/**
 	 * Contains no public class, interface etc.
@@ -215,6 +237,332 @@ public class JavaInterfaceParserTest
 	}
 
 	/**
+	 * Tests the conversion of existing Javadoc to {@link Documentation}s. The
+	 * documentations must also be assigned to the right {@link SignatureElements}, e.g.
+	 * "@param ..." to a method's input {@link Parameter} etc.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testJavadocConversion() throws Exception
+	{
+		String testFileName = "test/source/JavaInterfaceParser.java";
+		IFile iFile = TestUtils.makeIFileFromFileName(testFileName);
+
+		ICompilationUnit iCompilationUnit = JavaCore.createCompilationUnitFrom(iFile);
+		Assert.assertNotNull(iCompilationUnit);
+
+		parser.setSource(iCompilationUnit.getWorkingCopy(null));
+		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+
+		JavaInterfaceParser iParser = new JavaInterfaceParser(cu, testFileName,
+				delimiters);
+		InterfaceArtifact actualArtifact = iParser.parse();
+
+		JavaInterfaceArtifact expectedArtifact = createExpectedArtifact(testFileName, cu);
+		Assert.assertEquals(TestUtils.toStringWithoutId(expectedArtifact),
+				TestUtils.toStringWithoutId(actualArtifact));
+	}
+
+	/**
+	 * Creates the expected {@link JavaInterfaceArtifact} for the source
+	 * "test/source/JavaInterfaceParser.java".
+	 * 
+	 * @param fileName
+	 *            The file name of the source file.
+	 * @param cu
+	 *            The {@link CompilationUnit} of the source file.
+	 * @return {@link JavaInterfaceArtifact}
+	 * @throws JavaModelException
+	 */
+	@SuppressWarnings("unchecked")
+	private JavaInterfaceArtifact createExpectedArtifact(String fileName,
+			CompilationUnit cu) throws JavaModelException
+	{
+		Addressee developer = ObjectStructureUtils.findAddressee("Developer");
+
+		JavaInterfaceArtifact artifact = new JavaInterfaceArtifact(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, CATEGORY_ARTIFACT, cu);
+		artifact.setIdentifier(fileName);
+
+		ICompilationUnit icu = (ICompilationUnit) cu.getJavaElement();
+		artifact.setOriginalDocument(icu.getSource());
+
+		AST ast = AST.newAST(AST.JLS3);
+
+		/*
+		 * Interface
+		 */
+		JavaInterface jInterface = new JavaInterface(artifact, CATEGORY_CLASS);
+		jInterface.setIdentifier("JavaInterfaceParser");
+		jInterface.setQualifiedIdentifier("JavaInterfaceParser");
+		jInterface
+				.addDocpart(makeDocumentation(
+						developer,
+						Scope.EXPLICIT,
+						null,
+						"<p><b>This is a test class used in JUnit test!!</b></p>The parser parses Java Interfaces, Classes and Enumerations and maps the structure tothe iDocIt structure."));
+		artifact.addInterface(jInterface);
+
+		List<TagElement> tags = new ArrayList<TagElement>();
+		TagElement tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_AUTHOR);
+		TextElement textElem = ast.newTextElement();
+		textElem.setText(" Dirk Meier-Eickhoff");
+		tag.fragments().add(textElem);
+		tags.add(tag);
+
+		tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_SINCE);
+		textElem = ast.newTextElement();
+		textElem.setText(" 0.0.1");
+		tag.fragments().add(textElem);
+		tags.add(tag);
+
+		tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_VERSION);
+		textElem = ast.newTextElement();
+		textElem.setText(" 0.0.1");
+		tag.fragments().add(textElem);
+		tags.add(tag);
+		
+		jInterface.setAdditionalTags(tags);
+
+		List<JavaMethod> methods = new ArrayList<JavaMethod>();
+		jInterface.setOperations(methods);
+
+		/*
+		 * Constructor
+		 */
+		JavaMethod method = new JavaMethod(jInterface, CATEGORY_CONSTRUCTOR);
+		method.setIdentifier("JavaInterfaceParser");
+		method.setQualifiedIdentifier("JavaInterfaceParser");
+		method.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, null,
+				"This is the constructor."));
+		methods.add(method);
+
+		/*
+		 * Constructor -> input params
+		 */
+		JavaParameters inputParams = new JavaParameters(method, CATEGORY_PARAMETERS);
+		inputParams.setIdentifier("");
+		inputParams.setQualifiedIdentifier("");
+		method.setInputParameters(inputParams);
+
+		JavaParameter param = new JavaParameter(inputParams);
+		param.setIdentifier("compilationUnit");
+		param.setQualifiedIdentifier("compilationUnit");
+		param.setDataTypeName("CompilationUnit");
+		param.setQualifiedDataTypeName("CompilationUnit");
+		param.setSignatureElementPath("compilationUnit:CompilationUnit");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"compilationUnit:CompilationUnit",
+				"The {@link CompilationUnit} that should be parsed."));
+		inputParams.addParameter(param);
+
+		param = new JavaParameter(inputParams);
+		param.setIdentifier("artifactName");
+		param.setQualifiedIdentifier("artifactName");
+		param.setDataTypeName("String");
+		param.setQualifiedDataTypeName("String");
+		param.setSignatureElementPath("artifactName:String");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"artifactName:String",
+				"The name for the CompilationUnit (in general the Java source file)."));
+		inputParams.addParameter(param);
+
+		param = new JavaParameter(inputParams);
+		param.setIdentifier("delimiters");
+		param.setQualifiedIdentifier("delimiters");
+		param.setDataTypeName("Delimiters");
+		param.setQualifiedDataTypeName("Delimiters");
+		param.setSignatureElementPath("delimiters:Delimiters");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"delimiters:Delimiters", "The {@link Delimiters} for creating paths."));
+		inputParams.addParameter(param);
+
+		/*
+		 * Method
+		 */
+		method = new JavaMethod(jInterface, CATEGORY_METHOD);
+		method.setIdentifier("parse");
+		method.setQualifiedIdentifier("parse");
+		method.addDocpart(makeDocumentation(
+				developer,
+				Scope.EXPLICIT,
+				null,
+				"Parses the {@link CompilationUnit} <code>compilationUnit</code> (Java source file)and converts it to a {@link JavaInterfaceArtifact}. (Read{@link JavaInterfaceArtifact#copy(de.akra.idocit.common.structure.SignatureElement)})"));
+		
+		tags = new ArrayList<TagElement>();
+		tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_SEE);
+		SimpleName name = ast.newSimpleName("JavaModelException");
+		tag.fragments().add(name);
+		tags.add(tag);
+		
+		tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_SEE);
+		MethodRef mRef = ast.newMethodRef();
+		mRef.setName(ast.newSimpleName("parse"));
+		
+		MethodRefParameter mRefParam = ast.newMethodRefParameter();
+		mRefParam.setType(ast.newPrimitiveType(PrimitiveType.INT));
+		mRef.parameters().add(mRefParam);
+		
+		mRefParam = ast.newMethodRefParameter();
+		mRefParam.setType(ast.newSimpleType(ast.newName("String")));
+		mRef.parameters().add(mRefParam);
+		
+		tag.fragments().add(mRef);
+		tags.add(tag);
+		
+		tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_AUTHOR);
+		textElem = ast.newTextElement();
+		textElem.setText(" Dirk Meier-Eickhoff");
+		tag.fragments().add(textElem);
+		tags.add(tag);
+
+		tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_SINCE);
+		textElem = ast.newTextElement();
+		textElem.setText(" 0.0.1");
+		tag.fragments().add(textElem);
+		tags.add(tag);
+
+		tag = ast.newTagElement();
+		tag.setTagName(TagElement.TAG_VERSION);
+		textElem = ast.newTextElement();
+		textElem.setText(" 0.0.4");
+		tag.fragments().add(textElem);
+		tags.add(tag);
+		
+		method.setAdditionalTags(tags);
+		methods.add(method);
+
+		/*
+		 * Method -> input params
+		 */
+		inputParams = new JavaParameters(method, CATEGORY_PARAMETERS);
+		inputParams.setIdentifier("");
+		inputParams.setQualifiedIdentifier("");
+		method.setInputParameters(inputParams);
+
+		param = new JavaParameter(inputParams);
+		param.setIdentifier("anyNumber");
+		param.setQualifiedIdentifier("anyNumber");
+		param.setDataTypeName("int");
+		param.setQualifiedDataTypeName("int");
+		param.setSignatureElementPath("anyNumber:int");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, "anyNumber:int",
+				"This is only any number."));
+		inputParams.addParameter(param);
+
+		param = new JavaParameter(inputParams);
+		param.setIdentifier("anyString");
+		param.setQualifiedIdentifier("anyString");
+		param.setDataTypeName("String");
+		param.setQualifiedDataTypeName("String");
+		param.setSignatureElementPath("anyString:String");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, "anyString:String",
+				"This is only any simple String. {@literal  This Is A Literal}."));
+		inputParams.addParameter(param);
+
+		/*
+		 * Method -> output param
+		 */
+		JavaParameters outputParam = new JavaParameters(method, CATEGORY_RETURN_TYPE);
+		outputParam.setIdentifier("");
+		outputParam.setQualifiedIdentifier("");
+		method.setOutputParameters(outputParam);
+
+		param = new JavaParameter(outputParam);
+		param.setIdentifier("InterfaceArtifact");
+		param.setQualifiedIdentifier("InterfaceArtifact");
+		param.setDataTypeName("InterfaceArtifact");
+		param.setQualifiedDataTypeName("InterfaceArtifact");
+		param.setSignatureElementPath("InterfaceArtifact:InterfaceArtifact");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"InterfaceArtifact:InterfaceArtifact",
+				"a new {@link JavaInterfaceArtifact}."));
+		outputParam.addParameter(param);
+
+		/*
+		 * Method -> exceptions
+		 */
+		List<JavaParameters> exceptionList = new ArrayList<JavaParameters>();
+		method.setExceptions(exceptionList);
+
+		JavaParameters exceptions = new JavaParameters(method, CATEGORY_THROWS);
+		exceptions.setIdentifier("");
+		exceptions.setQualifiedIdentifier("");
+		exceptionList.add(exceptions);
+
+		param = new JavaParameter(exceptions);
+		param.setIdentifier("JavaModelException");
+		param.setQualifiedIdentifier("JavaModelException");
+		param.setDataTypeName("JavaModelException");
+		param.setQualifiedDataTypeName("JavaModelException");
+		param.setSignatureElementPath("JavaModelException:JavaModelException");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"JavaModelException:JavaModelException",
+				"if an error occurs by getting the source code from ICompilationUnit."));
+		exceptions.addParameter(param);
+
+		param = new JavaParameter(exceptions);
+		param.setIdentifier("SAXException");
+		param.setQualifiedIdentifier("SAXException");
+		param.setDataTypeName("SAXException");
+		param.setQualifiedDataTypeName("SAXException");
+		param.setSignatureElementPath("SAXException:SAXException");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"SAXException:SAXException", ""));
+		exceptions.addParameter(param);
+
+		param = new JavaParameter(exceptions);
+		param.setIdentifier("IOException");
+		param.setQualifiedIdentifier("IOException");
+		param.setDataTypeName("IOException");
+		param.setQualifiedDataTypeName("IOException");
+		param.setSignatureElementPath("IOException:IOException");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"IOException:IOException", ""));
+		exceptions.addParameter(param);
+
+		param = new JavaParameter(exceptions);
+		param.setIdentifier("ParserConfigurationException");
+		param.setQualifiedIdentifier("ParserConfigurationException");
+		param.setDataTypeName("ParserConfigurationException");
+		param.setQualifiedDataTypeName("ParserConfigurationException");
+		param.setSignatureElementPath("ParserConfigurationException:ParserConfigurationException");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"ParserConfigurationException:ParserConfigurationException", ""));
+		exceptions.addParameter(param);
+
+		return artifact;
+	}
+
+	/**
+	 * Create a new {@link Documentation} with the given information.
+	 * 
+	 * @param addressee
+	 * @param scope
+	 * @param signatureElementIdentifier
+	 * @param text
+	 * @return A new {@link Documentation} initialized with the given information.
+	 */
+	private Documentation makeDocumentation(Addressee addressee, Scope scope,
+			String signatureElementIdentifier, String text)
+	{
+		Documentation doc = new Documentation();
+		doc.setScope(scope);
+		doc.setSignatureElementIdentifier(signatureElementIdentifier);
+		doc.getAddresseeSequence().add(addressee);
+		doc.getDocumentation().put(addressee, text);
+		return doc;
+	}
+
+	/**
 	 * Parses the file <code>fileName</code>, prints the structure and returns the
 	 * structure as string.
 	 * 
@@ -229,24 +577,7 @@ public class JavaInterfaceParserTest
 	private String testParseWith(String fileName) throws FileNotFoundException,
 			IOException, SAXException, ParserConfigurationException, CoreException
 	{
-		File file = new File(fileName);
-
-		// create project to link source file to it. Is needed to get an IFile.
-		IWorkspace ws = ResourcesPlugin.getWorkspace();
-		IProject project = ws.getRoot().getProject("External Files");
-		if (!project.exists())
-		{
-			project.create(null);
-		}
-		if (!project.isOpen())
-		{
-			project.open(null);
-		}
-
-		IPath location = Path.fromOSString(file.getAbsolutePath());
-		IFile iFile = project.getFile(location.lastSegment());
-		Assert.assertNotNull(iFile);
-		iFile.createLink(location, IResource.NONE, null);
+		IFile iFile = TestUtils.makeIFileFromFileName(fileName);
 
 		ICompilationUnit iCompilationUnit = JavaCore.createCompilationUnitFrom(iFile);
 		Assert.assertNotNull(iCompilationUnit);
@@ -259,8 +590,8 @@ public class JavaInterfaceParserTest
 
 		StringBuffer hierarchy = new StringBuffer();
 		TestUtils.buildHierarchy(hierarchy, artifact, 0);
-		logger.log(Level.INFO, fileName);
-		logger.log(Level.INFO, hierarchy.toString());
+		logger.log(Level.FINER, fileName);
+		logger.log(Level.FINER, hierarchy.toString());
 		return hierarchy.toString();
 	}
 }

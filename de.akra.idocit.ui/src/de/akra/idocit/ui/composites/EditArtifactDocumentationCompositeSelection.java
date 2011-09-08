@@ -32,6 +32,7 @@ import org.pocui.core.composites.ISelection;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
@@ -41,7 +42,7 @@ import de.akra.idocit.common.structure.ThematicRole;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class EditArtifactDocumentationCompositeSelection implements ISelection
@@ -85,12 +86,28 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 	private SignatureElement selectedSignatureElement;
 
 	/**
-	 * Copy of the original {@link Documentation}s of the
-	 * {@link #selectedSignatureElement}. It is internally used (in
+	 * Contains copies of the original {@link Documentation}s for all (at least one time)
+	 * selected {@link SignatureElement}s. It is internally used to find out changes in
+	 * the documentations of the currently selected {@link SignatureElement}. Mapping from
+	 * the SignatureElement's id to it's initially (at startup or after saving) present
+	 * Documentations. The cached lists of Documentations are unmodifiable.
+	 * 
+	 * @since 0.0.2
+	 * @see #resetOriginalDocumentations()
+	 * @see Collections#unmodifiableList(List)
+	 */
+	private Map<Integer, List<Documentation>> originalDocumentations = Collections
+			.emptyMap();
+
+	/**
+	 * Copy of the {@link Documentation}s of the currently selected SignatureElement (
+	 * {@link #selectedSignatureElement}). It is internally used (in
 	 * {@link #equals(Object)}) to find out changes in the documentations of the selected
 	 * {@link SignatureElement}.
+	 * 
+	 * @since 0.0.2
 	 */
-	private List<Documentation> originalDocumentations;
+	private List<Documentation> currentDocumentations = Collections.emptyList();
 
 	/**
 	 * The collapsed {@link ThematicGrid}s in the {@link DisplayRecommendedRolesComposite}
@@ -105,6 +122,11 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 	 */
 	private Map<Integer, List<List<Addressee>>> displayedAddresseesForSigElemsDocumentations = Collections
 			.emptyMap();
+
+	/**
+	 * The file which stores the interface artifact.
+	 */
+	private IFile artifactFile = null;
 
 	/**
 	 * @return the displayedAddresseesForSigElemsDocumentations
@@ -123,11 +145,6 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 	{
 		this.displayedAddresseesForSigElemsDocumentations = displayedAddresseesForSigElemsDocumentations;
 	}
-
-	/**
-	 * The file which stores the interface artifact.
-	 */
-	private IFile artifactFile = null;
 
 	/**
 	 * Saves the list of active addressees for the {@link SignatureElement}
@@ -407,21 +424,114 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 
 	/**
 	 * Copies and caches the {@link Documentation}s. It is needed to find out changes in
+	 * the documentations of selected {@link SignatureElement}.
+	 * 
+	 * @param signatureElementId
+	 *            The {@link SignatureElement} id (used as key) to which the
+	 *            <code>documentations</code> belongs.
+	 * @param documentations
+	 *            The original documentations from the {@link SignatureElement} to cache.
+	 */
+	// Changes due to Issue #62
+	public void putOriginalDocumentations(int signatureElementId,
+			List<Documentation> documentations)
+	{
+		if (originalDocumentations == null
+				|| originalDocumentations == Collections.EMPTY_MAP)
+		{
+			this.originalDocumentations = new HashMap<Integer, List<Documentation>>(
+					DEFAULT_MAP_SIZE);
+		}
+
+		Integer id = Integer.valueOf(signatureElementId);
+		if (originalDocumentations.get(id) == null)
+		{
+			List<Documentation> origDocs = new ArrayList<Documentation>(
+					documentations.size());
+			for (Documentation doc : documentations)
+			{
+				origDocs.add(doc.copy());
+			}
+			originalDocumentations.put(id, Collections.unmodifiableList(origDocs));
+		}
+	}
+
+	// End changes due to Issue #62
+
+	/**
+	 * Use only {@link #putOriginalDocumentations(int, List)} to add original
+	 * documentations.
+	 * 
+	 * @param originalDocumentations
+	 *            the originalDocumentations to set
+	 */
+	// Changes due to Issue #62
+	public void setOriginalDocumentations(
+			Map<Integer, List<Documentation>> originalDocumentations)
+	{
+		this.originalDocumentations = originalDocumentations;
+	}
+
+	// End changes due to Issue #62
+
+	/**
+	 * Clears the map {@link #originalDocumentations}. Use this method after saving an
+	 * artifact.
+	 */
+	// Changes due to Issue #62
+	public void resetOriginalDocumentations()
+	{
+		if (this.originalDocumentations != null)
+		{
+			this.originalDocumentations.clear();
+		}
+	}
+
+	// End changes due to Issue #62
+
+	/**
+	 * @return the original Documentations for the given SignatureElement in an
+	 *         unmodifiable list. If the documentations are not cached <code>null</code>
+	 *         is returned (must not happen).
+	 */
+	// Changes due to Issue #62
+	public List<Documentation> getOriginalDocumentations(int signatureElementId)
+	{
+		return originalDocumentations.get(Integer.valueOf(signatureElementId));
+	}
+
+	// End changes due to Issue #62
+
+	/**
+	 * @return the originalDocumentations
+	 */
+	// Changes due to Issue #62
+	public Map<Integer, List<Documentation>> getOriginalDocumentations()
+	{
+		return originalDocumentations;
+	}
+
+	/**
+	 * Copies and caches the {@link Documentation}s. It is needed to find out changes in
 	 * the documentations of the selected {@link SignatureElement}.
 	 * 
 	 * @param documentations
-	 *            the original documentations from the {@link SignatureElement} to cache.
+	 *            the current documentations from the current {@link SignatureElement} to
+	 *            cache.
 	 */
 	// Changes due to Issue #21
-	public void setOriginalDocumentations(List<Documentation> documentations)
+	public void setCurrentDocumentations(List<Documentation> documentations)
 	{
-		this.originalDocumentations = new ArrayList<Documentation>();
+		this.currentDocumentations = new ArrayList<Documentation>();
 		for (Documentation doc : documentations)
 		{
-			this.originalDocumentations.add(doc.copy());
+			this.currentDocumentations.add(doc.copy());
 		}
 	}
+
 	// End changes due to Issue #21
+
+	// End changes due to Issue #62
 
 	/*
 	 * (non-Javadoc)
@@ -444,6 +554,8 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 		builder.append(selectedSignatureElement);
 		builder.append(", originalDocumentations=");
 		builder.append(originalDocumentations);
+		builder.append(", currentDocumentations=");
+		builder.append(currentDocumentations);
 		builder.append(", collapsedThematicGrids=");
 		builder.append(collapsedThematicGrids);
 		builder.append(", displayedAddresseesForSigElemsDocumentations=");
@@ -474,6 +586,9 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 						.hashCode());
 		result = prime
 				* result
+				+ ((currentDocumentations == null) ? 0 : currentDocumentations.hashCode());
+		result = prime
+				* result
 				+ ((displayedAddresseesForSigElemsDocumentations == null) ? 0
 						: displayedAddresseesForSigElemsDocumentations.hashCode());
 		result = prime * result
@@ -500,107 +615,76 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
 		if (obj == null)
-		{
 			return false;
-		}
-		if (!(obj instanceof EditArtifactDocumentationCompositeSelection))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		EditArtifactDocumentationCompositeSelection other = (EditArtifactDocumentationCompositeSelection) obj;
 		if (activeAddresseesMap == null)
 		{
 			if (other.activeAddresseesMap != null)
-			{
 				return false;
-			}
 		}
 		else if (!activeAddresseesMap.equals(other.activeAddresseesMap))
-		{
 			return false;
-		}
 		if (addresseeList == null)
 		{
 			if (other.addresseeList != null)
-			{
 				return false;
-			}
 		}
 		else if (!addresseeList.equals(other.addresseeList))
-		{
 			return false;
-		}
 		if (collapsedThematicGrids == null)
 		{
 			if (other.collapsedThematicGrids != null)
-			{
 				return false;
-			}
 		}
 		else if (!collapsedThematicGrids.equals(other.collapsedThematicGrids))
-		{
 			return false;
+		if (currentDocumentations == null)
+		{
+			if (other.currentDocumentations != null)
+				return false;
 		}
+		else if (!currentDocumentations.equals(other.currentDocumentations))
+			return false;
 		if (displayedAddresseesForSigElemsDocumentations == null)
 		{
 			if (other.displayedAddresseesForSigElemsDocumentations != null)
-			{
 				return false;
-			}
 		}
 		else if (!displayedAddresseesForSigElemsDocumentations
 				.equals(other.displayedAddresseesForSigElemsDocumentations))
-		{
 			return false;
-		}
 		if (interfaceArtifact == null)
 		{
 			if (other.interfaceArtifact != null)
-			{
 				return false;
-			}
 		}
 		else if (!interfaceArtifact.equals(other.interfaceArtifact))
-		{
 			return false;
-		}
 		if (originalDocumentations == null)
 		{
 			if (other.originalDocumentations != null)
-			{
 				return false;
-			}
 		}
 		else if (!originalDocumentations.equals(other.originalDocumentations))
-		{
 			return false;
-		}
 		if (selectedSignatureElement == null)
 		{
 			if (other.selectedSignatureElement != null)
-			{
 				return false;
-			}
 		}
 		else if (!selectedSignatureElement.equals(other.selectedSignatureElement))
-		{
 			return false;
-		}
 		if (thematicRoleList == null)
 		{
 			if (other.thematicRoleList != null)
-			{
 				return false;
-			}
 		}
 		else if (!thematicRoleList.equals(other.thematicRoleList))
-		{
 			return false;
-		}
 		return true;
 	}
 }

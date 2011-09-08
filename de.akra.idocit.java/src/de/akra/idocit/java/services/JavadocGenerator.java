@@ -34,11 +34,17 @@ import de.akra.idocit.java.structure.JavadocTagElement;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class JavadocGenerator
 {
+	/**
+	 * The value for attribute "name" for the iDocIt! HTML tables in Javadoc.
+	 * 
+	 * @since 0.0.2
+	 */
+	public static final String IDOCIT_HTML_TABLE_NAME = "idocit";
 
 	/**
 	 * Generates from the {@link JavadocTagElement}s one {@link Javadoc} comment.
@@ -116,6 +122,9 @@ public class JavadocGenerator
 			fragments.add(paramNameElement);
 		}
 
+		final String tableStartTag = "<table name=\"" + IDOCIT_HTML_TABLE_NAME
+				+ "\" border=\"1\" cellspacing=\"0\">\n";
+
 		for (Documentation doc : documentations)
 		{
 			// write only if there is something to write
@@ -128,7 +137,7 @@ public class JavadocGenerator
 				{
 					textElem.append("\n<br />");
 				}
-				textElem.append("<table border=\"1\" cellspacing=\"0\">");
+				textElem.append(tableStartTag);
 
 				if (doc.getSignatureElementIdentifier() != null)
 				{

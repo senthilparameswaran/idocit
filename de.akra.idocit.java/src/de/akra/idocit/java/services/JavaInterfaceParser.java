@@ -34,11 +34,13 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.xml.sax.SAXException;
@@ -269,8 +271,16 @@ public class JavaInterfaceParser
 				.getFullyQualifiedName());
 		jInterface.setRefToASTNode(absTypeDeclaration);
 
-		jInterface
-				.setDocumentations(JavadocParser.parse(absTypeDeclaration.getJavadoc()));
+		Javadoc javadoc = absTypeDeclaration.getJavadoc();
+		List<Documentation> docs = JavadocParser.parseIDocItJavadoc(javadoc);
+		if (docs.isEmpty())
+		{
+			docs = JavadocParser.convertExistingJavadoc(javadoc);
+		}
+		jInterface.setDocumentations(docs);
+
+		List<TagElement> additionalTags = JavadocParser.findAdditionalTags(javadoc);
+		jInterface.setAdditionalTags(additionalTags);
 
 		@SuppressWarnings("unchecked")
 		List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDeclaration
@@ -360,8 +370,16 @@ public class JavaInterfaceParser
 		method.setQualifiedIdentifier(methodDeclaration.getName().getFullyQualifiedName());
 		method.setRefToASTNode(methodDeclaration);
 
-		List<Documentation> documentations = JavadocParser.parse(methodDeclaration
-				.getJavadoc());
+		List<Documentation> convertedJavadoc = null;
+		Javadoc javadoc = methodDeclaration.getJavadoc();
+		List<Documentation> documentations = JavadocParser.parseIDocItJavadoc(javadoc);
+		if (documentations.isEmpty() && javadoc != null)
+		{
+			convertedJavadoc = JavadocParser.convertExistingJavadoc(javadoc);
+		}
+
+		List<TagElement> additionalTags = JavadocParser.findAdditionalTags(javadoc);
+		method.setAdditionalTags(additionalTags);
 
 		/*
 		 * Add input parameters, if existing
@@ -382,11 +400,13 @@ public class JavaInterfaceParser
 				JavaParameter param = processParameter(inputParameters, parameter);
 				ObjectStructureUtils.setParametersPaths(delimiters,
 						inputParameters.getQualifiedIdentifier(), param);
-
 				inputParameters.addParameter(param);
 			}
 
-			attachDocsToParameters(documentations, inputParameters);
+			if (convertedJavadoc == null)
+			{
+				attachDocsToParameters(documentations, inputParameters);
+			}
 			method.setInputParameters(inputParameters);
 		}
 
@@ -408,7 +428,10 @@ public class JavaInterfaceParser
 			ObjectStructureUtils.setParametersPaths(delimiters,
 					outputParameters.getQualifiedIdentifier(), returnType);
 
-			attachDocsToParameters(documentations, outputParameters);
+			if (convertedJavadoc == null)
+			{
+				attachDocsToParameters(documentations, outputParameters);
+			}
 			method.setOutputParameters(outputParameters);
 		}
 
@@ -425,7 +448,10 @@ public class JavaInterfaceParser
 			// exceptions. (We need the second list for WSDL fault messages.)
 			List<JavaParameters> exceptionList = new ArrayList<JavaParameters>(1);
 			JavaParameters exception = processThrownExceptions(method, thrownExceptions);
-			attachDocsToParameters(documentations, exception);
+			if (convertedJavadoc == null)
+			{
+				attachDocsToParameters(documentations, exception);
+			}
 			exceptionList.add(exception);
 			method.setExceptions(exceptionList);
 		}
@@ -433,18 +459,30 @@ public class JavaInterfaceParser
 		/*
 		 * Add the documentations without element path to the method.
 		 */
-		Iterator<Documentation> iterDocs = documentations.iterator();
-		while (iterDocs.hasNext())
+		if (convertedJavadoc == null)
 		{
-			Documentation doc = iterDocs.next();
-			if (doc.getSignatureElementIdentifier() == null)
+			Iterator<Documentation> iterDocs = documentations.iterator();
+			while (iterDocs.hasNext())
 			{
-				method.addDocpart(doc);
-				iterDocs.remove();
+				Documentation doc = iterDocs.next();
+				if (doc.getSignatureElementIdentifier() == null)
+				{
+					method.addDocpart(doc);
+					iterDocs.remove();
+				}
 			}
+			logNotAttachedDocs(documentations);
 		}
 
-		logNotAttachedDocs(documentations);
+		/*
+		 * Add existing Javadoc (converted to Documentation objects) to the iDocIt object
+		 * structure.
+		 */
+		if (convertedJavadoc != null)
+		{
+			attachConvertedDocs(convertedJavadoc, method);
+		}
+
 		return method;
 	}
 
@@ -497,6 +535,119 @@ public class JavaInterfaceParser
 				iterDocs.remove();
 			}
 		}
+	}
+
+	/**
+	 * Attaches the converted Javadoc to the methods elements. It tries to attach the
+	 * documentation of the parameters (@param, @return, @throws) to the right
+	 * {@link Parameter} of the method. If a documentation could not be assigned to a
+	 * parameter it is added to the method's documentations.
+	 * 
+	 * @param convertedJavadocs
+	 *            The list of {@link Documentation}s, converted from the existing Javadoc.
+	 * @param method
+	 *            The {@link JavaMethod} to which's elements the documentations should be
+	 *            added.
+	 */
+	private void attachConvertedDocs(List<Documentation> convertedJavadocs,
+			JavaMethod method)
+	{
+		Iterator<Documentation> iterDocs = convertedJavadocs.iterator();
+		while (iterDocs.hasNext())
+		{
+			Documentation doc = iterDocs.next();
+			String identifier = doc.getSignatureElementIdentifier();
+			if (identifier == null)
+			{
+				method.addDocpart(doc);
+			}
+			else
+			{
+				String name = identifier.substring(
+						identifier.indexOf(JavaParser.delimiters.pathDelimiter) + 1,
+						identifier.length());
+
+				if (!((identifier.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_PARAM) && attachConvertedDocToParameters(
+						name, doc, method.getInputParameters()))
+						|| (identifier
+								.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_RETURN) && attachConvertedDocToParameters(
+								name, doc, method.getOutputParameters())) || (identifier
+						.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_THROWS) && attachConvertedDocToParameters(
+						name, doc, method.getExceptions()))))
+				{
+					logger.info("Converted and not assignable Documentation is attached to the JavaMethod's documentations: "
+							+ doc);
+					method.addDocpart(doc);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Attaches the documentation to the Parameter with the identifier
+	 * <code>searchName</code>.
+	 * 
+	 * @param searchName
+	 *            The identifier of the {@link Parameter} to which the <code>doc</code>
+	 *            should be added.
+	 * @param doc
+	 *            The {@link Documentation} which should be attached to a Parameter.
+	 * @param exceptions
+	 *            List of exceptions. The <code>doc</code> should be added to one of the
+	 *            including {@link Parameter}s.
+	 * @return true, if the documentation could be assigned to a parameter.
+	 * @see #attachConvertedDocToParameters(String, Documentation, Parameters)
+	 */
+	private boolean attachConvertedDocToParameters(String searchName, Documentation doc,
+			List<? extends Parameters> exceptions)
+	{
+		boolean found = false;
+		if (exceptions != null)
+		{
+			Iterator<? extends Parameters> iterExceptions = exceptions.iterator();
+			while (iterExceptions.hasNext() && !found)
+			{
+				found = attachConvertedDocToParameters(searchName, doc,
+						iterExceptions.next());
+			}
+		}
+		return found;
+	}
+
+	/**
+	 * Attaches the documentation to the Parameter with the identifier
+	 * <code>searchName</code>.
+	 * 
+	 * @param searchName
+	 *            The identifier of the {@link Parameter} to which the <code>doc</code>
+	 *            should be added.
+	 * @param doc
+	 *            The {@link Documentation} which should be attached to a Parameter.
+	 * @param parameters
+	 *            The <code>doc</code> should be added to one of the including
+	 *            {@link Parameter}s.
+	 * @return true, if the documentation could be assigned to a parameter.
+	 */
+	private boolean attachConvertedDocToParameters(String searchName, Documentation doc,
+			Parameters parameters)
+	{
+		boolean found = false;
+		if (parameters != null)
+		{
+			Iterator<Parameter> iterParams = parameters.getParameters().iterator();
+			while (iterParams.hasNext() && !found)
+			{
+				Parameter param = iterParams.next();
+				if (param.getIdentifier().equals(searchName)
+						|| (CATEGORY_RETURN_TYPE.equals(parameters.getCategory())))
+				{
+					param.addDocpart(doc);
+					doc.setSignatureElementIdentifier(param.getSignatureElementPath());
+					found = true;
+				}
+			}
+		}
+		return found;
 	}
 
 	/**
