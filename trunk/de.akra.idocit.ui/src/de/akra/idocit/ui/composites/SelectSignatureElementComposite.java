@@ -197,8 +197,8 @@ public class SelectSignatureElementComposite
 			// create the tree only if the structure was changed.
 			// This should not be happen during one session.
 			if (oldInSelection == null
-					|| (oldInSelection != null && newInSelection.getInterfaceArtifact() != oldInSelection
-							.getInterfaceArtifact()))
+					|| newInSelection.getInterfaceArtifact() != oldInSelection
+							.getInterfaceArtifact())
 			{
 				log.log(Level.FINE, "Build tree of SignatureElements.");
 				selectionTreeViewer.setInput(newInSelection.getInterfaceArtifact());
@@ -218,7 +218,8 @@ public class SelectSignatureElementComposite
 	protected void removeAllListener()
 	{
 		selectionTreeViewer.removeSelectionChangedListener(selectionChangedListener);
-		menuItemCollapseTree.removeSelectionListener(menuItemCollapseTreeSelectionListener);
+		menuItemCollapseTree
+				.removeSelectionListener(menuItemCollapseTreeSelectionListener);
 		menuItemExpandTree.removeSelectionListener(menuItemExpandTreeSelectionListener);
 	}
 

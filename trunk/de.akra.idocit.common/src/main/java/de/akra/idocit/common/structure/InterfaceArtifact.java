@@ -196,17 +196,38 @@ public abstract class InterfaceArtifact extends SignatureElement
 	 * 
 	 * @author Dirk Meier-Eickhoff
 	 * @since 0.0.1
-	 * @version 0.0.1
+	 * @version 0.0.2
 	 * 
 	 */
 	private static class NotSupportedArtifact extends InterfaceArtifact
 	{
+		private static final String msg = "[Artifact is not supported]";
 
 		public NotSupportedArtifact()
 		{
 			super(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "");
-			setIdentifier("[Artifact is not supported]");
+			setIdentifier(msg);
 			setDocumentationAllowed(false);
+			
+			// Changes due to Issue #59
+			Interface i = new Interface(this, "") {
+				
+				@Override
+				protected void doCopyTo(SignatureElement signatureElement)
+				{
+					// do nothing
+				}
+				
+				@Override
+				protected SignatureElement createSignatureElement(SignatureElement parent)
+				{
+					return this;
+				}
+			};
+			i.setIdentifier(msg);
+			i.setDocumentationAllowed(false);
+			this.addInterface(i);
+			// End changes due to Issue #59
 		}
 
 		@Override
