@@ -43,13 +43,15 @@ import de.akra.idocit.common.services.ThematicGridService;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
-import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -211,7 +213,8 @@ public class EditArtifactDocumentationComposite
 						.getSelectedSignatureElement();
 				editArtSelection.setSelectedSignatureElement(selectedSigElem);
 				// Changes due to Issue #21
-				editArtSelection.setCurrentDocumentations(selectedSigElem.getDocumentations());
+				editArtSelection.setCurrentDocumentations(selectedSigElem
+						.getDocumentations());
 				// End changes due to Issue #21
 				// Changes due to Issue #62
 				editArtSelection.putOriginalDocumentations(selectedSigElem.getId(),
@@ -284,9 +287,20 @@ public class EditArtifactDocumentationComposite
 					getSelection().putCollapsedThematicGrids(operation.getId(),
 							selection.getCollapsedThematicGridNames());
 
+					Operation currentOperation = (Operation) operation;
+					String oldThematicGridName = currentOperation.getThematicGridName();
+					boolean thematicGridNameChanged = (oldThematicGridName != null)
+							&& !oldThematicGridName.equals(selection
+									.getReferenceThematicGridName());
+
+					currentOperation.setThematicGridName(selection
+							.getReferenceThematicGridName());
+					currentOperation.setDocumentationChanged(thematicGridNameChanged);
+
 					// no setSelection() needed, because the state does not
-					// affect other composites
-					// fireChangeEvent();
+					// affect other composites.
+
+					fireChangeEvent();
 				}
 			}
 		};
@@ -438,13 +452,14 @@ public class EditArtifactDocumentationComposite
 			groupDisplayRecommendedRolesComposite.setText(String.format(
 					GROUP_TITLE_OVERVIEW_RECOMMENDED_ROLES, operation.getDisplayName()));
 
-			recRolesCompSelection.setCollapsedThematicGridNames(newInSelection
+			recRolesCompSelection = recRolesCompSelection.setCollapsedThematicGridNames(newInSelection
 					.getCollapsedThematicGrids(operation.getId()));
 
 			// Changes due to Issue #23
 			try
 			{
-				List<ThematicGrid> thematicGrids = PersistenceService.loadThematicGrids();
+				List<ThematicGrid> thematicGrids = ServiceManager.getInstance()
+						.getPersistenceService().loadThematicGrids();
 				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier(),
 						thematicGrids);
 			}
@@ -470,9 +485,26 @@ public class EditArtifactDocumentationComposite
 							OPERATION_NAME_NOT_AVAILABLE));
 		}
 
-		recRolesCompSelection.setRecommendedThematicRoles(roles);
-		recRolesCompSelection.setAssignedThematicRoles(associatedThematicRoles);
+		recRolesCompSelection = recRolesCompSelection.setRecommendedThematicRoles(roles);
+		recRolesCompSelection = recRolesCompSelection.setAssignedThematicRoles(associatedThematicRoles);
 
+		// Set the thematic grid name of the active operation to the recommended
+		// roles composite! If no operation is active, pass the empty String.
+		if (!SignatureElement.EMPTY_SIGNATURE_ELEMENT.equals(operation))
+		{
+			Operation currentOperation = (Operation) operation;
+
+			recRolesCompSelection = recRolesCompSelection
+					.setReferenceThematicGridName(currentOperation.getThematicGridName());
+
+		}
+		else
+		{
+			recRolesCompSelection = recRolesCompSelection
+					.setReferenceThematicGridName(ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME);
+
+		}
+		
 		displayRecommendedRolesComposite.setSelection(recRolesCompSelection);
 	}
 

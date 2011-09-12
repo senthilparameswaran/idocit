@@ -15,6 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.common.structure;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,8 +28,7 @@ import java.util.Set;
  * @version 0.0.1
  * 
  */
-public class ThematicGrid implements DescribedItem
-{
+public class ThematicGrid implements DescribedItem, Cloneable {
 	private String name;
 
 	private String description;
@@ -38,19 +39,26 @@ public class ThematicGrid implements DescribedItem
 	private Set<String> verbs;
 
 	/**
-	 * All associated roles for this grid with the flag if it is mandatory or optional.
-	 * The keys are the {@link ThematicRole}s and the value describes if it is mandatory (
-	 * <code>true</code>) or optional (<code>false</code>).<br/>
+	 * All associated roles for this grid with the flag if it is mandatory or
+	 * optional. The keys are the {@link ThematicRole}s and the value describes
+	 * if it is mandatory ( <code>true</code>) or optional (<code>false</code>).<br/>
 	 * By default, roles are mandatory!
 	 * 
 	 */
 	private Map<ThematicRole, Boolean> roles;
 
 	/**
+	 * The main verb of the grid which generalizes all other associated verbs.
+	 * 
+	 * Invariant: the reference verb must be an element of the set of associated
+	 * verbs!‚‚
+	 */
+	private String referenceVerb;
+
+	/**
 	 * @return the roles
 	 */
-	public Map<ThematicRole, Boolean> getRoles()
-	{
+	public Map<ThematicRole, Boolean> getRoles() {
 		return roles;
 	}
 
@@ -58,36 +66,30 @@ public class ThematicGrid implements DescribedItem
 	 * @param roles
 	 *            the roles to set
 	 */
-	public void setRoles(Map<ThematicRole, Boolean> roles)
-	{
+	public void setRoles(Map<ThematicRole, Boolean> roles) {
 		this.roles = roles;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description)
-	{
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
 	 * @return the set of verbs
 	 */
-	public Set<String> getVerbs()
-	{
+	public Set<String> getVerbs() {
 		return verbs;
 	}
 
@@ -95,98 +97,82 @@ public class ThematicGrid implements DescribedItem
 	 * @param verbs
 	 *            Set of verbs.
 	 */
-	public void setVerbs(Set<String> verbs)
-	{
+	public void setVerbs(Set<String> verbs) {
 		this.verbs = verbs;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	public String getRefernceVerb() {
+		return referenceVerb;
+	}
+
+	public void setRefernceVerb(String refernceVerb) {
+		this.referenceVerb = refernceVerb;
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((referenceVerb == null) ? 0 : referenceVerb.hashCode());
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result + ((verbs == null) ? 0 : verbs.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
-		{
 			return true;
-		}
 		if (obj == null)
-		{
 			return false;
-		}
-		if (!(obj instanceof ThematicGrid))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		ThematicGrid other = (ThematicGrid) obj;
-		if (description == null)
-		{
+		if (description == null) {
 			if (other.description != null)
-			{
 				return false;
-			}
-		}
-		else if (!description.equals(other.description))
-		{
+		} else if (!description.equals(other.description))
 			return false;
-		}
-		if (name == null)
-		{
+		if (name == null) {
 			if (other.name != null)
-			{
 				return false;
-			}
-		}
-		else if (!name.equals(other.name))
-		{
+		} else if (!name.equals(other.name))
 			return false;
-		}
-		if (roles == null)
-		{
+		if (referenceVerb == null) {
+			if (other.referenceVerb != null)
+				return false;
+		} else if (!referenceVerb.equals(other.referenceVerb))
+			return false;
+		if (roles == null) {
 			if (other.roles != null)
-			{
 				return false;
-			}
-		}
-		else if (!roles.equals(other.roles))
-		{
+		} else if (!roles.equals(other.roles))
 			return false;
-		}
-		if (verbs == null)
-		{
+		if (verbs == null) {
 			if (other.verbs != null)
-			{
 				return false;
-			}
-		}
-		else if (!verbs.equals(other.verbs))
-		{
+		} else if (!verbs.equals(other.verbs))
 			return false;
-		}
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ThematicGrid [name=");
 		builder.append(name);
@@ -196,7 +182,34 @@ public class ThematicGrid implements DescribedItem
 		builder.append(verbs);
 		builder.append(", roles=");
 		builder.append(roles);
+		builder.append(", rerferenceVerb=");
+		builder.append(referenceVerb);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object clone() {
+		try {
+			ThematicGrid clone = (ThematicGrid) super.clone();
+
+			clone.setDescription(description);
+			clone.setName(name);
+			clone.setRefernceVerb(referenceVerb);
+
+			Set<String> cloneVerbs = new HashSet<String>(verbs);
+			clone.setVerbs(cloneVerbs);
+
+			Map<ThematicRole, Boolean> cloneRoles = new HashMap<ThematicRole, Boolean>();
+			cloneRoles.putAll(roles);
+			clone.setRoles(cloneRoles);
+
+			return clone;
+		} catch (CloneNotSupportedException cnsEx) {
+			throw new RuntimeException(cnsEx);
+		}
 	}
 }

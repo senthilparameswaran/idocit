@@ -27,8 +27,7 @@ import java.util.List;
  * @version 0.0.1
  * 
  */
-public abstract class Operation extends SignatureElement
-{
+public abstract class Operation extends SignatureElement {
 	/**
 	 * List of input parameters.
 	 */
@@ -44,6 +43,8 @@ public abstract class Operation extends SignatureElement
 	 */
 	private List<? extends Parameters> exceptions;
 
+	private String thematicGridName;
+
 	/**
 	 * Constructor.
 	 * 
@@ -51,30 +52,29 @@ public abstract class Operation extends SignatureElement
 	 *            The parent of this SignatureElement.
 	 * @param category
 	 *            The category of this element.
+	 * @param thematicGridName
+	 *            The name of the reference thematic grid of this operation
 	 */
-	public Operation(SignatureElement parent, String category)
-	{
+	public Operation(SignatureElement parent, String category,
+			String thematicGridName) {
 		super(parent, category);
 		exceptions = Collections.emptyList();
+		this.thematicGridName = thematicGridName;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int size()
-	{
+	public final int size() {
 		int size = 0;
-		if (inputParameters != null)
-		{
+		if (inputParameters != null) {
 			size += inputParameters.size() + 1;
 		}
-		if (outputParameters != null)
-		{
+		if (outputParameters != null) {
 			size += outputParameters.size() + 1;
 		}
-		for (Parameters paramList : exceptions)
-		{
+		for (Parameters paramList : exceptions) {
 			size += paramList.size() + 1;
 		}
 		return size;
@@ -87,29 +87,24 @@ public abstract class Operation extends SignatureElement
 	 */
 	@Override
 	public final SignatureElement copy(SignatureElement parent)
-			throws IllegalArgumentException
-	{
+			throws IllegalArgumentException {
 		SignatureElement newElem = super.copy(parent);
 		checkIfAssignable(Operation.class, newElem);
 
 		Operation op = (Operation) newElem;
 
-		if (inputParameters != null)
-		{
+		if (inputParameters != null) {
 			op.setInputParameters((Parameters) inputParameters.copy(op));
 		}
 
-		if (outputParameters != null)
-		{
+		if (outputParameters != null) {
 			op.setOutputParameters((Parameters) outputParameters.copy(op));
 		}
 
 		List<Parameters> newExceptions = Collections.emptyList();
-		if (exceptions != Collections.EMPTY_LIST)
-		{
+		if (exceptions != Collections.EMPTY_LIST) {
 			newExceptions = new ArrayList<Parameters>(exceptions.size());
-			for (Parameters paramList : exceptions)
-			{
+			for (Parameters paramList : exceptions) {
 				newExceptions.add((Parameters) paramList.copy(op));
 			}
 		}
@@ -121,16 +116,14 @@ public abstract class Operation extends SignatureElement
 	 * @param outputParameters
 	 *            the outputParameters to set
 	 */
-	public void setOutputParameters(Parameters outputParameters)
-	{
+	public void setOutputParameters(Parameters outputParameters) {
 		this.outputParameters = outputParameters;
 	}
 
 	/**
 	 * @return the outputParameters
 	 */
-	public Parameters getOutputParameters()
-	{
+	public Parameters getOutputParameters() {
 		return outputParameters;
 	}
 
@@ -138,16 +131,14 @@ public abstract class Operation extends SignatureElement
 	 * @param inputParameters
 	 *            the inputParameters to set
 	 */
-	public void setInputParameters(Parameters inputParameters)
-	{
+	public void setInputParameters(Parameters inputParameters) {
 		this.inputParameters = inputParameters;
 	}
 
 	/**
 	 * @return the inputParameters
 	 */
-	public Parameters getInputParameters()
-	{
+	public Parameters getInputParameters() {
 		return inputParameters;
 	}
 
@@ -155,91 +146,68 @@ public abstract class Operation extends SignatureElement
 	 * @param exceptions
 	 *            the exceptions to set
 	 */
-	public void setExceptions(List<? extends Parameters> exceptions)
-	{
+	public void setExceptions(List<? extends Parameters> exceptions) {
 		this.exceptions = exceptions;
 	}
 
 	/**
 	 * @return the exceptions
 	 */
-	public List<? extends Parameters> getExceptions()
-	{
+	public List<? extends Parameters> getExceptions() {
 		return exceptions;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((exceptions == null) ? 0 : exceptions.hashCode());
+		result = prime * result
+				+ ((exceptions == null) ? 0 : exceptions.hashCode());
 		result = prime * result
 				+ ((inputParameters == null) ? 0 : inputParameters.hashCode());
-		result = prime * result
+		result = prime
+				* result
 				+ ((outputParameters == null) ? 0 : outputParameters.hashCode());
+		result = prime * result
+				+ ((thematicGridName == null) ? 0 : thematicGridName.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
-		{
 			return true;
-		}
 		if (!super.equals(obj))
-		{
 			return false;
-		}
-		if (!(obj instanceof Operation))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		Operation other = (Operation) obj;
-		if (exceptions == null)
-		{
+		if (exceptions == null) {
 			if (other.exceptions != null)
-			{
 				return false;
-			}
-		}
-		else if (!exceptions.equals(other.exceptions))
-		{
+		} else if (!exceptions.equals(other.exceptions))
 			return false;
-		}
-		if (inputParameters == null)
-		{
+		if (inputParameters == null) {
 			if (other.inputParameters != null)
-			{
 				return false;
-			}
-		}
-		else if (!inputParameters.equals(other.inputParameters))
-		{
+		} else if (!inputParameters.equals(other.inputParameters))
 			return false;
-		}
-		if (outputParameters == null)
-		{
+		if (outputParameters == null) {
 			if (other.outputParameters != null)
-			{
 				return false;
-			}
-		}
-		else if (!outputParameters.equals(other.outputParameters))
-		{
+		} else if (!outputParameters.equals(other.outputParameters))
 			return false;
-		}
+		if (thematicGridName == null) {
+			if (other.thematicGridName != null)
+				return false;
+		} else if (!thematicGridName.equals(other.thematicGridName))
+			return false;
 		return true;
 	}
 
@@ -249,16 +217,25 @@ public abstract class Operation extends SignatureElement
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Operation [inputParameters=");
 		builder.append(inputParameters);
 		builder.append(", outputParameters=");
 		builder.append(outputParameters);
+		builder.append(", thematicGridName=");
+		builder.append(thematicGridName);
 		builder.append(", exceptions=");
 		builder.append(exceptions);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public String getThematicGridName() {
+		return thematicGridName;
+	}
+
+	public void setThematicGridName(String thematicGridName) {
+		this.thematicGridName = thematicGridName;
 	}
 }

@@ -116,7 +116,7 @@ public class JavaInterfaceArtifactTest
 		additionalTags.add(tag);
 		
 		List<JavaMethod> operations = new ArrayList<JavaMethod>();
-		JavaMethod op = new JavaMethod(interf, "Method");
+		JavaMethod op = new JavaMethod(interf, "Method", "Searching Operations");
 		op.setIdentifier("find");
 		op.setAdditionalTags(additionalTags);
 		operations.add(op);

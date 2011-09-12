@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package de.akra.idocit.core.services;
+package de.akra.idocit.core.services.impl;
 
 import de.akra.idocit.common.services.ThematicGridService;
+import de.akra.idocit.core.services.PersistenceService;
 
 
 public class ServiceManager {
 	private static final ServiceManager instance = new ServiceManager();
 
-	private ParsingService parsingService = new ParsingService();
+	private ParsingService parsingService = null;
 
-	private PersistenceService persistenceService = new PersistenceService();
+	private PersistenceService persistenceService = null;
 
-	private ThematicGridService thematicGridService = new ThematicGridService();
+	private ThematicGridService thematicGridService = null;
 
 	private ServiceManager() {
 
@@ -45,5 +46,17 @@ public class ServiceManager {
 
 	public ThematicGridService getThematicGridService() {
 		return thematicGridService;
+	}
+
+	public void setParsingService(ParsingService parsingService) {
+		this.parsingService = parsingService;
+	}
+
+	public void setPersistenceService(PersistenceService persistenceService) {
+		this.persistenceService = persistenceService;
+	}
+
+	public void setThematicGridService(ThematicGridService thematicGridService) {
+		this.thematicGridService = thematicGridService;
 	}
 }

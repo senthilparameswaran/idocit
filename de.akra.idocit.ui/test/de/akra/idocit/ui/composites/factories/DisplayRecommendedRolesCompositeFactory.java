@@ -25,6 +25,8 @@ import java.util.TreeSet;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.pocui.core.actions.EmptyActionConfiguration;
+import org.pocui.core.composites.ISelectionListener;
+import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
@@ -41,8 +43,7 @@ import de.akra.idocit.ui.composites.DisplayRecommendedRolesCompositeSelection;
  */
 public class DisplayRecommendedRolesCompositeFactory
 		implements
-		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection>
-{
+		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection> {
 
 	/**
 	 * {@inheritDoc}
@@ -73,10 +74,20 @@ public class DisplayRecommendedRolesCompositeFactory
 		roles.put("Class 1", recRoles);
 		roles.put("Class 2", recRoles);
 
-		selection.setRecommendedThematicRoles(roles);
-		selection.setAssignedThematicRoles(assignedThematicRoles);
+		selection = selection.setRecommendedThematicRoles(roles);
+		selection = selection.setAssignedThematicRoles(assignedThematicRoles);
 
 		recRolesComp.setSelection(selection);
+		
+		recRolesComp.addSelectionListener(new ISelectionListener<DisplayRecommendedRolesCompositeSelection>() {
+			
+			@Override
+			public void selectionChanged(
+					DisplayRecommendedRolesCompositeSelection arg0,
+					PocUIComposite<DisplayRecommendedRolesCompositeSelection> arg1) {
+				System.out.println(arg0);
+			}
+		});
 
 		pvParent.pack();
 		pvParent.layout();
@@ -87,8 +98,7 @@ public class DisplayRecommendedRolesCompositeFactory
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EmptyResourceConfiguration getResourceConfiguration()
-	{
+	public EmptyResourceConfiguration getResourceConfiguration() {
 		return EmptyResourceConfiguration.getInstance();
 	}
 }

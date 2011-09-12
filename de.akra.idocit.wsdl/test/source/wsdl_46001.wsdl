@@ -1,144 +1,175 @@
-<?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/"
+	xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
 	<!-- TYPES -->
 
-  <wsdl:types>
-    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
-      <s:complexType name="MyComplexType">
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-        
-      <s:element name="GetCompletionListComplex" type="tns:MyComplexType"/>
-      
-      <s:element name="GetCompletionList">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetCompletionListResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetCompletionListResult" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfString">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="GetCompletionListVn">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetCompletionListVnResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetCompletionListVnResult" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-    </s:schema>
-  </wsdl:types>
-  
-  <!-- MESSAGE -->
-  
-  <wsdl:message name="GetCompletionListSoapIn">
-    <wsdl:part name="parameters" element="tns:GetCompletionList" />
-  </wsdl:message>
-  <wsdl:message name="GetCompletionListSoapInSimple">
-    <wsdl:part name="id" element="s:int" />
-  </wsdl:message>
-  <wsdl:message name="GetCompletionListSoapInComplex">
-    <wsdl:part name="parameters" element="tns:GetCompletionListComplex" />
-  </wsdl:message>
-  <wsdl:message name="GetCompletionListSoapOut">
-    <wsdl:part name="parameters" element="tns:GetCompletionListResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetCompletionListVnSoapIn">
-    <wsdl:part name="parameters" element="tns:GetCompletionListVn" />
-  </wsdl:message>
-  <wsdl:message name="GetCompletionListVnSoapOut">
-    <wsdl:part name="parameters" element="tns:GetCompletionListVnResponse" />
-  </wsdl:message>
-  
-  <!-- PORTTYPE -->
-  
-  <wsdl:portType name="AutoCompleteSoap">
-    <wsdl:operation name="GetCompletionList">
-      <wsdl:input message="tns:GetCompletionListSoapIn" />
-      <wsdl:output message="tns:GetCompletionListSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetCompletionListVn">
-      <wsdl:input message="tns:GetCompletionListVnSoapIn" />
-      <wsdl:output message="tns:GetCompletionListVnSoapOut" />
-    </wsdl:operation>
-  </wsdl:portType>
-  
-  <!-- BINDING -->
-  
-  <wsdl:binding name="AutoCompleteSoap" type="tns:AutoCompleteSoap">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetCompletionList">
-      <soap:operation soapAction="http://tempuri.org/GetCompletionList" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetCompletionListVn">
-      <soap:operation soapAction="http://tempuri.org/GetCompletionListVn" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:binding name="AutoCompleteSoap12" type="tns:AutoCompleteSoap">
-    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetCompletionList">
-      <soap12:operation soapAction="http://tempuri.org/GetCompletionList" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetCompletionListVn">
-      <soap12:operation soapAction="http://tempuri.org/GetCompletionListVn" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-  </wsdl:binding>
-  
-  <!-- SERVICE -->
-  
-  <wsdl:service name="AutoComplete">
-    <wsdl:port name="AutoCompleteSoap" binding="tns:AutoCompleteSoap">
-      <soap:address location="http://brothertennis.com/AutoComplete.asmx" />
-    </wsdl:port>
-    <wsdl:port name="AutoCompleteSoap12" binding="tns:AutoCompleteSoap12">
-      <soap12:address location="http://brothertennis.com/AutoComplete.asmx" />
-    </wsdl:port>
-  </wsdl:service>
+	<wsdl:types>
+		<s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+			<s:complexType name="MyComplexType">
+				<s:sequence>
+					<s:element minOccurs="0" maxOccurs="1" name="prefixText"
+						type="s:string" />
+					<s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+				</s:sequence>
+			</s:complexType>
+
+			<s:element name="GetCompletionListComplex" type="tns:MyComplexType" />
+
+			<s:element name="GetCompletionList">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="prefixText"
+							type="s:string" />
+						<s:element minOccurs="1" maxOccurs="1" name="count"
+							type="s:int" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetCompletionListResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetCompletionListResult" type="tns:ArrayOfString" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:complexType name="ArrayOfString">
+				<s:sequence>
+					<s:element minOccurs="0" maxOccurs="unbounded" name="string"
+						nillable="true" type="s:string" />
+				</s:sequence>
+			</s:complexType>
+			<s:element name="GetCompletionListVn">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="prefixText"
+							type="s:string" />
+						<s:element minOccurs="1" maxOccurs="1" name="count"
+							type="s:int" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetCompletionListVnResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetCompletionListVnResult" type="tns:ArrayOfString" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+		</s:schema>
+	</wsdl:types>
+
+	<!-- MESSAGE -->
+
+	<wsdl:message name="GetCompletionListSoapIn">
+		<wsdl:part name="parameters" element="tns:GetCompletionList" />
+	</wsdl:message>
+	<wsdl:message name="GetCompletionListSoapInSimple">
+		<wsdl:part name="id" element="s:int" />
+	</wsdl:message>
+	<wsdl:message name="GetCompletionListSoapInComplex">
+		<wsdl:part name="parameters" element="tns:GetCompletionListComplex" />
+	</wsdl:message>
+	<wsdl:message name="GetCompletionListSoapOut">
+		<wsdl:part name="parameters" element="tns:GetCompletionListResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetCompletionListVnSoapIn">
+		<wsdl:part name="parameters" element="tns:GetCompletionListVn" />
+	</wsdl:message>
+	<wsdl:message name="GetCompletionListVnSoapOut">
+		<wsdl:part name="parameters" element="tns:GetCompletionListVnResponse" />
+	</wsdl:message>
+
+	<!-- PORTTYPE -->
+
+	<wsdl:portType name="AutoCompleteSoap">
+		<wsdl:operation name="GetCompletionList">
+			<wsdl:documentation>
+				<thematicgrid name="0">
+					<docpart role="ACTION" scope="EXPLICIT">
+						<addressee group="Developer">Documentation 1</addressee>
+					</docpart>
+				</thematicgrid>
+			</wsdl:documentation>
+			<wsdl:input message="tns:GetCompletionListSoapIn" />
+			<wsdl:output message="tns:GetCompletionListSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetCompletionListVn">
+			<wsdl:documentation>
+				<thematicgrid name="1">
+					<docpart role="ACTION" scope="EXPLICIT">
+						<addressee group="Developer">Documentation 1</addressee>
+					</docpart>
+				</thematicgrid>
+			</wsdl:documentation>
+			<wsdl:input message="tns:GetCompletionListVnSoapIn" />
+			<wsdl:output message="tns:GetCompletionListVnSoapOut" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- BINDING -->
+
+	<wsdl:binding name="AutoCompleteSoap" type="tns:AutoCompleteSoap">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetCompletionList">
+			<soap:operation soapAction="http://tempuri.org/GetCompletionList"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCompletionListVn">
+			<soap:operation soapAction="http://tempuri.org/GetCompletionListVn"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="AutoCompleteSoap12" type="tns:AutoCompleteSoap">
+		<soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetCompletionList">
+			<soap12:operation soapAction="http://tempuri.org/GetCompletionList"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCompletionListVn">
+			<soap12:operation soapAction="http://tempuri.org/GetCompletionListVn"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<!-- SERVICE -->
+
+	<wsdl:service name="AutoComplete">
+		<wsdl:port name="AutoCompleteSoap" binding="tns:AutoCompleteSoap">
+			<soap:address location="http://brothertennis.com/AutoComplete.asmx" />
+		</wsdl:port>
+		<wsdl:port name="AutoCompleteSoap12" binding="tns:AutoCompleteSoap12">
+			<soap12:address location="http://brothertennis.com/AutoComplete.asmx" />
+		</wsdl:port>
+	</wsdl:service>
 </wsdl:definitions>

@@ -1,4 +1,4 @@
-package de.akra.idocit.core.services;
+package de.akra.idocit.core.services.impl;
 
 import java.util.List;
 import java.util.Map;

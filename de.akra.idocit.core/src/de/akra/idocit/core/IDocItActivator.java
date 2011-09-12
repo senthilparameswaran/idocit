@@ -32,12 +32,15 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import de.akra.idocit.common.services.ThematicGridService;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
-import de.akra.idocit.core.services.EclipseParsingServiceInitializer;
-import de.akra.idocit.core.services.ParsingService;
 import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.impl.EclipseParsingServiceInitializer;
+import de.akra.idocit.core.services.impl.ParsingService;
+import de.akra.idocit.core.services.impl.EclipsePersistenceService;
+import de.akra.idocit.core.services.impl.ServiceManager;
 
 /**
  * The {@link IStartup} of iDocIt!.
@@ -79,17 +82,26 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	 */
 	@Override
 	public void earlyStartup() {
+		ServiceManager.getInstance().setPersistenceService(
+				new EclipsePersistenceService());
+		ServiceManager.getInstance().setThematicGridService(
+				new ThematicGridService());
+		ServiceManager.getInstance().setParsingService(new ParsingService());
+
+		PersistenceService persistenceService = ServiceManager.getInstance()
+				.getPersistenceService();
+
 		// Initialize the Preference Store.
-		if (!PersistenceService.areAddresseesInitialized()) {
-			List<Addressee> addressees = PersistenceService
+		if (!persistenceService.areAddresseesInitialized()) {
+			List<Addressee> addressees = persistenceService
 					.readInitialAddressees();
-			PersistenceService.persistAddressees(addressees);
+			persistenceService.persistAddressees(addressees);
 		}
 
-		if (!PersistenceService.areThematicRolesInitialized()) {
-			List<ThematicRole> roles = PersistenceService
+		if (!persistenceService.areThematicRolesInitialized()) {
+			List<ThematicRole> roles = persistenceService
 					.readInitialThematicRoles();
-			PersistenceService.persistThematicRoles(roles);
+			persistenceService.persistThematicRoles(roles);
 		}
 
 		initializeIDocIt();
@@ -165,14 +177,16 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 				fireChangeEvent(true);
 
 				// Registered Parsers
-				ParsingService.init(new EclipseParsingServiceInitializer());
+				ServiceManager.getInstance().getParsingService()
+						.init(new EclipseParsingServiceInitializer());
 
 				try {
 					// Thematic Grids
 					InputStream resourceInputStream = FileLocator.openStream(
 							plugin.getBundle(), new Path(
 									THEMATIC_GRIDS_RESOURCE_FILE), false);
-					PersistenceService.init(resourceInputStream);
+					ServiceManager.getInstance().getPersistenceService()
+							.init(resourceInputStream);
 				} catch (FileNotFoundException e) {
 					logger.log(Level.WARNING, e.getMessage(), e);
 				} catch (IOException ioEx) {

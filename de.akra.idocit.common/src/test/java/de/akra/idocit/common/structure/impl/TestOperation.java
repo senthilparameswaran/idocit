@@ -33,15 +33,15 @@ public class TestOperation extends Operation
 	 * @param parent
 	 * @param category
 	 */
-	public TestOperation(SignatureElement parent, String category)
+	public TestOperation(SignatureElement parent, String category, String thematicGridName)
 	{
-		super(parent, category);
+		super(parent, category, thematicGridName);
 	}
 
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new TestOperation(parent, super.getCategory());
+		return new TestOperation(parent, super.getCategory(), super.getThematicGridName());
 	}
 
 	@Override

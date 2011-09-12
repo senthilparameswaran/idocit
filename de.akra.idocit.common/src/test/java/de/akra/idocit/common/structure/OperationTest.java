@@ -93,7 +93,7 @@ public class OperationTest
 
 	private Operation createOperation(SignatureElement parent)
 	{
-		Operation op = new TestOperation(parent, "Operation");
+		Operation op = new TestOperation(parent, "Operation", "Searching Operations");
 		op.setIdentifier("findSomething");
 
 		/*

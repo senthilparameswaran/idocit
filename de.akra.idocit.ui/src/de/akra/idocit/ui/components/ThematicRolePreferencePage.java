@@ -30,7 +30,7 @@ import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
 import de.akra.idocit.common.structure.ThematicRole;
-import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageThematicRoleComposite;
 import de.akra.idocit.ui.composites.ManageThematicRoleCompositeSelection;
 
@@ -43,29 +43,24 @@ import de.akra.idocit.ui.composites.ManageThematicRoleCompositeSelection;
  */
 public class ThematicRolePreferencePage
 		extends
-		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection>
-{
+		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection> {
 	@Override
-	protected void initListener() throws CompositeInitializationException
-	{
+	protected void initListener() throws CompositeInitializationException {
 		// Nothing to do!
 	}
 
 	@Override
-	protected void addAllListener()
-	{
+	protected void addAllListener() {
 		// Nothing to do!
 	}
 
 	@Override
-	protected void removeAllListener()
-	{
+	protected void removeAllListener() {
 		// Nothing to do!
 	}
 
 	@Override
-	public boolean isValid()
-	{
+	public boolean isValid() {
 		return true;
 	}
 
@@ -73,49 +68,46 @@ public class ThematicRolePreferencePage
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(IWorkbench workbench)
-	{
+	public void init(IWorkbench workbench) {
 		IPreferenceStore prefStore = getPreferenceStore();
 
-		if (prefStore == null)
-		{
+		if (prefStore == null) {
 			setPreferenceStore(PlatformUI.getPreferenceStore());
 			prefStore = getPreferenceStore();
 		}
 
-		loadPreferences(PersistenceService.loadThematicRoles());
+		loadPreferences(ServiceManager.getInstance().getPersistenceService()
+				.loadThematicRoles());
 	}
 
-	private void loadPreferences(List<ThematicRole> roles)
-	{
+	private void loadPreferences(List<ThematicRole> roles) {
 		ManageThematicRoleCompositeSelection selection = new ManageThematicRoleCompositeSelection();
 		selection.setActiveThematicRole(!roles.isEmpty() ? roles.get(0) : null);
 		selection.setThematicRoles(roles);
-		selection.setLastSaveTimeThematicRoles(PersistenceService
-				.getLastSaveTimeOfThematicRoles());
+		selection.setLastSaveTimeThematicRoles(ServiceManager.getInstance()
+				.getPersistenceService().getLastSaveTimeOfThematicRoles());
 
 		setSelection(selection);
 	}
 
 	@Override
-	protected void performDefaults()
-	{
-		List<ThematicRole> initialRoles = PersistenceService.readInitialThematicRoles();
+	protected void performDefaults() {
+		List<ThematicRole> initialRoles = ServiceManager.getInstance()
+				.getPersistenceService().readInitialThematicRoles();
 
 		loadPreferences(initialRoles);
 	}
 
 	@Override
-	protected void performApply()
-	{
+	protected void performApply() {
 		List<ThematicRole> roles = new ArrayList<ThematicRole>();
 
-		for (ThematicRole role : getSelection().getThematicRoles())
-		{
+		for (ThematicRole role : getSelection().getThematicRoles()) {
 			roles.add(role);
 		}
 
-		PersistenceService.persistThematicRoles(roles);
+		ServiceManager.getInstance().getPersistenceService()
+				.persistThematicRoles(roles);
 	}
 
 	/*
@@ -124,8 +116,7 @@ public class ThematicRolePreferencePage
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	@Override
-	public boolean performOk()
-	{
+	public boolean performOk() {
 		boolean saveState = super.performOk();
 		performApply();
 		return saveState;
@@ -133,8 +124,7 @@ public class ThematicRolePreferencePage
 
 	@Override
 	protected AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection> instanciateMask(
-			Composite comp)
-	{
+			Composite comp) {
 		return new ManageThematicRoleComposite(comp);
 	}
 }

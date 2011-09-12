@@ -97,7 +97,7 @@ public class InterfaceTest
 		List<Operation> operations = new Vector<Operation>();
 		newInterface.setOperations(operations);
 
-		Operation op = new TestOperation(parent, "Operation");
+		Operation op = new TestOperation(parent, "Operation", "Searching Operations");
 		op.setIdentifier("findSomething");
 		operations.add(op);
 

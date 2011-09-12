@@ -35,11 +35,13 @@ import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jface.text.BadLocationException;
@@ -77,6 +79,8 @@ public class JavadocGeneratorTest
 	 * The same applies to "@return".
 	 */
 	private static final String EXPECTED_JAVADOC = "/** "
+			+ lineSeparator
+			+ " * @thematicgrid Searching Operations"
 			+ lineSeparator
 			+ " * <table name=\"idocit\" border=\"1\" cellspacing=\"0\">"
 			+ lineSeparator
@@ -170,6 +174,7 @@ public class JavadocGeneratorTest
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testGeneradeJavadoc() throws FileNotFoundException, IOException
 	{
@@ -179,6 +184,17 @@ public class JavadocGeneratorTest
 		AST ast = absTypeDecl.getAST();
 		Javadoc javadoc = ast.newJavadoc();
 
+		TagElement tagElement = ast.newTagElement();
+		tagElement.setTagName(JavadocParser.JAVADOC_TAG_THEMATICGRID);
+
+		List<ASTNode> fragments = (List<ASTNode>) tagElement.fragments();
+		TextElement textElement = ast.newTextElement();
+		textElement.setText(" Searching Operations");
+		fragments.add(textElement);
+
+		List<TagElement> tags = javadoc.tags();
+		tags.add(tagElement);
+		
 		List<Documentation> documentations = createParamDocumentations();
 		JavadocGenerator.appendDocsToJavadoc(documentations, null, null, javadoc);
 		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_PARAM,
@@ -219,7 +235,7 @@ public class JavadocGeneratorTest
 
 		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
-				additionalTags, typeDecl.getJavadoc(), ast);
+				additionalTags, typeDecl.getJavadoc(), ast, null);
 		typeDecl.setJavadoc(javadoc);
 
 		cu.rewrite(document, null);
@@ -268,7 +284,7 @@ public class JavadocGeneratorTest
 
 		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
-				additionalTags, ast.newJavadoc(), ast);
+				additionalTags, ast.newJavadoc(), ast, null);
 
 		rewriter.set(typeDecl, TypeDeclaration.JAVADOC_PROPERTY, javadoc, null);
 

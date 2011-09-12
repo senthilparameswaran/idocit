@@ -33,7 +33,8 @@ import de.akra.idocit.common.structure.ParameterType;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
-import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.impl.EclipsePersistenceService;
+import de.akra.idocit.core.services.impl.ServiceManager;
 
 /**
  * 
@@ -52,10 +53,10 @@ public class ObjectStructureUtils
 	 */
 	private static Logger logger = Logger.getLogger(ObjectStructureUtils.class.getName());
 
-	private static List<Addressee> supportedAddressees = PersistenceService
+	private static List<Addressee> supportedAddressees = ServiceManager.getInstance().getPersistenceService()
 			.loadConfiguredAddressees();
 
-	private static List<ThematicRole> supportedThematicRoles = PersistenceService
+	private static List<ThematicRole> supportedThematicRoles = ServiceManager.getInstance().getPersistenceService()
 			.loadThematicRoles();
 
 	// use this for testing with JUnit, because the workspace is not available

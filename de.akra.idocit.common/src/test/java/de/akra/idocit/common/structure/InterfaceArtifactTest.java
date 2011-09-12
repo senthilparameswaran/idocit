@@ -100,13 +100,12 @@ public class InterfaceArtifactTest
 		artifact.setIdentifier("test.wsdl");
 
 		List<Interface> interfaceList = new Vector<Interface>();
-		Interface interf = new TestInterface(artifact, "PortType") {
-		};
+		Interface interf = new TestInterface(artifact, "PortType");
 		interf.setIdentifier("CustomerService");
 		interfaceList.add(interf);
 
 		List<Operation> operations = new Vector<Operation>();
-		Operation op = new TestOperation(interf, "Operation");
+		Operation op = new TestOperation(interf, "Operation", "Searching Operations");
 		op.setIdentifier("find");
 		op.setDocumentationChanged(true);
 		operations.add(op);
