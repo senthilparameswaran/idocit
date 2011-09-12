@@ -94,7 +94,7 @@ public class JavaMethodTest
 
 	private Operation createOperation(SignatureElement parent)
 	{
-		Operation op = new JavaMethod(parent, "Operation");
+		Operation op = new JavaMethod(parent, "Operation", "Searching Operations");
 		op.setIdentifier("findSomething");
 
 		/*

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package de.akra.idocit.core.services;
+package de.akra.idocit.core.services.impl;
 
 import java.util.Collections;
 import java.util.HashMap;

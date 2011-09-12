@@ -52,6 +52,7 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.structure.JavaInterface;
@@ -63,23 +64,23 @@ import de.akra.idocit.java.structure.JavaParameters;
 /**
  * Tests for {@link JavaInterfaceParser}.
  * <p>
- * Run this test as JUnit Plug-in Test or initialize in {@link ObjectStructureUtils} the
- * private attributes <code>supportedAddressees</code> and
- * <code>supportedThematicRoles</code> with {@link Collections#emptyList()}, because the
- * Eclipse Workspace is not available in JUnit Test.
+ * Run this test as JUnit Plug-in Test or initialize in
+ * {@link ObjectStructureUtils} the private attributes
+ * <code>supportedAddressees</code> and <code>supportedThematicRoles</code> with
+ * {@link Collections#emptyList()}, because the Eclipse Workspace is not
+ * available in JUnit Test.
  * </p>
  * <p>
- * Note: Resolving type binding does not work in the tests. Therefore the inner structure
- * (public accessible attributes) could not be tested.
+ * Note: Resolving type binding does not work in the tests. Therefore the inner
+ * structure (public accessible attributes) could not be tested.
  * </p>
  * 
  * @author Dirk Meier-Eickhoff
  * 
  */
-public class JavaInterfaceParserTest
-{
-	private static Logger logger = Logger.getLogger(JavaInterfaceParserTest.class
-			.getName());
+public class JavaInterfaceParserTest {
+	private static Logger logger = Logger
+			.getLogger(JavaInterfaceParserTest.class.getName());
 	private Delimiters delimiters;
 
 	private ASTParser parser;
@@ -129,7 +130,8 @@ public class JavaInterfaceParserTest
 			+ "				typeRec (Type: TypeRecursion)\n"
 			+ "				typeRec2 (Type: TypeRecursion)\n"
 			+ "		getTypeRec [Method]\n"
-			+ "			 [ReturnType]\n" + "				TypeRecursion (Type: TypeRecursion)\n";
+			+ "			 [ReturnType]\n"
+			+ "				TypeRecursion (Type: TypeRecursion)\n";
 
 	/**
 	 * Class with recursive object definition and two inner classes.
@@ -195,8 +197,7 @@ public class JavaInterfaceParserTest
 	 * Init things before tests.
 	 */
 	@Before
-	public void before()
-	{
+	public void before() {
 		this.delimiters = new Delimiters();
 		delimiters.pathDelimiter = "/";
 		delimiters.namespaceDelimiter = ".";
@@ -209,20 +210,21 @@ public class JavaInterfaceParserTest
 	}
 
 	/**
-	 * Test for parsing a CompilationUnit. Tests only the class structure, no Javadoc.
+	 * Test for parsing a CompilationUnit. Tests only the class structure, no
+	 * Javadoc.
 	 * <ul>
 	 * <li>Tests a common class</li>
 	 * <li>Tests a class file with no public class, interface etc.</li>
 	 * <li>Tests a class with recursive object definitions</li>
-	 * <li>Tests a class with recursive object definitions and two inner classes</li>
+	 * <li>Tests a class with recursive object definitions and two inner classes
+	 * </li>
 	 * </ul>
 	 * 
 	 * @throws Exception
 	 * @see {@link ReflectionHelper#reflectParameter(de.akra.idocit.core.structure.SignatureElement, org.eclipse.jdt.core.dom.ITypeBinding, String, String)}
 	 */
 	@Test
-	public void testParse() throws Exception
-	{
+	public void testParse() throws Exception {
 		Assert.assertEquals(EXPECTED_CLASS_STRUCTURE_PARSING_SERVICE,
 				testParseWith("test/source/ParsingService.java"));
 
@@ -238,18 +240,19 @@ public class JavaInterfaceParserTest
 
 	/**
 	 * Tests the conversion of existing Javadoc to {@link Documentation}s. The
-	 * documentations must also be assigned to the right {@link SignatureElements}, e.g.
-	 * "@param ..." to a method's input {@link Parameter} etc.
+	 * documentations must also be assigned to the right
+	 * {@link SignatureElements}, e.g. "@param ..." to a method's input
+	 * {@link Parameter} etc.
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testJavadocConversion() throws Exception
-	{
+	public void testJavadocConversion() throws Exception {
 		String testFileName = "test/source/JavaInterfaceParser.java";
 		IFile iFile = TestUtils.makeIFileFromFileName(testFileName);
 
-		ICompilationUnit iCompilationUnit = JavaCore.createCompilationUnitFrom(iFile);
+		ICompilationUnit iCompilationUnit = JavaCore
+				.createCompilationUnitFrom(iFile);
 		Assert.assertNotNull(iCompilationUnit);
 
 		parser.setSource(iCompilationUnit.getWorkingCopy(null));
@@ -259,7 +262,8 @@ public class JavaInterfaceParserTest
 				delimiters);
 		InterfaceArtifact actualArtifact = iParser.parse();
 
-		JavaInterfaceArtifact expectedArtifact = createExpectedArtifact(testFileName, cu);
+		JavaInterfaceArtifact expectedArtifact = createExpectedArtifact(
+				testFileName, cu);
 		Assert.assertEquals(TestUtils.toStringWithoutId(expectedArtifact),
 				TestUtils.toStringWithoutId(actualArtifact));
 	}
@@ -277,8 +281,7 @@ public class JavaInterfaceParserTest
 	 */
 	@SuppressWarnings("unchecked")
 	private JavaInterfaceArtifact createExpectedArtifact(String fileName,
-			CompilationUnit cu) throws JavaModelException
-	{
+			CompilationUnit cu) throws JavaModelException {
 		Addressee developer = ObjectStructureUtils.findAddressee("Developer");
 
 		JavaInterfaceArtifact artifact = new JavaInterfaceArtifact(
@@ -325,7 +328,7 @@ public class JavaInterfaceParserTest
 		textElem.setText(" 0.0.1");
 		tag.fragments().add(textElem);
 		tags.add(tag);
-		
+
 		jInterface.setAdditionalTags(tags);
 
 		List<JavaMethod> methods = new ArrayList<JavaMethod>();
@@ -334,7 +337,8 @@ public class JavaInterfaceParserTest
 		/*
 		 * Constructor
 		 */
-		JavaMethod method = new JavaMethod(jInterface, CATEGORY_CONSTRUCTOR);
+		JavaMethod method = new JavaMethod(jInterface, CATEGORY_CONSTRUCTOR,
+				ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME);
 		method.setIdentifier("JavaInterfaceParser");
 		method.setQualifiedIdentifier("JavaInterfaceParser");
 		method.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, null,
@@ -344,7 +348,8 @@ public class JavaInterfaceParserTest
 		/*
 		 * Constructor -> input params
 		 */
-		JavaParameters inputParams = new JavaParameters(method, CATEGORY_PARAMETERS);
+		JavaParameters inputParams = new JavaParameters(method,
+				CATEGORY_PARAMETERS);
 		inputParams.setIdentifier("");
 		inputParams.setQualifiedIdentifier("");
 		method.setInputParameters(inputParams);
@@ -378,13 +383,15 @@ public class JavaInterfaceParserTest
 		param.setQualifiedDataTypeName("Delimiters");
 		param.setSignatureElementPath("delimiters:Delimiters");
 		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
-				"delimiters:Delimiters", "The {@link Delimiters} for creating paths."));
+				"delimiters:Delimiters",
+				"The {@link Delimiters} for creating paths."));
 		inputParams.addParameter(param);
 
 		/*
 		 * Method
 		 */
-		method = new JavaMethod(jInterface, CATEGORY_METHOD);
+		method = new JavaMethod(jInterface, CATEGORY_METHOD,
+				ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME);
 		method.setIdentifier("parse");
 		method.setQualifiedIdentifier("parse");
 		method.addDocpart(makeDocumentation(
@@ -392,30 +399,30 @@ public class JavaInterfaceParserTest
 				Scope.EXPLICIT,
 				null,
 				"Parses the {@link CompilationUnit} <code>compilationUnit</code> (Java source file)and converts it to a {@link JavaInterfaceArtifact}. (Read{@link JavaInterfaceArtifact#copy(de.akra.idocit.common.structure.SignatureElement)})"));
-		
+
 		tags = new ArrayList<TagElement>();
 		tag = ast.newTagElement();
 		tag.setTagName(TagElement.TAG_SEE);
 		SimpleName name = ast.newSimpleName("JavaModelException");
 		tag.fragments().add(name);
 		tags.add(tag);
-		
+
 		tag = ast.newTagElement();
 		tag.setTagName(TagElement.TAG_SEE);
 		MethodRef mRef = ast.newMethodRef();
 		mRef.setName(ast.newSimpleName("parse"));
-		
+
 		MethodRefParameter mRefParam = ast.newMethodRefParameter();
 		mRefParam.setType(ast.newPrimitiveType(PrimitiveType.INT));
 		mRef.parameters().add(mRefParam);
-		
+
 		mRefParam = ast.newMethodRefParameter();
 		mRefParam.setType(ast.newSimpleType(ast.newName("String")));
 		mRef.parameters().add(mRefParam);
-		
+
 		tag.fragments().add(mRef);
 		tags.add(tag);
-		
+
 		tag = ast.newTagElement();
 		tag.setTagName(TagElement.TAG_AUTHOR);
 		textElem = ast.newTextElement();
@@ -436,7 +443,7 @@ public class JavaInterfaceParserTest
 		textElem.setText(" 0.0.4");
 		tag.fragments().add(textElem);
 		tags.add(tag);
-		
+
 		method.setAdditionalTags(tags);
 		methods.add(method);
 
@@ -454,8 +461,8 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("int");
 		param.setQualifiedDataTypeName("int");
 		param.setSignatureElementPath("anyNumber:int");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, "anyNumber:int",
-				"This is only any number."));
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"anyNumber:int", "This is only any number."));
 		inputParams.addParameter(param);
 
 		param = new JavaParameter(inputParams);
@@ -464,14 +471,16 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("String");
 		param.setQualifiedDataTypeName("String");
 		param.setSignatureElementPath("anyString:String");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, "anyString:String",
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"anyString:String",
 				"This is only any simple String. {@literal  This Is A Literal}."));
 		inputParams.addParameter(param);
 
 		/*
 		 * Method -> output param
 		 */
-		JavaParameters outputParam = new JavaParameters(method, CATEGORY_RETURN_TYPE);
+		JavaParameters outputParam = new JavaParameters(method,
+				CATEGORY_RETURN_TYPE);
 		outputParam.setIdentifier("");
 		outputParam.setQualifiedIdentifier("");
 		method.setOutputParameters(outputParam);
@@ -549,11 +558,11 @@ public class JavaInterfaceParserTest
 	 * @param scope
 	 * @param signatureElementIdentifier
 	 * @param text
-	 * @return A new {@link Documentation} initialized with the given information.
+	 * @return A new {@link Documentation} initialized with the given
+	 *         information.
 	 */
 	private Documentation makeDocumentation(Addressee addressee, Scope scope,
-			String signatureElementIdentifier, String text)
-	{
+			String signatureElementIdentifier, String text) {
 		Documentation doc = new Documentation();
 		doc.setScope(scope);
 		doc.setSignatureElementIdentifier(signatureElementIdentifier);
@@ -563,8 +572,8 @@ public class JavaInterfaceParserTest
 	}
 
 	/**
-	 * Parses the file <code>fileName</code>, prints the structure and returns the
-	 * structure as string.
+	 * Parses the file <code>fileName</code>, prints the structure and returns
+	 * the structure as string.
 	 * 
 	 * @param fileName
 	 * @return a simple string representation of the class structure.
@@ -575,17 +584,19 @@ public class JavaInterfaceParserTest
 	 * @throws CoreException
 	 */
 	private String testParseWith(String fileName) throws FileNotFoundException,
-			IOException, SAXException, ParserConfigurationException, CoreException
-	{
+			IOException, SAXException, ParserConfigurationException,
+			CoreException {
 		IFile iFile = TestUtils.makeIFileFromFileName(fileName);
 
-		ICompilationUnit iCompilationUnit = JavaCore.createCompilationUnitFrom(iFile);
+		ICompilationUnit iCompilationUnit = JavaCore
+				.createCompilationUnitFrom(iFile);
 		Assert.assertNotNull(iCompilationUnit);
 
 		parser.setSource(iCompilationUnit.getWorkingCopy(null));
 		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
-		JavaInterfaceParser iParser = new JavaInterfaceParser(cu, fileName, delimiters);
+		JavaInterfaceParser iParser = new JavaInterfaceParser(cu, fileName,
+				delimiters);
 		InterfaceArtifact artifact = iParser.parse();
 
 		StringBuffer hierarchy = new StringBuffer();

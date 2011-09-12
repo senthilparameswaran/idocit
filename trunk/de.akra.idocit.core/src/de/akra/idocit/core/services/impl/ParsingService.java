@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.akra.idocit.core.services;
+package de.akra.idocit.core.services.impl;
 
 import java.util.Map;
 
@@ -32,16 +32,10 @@ import de.akra.idocit.core.extensions.Parser;
  */
 public final class ParsingService {
 
-	private static ParsingServiceInitializer parserReader = null;
+	private ParsingServiceInitializer parserReader = null;
 
-	/**
-	 * Constructor. No need for instantiation, because all methods are static.
-	 */
-	ParsingService() {
-	}
-
-	public static void init(ParsingServiceInitializer parserReader) {
-		ParsingService.parserReader = parserReader;
+	public void init(ParsingServiceInitializer parserReader) {
+		this.parserReader = parserReader;
 	}
 
 	/**
@@ -57,7 +51,7 @@ public final class ParsingService {
 	 *             If no {@link ParsingServiceInitializer} is set to this
 	 *             service
 	 */
-	public static Parser getParser(String type)
+	public Parser getParser(String type)
 			throws UnitializedIDocItException {
 		if (parserReader != null) {
 			return loadParserExtensions().get(type);
@@ -78,7 +72,7 @@ public final class ParsingService {
 	 *             If no {@link ParsingServiceInitializer} is set to this
 	 *             service
 	 */
-	public static boolean isSupported(String type)
+	public boolean isSupported(String type)
 			throws UnitializedIDocItException {
 		if (parserReader != null) {
 			return loadParserExtensions().get(type) != null;
@@ -100,7 +94,7 @@ public final class ParsingService {
 	 * @return true, if there is a {@link Parser} in <code>extensions</code>
 	 *         supporting the <code>type</code>.
 	 */
-	private static boolean isSupported(Map<String, Parser> extensions,
+	private boolean isSupported(Map<String, Parser> extensions,
 			String type) {
 		return extensions.get(type) != null;
 	}
@@ -114,7 +108,7 @@ public final class ParsingService {
 	 * @return {@link Delimiters} of the corresponding {@link Parser}, if the
 	 *         type is not supported <code>null</code> is returned.
 	 */
-	public static Delimiters getDelimiters(String type) {
+	public Delimiters getDelimiters(String type) {
 		Map<String, Parser> extensions = loadParserExtensions();
 		if (isSupported(extensions, type)) {
 			return extensions.get(type).getDelimiters();
@@ -126,7 +120,7 @@ public final class ParsingService {
 	 * Loads all extensions for the {@link Parser}. They are loaded by first
 	 * use. If the list should be updated Eclipse must be restarted.
 	 */
-	private static Map<String, Parser> loadParserExtensions() {
+	private Map<String, Parser> loadParserExtensions() {
 		return parserReader.readRegisteredParsers();
 	}
 }

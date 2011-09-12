@@ -51,11 +51,15 @@ public class JavaMethod extends Operation
 	 * Constructor
 	 * 
 	 * @param parent
+	 * 	The parent {@link SignatureElement}
 	 * @param category
+	 * 	The name of the category of this method
+	 * @param thematicGridName
+	 * 	The name of the reference thematic grid
 	 */
-	public JavaMethod(SignatureElement parent, String category)
+	public JavaMethod(SignatureElement parent, String category, String thematicGridName)
 	{
-		super(parent, category);
+		super(parent, category, thematicGridName);
 	}
 
 	/**
@@ -68,7 +72,7 @@ public class JavaMethod extends Operation
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new JavaMethod(parent, super.getCategory());
+		return new JavaMethod(parent, super.getCategory(), getThematicGridName());
 	}
 
 	/**

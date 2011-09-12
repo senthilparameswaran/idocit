@@ -36,22 +36,21 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 import de.akra.idocit.common.structure.InterfaceArtifact;
-import de.akra.idocit.core.services.HTMLDocGenerator;
-import de.akra.idocit.core.services.ParsingService;
-import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.impl.HTMLDocGenerator;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.components.DocumentationEditor;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
- * PopupMenu action to open the {@link DocumentationEditor} with the selected file.
+ * PopupMenu action to open the {@link DocumentationEditor} with the selected
+ * file.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
  * @version 0.0.1
  * 
  */
-public class HTMLExport implements IObjectActionDelegate
-{
+public class HTMLExport implements IObjectActionDelegate {
 	/**
 	 * Logger.
 	 */
@@ -62,40 +61,34 @@ public class HTMLExport implements IObjectActionDelegate
 	/**
 	 * Constructor for Action1.
 	 */
-	public HTMLExport()
-	{
+	public HTMLExport() {
 		super();
 	}
 
 	/**
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart)
-	{
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		shell = targetPart.getSite().getShell();
 	}
 
 	/**
 	 * @see IActionDelegate#run(IAction)
 	 */
-	public void run(IAction action)
-	{
+	public void run(IAction action) {
 		ISelectionService selectionService = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getSelectionService();
 		IStructuredSelection structuredSelection = (IStructuredSelection) selectionService
 				.getSelection();
 
-		if (structuredSelection != null)
-		{
+		if (structuredSelection != null) {
 			IFile file = (IFile) structuredSelection.getFirstElement();
-			if (file != null)
-			{
+			if (file != null) {
 				// Get the interface as file ...
 				IFile interfaceIFile = new FileEditorInput(file).getFile();
 				File interfaceFile = interfaceIFile.getLocation().toFile();
 
-				if (interfaceFile.exists())
-				{
+				if (interfaceFile.exists()) {
 					// get target file
 					FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 					fileDialog.setText("Export Documentation as HTML-file");
@@ -105,8 +98,7 @@ public class HTMLExport implements IObjectActionDelegate
 
 					boolean stored = false;
 
-					while ((selectedFileName != null) && !stored)
-					{
+					while ((selectedFileName != null) && !stored) {
 
 						boolean exists = new File(selectedFileName).exists();
 						boolean overwrite = exists
@@ -117,31 +109,32 @@ public class HTMLExport implements IObjectActionDelegate
 														+ selectedFileName
 														+ " already exists. Do you want to overwrite it?");
 
-						if (overwrite || !exists)
-						{
+						if (overwrite || !exists) {
 							// parse interface file.
-							try
-							{
+							try {
 								logger.log(Level.INFO, "Start parsing");
-								InterfaceArtifact interfaceArtifact = PersistenceService
+								InterfaceArtifact interfaceArtifact = ServiceManager
+										.getInstance().getPersistenceService()
 										.loadInterface(interfaceIFile);
 								logger.log(Level.INFO, "End parsing");
 								logger.log(Level.INFO, "Start converting");
 								HTMLDocGenerator docGen = new HTMLDocGenerator(
 										interfaceArtifact,
-										ParsingService.getDelimiters(file
-												.getFileExtension()));
+										ServiceManager
+												.getInstance()
+												.getParsingService()
+												.getDelimiters(
+														file.getFileExtension()));
 								String html = docGen.generateHTML();
 								logger.log(Level.INFO, "End converting");
 
 								BufferedWriter writer = new BufferedWriter(
-										new FileWriter(new File(selectedFileName)));
+										new FileWriter(new File(
+												selectedFileName)));
 
 								writer.write(html);
 								writer.close();
-							}
-							catch (Exception ex)
-							{
+							} catch (Exception ex) {
 								String msg = "Could not export documentation for "
 										+ interfaceIFile.getFullPath();
 								logger.log(Level.SEVERE, msg, ex);
@@ -149,15 +142,11 @@ public class HTMLExport implements IObjectActionDelegate
 							}
 
 							stored = true;
-						}
-						else
-						{
+						} else {
 							selectedFileName = fileDialog.open();
 						}
 					}
-				}
-				else
-				{
+				} else {
 					String msg = "File is no longer available: "
 							+ interfaceFile.getAbsolutePath();
 					logger.log(Level.WARNING, msg);
@@ -171,7 +160,7 @@ public class HTMLExport implements IObjectActionDelegate
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
-	public void selectionChanged(IAction action, ISelection selection)
-	{}
+	public void selectionChanged(IAction action, ISelection selection) {
+	}
 
 }

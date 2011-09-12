@@ -99,7 +99,7 @@ public class JavaInterfaceTest
 		List<Operation> operations = new Vector<Operation>();
 		newInterface.setOperations(operations);
 
-		Operation op = new JavaMethod(parent, "Operation");
+		Operation op = new JavaMethod(parent, "Operation", "Searching Operations");
 		op.setIdentifier("findSomething");
 		operations.add(op);
 

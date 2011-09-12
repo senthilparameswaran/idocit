@@ -65,7 +65,7 @@ public class InterfaceArtifactTestFactory
 		List<Operation> opList = new Vector<Operation>();
 
 		// 1. Operation
-		Operation operation = new TestOperation(iFace, "Operation");
+		Operation operation = new TestOperation(iFace, "Operation", "Test Operations");
 		operation.setIdentifier("TestOperation_1");
 
 		Parameters paramList = createParameters(operation, "InputMessage", "TestOp_1_IN",
@@ -78,7 +78,7 @@ public class InterfaceArtifactTestFactory
 		opList.add(operation);
 
 		// 2. Operation
-		operation = new TestOperation(iFace, "Operation");
+		operation = new TestOperation(iFace, "Operation", "Test Operations");
 		operation.setIdentifier("TestOperation_2");
 
 		paramList = createParameters(operation, "InputMessage", "TestOp_2_IN", 5, 7);

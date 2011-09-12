@@ -77,10 +77,12 @@
   
   <wsdl:portType name="AutoCompleteSoap">
     <wsdl:operation name="GetCompletionList">
+      <wsdl:documentation><docpart role="ACTION" scope="EXPLICIT"><addressee group="Developer">Documentation 1</addressee></docpart></wsdl:documentation>
       <wsdl:input message="tns:GetCompletionListSoapIn" />
       <wsdl:output message="tns:GetCompletionListSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetCompletionListVn">
+      <wsdl:documentation><docpart role="ACTION" scope="EXPLICIT"><addressee group="Developer">Documentation 2</addressee></docpart></wsdl:documentation>
       <wsdl:input message="tns:GetCompletionListVnSoapIn" />
       <wsdl:output message="tns:GetCompletionListVnSoapOut" />
     </wsdl:operation>

@@ -46,9 +46,9 @@ public class WSDLOperation extends Operation
 	 * @param category
 	 *            The category of this element.
 	 */
-	public WSDLOperation(SignatureElement parent, String category)
+	public WSDLOperation(SignatureElement parent, String category, String thematicGrid)
 	{
-		super(parent, category);
+		super(parent, category, thematicGrid);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class WSDLOperation extends Operation
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new WSDLOperation(parent, super.getCategory());
+		return new WSDLOperation(parent, super.getCategory(), getThematicGridName());
 	}
 
 	/**

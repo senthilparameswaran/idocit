@@ -23,12 +23,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
+import org.junit.Before;
 import org.junit.Test;
 
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
+import de.akra.idocit.core.services.impl.ParsingService;
+import de.akra.idocit.core.services.impl.ParsingServiceInitializer;
+import de.akra.idocit.core.services.impl.ServiceManager;
 
 /**
  * Tests for {@link ParsingService}.
@@ -39,6 +43,13 @@ import de.akra.idocit.core.extensions.Parser;
 public class ParsingServiceTest {
 	private static Logger logger = Logger.getLogger(ParsingServiceTest.class
 			.getName());
+
+	@Before
+	public void setUp() {
+		ServiceManager.getInstance().setParsingService(new ParsingService());
+		ServiceManager.getInstance().getParsingService()
+				.init(new TestParserInitializer());
+	}
 
 	private class WsdlTestParser implements Parser {
 		@Override
@@ -88,15 +99,13 @@ public class ParsingServiceTest {
 	public void testGetParser() throws UnitializedIDocItException {
 		/*
 		 * Positive tests
-		 * ******************************************************* 
-		 * Test case #1:
+		 * ******************************************************* Test case #1:
 		 * Get the parser for WSDL files, with the type "wsdl".
 		 * *******************************************************
 		 */
 		{
-			ParsingService.init(new TestParserInitializer());
-
-			Parser parser = ParsingService.getParser("wsdl");
+			Parser parser = ServiceManager.getInstance().getParsingService()
+					.getParser("wsdl");
 			logger.log(Level.FINE, "The received parser for \"wsdl\": "
 					+ parser);
 			assertEquals(true, parser != null);
@@ -104,16 +113,16 @@ public class ParsingServiceTest {
 
 		/*
 		 * Negative tests
-		 * ******************************************************* 
-		 * Test case #1:
+		 * ******************************************************* Test case #1:
 		 * Getting the parser for the type "xyz" should fail.
 		 * *******************************************************
 		 */
 		{
-			ParsingService.init(null);
+			ServiceManager.getInstance().getParsingService().init(null);
 			boolean exceptionOccured = false;
 			try {
-				Parser parser = ParsingService.getParser("xyz");
+				Parser parser = ServiceManager.getInstance()
+						.getParsingService().getParser("xyz");
 				logger.log(Level.FINE, "The received parser for \"xyz\": "
 						+ parser);
 			} catch (UnitializedIDocItException unInitEx) {
@@ -122,12 +131,13 @@ public class ParsingServiceTest {
 			assertEquals(true, exceptionOccured);
 		}
 		{
-			ParsingService.init(new TestParserInitializer());
+			ServiceManager.getInstance().getParsingService()
+					.init(new TestParserInitializer());
 
-			Parser parser = ParsingService.getParser("xyz");
+			Parser parser = ServiceManager.getInstance().getParsingService()
+					.getParser("xyz");
 			logger.log(Level.FINE, "The received parser for \"xyz\": " + parser);
 			assertEquals(true, parser == null);
 		}
 	}
-
 }

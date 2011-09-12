@@ -53,6 +53,7 @@ import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
@@ -61,20 +62,20 @@ import de.akra.idocit.java.structure.JavaParameter;
 import de.akra.idocit.java.structure.JavaParameters;
 
 /**
- * The parser parses Java Interfaces, Classes and Enumerations and maps the structure to
- * the iDocIt structure.
+ * The parser parses Java Interfaces, Classes and Enumerations and maps the
+ * structure to the iDocIt structure.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
  * @version 0.0.1
  * 
  */
-public class JavaInterfaceParser
-{
+public class JavaInterfaceParser {
 	/**
 	 * Logger.
 	 */
-	private static Logger logger = Logger.getLogger(JavaInterfaceParser.class.getName());
+	private static Logger logger = Logger.getLogger(JavaInterfaceParser.class
+			.getName());
 
 	private static final String CATEGORY_ARTIFACT = "Artifact";
 	private static final String CATEGORY_INTERFACE = "Interface";
@@ -113,13 +114,13 @@ public class JavaInterfaceParser
 	 * @param compilationUnit
 	 *            The {@link CompilationUnit} that should be parsed.
 	 * @param artifactName
-	 *            The name for the CompilationUnit (in general the Java source file).
+	 *            The name for the CompilationUnit (in general the Java source
+	 *            file).
 	 * @param delimiters
 	 *            The {@link Delimiters} for creating paths.
 	 */
-	public JavaInterfaceParser(CompilationUnit compilationUnit, String artifactName,
-			Delimiters delimiters)
-	{
+	public JavaInterfaceParser(CompilationUnit compilationUnit,
+			String artifactName, Delimiters delimiters) {
 		this.compilationUnit = compilationUnit;
 		this.artifactName = artifactName;
 		this.delimiters = delimiters;
@@ -127,23 +128,24 @@ public class JavaInterfaceParser
 	}
 
 	/**
-	 * Parses the {@link CompilationUnit} <code>compilationUnit</code> (Java source file)
-	 * and converts it to a {@link JavaInterfaceArtifact}.
+	 * Parses the {@link CompilationUnit} <code>compilationUnit</code> (Java
+	 * source file) and converts it to a {@link JavaInterfaceArtifact}.
 	 * 
 	 * @return a new {@link JavaInterfaceArtifact}.
 	 * @throws JavaModelException
-	 *             if an error occurs by getting the source code from ICompilationUnit.
+	 *             if an error occurs by getting the source code from
+	 *             ICompilationUnit.
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
 	 */
 	public InterfaceArtifact parse() throws JavaModelException, SAXException,
-			IOException, ParserConfigurationException
-	{
+			IOException, ParserConfigurationException {
 		JavaInterfaceArtifact artifact = (JavaInterfaceArtifact) processCompilationUnit(
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, compilationUnit);
 
-		ICompilationUnit cu = (ICompilationUnit) compilationUnit.getJavaElement();
+		ICompilationUnit cu = (ICompilationUnit) compilationUnit
+				.getJavaElement();
 		artifact.setOriginalDocument(cu.getSource());
 
 		return artifact;
@@ -162,10 +164,9 @@ public class JavaInterfaceParser
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	private JavaInterfaceArtifact processCompilationUnit(SignatureElement parent,
-			CompilationUnit compilationUnit) throws SAXException, IOException,
-			ParserConfigurationException
-	{
+	private JavaInterfaceArtifact processCompilationUnit(
+			SignatureElement parent, CompilationUnit compilationUnit)
+			throws SAXException, IOException, ParserConfigurationException {
 		JavaInterfaceArtifact artifact = new JavaInterfaceArtifact(parent,
 				CATEGORY_ARTIFACT, compilationUnit);
 		artifact.setIdentifier(artifactName);
@@ -174,28 +175,22 @@ public class JavaInterfaceParser
 		List<AbstractTypeDeclaration> types = (List<AbstractTypeDeclaration>) compilationUnit
 				.types();
 		List<Interface> interfaces = Collections.emptyList();
-		if (types.size() > 0)
-		{
+		if (types.size() > 0) {
 			// process all classes, interfaces and enum declarations
 			interfaces = new ArrayList<Interface>(types.size());
-			for (AbstractTypeDeclaration type : types)
-			{
-				if (ReflectionHelper.isPublic(type.getModifiers()))
-				{
-					switch (type.getNodeType())
-					{
-					case ASTNode.TYPE_DECLARATION:
-					{
+			for (AbstractTypeDeclaration type : types) {
+				if (ReflectionHelper.isPublic(type.getModifiers())) {
+					switch (type.getNodeType()) {
+					case ASTNode.TYPE_DECLARATION: {
 						TypeDeclaration typeDec = (TypeDeclaration) type;
-						interfaces.add((Interface) processTypeDeclaration(artifact,
-								typeDec));
+						interfaces.add((Interface) processTypeDeclaration(
+								artifact, typeDec));
 						break;
 					}
-					case ASTNode.ENUM_DECLARATION:
-					{
+					case ASTNode.ENUM_DECLARATION: {
 						EnumDeclaration enumDec = (EnumDeclaration) type;
-						interfaces.add((Interface) processEnumDeclaration(artifact,
-								enumDec));
+						interfaces.add((Interface) processEnumDeclaration(
+								artifact, enumDec));
 						break;
 					}
 					}
@@ -221,10 +216,10 @@ public class JavaInterfaceParser
 	 */
 	private JavaInterface processTypeDeclaration(SignatureElement parent,
 			TypeDeclaration typeDeclaration) throws SAXException, IOException,
-			ParserConfigurationException
-	{
+			ParserConfigurationException {
 		return processAbstractTypeDeclaration(parent, typeDeclaration,
-				typeDeclaration.isInterface() ? CATEGORY_INTERFACE : CATEGORY_CLASS);
+				typeDeclaration.isInterface() ? CATEGORY_INTERFACE
+						: CATEGORY_CLASS);
 	}
 
 	/**
@@ -241,9 +236,9 @@ public class JavaInterfaceParser
 	 */
 	private JavaInterface processEnumDeclaration(SignatureElement parent,
 			EnumDeclaration enumDeclaration) throws SAXException, IOException,
-			ParserConfigurationException
-	{
-		return processAbstractTypeDeclaration(parent, enumDeclaration, CATEGORY_ENUM);
+			ParserConfigurationException {
+		return processAbstractTypeDeclaration(parent, enumDeclaration,
+				CATEGORY_ENUM);
 	}
 
 	/**
@@ -261,10 +256,10 @@ public class JavaInterfaceParser
 	 * @throws SAXException
 	 * @see AbstractTypeDeclaration
 	 */
-	private JavaInterface processAbstractTypeDeclaration(SignatureElement parent,
+	private JavaInterface processAbstractTypeDeclaration(
+			SignatureElement parent,
 			AbstractTypeDeclaration absTypeDeclaration, String category)
-			throws SAXException, IOException, ParserConfigurationException
-	{
+			throws SAXException, IOException, ParserConfigurationException {
 		JavaInterface jInterface = new JavaInterface(parent, category);
 		jInterface.setIdentifier(absTypeDeclaration.getName().getIdentifier());
 		jInterface.setQualifiedIdentifier(absTypeDeclaration.getName()
@@ -273,13 +268,13 @@ public class JavaInterfaceParser
 
 		Javadoc javadoc = absTypeDeclaration.getJavadoc();
 		List<Documentation> docs = JavadocParser.parseIDocItJavadoc(javadoc);
-		if (docs.isEmpty())
-		{
+		if (docs.isEmpty()) {
 			docs = JavadocParser.convertExistingJavadoc(javadoc);
 		}
 		jInterface.setDocumentations(docs);
 
-		List<TagElement> additionalTags = JavadocParser.findAdditionalTags(javadoc);
+		List<TagElement> additionalTags = JavadocParser
+				.findAdditionalTags(javadoc);
 		jInterface.setAdditionalTags(additionalTags);
 
 		@SuppressWarnings("unchecked")
@@ -289,47 +284,42 @@ public class JavaInterfaceParser
 		List<Interface> innerInterface = Collections.emptyList();
 		List<Operation> operations = Collections.emptyList();
 
-		for (BodyDeclaration bodyDec : bodyDeclarations)
-		{
+		for (BodyDeclaration bodyDec : bodyDeclarations) {
 			// only public elements are processed
-			if (ReflectionHelper.isPublic(bodyDec.getModifiers()))
-			{
-				switch (bodyDec.getNodeType())
-				{
-				case ASTNode.TYPE_DECLARATION:
-				{
-					if (innerInterface == Collections.EMPTY_LIST)
-					{
+			if (ReflectionHelper.isPublic(bodyDec.getModifiers())) {
+				switch (bodyDec.getNodeType()) {
+				case ASTNode.TYPE_DECLARATION: {
+					if (innerInterface == Collections.EMPTY_LIST) {
 						innerInterface = new ArrayList<Interface>(
 								SignatureElement.DEFAULT_ARRAY_SIZE);
 					}
 					TypeDeclaration typeDec = (TypeDeclaration) bodyDec;
-					innerInterface.add(processTypeDeclaration(jInterface, typeDec));
+					innerInterface.add(processTypeDeclaration(jInterface,
+							typeDec));
 					break;
 				}
-				case ASTNode.ENUM_DECLARATION:
-				{
-					if (innerInterface == Collections.EMPTY_LIST)
-					{
+				case ASTNode.ENUM_DECLARATION: {
+					if (innerInterface == Collections.EMPTY_LIST) {
 						innerInterface = new ArrayList<Interface>(
 								SignatureElement.DEFAULT_ARRAY_SIZE);
 					}
 					EnumDeclaration enumDec = (EnumDeclaration) bodyDec;
-					innerInterface.add(processEnumDeclaration(jInterface, enumDec));
+					innerInterface.add(processEnumDeclaration(jInterface,
+							enumDec));
 					break;
 				}
-				case ASTNode.METHOD_DECLARATION:
-				{
+				case ASTNode.METHOD_DECLARATION: {
 					MethodDeclaration methodDec = (MethodDeclaration) bodyDec;
-					if (ReflectionHelper.isPublic(methodDec.getModifiers()))
-					{
-						if (operations == Collections.EMPTY_LIST)
-						{
-							// init with number of all field, method, enum, class etc.
+					if (ReflectionHelper.isPublic(methodDec.getModifiers())) {
+						if (operations == Collections.EMPTY_LIST) {
+							// init with number of all field, method, enum,
+							// class etc.
 							// declarations to avoid resizing of the array
-							operations = new ArrayList<Operation>(bodyDeclarations.size());
+							operations = new ArrayList<Operation>(
+									bodyDeclarations.size());
 						}
-						operations.add(processMethodDeclaration(jInterface, methodDec));
+						operations.add(processMethodDeclaration(jInterface,
+								methodDec));
 					}
 					break;
 				}
@@ -343,8 +333,9 @@ public class JavaInterfaceParser
 	}
 
 	/**
-	 * Converts a {@link MethodDeclaration} to a {@link JavaMethod}. If there exists no
-	 * parameters, return value or thrown exceptions they are set to <code>null</code>.
+	 * Converts a {@link MethodDeclaration} to a {@link JavaMethod}. If there
+	 * exists no parameters, return value or thrown exceptions they are set to
+	 * <code>null</code>.
 	 * 
 	 * @param parent
 	 *            The parent {@link SignatureElement}.
@@ -356,36 +347,42 @@ public class JavaInterfaceParser
 	 * @throws SAXException
 	 */
 	private JavaMethod processMethodDeclaration(SignatureElement parent,
-			MethodDeclaration methodDeclaration) throws SAXException, IOException,
-			ParserConfigurationException
-	{
+			MethodDeclaration methodDeclaration) throws SAXException,
+			IOException, ParserConfigurationException {
 		String category = CATEGORY_METHOD;
-		if (methodDeclaration.isConstructor())
-		{
+		if (methodDeclaration.isConstructor()) {
 			category = CATEGORY_CONSTRUCTOR;
 		}
 
-		JavaMethod method = new JavaMethod(parent, category);
+		Javadoc javadoc = methodDeclaration.getJavadoc();
+		String thematicGridName = JavadocParser
+				.parseIDocItReferenceGrid(javadoc);
+
+		if (thematicGridName == null) {
+			thematicGridName = ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME;
+		}
+
+		JavaMethod method = new JavaMethod(parent, category, thematicGridName);
 		method.setIdentifier(methodDeclaration.getName().getIdentifier());
-		method.setQualifiedIdentifier(methodDeclaration.getName().getFullyQualifiedName());
+		method.setQualifiedIdentifier(methodDeclaration.getName()
+				.getFullyQualifiedName());
 		method.setRefToASTNode(methodDeclaration);
 
 		List<Documentation> convertedJavadoc = null;
-		Javadoc javadoc = methodDeclaration.getJavadoc();
-		List<Documentation> documentations = JavadocParser.parseIDocItJavadoc(javadoc);
-		if (documentations.isEmpty() && javadoc != null)
-		{
+		List<Documentation> documentations = JavadocParser
+				.parseIDocItJavadoc(javadoc);
+		if (documentations.isEmpty() && javadoc != null) {
 			convertedJavadoc = JavadocParser.convertExistingJavadoc(javadoc);
 		}
 
-		List<TagElement> additionalTags = JavadocParser.findAdditionalTags(javadoc);
+		List<TagElement> additionalTags = JavadocParser
+				.findAdditionalTags(javadoc);
 		method.setAdditionalTags(additionalTags);
 
 		/*
 		 * Add input parameters, if existing
 		 */
-		if (methodDeclaration.parameters().size() > 0)
-		{
+		if (methodDeclaration.parameters().size() > 0) {
 			JavaParameters inputParameters = new JavaParameters(method,
 					CATEGORY_PARAMETERS);
 			inputParameters.setDocumentationAllowed(false);
@@ -395,16 +392,15 @@ public class JavaInterfaceParser
 			@SuppressWarnings("unchecked")
 			List<SingleVariableDeclaration> parameters = (List<SingleVariableDeclaration>) methodDeclaration
 					.parameters();
-			for (SingleVariableDeclaration parameter : parameters)
-			{
-				JavaParameter param = processParameter(inputParameters, parameter);
+			for (SingleVariableDeclaration parameter : parameters) {
+				JavaParameter param = processParameter(inputParameters,
+						parameter);
 				ObjectStructureUtils.setParametersPaths(delimiters,
 						inputParameters.getQualifiedIdentifier(), param);
 				inputParameters.addParameter(param);
 			}
 
-			if (convertedJavadoc == null)
-			{
+			if (convertedJavadoc == null) {
 				attachDocsToParameters(documentations, inputParameters);
 			}
 			method.setInputParameters(inputParameters);
@@ -413,13 +409,13 @@ public class JavaInterfaceParser
 		/*
 		 * Add return type (always existing), void is ignored
 		 */
-		JavaParameters outputParameters = new JavaParameters(method, CATEGORY_RETURN_TYPE);
+		JavaParameters outputParameters = new JavaParameters(method,
+				CATEGORY_RETURN_TYPE);
 		Type retType = methodDeclaration.getReturnType2();
 		JavaParameter returnType = processReturnType(outputParameters, retType);
 
 		// add only if there is a type and that type is not void
-		if (returnType != null)
-		{
+		if (returnType != null) {
 			outputParameters.setDocumentationAllowed(false);
 			outputParameters.setIdentifier("");
 			outputParameters.setQualifiedIdentifier("");
@@ -428,8 +424,7 @@ public class JavaInterfaceParser
 			ObjectStructureUtils.setParametersPaths(delimiters,
 					outputParameters.getQualifiedIdentifier(), returnType);
 
-			if (convertedJavadoc == null)
-			{
+			if (convertedJavadoc == null) {
 				attachDocsToParameters(documentations, outputParameters);
 			}
 			method.setOutputParameters(outputParameters);
@@ -438,18 +433,19 @@ public class JavaInterfaceParser
 		/*
 		 * Add thrown exceptions, if existing
 		 */
-		if (methodDeclaration.thrownExceptions().size() > 0)
-		{
+		if (methodDeclaration.thrownExceptions().size() > 0) {
 			@SuppressWarnings("unchecked")
 			List<Name> thrownExceptions = (List<Name>) methodDeclaration
 					.thrownExceptions();
 
-			// Java has only one list of list (JavaParameters contains a list) for thrown
+			// Java has only one list of list (JavaParameters contains a list)
+			// for thrown
 			// exceptions. (We need the second list for WSDL fault messages.)
-			List<JavaParameters> exceptionList = new ArrayList<JavaParameters>(1);
-			JavaParameters exception = processThrownExceptions(method, thrownExceptions);
-			if (convertedJavadoc == null)
-			{
+			List<JavaParameters> exceptionList = new ArrayList<JavaParameters>(
+					1);
+			JavaParameters exception = processThrownExceptions(method,
+					thrownExceptions);
+			if (convertedJavadoc == null) {
 				attachDocsToParameters(documentations, exception);
 			}
 			exceptionList.add(exception);
@@ -459,14 +455,11 @@ public class JavaInterfaceParser
 		/*
 		 * Add the documentations without element path to the method.
 		 */
-		if (convertedJavadoc == null)
-		{
+		if (convertedJavadoc == null) {
 			Iterator<Documentation> iterDocs = documentations.iterator();
-			while (iterDocs.hasNext())
-			{
+			while (iterDocs.hasNext()) {
 				Documentation doc = iterDocs.next();
-				if (doc.getSignatureElementIdentifier() == null)
-				{
+				if (doc.getSignatureElementIdentifier() == null) {
 					method.addDocpart(doc);
 					iterDocs.remove();
 				}
@@ -475,11 +468,10 @@ public class JavaInterfaceParser
 		}
 
 		/*
-		 * Add existing Javadoc (converted to Documentation objects) to the iDocIt object
-		 * structure.
+		 * Add existing Javadoc (converted to Documentation objects) to the
+		 * iDocIt object structure.
 		 */
-		if (convertedJavadoc != null)
-		{
+		if (convertedJavadoc != null) {
 			attachConvertedDocs(convertedJavadoc, method);
 		}
 
@@ -492,14 +484,12 @@ public class JavaInterfaceParser
 	 * @param documentations
 	 *            The not assignable documentations.
 	 */
-	private void logNotAttachedDocs(List<Documentation> documentations)
-	{
-		if (documentations != null && !documentations.isEmpty())
-		{
-			StringBuffer msg = new StringBuffer(String.valueOf(documentations.size()));
+	private void logNotAttachedDocs(List<Documentation> documentations) {
+		if (documentations != null && !documentations.isEmpty()) {
+			StringBuffer msg = new StringBuffer(String.valueOf(documentations
+					.size()));
 			msg.append(" documentation(s) could not be attached: ");
-			for (Documentation doc : documentations)
-			{
+			for (Documentation doc : documentations) {
 				msg.append(doc.toString());
 				msg.append("\n");
 			}
@@ -508,73 +498,70 @@ public class JavaInterfaceParser
 	}
 
 	/**
-	 * Attaches the {@link Documentation}s to the matching {@link JavaParameters} or
-	 * {@link JavaParameter}.
+	 * Attaches the {@link Documentation}s to the matching
+	 * {@link JavaParameters} or {@link JavaParameter}.
 	 * 
 	 * @param documentations
 	 *            The {@link Documentation}s that should be added.
 	 *            <p>
-	 *            <b>HINT:</b> If a documentation could be added, it is removed from the
-	 *            list.
+	 *            <b>HINT:</b> If a documentation could be added, it is removed
+	 *            from the list.
 	 *            </p>
 	 * @param parameters
-	 *            The parameters to which the documentations should be added, if they
-	 *            match.
-	 * @see Parameters#addMatchingDocumentation(Delimiters, Documentation, StringBuffer)
-	 * @see Parameter#addMatchingDocumentation(Delimiters, Documentation, StringBuffer)
+	 *            The parameters to which the documentations should be added, if
+	 *            they match.
+	 * @see Parameters#addMatchingDocumentation(Delimiters, Documentation,
+	 *      StringBuffer)
+	 * @see Parameter#addMatchingDocumentation(Delimiters, Documentation,
+	 *      StringBuffer)
 	 */
 	private void attachDocsToParameters(List<Documentation> documentations,
-			JavaParameters parameters)
-	{
+			JavaParameters parameters) {
 		Iterator<Documentation> iterDocs = documentations.iterator();
-		while (iterDocs.hasNext())
-		{
+		while (iterDocs.hasNext()) {
 			Documentation doc = iterDocs.next();
-			if (parameters.addMatchingDocumentation(delimiters, doc))
-			{
+			if (parameters.addMatchingDocumentation(delimiters, doc)) {
 				iterDocs.remove();
 			}
 		}
 	}
 
 	/**
-	 * Attaches the converted Javadoc to the methods elements. It tries to attach the
-	 * documentation of the parameters (@param, @return, @throws) to the right
-	 * {@link Parameter} of the method. If a documentation could not be assigned to a
-	 * parameter it is added to the method's documentations.
+	 * Attaches the converted Javadoc to the methods elements. It tries to
+	 * attach the documentation of the parameters (@param, @return, @throws) to
+	 * the right {@link Parameter} of the method. If a documentation could not
+	 * be assigned to a parameter it is added to the method's documentations.
 	 * 
 	 * @param convertedJavadocs
-	 *            The list of {@link Documentation}s, converted from the existing Javadoc.
+	 *            The list of {@link Documentation}s, converted from the
+	 *            existing Javadoc.
 	 * @param method
-	 *            The {@link JavaMethod} to which's elements the documentations should be
-	 *            added.
+	 *            The {@link JavaMethod} to which's elements the documentations
+	 *            should be added.
 	 */
 	private void attachConvertedDocs(List<Documentation> convertedJavadocs,
-			JavaMethod method)
-	{
+			JavaMethod method) {
 		Iterator<Documentation> iterDocs = convertedJavadocs.iterator();
-		while (iterDocs.hasNext())
-		{
+		while (iterDocs.hasNext()) {
 			Documentation doc = iterDocs.next();
 			String identifier = doc.getSignatureElementIdentifier();
-			if (identifier == null)
-			{
+			if (identifier == null) {
 				method.addDocpart(doc);
-			}
-			else
-			{
-				String name = identifier.substring(
-						identifier.indexOf(JavaParser.delimiters.pathDelimiter) + 1,
-						identifier.length());
+			} else {
+				String name = identifier
+						.substring(
+								identifier
+										.indexOf(JavaParser.delimiters.pathDelimiter) + 1,
+								identifier.length());
 
-				if (!((identifier.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_PARAM) && attachConvertedDocToParameters(
+				if (!((identifier
+						.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_PARAM) && attachConvertedDocToParameters(
 						name, doc, method.getInputParameters()))
 						|| (identifier
 								.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_RETURN) && attachConvertedDocToParameters(
 								name, doc, method.getOutputParameters())) || (identifier
 						.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_THROWS) && attachConvertedDocToParameters(
-						name, doc, method.getExceptions()))))
-				{
+						name, doc, method.getExceptions())))) {
 					logger.info("Converted and not assignable Documentation is attached to the JavaMethod's documentations: "
 							+ doc);
 					method.addDocpart(doc);
@@ -588,25 +575,24 @@ public class JavaInterfaceParser
 	 * <code>searchName</code>.
 	 * 
 	 * @param searchName
-	 *            The identifier of the {@link Parameter} to which the <code>doc</code>
-	 *            should be added.
+	 *            The identifier of the {@link Parameter} to which the
+	 *            <code>doc</code> should be added.
 	 * @param doc
-	 *            The {@link Documentation} which should be attached to a Parameter.
+	 *            The {@link Documentation} which should be attached to a
+	 *            Parameter.
 	 * @param exceptions
-	 *            List of exceptions. The <code>doc</code> should be added to one of the
-	 *            including {@link Parameter}s.
+	 *            List of exceptions. The <code>doc</code> should be added to
+	 *            one of the including {@link Parameter}s.
 	 * @return true, if the documentation could be assigned to a parameter.
 	 * @see #attachConvertedDocToParameters(String, Documentation, Parameters)
 	 */
-	private boolean attachConvertedDocToParameters(String searchName, Documentation doc,
-			List<? extends Parameters> exceptions)
-	{
+	private boolean attachConvertedDocToParameters(String searchName,
+			Documentation doc, List<? extends Parameters> exceptions) {
 		boolean found = false;
-		if (exceptions != null)
-		{
-			Iterator<? extends Parameters> iterExceptions = exceptions.iterator();
-			while (iterExceptions.hasNext() && !found)
-			{
+		if (exceptions != null) {
+			Iterator<? extends Parameters> iterExceptions = exceptions
+					.iterator();
+			while (iterExceptions.hasNext() && !found) {
 				found = attachConvertedDocToParameters(searchName, doc,
 						iterExceptions.next());
 			}
@@ -619,30 +605,30 @@ public class JavaInterfaceParser
 	 * <code>searchName</code>.
 	 * 
 	 * @param searchName
-	 *            The identifier of the {@link Parameter} to which the <code>doc</code>
-	 *            should be added.
+	 *            The identifier of the {@link Parameter} to which the
+	 *            <code>doc</code> should be added.
 	 * @param doc
-	 *            The {@link Documentation} which should be attached to a Parameter.
+	 *            The {@link Documentation} which should be attached to a
+	 *            Parameter.
 	 * @param parameters
 	 *            The <code>doc</code> should be added to one of the including
 	 *            {@link Parameter}s.
 	 * @return true, if the documentation could be assigned to a parameter.
 	 */
-	private boolean attachConvertedDocToParameters(String searchName, Documentation doc,
-			Parameters parameters)
-	{
+	private boolean attachConvertedDocToParameters(String searchName,
+			Documentation doc, Parameters parameters) {
 		boolean found = false;
-		if (parameters != null)
-		{
-			Iterator<Parameter> iterParams = parameters.getParameters().iterator();
-			while (iterParams.hasNext() && !found)
-			{
+		if (parameters != null) {
+			Iterator<Parameter> iterParams = parameters.getParameters()
+					.iterator();
+			while (iterParams.hasNext() && !found) {
 				Parameter param = iterParams.next();
 				if (param.getIdentifier().equals(searchName)
-						|| (CATEGORY_RETURN_TYPE.equals(parameters.getCategory())))
-				{
+						|| (CATEGORY_RETURN_TYPE.equals(parameters
+								.getCategory()))) {
 					param.addDocpart(doc);
-					doc.setSignatureElementIdentifier(param.getSignatureElementPath());
+					doc.setSignatureElementIdentifier(param
+							.getSignatureElementPath());
 					found = true;
 				}
 			}
@@ -651,7 +637,8 @@ public class JavaInterfaceParser
 	}
 
 	/**
-	 * Convert a parameter <code>variableDeclaration</code> to a {@link JavaParameter}.
+	 * Convert a parameter <code>variableDeclaration</code> to a
+	 * {@link JavaParameter}.
 	 * 
 	 * @param parent
 	 *            The parent {@link SignatureElement}.
@@ -660,75 +647,67 @@ public class JavaInterfaceParser
 	 * @return a new {@link JavaParameter}.
 	 */
 	private JavaParameter processParameter(SignatureElement parent,
-			SingleVariableDeclaration variableDeclaration)
-	{
+			SingleVariableDeclaration variableDeclaration) {
 		JavaParameter containingAttributes = null;
 
 		IVariableBinding resolvedBinding = variableDeclaration.resolveBinding();
-		if (resolvedBinding != null)
-		{
+		if (resolvedBinding != null) {
 			ITypeBinding typeBinding = resolvedBinding.getType();
-			containingAttributes = reflectionHelper.reflectParameter(parent, typeBinding,
-					variableDeclaration.getName().getIdentifier(), variableDeclaration
-							.getName().getFullyQualifiedName());
-		}
-		else
-		{
-			// if resolveBinding() gives no result try variableDeclaration.getType()
+			containingAttributes = reflectionHelper.reflectParameter(parent,
+					typeBinding, variableDeclaration.getName().getIdentifier(),
+					variableDeclaration.getName().getFullyQualifiedName());
+		} else {
+			// if resolveBinding() gives no result try
+			// variableDeclaration.getType()
 			// and work with that Type.
 			Type type = variableDeclaration.getType();
-			containingAttributes = reflectionHelper.reflectParameter(parent, type,
-					variableDeclaration.getName().getIdentifier(), variableDeclaration
-							.getName().getFullyQualifiedName());
+			containingAttributes = reflectionHelper.reflectParameter(parent,
+					type, variableDeclaration.getName().getIdentifier(),
+					variableDeclaration.getName().getFullyQualifiedName());
 		}
 
 		return containingAttributes;
 	}
 
 	/**
-	 * Create the list of thrown exceptions. The list is wrapped in {@link JavaParameters}
-	 * .
+	 * Create the list of thrown exceptions. The list is wrapped in
+	 * {@link JavaParameters} .
 	 * 
 	 * @param parent
 	 *            The parent {@link SignatureElement}.
 	 * @param thrownExceptions
-	 *            The {@link List} of {@link SimpleName} of the thrown exceptions to
-	 *            process.
+	 *            The {@link List} of {@link SimpleName} of the thrown
+	 *            exceptions to process.
 	 * @return a new {@link JavaParameters}.
 	 */
 	private JavaParameters processThrownExceptions(SignatureElement parent,
-			List<Name> thrownExceptions)
-	{
+			List<Name> thrownExceptions) {
 		JavaParameters exceptions = new JavaParameters(parent, CATEGORY_THROWS);
 		exceptions.setDocumentationAllowed(false);
 		exceptions.setIdentifier("");
 		exceptions.setQualifiedIdentifier("");
 
-		for (Name name : thrownExceptions)
-		{
+		for (Name name : thrownExceptions) {
 			JavaParameter exception = new JavaParameter(exceptions);
 			ITypeBinding typeBinding = name.resolveTypeBinding();
-			if (typeBinding != null)
-			{
-				// TODO should be the inner structure of Exceptions be documentable? It
+			if (typeBinding != null) {
+				// TODO should be the inner structure of Exceptions be
+				// documentable? It
 				// might be make sense for custom Exceptions.
 				exception.setIdentifier(typeBinding.getName());
-				exception.setQualifiedIdentifier(typeBinding.getQualifiedName());
+				exception
+						.setQualifiedIdentifier(typeBinding.getQualifiedName());
 				exception.setDataTypeName(typeBinding.getName());
-				exception.setQualifiedDataTypeName(typeBinding.getQualifiedName());
-			}
-			else
-			{
+				exception.setQualifiedDataTypeName(typeBinding
+						.getQualifiedName());
+			} else {
 				String identifier;
 				String qIdentifier = name.getFullyQualifiedName();
 
-				if (name.isQualifiedName())
-				{
+				if (name.isQualifiedName()) {
 					QualifiedName qName = (QualifiedName) name;
 					identifier = qName.getName().getIdentifier();
-				}
-				else
-				{
+				} else {
 					SimpleName sName = (SimpleName) name;
 					identifier = sName.getIdentifier();
 				}
@@ -747,8 +726,8 @@ public class JavaInterfaceParser
 	}
 
 	/**
-	 * Create the return type as {@link JavaParameter}. The return type has only an
-	 * identifier no further inner structure or data type.
+	 * Create the return type as {@link JavaParameter}. The return type has only
+	 * an identifier no further inner structure or data type.
 	 * 
 	 * @param parent
 	 *            The parent {@link SignatureElement}.
@@ -758,28 +737,22 @@ public class JavaInterfaceParser
 	 *         <code>type == null</code> or the identifier of type equals
 	 *         <code>void</code>.
 	 */
-	private JavaParameter processReturnType(SignatureElement parent, Type type)
-	{
+	private JavaParameter processReturnType(SignatureElement parent, Type type) {
 		JavaParameter returnType = null;
-		if (type != null)
-		{
+		if (type != null) {
 			ITypeBinding typeBinding = type.resolveBinding();
-			if (typeBinding != null)
-			{
+			if (typeBinding != null) {
 				String identifier = typeBinding.getName();
-				if (!identifier.equals(RETURN_TYPE_VOID))
-				{
-					returnType = reflectionHelper.reflectParameter(parent, typeBinding,
-							identifier, typeBinding.getQualifiedName());
+				if (!identifier.equals(RETURN_TYPE_VOID)) {
+					returnType = reflectionHelper.reflectParameter(parent,
+							typeBinding, identifier,
+							typeBinding.getQualifiedName());
 				}
-			}
-			else
-			{
+			} else {
 				String identifier = ReflectionHelper.getIdentifierFrom(type);
-				if (!identifier.equals(RETURN_TYPE_VOID))
-				{
-					returnType = reflectionHelper.reflectParameter(parent, type,
-							identifier, identifier);
+				if (!identifier.equals(RETURN_TYPE_VOID)) {
+					returnType = reflectionHelper.reflectParameter(parent,
+							type, identifier, identifier);
 				}
 			}
 		}

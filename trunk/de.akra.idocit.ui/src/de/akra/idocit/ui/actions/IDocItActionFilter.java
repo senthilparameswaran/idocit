@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IResourceActionFilter;
 
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
-import de.akra.idocit.core.services.ParsingService;
+import de.akra.idocit.core.services.impl.ServiceManager;
 
 /**
  * This should be a filter to disable the Action if the file is not supported.
@@ -32,22 +32,20 @@ import de.akra.idocit.core.services.ParsingService;
  * @version 0.0.1
  * 
  */
-public class IDocItActionFilter implements IResourceActionFilter
-{
+public class IDocItActionFilter implements IResourceActionFilter {
 	private static IDocItActionFilter instance;
 
 	/**
 	 * Logger.
 	 */
-	private static Logger logger = Logger.getLogger(IDocItActionFilter.class.getName());
-	
+	private static Logger logger = Logger.getLogger(IDocItActionFilter.class
+			.getName());
+
 	/**
 	 * @return the singleton instance of IDocItActionFilter.
 	 */
-	public IDocItActionFilter getInstance()
-	{
-		if (instance == null)
-		{
+	public IDocItActionFilter getInstance() {
+		if (instance == null) {
 			instance = new IDocItActionFilter();
 		}
 		return instance;
@@ -56,25 +54,28 @@ public class IDocItActionFilter implements IResourceActionFilter
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String,
-	 *      java.lang.String)
+	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object,
+	 *      java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean testAttribute(Object target, String name, String value)
-	{
-		if (target instanceof IFile)
-		{
+	public boolean testAttribute(Object target, String name, String value) {
+		if (target instanceof IFile) {
 			IFile file = (IFile) target;
 			String type = file.getFileExtension();
 			try {
-				return (type != null) && ParsingService.isSupported(type);
+				return (type != null)
+						&& ServiceManager.getInstance().getParsingService()
+								.isSupported(type);
 			} catch (UnitializedIDocItException e) {
-				logger.log(Level.WARNING, "Could not test the attributes, becaue the ParsingService seems not to be initialized.", e);
-				
+				logger.log(
+						Level.WARNING,
+						"Could not test the attributes, becaue the ParsingService seems not to be initialized.",
+						e);
+
 				return false;
 			}
 		}
-		
+
 		return false;
 	}
 

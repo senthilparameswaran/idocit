@@ -15,6 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,8 +32,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.Assert;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -96,6 +100,32 @@ public class JavadocParserTest
 		logger.log(Level.FINE, convertedDocs.toString());
 
 		Assert.assertEquals(allUsedDocs, convertedDocs);
+	}
+	
+	/**
+	 * Tests {@link JavadocParser#parseIDocItReferenceGrid(Javadoc)}.
+	 */
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testParseIDocItReferenceGrid(){
+		
+		
+		AST a = AST.newAST(AST.JLS3);
+		Javadoc javadoc = a.newJavadoc();
+		
+		TagElement tagElement = a.newTagElement();
+		tagElement.setTagName(JavadocParser.JAVADOC_TAG_THEMATICGRID);
+		
+		List<ASTNode> fragments = (List<ASTNode>) tagElement.fragments();
+		TextElement textElement = a.newTextElement();
+		textElement.setText("Searching Operations");
+		fragments.add(textElement);
+		
+		List<TagElement> tags = javadoc.tags();
+		tags.add(tagElement);
+		
+		String thematicGridName = JavadocParser.parseIDocItReferenceGrid(javadoc);
+		assertEquals("Searching Operations", thematicGridName);
 	}
 
 	/**

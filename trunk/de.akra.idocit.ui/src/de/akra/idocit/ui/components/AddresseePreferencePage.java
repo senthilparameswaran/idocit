@@ -30,7 +30,7 @@ import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
 import de.akra.idocit.common.structure.Addressee;
-import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageAddresseeComposite;
 import de.akra.idocit.ui.composites.ManageAddresseeCompositeSelection;
 
@@ -43,29 +43,24 @@ import de.akra.idocit.ui.composites.ManageAddresseeCompositeSelection;
  */
 public class AddresseePreferencePage
 		extends
-		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageAddresseeCompositeSelection>
-{
+		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageAddresseeCompositeSelection> {
 	@Override
-	protected void initListener() throws CompositeInitializationException
-	{
+	protected void initListener() throws CompositeInitializationException {
 		// Nothing to do!
 	}
 
 	@Override
-	protected void addAllListener()
-	{
+	protected void addAllListener() {
 		// Nothing to do!
 	}
 
 	@Override
-	protected void removeAllListener()
-	{
+	protected void removeAllListener() {
 		// Nothing to do!
 	}
 
 	@Override
-	public boolean isValid()
-	{
+	public boolean isValid() {
 		return true;
 	}
 
@@ -73,48 +68,45 @@ public class AddresseePreferencePage
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(IWorkbench workbench)
-	{
+	public void init(IWorkbench workbench) {
 		IPreferenceStore prefStore = getPreferenceStore();
 
-		if (prefStore == null)
-		{
+		if (prefStore == null) {
 			setPreferenceStore(PlatformUI.getPreferenceStore());
 			prefStore = getPreferenceStore();
 		}
 
-		loadPreferences(PersistenceService.loadConfiguredAddressees());
+		loadPreferences(ServiceManager.getInstance().getPersistenceService()
+				.loadConfiguredAddressees());
 	}
 
-	private void loadPreferences(List<Addressee> addressees)
-	{
+	private void loadPreferences(List<Addressee> addressees) {
 		ManageAddresseeCompositeSelection selection = new ManageAddresseeCompositeSelection();
-		selection
-				.setActiveAddressee(!addressees.isEmpty() ? addressees.get(0) : null);
+		selection.setActiveAddressee(!addressees.isEmpty() ? addressees.get(0)
+				: null);
 		selection.setAddressees(addressees);
 
 		setSelection(selection);
 	}
 
 	@Override
-	protected void performDefaults()
-	{
-		List<Addressee> addressees = PersistenceService.readInitialAddressees();
-		
+	protected void performDefaults() {
+		List<Addressee> addressees = ServiceManager.getInstance()
+				.getPersistenceService().readInitialAddressees();
+
 		loadPreferences(addressees);
 	}
 
 	@Override
-	protected void performApply()
-	{
+	protected void performApply() {
 		List<Addressee> items = new ArrayList<Addressee>();
 
-		for (Addressee addressee : getSelection().getAddressees())
-		{
+		for (Addressee addressee : getSelection().getAddressees()) {
 			items.add((Addressee) addressee);
 		}
 
-		PersistenceService.persistAddressees(items);
+		ServiceManager.getInstance().getPersistenceService()
+				.persistAddressees(items);
 	}
 
 	/*
@@ -123,8 +115,7 @@ public class AddresseePreferencePage
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	@Override
-	public boolean performOk()
-	{
+	public boolean performOk() {
 		performApply();
 		boolean saveState = super.performOk();
 		return saveState;
@@ -132,8 +123,7 @@ public class AddresseePreferencePage
 
 	@Override
 	protected AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageAddresseeCompositeSelection> instanciateMask(
-			Composite comp)
-	{
+			Composite comp) {
 		return new ManageAddresseeComposite(comp);
 	}
 

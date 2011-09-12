@@ -24,6 +24,7 @@ import de.akra.idocit.common.structure.impl.TestInterfaceArtifact;
 import de.akra.idocit.common.structure.impl.TestOperation;
 import de.akra.idocit.common.structure.impl.TestParameter;
 import de.akra.idocit.common.structure.impl.TestParameters;
+import de.akra.idocit.core.services.impl.HTMLDocGenerator;
 
 /**
  * Tests for {@link HTMLDocGenerator}.
@@ -79,7 +80,7 @@ public class HTMLDocGeneratorTest
 		interfaceList.add(interf);
 
 		List<Operation> operations = new Vector<Operation>();
-		Operation op = new TestOperation(interf, "Operation");
+		Operation op = new TestOperation(interf, "Operation", "Searching Operations");
 		op.setIdentifier("find");
 		op.addDocpart(createDocumentation());
 		operations.add(op);

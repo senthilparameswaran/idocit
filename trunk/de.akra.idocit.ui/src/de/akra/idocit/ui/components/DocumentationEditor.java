@@ -50,7 +50,7 @@ import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
-import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeSelection;
 import de.akra.idocit.ui.constants.DialogConstants;
@@ -153,7 +153,8 @@ public class DocumentationEditor
 
 		if ((type != null)) {
 			try {
-				PersistenceService.writeInterface(artifact, interfaceFile);
+				ServiceManager.getInstance().getPersistenceService()
+						.writeInterface(artifact, interfaceFile);
 				initialInterfaceArtifact = (InterfaceArtifact) artifact
 						.copy(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
 				getMask().getSelection().resetOriginalDocumentations();
@@ -177,23 +178,23 @@ public class DocumentationEditor
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
-		List<Addressee> addressees = PersistenceService
-				.loadConfiguredAddressees();
-		List<ThematicRole> thematicRoles = PersistenceService
-				.loadThematicRoles();
-
 		setSite(site);
 		setInput(input);
 
-		EditArtifactDocumentationCompositeSelection selection = new EditArtifactDocumentationCompositeSelection();
-		selection
-				.setSelectedSignatureElement(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
-		selection
-				.setInterfaceArtifact(InterfaceArtifact.NOT_SUPPORTED_ARTIFACT);
-		selection.setAddresseeList(addressees);
-		selection.setThematicRoleList(thematicRoles);
-
 		if (IDocItActivator.isInitializedAtStartup()) {
+			List<Addressee> addressees = ServiceManager.getInstance()
+					.getPersistenceService().loadConfiguredAddressees();
+			List<ThematicRole> thematicRoles = ServiceManager.getInstance()
+					.getPersistenceService().loadThematicRoles();
+
+			EditArtifactDocumentationCompositeSelection selection = new EditArtifactDocumentationCompositeSelection();
+			selection
+					.setSelectedSignatureElement(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+			selection
+					.setInterfaceArtifact(InterfaceArtifact.NOT_SUPPORTED_ARTIFACT);
+			selection.setAddresseeList(addressees);
+			selection.setThematicRoleList(thematicRoles);
+
 			if (input instanceof FileEditorInput) {
 				// Get the interface as file ...
 				IFile interfaceIFile = ((FileEditorInput) input).getFile();
@@ -205,7 +206,8 @@ public class DocumentationEditor
 					// ... and load it.
 					try {
 						logger.log(Level.INFO, "Start parsing");
-						InterfaceArtifact interfaceArtifact = PersistenceService
+						InterfaceArtifact interfaceArtifact = ServiceManager
+								.getInstance().getPersistenceService()
 								.loadInterface(interfaceIFile);
 						selection.setInterfaceArtifact(interfaceArtifact);
 						selection.setArtifactFile(interfaceIFile);
@@ -242,10 +244,11 @@ public class DocumentationEditor
 			} else {
 				logger.log(Level.SEVERE, "Not an instance of FileEditorInput.");
 			}
+
+			logger.log(Level.INFO, "Start setSelection");
+			setSelection(selection);
+			logger.log(Level.INFO, "End setSelection");
 		}
-		logger.log(Level.INFO, "Start setSelection");
-		setSelection(selection);
-		logger.log(Level.INFO, "End setSelection");
 	}
 
 	/**
@@ -254,7 +257,8 @@ public class DocumentationEditor
 	@Override
 	public boolean isDirty() {
 		return (initialInterfaceArtifact != null)
-				&& (getSelection() != null) && !initialInterfaceArtifact.equals(getSelection()
+				&& (getSelection() != null)
+				&& !initialInterfaceArtifact.equals(getSelection()
 						.getInterfaceArtifact());
 	}
 
@@ -376,7 +380,10 @@ public class DocumentationEditor
 	@Override
 	public void dispose() {
 		super.dispose();
-		initializationFont.dispose();
+
+		if (initializationFont != null) {
+			initializationFont.dispose();
+		}
 
 		IDocItActivator.removeConfigurationListener(listener);
 	}

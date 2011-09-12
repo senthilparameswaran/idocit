@@ -61,6 +61,8 @@ public class EditThematicGridCompositeFactory
 		verbs.add("get");
 		verbs.add("write");
 		grid.setVerbs(verbs);
+		
+		grid.setRefernceVerb("write");
 
 		List<ThematicRole> roles = new ArrayList<ThematicRole>();
 		ThematicRole roleAgent = new ThematicRole("AGENT");

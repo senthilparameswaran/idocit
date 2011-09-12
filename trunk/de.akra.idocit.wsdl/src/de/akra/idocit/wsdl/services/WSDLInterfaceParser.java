@@ -41,6 +41,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ParameterPathElement;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
@@ -58,8 +59,7 @@ import de.akra.idocit.wsdl.structure.WSDLParameter;
  * @version 0.0.1
  * 
  */
-public class WSDLInterfaceParser
-{
+public class WSDLInterfaceParser {
 	private static final String CATEGORY_PART = "Part";
 
 	private static final String CATEGORY_PORT_TYPE = "PortType";
@@ -73,16 +73,12 @@ public class WSDLInterfaceParser
 	private static final String CATEGORY_INPUT_MESSAGE = "InputMessage";
 
 	private static final String CATEGORY_FAULT_MESSAGE = "FaultMessage";
-	
-	/**
-	 * For debugging purpose.
-	 */
-	private static long timeCounter = 0;
 
 	/**
 	 * Logger.
 	 */
-	private static Logger logger = Logger.getLogger(WSDLInterfaceParser.class.getName());
+	private static Logger logger = Logger.getLogger(WSDLInterfaceParser.class
+			.getName());
 
 	/**
 	 * The WSDL structure.
@@ -110,8 +106,7 @@ public class WSDLInterfaceParser
 	 *            The delimiters to use.
 	 */
 	public WSDLInterfaceParser(Definition wsdlDefinition, String artifactName,
-			Delimiters delimiters)
-	{
+			Delimiters delimiters) {
 		this.wsdlDefinition = wsdlDefinition;
 		this.artifactName = artifactName;
 		this.delimiters = delimiters;
@@ -122,15 +117,12 @@ public class WSDLInterfaceParser
 	 * 
 	 * @return The WSDL file structure.
 	 */
-	public WSDLInterfaceArtifact parse()
-	{
+	public WSDLInterfaceArtifact parse() {
 		WSDLInterfaceArtifact ifaceArtifact = new WSDLInterfaceArtifact(
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, CATEGORY_ARTIFACT,
 				wsdlDefinition, artifactName);
 		ifaceArtifact.setInterfaces(readPortTypes(ifaceArtifact));
 
-		logger.log(Level.INFO, "Time for WSDLParsingService.extractRoles = " + timeCounter + "ms");
-		
 		return ifaceArtifact;
 	}
 
@@ -141,11 +133,11 @@ public class WSDLInterfaceParser
 	 * @param parent
 	 *            The parent for the new {@link Interface}s.
 	 * 
-	 * @return The {@link List} of {@link Interface}s with the parsed {@link PortType}s.
+	 * @return The {@link List} of {@link Interface}s with the parsed
+	 *         {@link PortType}s.
 	 */
 	@SuppressWarnings("unchecked")
-	private List<Interface> readPortTypes(SignatureElement parent)
-	{
+	private List<Interface> readPortTypes(SignatureElement parent) {
 
 		// Get only the PortTypes defined in this WSDL definition. With
 		// getAllPortTypes() we would get more PortTypes.
@@ -155,18 +147,19 @@ public class WSDLInterfaceParser
 
 		List<Interface> iList = new ArrayList<Interface>(portTypes.size());
 
-		while (i.hasNext())
-		{
+		while (i.hasNext()) {
 			PortType p = i.next();
 
-			WSDLInterface wsdlInterface = new WSDLInterface(parent, CATEGORY_PORT_TYPE);
+			WSDLInterface wsdlInterface = new WSDLInterface(parent,
+					CATEGORY_PORT_TYPE);
 			wsdlInterface.setIdentifier(p.getQName() != null ? p.getQName()
 					.getLocalPart() : SignatureElement.ANONYMOUS_IDENTIFIER);
 			wsdlInterface.setPortType(p);
-			wsdlInterface.setDocumentations(DocumentationParser.parseDocElements(p
-					.getDocumentationElements()));
-			
-			wsdlInterface.setOperations(readOperations(wsdlInterface, p.getOperations()));
+			wsdlInterface.setDocumentations(DocumentationParser
+					.parseDocElements(p.getDocumentationElements()));
+
+			wsdlInterface.setOperations(readOperations(wsdlInterface,
+					p.getOperations()));
 
 			iList.add(wsdlInterface);
 		}
@@ -185,13 +178,21 @@ public class WSDLInterfaceParser
 	 */
 	@SuppressWarnings("unchecked")
 	private List<WSDLOperation> readOperations(SignatureElement parent,
-			List<javax.wsdl.Operation> operations)
-	{
-		List<WSDLOperation> opList = new ArrayList<WSDLOperation>(operations.size());
+			List<javax.wsdl.Operation> operations) {
+		List<WSDLOperation> opList = new ArrayList<WSDLOperation>(
+				operations.size());
 
-		for (javax.wsdl.Operation o : operations)
-		{
-			WSDLOperation newOp = new WSDLOperation(parent, CATEGORY_OPERATION);
+		for (javax.wsdl.Operation o : operations) {
+			Element thematicGridElement = DocumentationParser
+					.findDocElemWithThematicGrid(o.getDocumentationElements());
+			String thematicGridName = null;
+
+			if (thematicGridElement != null) {
+				thematicGridName = DocumentationParser
+						.readThematicGridName(thematicGridElement);
+			}
+
+			WSDLOperation newOp = createWsdlOperation(parent, thematicGridName);
 			newOp.setIdentifier(o.getName());
 			newOp.setOperation(o);
 			newOp.setDocumentations(DocumentationParser.parseDocElements(o
@@ -200,47 +201,38 @@ public class WSDLInterfaceParser
 			WSDLMessage wsdlMessage;
 
 			// create object structure for the input message
-			wsdlMessage = buildWSDLMessageStructure(newOp, o.getInput().getMessage(),
-					CATEGORY_INPUT_MESSAGE);
-			if (wsdlMessage != null)
-			{
+			wsdlMessage = buildWSDLMessageStructure(newOp, o.getInput()
+					.getMessage(), CATEGORY_INPUT_MESSAGE);
+			if (wsdlMessage != null) {
 				wsdlMessage.setMessageRef(o.getInput());
 				newOp.setInputParameters(wsdlMessage);
-			}
-			else
-			{
+			} else {
 				logger.log(Level.SEVERE, "Input message could not be built.");
 			}
 
 			// create object structure for the output message
-			wsdlMessage = buildWSDLMessageStructure(newOp, o.getOutput().getMessage(),
-					CATEGORY_OUTPUT_MESSAGE);
-			if (wsdlMessage != null)
-			{
+			wsdlMessage = buildWSDLMessageStructure(newOp, o.getOutput()
+					.getMessage(), CATEGORY_OUTPUT_MESSAGE);
+			if (wsdlMessage != null) {
 				wsdlMessage.setMessageRef(o.getOutput());
 				newOp.setOutputParameters(wsdlMessage);
-			}
-			else
-			{
+			} else {
 				logger.log(Level.SEVERE, "Output message could not be built.");
 			}
 
 			// create object structure for the fault messages
-			List<Parameters> faultMessages = new ArrayList<Parameters>(o.getFaults()
-					.size());
-			for (Fault fault : ((Map<String, Fault>) o.getFaults()).values())
-			{
-				wsdlMessage = buildWSDLMessageStructure(newOp, fault.getMessage(),
-						CATEGORY_FAULT_MESSAGE);
+			List<Parameters> faultMessages = new ArrayList<Parameters>(o
+					.getFaults().size());
+			for (Fault fault : ((Map<String, Fault>) o.getFaults()).values()) {
+				wsdlMessage = buildWSDLMessageStructure(newOp,
+						fault.getMessage(), CATEGORY_FAULT_MESSAGE);
 
-				if (wsdlMessage != null)
-				{
+				if (wsdlMessage != null) {
 					wsdlMessage.setMessageRef(fault);
 					faultMessages.add(wsdlMessage);
-				}
-				else
-				{
-					logger.log(Level.SEVERE, "Fault message could not be built.");
+				} else {
+					logger.log(Level.SEVERE,
+							"Fault message could not be built.");
 				}
 			}
 			newOp.setExceptions(faultMessages);
@@ -256,56 +248,79 @@ public class WSDLInterfaceParser
 	}
 
 	/**
-	 * Build the object structure for a WSDL message element with all referenced type
-	 * structures. It builds the structure for all part elements in the message down to
-	 * the last simple type or to the last accessible information. Complex types are
-	 * divided again into several {@link Parameter}s.
+	 * Instanciates and returns a {@link WSDLOperation}. The given
+	 * thematicGridName will be the thematic grid name of the returned
+	 * operation. If this name is <code>null</code>, the empty string is used as
+	 * thematic grid name.
+	 * 
+	 * @param parent
+	 *            The parent-{@link SignatureElement} of the new Operation
+	 * @param thematicGridElement
+	 *            The XML-Element containing the thematic grid-data
+	 * @return See above
+	 */
+	private WSDLOperation createWsdlOperation(SignatureElement parent,
+			String thematicGridName) {
+		WSDLOperation newOp = null;
+
+		if (thematicGridName != null) {
+			newOp = new WSDLOperation(parent, CATEGORY_OPERATION,
+					thematicGridName);
+		} else {
+			newOp = new WSDLOperation(parent, CATEGORY_OPERATION,
+					ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME);
+		}
+
+		return newOp;
+	}
+
+	/**
+	 * Build the object structure for a WSDL message element with all referenced
+	 * type structures. It builds the structure for all part elements in the
+	 * message down to the last simple type or to the last accessible
+	 * information. Complex types are divided again into several
+	 * {@link Parameter}s.
 	 * 
 	 * @param parent
 	 *            The parent for the new {@link WSDLMessage}.
 	 * @param message
-	 *            The {@link Message} of an {@link javax.wsdl.Operation} which should be
-	 *            divided into its {@link Parameter}.
+	 *            The {@link Message} of an {@link javax.wsdl.Operation} which
+	 *            should be divided into its {@link Parameter}.
 	 * @param category
 	 *            The category for the new {@link WSDLMessage}.
-	 * @return The {@link WSDLMessage} that represents the whole structure of an WSDL
-	 *         message element. <code>null</code> if there exists no {@link Message}.
+	 * @return The {@link WSDLMessage} that represents the whole structure of an
+	 *         WSDL message element. <code>null</code> if there exists no
+	 *         {@link Message}.
 	 * @see WSDLParsingService#extractRoles(Message, javax.wsdl.Types)
 	 */
 	private WSDLMessage buildWSDLMessageStructure(SignatureElement parent,
-			Message message, String category)
-	{
+			Message message, String category) {
 		// path =
 		// <MESSAGE_NAME>"."<PART_NAME>"("<ELEMENT_TYPE>")"["."<ELEMENT_NAME>"("<ELEMENT_TYPE>")"]*
 
 		WSDLMessage wsdlMessage = null;
-		
-		//TODO remove time counter
-		long start = System.currentTimeMillis();
+
 		List<String> rolePaths = WSDLParsingService.extractRoles(message,
 				wsdlDefinition.getTypes(), delimiters);
-		long end = System.currentTimeMillis();
-		timeCounter += end-start;
 
-		if (!rolePaths.isEmpty())
-		{
+		if (!rolePaths.isEmpty()) {
 			// the WSDLMessage represents an embedded message of an Operation
 			wsdlMessage = new WSDLMessage(parent, category);
-			
+
 			String firstPath = rolePaths.get(0);
 			ParameterPathElement msgPathElem = ObjectStructureUtils
-			.parsePathElement(delimiters, extractMessageName(firstPath));
-			
+					.parsePathElement(delimiters, extractMessageName(firstPath));
+
 			wsdlMessage.setIdentifier(msgPathElem.getIdentifier());
-			wsdlMessage.setQualifiedIdentifier(msgPathElem.getQualifiedIdentifier());
+			wsdlMessage.setQualifiedIdentifier(msgPathElem
+					.getQualifiedIdentifier());
 
-			for (String path : rolePaths)
-			{
+			for (String path : rolePaths) {
 				// split path into elements
-				String[] pathArray = path.split(delimiters.getQuotedPathDelimiter());
+				String[] pathArray = path.split(delimiters
+						.getQuotedPathDelimiter());
 
-				if (pathArray.length > 1)
-				{
+				if (pathArray.length > 1) {
 					// search for existing Parameter
 					// TODO test qualified name things
 					ParameterPathElement paramPathElem = ObjectStructureUtils
@@ -315,8 +330,7 @@ public class WSDLInterfaceParser
 							paramPathElem.getQualifiedIdentifier(),
 							paramPathElem.getQualifiedTypeName());
 
-					if (partElem == null)
-					{
+					if (partElem == null) {
 						// if not found, create new Input ...
 						partElem = new WSDLParameter(parent, CATEGORY_PART);
 						partElem.setIdentifier(paramPathElem.getIdentifier());
@@ -342,41 +356,42 @@ public class WSDLInterfaceParser
 	}
 
 	/**
-	 * A recursive method that builds the hierarchy of {@link Parameter}s out of the array
-	 * <code>elemPath</code> containing the path of one parameter/argument of a WSDL
-	 * message.
+	 * A recursive method that builds the hierarchy of {@link Parameter}s out of
+	 * the array <code>elemPath</code> containing the path of one
+	 * parameter/argument of a WSDL message.
 	 * 
 	 * @param elemPath
-	 *            array containing the path of one parameter/argument of a WSDL message.
+	 *            array containing the path of one parameter/argument of a WSDL
+	 *            message.
 	 * @param offset
 	 *            The current position for the array index.
 	 * @param parent
-	 *            The parent {@link Parameter} to which new sub elements are added.
+	 *            The parent {@link Parameter} to which new sub elements are
+	 *            added.
 	 * @throws IllegalArgumentException
 	 */
-	private void buildParameterHierarchy(String[] elemPath, int offset, Parameter parent)
-			throws IllegalArgumentException
-	{
+	private void buildParameterHierarchy(String[] elemPath, int offset,
+			Parameter parent) throws IllegalArgumentException {
 		// exit condition for recursion
-		if (offset != elemPath.length)
-		{
+		if (offset != elemPath.length) {
 			// search for existing Parameter
 			// TODO test qualified things
-			ParameterPathElement paramPathElem = ObjectStructureUtils.parsePathElement(
-					delimiters, elemPath[offset]);
+			ParameterPathElement paramPathElem = ObjectStructureUtils
+					.parsePathElement(delimiters, elemPath[offset]);
 			Parameter param = findExistingParameter(parent.getComplexType(),
 					paramPathElem.getQualifiedIdentifier(),
 					paramPathElem.getQualifiedTypeName());
 
 			// if not found, ...
-			if (param == null)
-			{
+			if (param == null) {
 				// ... create new Parameter
 				param = new WSDLParameter(parent, "");
 				param.setIdentifier(paramPathElem.getIdentifier());
-				param.setQualifiedIdentifier(paramPathElem.getQualifiedIdentifier());
+				param.setQualifiedIdentifier(paramPathElem
+						.getQualifiedIdentifier());
 				param.setDataTypeName(paramPathElem.getTypeName());
-				param.setQualifiedDataTypeName(paramPathElem.getQualifiedTypeName());
+				param.setQualifiedDataTypeName(paramPathElem
+						.getQualifiedTypeName());
 
 				// add new Parameter
 				parent.addParameter(param);
@@ -388,15 +403,15 @@ public class WSDLInterfaceParser
 	}
 
 	/**
-	 * Finds in the {@link List} of {@link Parameter} an existing {@link Parameter} with
-	 * the same name <code>qualifiedElemName</code> and type
-	 * <code>qualifiedElemType</code>. If no {@link Parameter} matches the
-	 * <code>qualifiedElemName</code> and <code>qualifiedElemType</code> <code>null</code>
-	 * is returned.
+	 * Finds in the {@link List} of {@link Parameter} an existing
+	 * {@link Parameter} with the same name <code>qualifiedElemName</code> and
+	 * type <code>qualifiedElemType</code>. If no {@link Parameter} matches the
+	 * <code>qualifiedElemName</code> and <code>qualifiedElemType</code>
+	 * <code>null</code> is returned.
 	 * 
 	 * @param paramList
-	 *            The {@link List} of {@link Parameter} which should be the source for the
-	 *            searching.
+	 *            The {@link List} of {@link Parameter} which should be the
+	 *            source for the searching.
 	 * @param qualifiedElemName
 	 *            The qualified searched element name.
 	 * @param qualifiedElemType
@@ -405,16 +420,15 @@ public class WSDLInterfaceParser
 	 * @return The found {@link Parameter}, otherwise <code>null</code>.
 	 */
 	private Parameter findExistingParameter(List<Parameter> paramList,
-			String qualifiedElemName, String qualifiedElemType)
-	{
+			String qualifiedElemName, String qualifiedElemType) {
 		Parameter result = null;
 		Iterator<Parameter> i = paramList.iterator();
-		while (i.hasNext() && result == null)
-		{
+		while (i.hasNext() && result == null) {
 			Parameter p = i.next();
-			if ((p.getQualifiedIdentifier() != null) && p.getQualifiedIdentifier().equals(qualifiedElemName)
-					&& (p.getQualifiedDataTypeName() != null) && p.getQualifiedDataTypeName().equals(qualifiedElemType))
-			{
+			if ((p.getQualifiedIdentifier() != null)
+					&& p.getQualifiedIdentifier().equals(qualifiedElemName)
+					&& (p.getQualifiedDataTypeName() != null)
+					&& p.getQualifiedDataTypeName().equals(qualifiedElemType)) {
 				result = p;
 			}
 		}
@@ -422,41 +436,41 @@ public class WSDLInterfaceParser
 	}
 
 	/**
-	 * Attaches the {@link Documentation}s of the {@link Input}, {@link Output} and
-	 * {@link Fault} of a {@link javax.wsdl.Operation} hold in <code>wsdlOperation</code>
-	 * to the {@link WSDLOperation#getInputParameters()},
+	 * Attaches the {@link Documentation}s of the {@link Input}, {@link Output}
+	 * and {@link Fault} of a {@link javax.wsdl.Operation} hold in
+	 * <code>wsdlOperation</code> to the
+	 * {@link WSDLOperation#getInputParameters()},
 	 * {@link WSDLOperation#getOutputParameters()} and
 	 * {@link WSDLOperation#getExceptions()}.
 	 * 
 	 * @param wsdlOperation
-	 *            The {@link WSDLOperation} to which the {@link Documentation}s should be
-	 *            added.
+	 *            The {@link WSDLOperation} to which the {@link Documentation}s
+	 *            should be added.
 	 */
 	@SuppressWarnings("unchecked")
-	private void attachDocumentation(WSDLOperation wsdlOperation)
-	{
-		// match documentations out of wsdlDocElems (docpart elements) to the Parameters
+	private void attachDocumentation(WSDLOperation wsdlOperation) {
+		// match documentations out of wsdlDocElems (docpart elements) to the
+		// Parameters
 		// in WSDLMessage
 		attachDocumentation((WSDLMessage) wsdlOperation.getInputParameters());
 		attachDocumentation((WSDLMessage) wsdlOperation.getOutputParameters());
 
-		for (WSDLMessage msg : (List<WSDLMessage>) wsdlOperation.getExceptions())
-		{
+		for (WSDLMessage msg : (List<WSDLMessage>) wsdlOperation
+				.getExceptions()) {
 			attachDocumentation(msg);
 		}
 	}
 
 	/**
-	 * Converts the documentation {@link Element} of the {@link WSDLElement} hold in
-	 * {@link WSDLMessage} to {@link Documentation}s and attaches them to the
-	 * {@link Parameter}s in <code>wsdlMessage</code>.
+	 * Converts the documentation {@link Element} of the {@link WSDLElement}
+	 * hold in {@link WSDLMessage} to {@link Documentation}s and attaches them
+	 * to the {@link Parameter}s in <code>wsdlMessage</code>.
 	 * 
 	 * @param wsdlMessage
-	 *            The {@link WSDLMessage} to which the {@link Documentation}s should be
-	 *            added.
+	 *            The {@link WSDLMessage} to which the {@link Documentation}s
+	 *            should be added.
 	 */
-	private void attachDocumentation(WSDLMessage wsdlMessage)
-	{
+	private void attachDocumentation(WSDLMessage wsdlMessage) {
 		List<Element> wsdlDocElems = wsdlMessage.getMessageRef()
 				.getDocumentationElements();
 
@@ -467,32 +481,28 @@ public class WSDLInterfaceParser
 	}
 
 	/**
-	 * It searches for all {@link Documentation}s in <code>msgPartDocumentation</code> a
-	 * corresponding {@link Parameter} in the structure of <code>paramList</code> or the
-	 * {@link Parameters} itself. If a {@link Documentation} is found for a
-	 * {@link Parameter} or the {@link Parameters} it is attached to it.
+	 * It searches for all {@link Documentation}s in
+	 * <code>msgPartDocumentation</code> a corresponding {@link Parameter} in
+	 * the structure of <code>paramList</code> or the {@link Parameters} itself.
+	 * If a {@link Documentation} is found for a {@link Parameter} or the
+	 * {@link Parameters} it is attached to it.
 	 * 
 	 * @param paramList
-	 *            The message element as {@link Parameters} with its underlying structure
-	 *            of {@link Parameter}s.
+	 *            The message element as {@link Parameters} with its underlying
+	 *            structure of {@link Parameter}s.
 	 * @param msgPartDocumentations
-	 *            {@link List} of {@link Documentation}s which should be assigned to the
-	 *            {@link Parameter}s in <code>paramList</code>.
+	 *            {@link List} of {@link Documentation}s which should be
+	 *            assigned to the {@link Parameter}s in <code>paramList</code>.
 	 */
-	private void attachDocpartsToParameters(List<Documentation> msgPartDocumentations,
-			Parameters paramList)
-	{
+	private void attachDocpartsToParameters(
+			List<Documentation> msgPartDocumentations, Parameters paramList) {
 		// iterate over all items in msgPartDocumentations
-		for (Documentation doc : msgPartDocumentations)
-		{
+		for (Documentation doc : msgPartDocumentations) {
 			// find right Parameter and add documentation
-			if (!paramList.addMatchingDocumentation(delimiters, doc))
-			{
+			if (!paramList.addMatchingDocumentation(delimiters, doc)) {
 				// if not found, log it
-				logger.log(
-						Level.INFO,
-						"Found docpart is not assignable: "
-								+ doc.getSignatureElementIdentifier());
+				logger.log(Level.INFO, "Found docpart is not assignable: "
+						+ doc.getSignatureElementIdentifier());
 			}
 		}
 	}
@@ -506,11 +516,9 @@ public class WSDLInterfaceParser
 	 * @return The &lt;MESSAGE_NAME&gt;.
 	 * @see WSDLParsingService#extractRoles(Message, javax.wsdl.Types)
 	 */
-	private String extractMessageName(String path)
-	{
+	private String extractMessageName(String path) {
 		int endPosOfName = path.indexOf(delimiters.pathDelimiter);
-		if (endPosOfName == -1)
-		{
+		if (endPosOfName == -1) {
 			endPosOfName = path.length();
 		}
 		return path.substring(0, endPosOfName);
