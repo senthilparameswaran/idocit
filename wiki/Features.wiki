@@ -7,7 +7,7 @@
  * Extended support by documenting source code with the new approach of thematic grids and thematic roles (read more in "Hands on tutorial")
  * Graphical user interface to insert documentations
  * Seamless integration into Eclipse as plugins
- * Supports Eclipse 3.6 (and other versions??)
+ * Supports Eclipse 3.6
  * Installation via the Eclipse update site http://idocit.googlecode.com/svn/updatesite/
  * HTML export of the documentations in a simple format
 
