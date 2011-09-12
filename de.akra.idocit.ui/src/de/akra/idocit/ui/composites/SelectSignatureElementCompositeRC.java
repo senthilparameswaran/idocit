@@ -45,7 +45,7 @@ import de.akra.idocit.ui.Activator;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 {
@@ -69,7 +69,10 @@ public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 	}
 
 	/**
-	 * Get the icon for the <code>sigElemenent</code>
+	 * Get the icon for the <code>sigElemenent</code>. If the element is
+	 * {@link InterfaceArtifact#NOT_SUPPORTED_ARTIFACT} or has
+	 * {@link InterfaceArtifact#NOT_SUPPORTED_ARTIFACT} as parent the icon with a red
+	 * cross (rem_co.gif) is returned.
 	 * 
 	 * @param sigElement
 	 *            The {@link SignatureElement} for which the icon should be get.
@@ -79,6 +82,12 @@ public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 	{
 		if (sigElement instanceof Interface)
 		{
+			// Changes due to Issue #59
+			if (sigElement.getParent() == InterfaceArtifact.NOT_SUPPORTED_ARTIFACT)
+			{
+				return getImageFromCache(IMAGE_PATH + "rem_co.gif");
+			}
+			// End changes due to Issue #59
 			return getImageFromCache(IMAGE_PATH + "int_obj.gif");
 		}
 		else if (sigElement instanceof InterfaceArtifact)
@@ -133,15 +142,16 @@ public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 	 */
 	private Image getImageFromCache(String path)
 	{
-		if (Activator.getDefault() != null){
+		if (Activator.getDefault() != null)
+		{
 			Image image = imageCache.get(path);
 			if (image == null)
 			{
 				try
 				{
-					InputStream imageStream = FileLocator.openStream(Activator.getDefault()
-							.getBundle(), new Path(path), false);
-	
+					InputStream imageStream = FileLocator.openStream(Activator
+							.getDefault().getBundle(), new Path(path), false);
+
 					ImageDescriptor.createFromImage(new Image(PlatformUI.getWorkbench()
 							.getDisplay(), imageStream));
 					image = Activator.getImageDescriptor(path).createImage();
@@ -151,7 +161,8 @@ public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 					}
 					else
 					{
-						logger.log(Level.SEVERE, "The image could not be created: " + path);
+						logger.log(Level.SEVERE, "The image could not be created: "
+								+ path);
 					}
 				}
 				catch (IOException ioEx)
@@ -161,7 +172,9 @@ public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 				}
 			}
 			return image;
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}

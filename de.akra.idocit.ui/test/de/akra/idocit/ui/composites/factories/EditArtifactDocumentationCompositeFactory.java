@@ -115,8 +115,7 @@ public class EditArtifactDocumentationCompositeFactory
 		artifact.setIdentifier("test.wsdl");
 
 		List<Interface> interfaceList = new Vector<Interface>();
-		Interface interf = new TestInterface(artifact, "PortType") {
-		};
+		Interface interf = new TestInterface(artifact, "PortType");
 		interf.setIdentifier("CustomerService");
 		interfaceList.add(interf);
 
