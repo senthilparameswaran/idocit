@@ -16,6 +16,7 @@
 package source;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -66,6 +67,8 @@ public class JavaInterfaceParser
 	 *            This is only any number.
 	 * @param anyString
 	 *            This is only any simple String. {@literal This Is A Literal}.
+	 * @param names
+	 *            The list of names
 	 * @return a new {@link JavaInterfaceArtifact}.
 	 * @throws JavaModelException
 	 *             if an error occurs by getting the source code from ICompilationUnit.
@@ -78,7 +81,7 @@ public class JavaInterfaceParser
 	 * @since 0.0.1
 	 * @version 0.0.4
 	 */
-	public InterfaceArtifact parse(int anyNumber, String anyString)
+	public InterfaceArtifact parse(int anyNumber, String anyString, List<String> names)
 			throws JavaModelException, SAXException, IOException,
 			ParserConfigurationException
 	{
