@@ -46,6 +46,20 @@ public class JavadocGenerator
 	 */
 	public static final String IDOCIT_HTML_TABLE_NAME = "idocit";
 
+/**
+	 * HTML Quote for "<"
+	 * 
+	 * @since 0.0.2
+	 */
+	public static final String LESS_THAN_CODE = "&lt;";
+
+	/**
+	 * HTML Quote for ">"
+	 * 
+	 * @since 0.0.2
+	 */
+	public static final String GREATER_THAN_CODE = "&gt;";
+
 	/**
 	 * Generates from the {@link JavadocTagElement}s one {@link Javadoc} comment.
 	 * 
@@ -72,6 +86,23 @@ public class JavadocGenerator
 							javadoc);
 				}
 			}
+		}
+	}
+
+	public static String quoteGenericsInIdentifier(String identifier)
+	{
+		int startIndex = identifier.indexOf('<');
+
+		// return identifier.replaceAll("<", LESS_THAN_CODE).replaceAll(">",
+		// GREATER_THAN_CODE);
+
+		if (startIndex >= 0)
+		{
+			return identifier.substring(0, startIndex);
+		}
+		else
+		{
+			return identifier;
 		}
 	}
 
@@ -142,7 +173,8 @@ public class JavadocGenerator
 				if (doc.getSignatureElementIdentifier() != null)
 				{
 					textElem.append("<tr><td>Element:</td><td>");
-					textElem.append(doc.getSignatureElementIdentifier());
+					textElem.append(quoteGenericsInIdentifier(doc
+							.getSignatureElementIdentifier()));
 					textElem.append("</td></tr>\n");
 				}
 

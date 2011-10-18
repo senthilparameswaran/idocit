@@ -106,11 +106,11 @@ public class ReflectionHelper
 		JavaParameter returnParameter = new JavaParameter(parent);
 		returnParameter.setIdentifier(identifier);
 		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
-		returnParameter.setDataTypeName(typeBinding.getName());
+		returnParameter.setDataTypeName(JavadocGenerator.quoteGenericsInIdentifier(typeBinding.getName()));
 
 		String qTypeName = typeBinding.getQualifiedName();
 		qTypeName = qTypeName != null ? qTypeName : typeBinding.getName();
-		returnParameter.setQualifiedDataTypeName(qTypeName);
+		returnParameter.setQualifiedDataTypeName(JavadocGenerator.quoteGenericsInIdentifier(qTypeName));
 
 		if (!reflectedTypes.contains(qTypeName))
 		{

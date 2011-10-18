@@ -476,6 +476,18 @@ public class JavaInterfaceParserTest {
 				"This is only any simple String. {@literal  This Is A Literal}."));
 		inputParams.addParameter(param);
 
+		param = new JavaParameter(inputParams);
+		param.setIdentifier("names");
+		param.setQualifiedIdentifier("names");
+		param.setDataTypeName("List<String>");
+		param.setQualifiedDataTypeName("List<String>");
+		param.setSignatureElementPath("names:List<String>");
+		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+				"names:List<String>",
+				"The list of names"));
+		inputParams.addParameter(param);
+
+		
 		/*
 		 * Method -> output param
 		 */
