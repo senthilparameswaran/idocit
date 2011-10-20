@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -178,7 +179,7 @@ public class CompositeTestPersistenceService implements PersistenceService {
 
 	@Override
 	public long getLastSaveTimeOfThematicRoles() {
-		throw new RuntimeException("Not implemented!");
+		return new Date().getTime();
 	}
 
 	@Override

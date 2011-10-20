@@ -88,7 +88,7 @@ public class EditThematicRoleComposite
 
 		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(300, 600).grab(true, true)
+		GridDataFactory.fillDefaults().hint(300, 100).grab(true, true)
 				.applyTo(txtDescription);
 	}
 

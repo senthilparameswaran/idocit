@@ -28,9 +28,11 @@ import org.pocui.swt.composites.ICompositeFactory;
 
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageThematicGridsComposite;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeAC;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;
+import de.akra.idocit.ui.services.CompositeTestPersistenceService;
 
 /**
  * @author Dirk Meier-Eickhoff
@@ -45,6 +47,9 @@ public class ManageThematicGridsCompositeFactory
 	@Override
 	public ManageThematicGridsComposite createComposite(Composite arg0)
 	{
+		ServiceManager.getInstance().setPersistenceService(
+				new CompositeTestPersistenceService());
+
 		ManageThematicGridsComposite composite = new ManageThematicGridsComposite(arg0,
 				new ManageThematicGridsCompositeAC());
 

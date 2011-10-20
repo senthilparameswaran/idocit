@@ -140,7 +140,7 @@ public class EditThematicGridComposite
 
 		txtVerbs = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(500, 120).grab(true, true).applyTo(txtVerbs);
+		GridDataFactory.fillDefaults().hint(100, 120).grab(true, true).applyTo(txtVerbs);
 
 		Label lblRoles = new Label(this, SWT.NONE);
 		lblRoles.setText("Associated Thematic Roles:");
@@ -150,14 +150,14 @@ public class EditThematicGridComposite
 		GridDataFactory.fillDefaults().hint(500, 200).grab(true, true).applyTo(tabRoles);
 		tabRoles.setHeaderVisible(true);
 		tabRoles.setToolTipText("Use the context menu to change the status.");
-
-		TableColumn colRoles = new TableColumn(tabRoles, SWT.NONE);
+		
+		TableColumn colRoles = new TableColumn(tabRoles, SWT.LEFT);
 		colRoles.setText(TABLE_HEADER_THEMATIC_ROLE);
 
-		TableColumn colMandatory = new TableColumn(tabRoles, SWT.NONE);
+		TableColumn colMandatory = new TableColumn(tabRoles, SWT.CENTER);
 		colMandatory.setText(TABLE_HEADER_STATUS);
-		colMandatory.setAlignment(SWT.CENTER);
-
+		colMandatory.setWidth(80);
+		
 		tablePopUpMenu = new Menu(this.getShell(), SWT.POP_UP);
 		// tabRoles.setMenu(tablePopUpMenu);
 
@@ -260,11 +260,7 @@ public class EditThematicGridComposite
 					items[i].setData(role);
 				}
 
-				TableColumn[] tabCols = tabRoles.getColumns();
-				for (int i = 0; i < tabCols.length; i++)
-				{
-					tabCols[i].pack();
-				}
+				tabRoles.getColumns()[0].pack(); // Column "Thematic Role"
 			}
 			// Changes due to Issue #27
 			else
