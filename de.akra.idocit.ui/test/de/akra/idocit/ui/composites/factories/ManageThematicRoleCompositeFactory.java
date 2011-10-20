@@ -25,8 +25,10 @@ import org.pocui.swt.composites.ICompositeFactory;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageThematicRoleComposite;
 import de.akra.idocit.ui.composites.ManageThematicRoleCompositeSelection;
+import de.akra.idocit.ui.services.CompositeTestPersistenceService;
 
 /**
  * Factory for {@link ManageThematicRoleComposite} for managing {@link Addressee}s.
@@ -43,6 +45,9 @@ public class ManageThematicRoleCompositeFactory
 	@Override
 	public ManageThematicRoleComposite createComposite(Composite parent)
 	{
+		ServiceManager.getInstance().setPersistenceService(
+				new CompositeTestPersistenceService());
+
 		ManageThematicRoleComposite composite = new ManageThematicRoleComposite(parent);
 
 		ManageThematicRoleCompositeSelection selection = new ManageThematicRoleCompositeSelection();

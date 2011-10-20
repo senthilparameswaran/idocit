@@ -87,7 +87,7 @@ public class EditAddresseeListComposite
 		lblEmpty.setText("");
 
 		itemList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(300, 600).grab(true, true).span(2, 1).applyTo(itemList);
+		GridDataFactory.fillDefaults().hint(100, 100).grab(true, true).span(2, 1).applyTo(itemList);
 
 		btnAdd = new Button(this, SWT.PUSH);
 		btnAdd.setText("Add Item");
@@ -266,8 +266,9 @@ public class EditAddresseeListComposite
 				int index = newInSelection.getAddressees().indexOf(item);
 				selectedItemIndices[i] = index;
 			}
-
+			
 			itemList.select(selectedItemIndices);
+			itemList.showSelection();
 		}
 
 		btnRemove.setEnabled((newInSelection.getActiveAddressees() != null)

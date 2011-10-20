@@ -144,7 +144,7 @@ public class ManageAddresseeComposite
 	@Override
 	protected void initGUI(Composite parent) throws CompositeInitializationException
 	{
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(this);
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 5).applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
 		RED = this.getDisplay().getSystemColor(SWT.COLOR_RED);
