@@ -10,6 +10,7 @@
  * Supports Eclipse 3.6
  * Installation via the Eclipse update site http://idocit.googlecode.com/svn/updatesite/
  * HTML export of the documentations in a simple format
+ * Define Reference Grid for each operation (categorize your operations, e.g. "Searching Operation" or "Mathematical Operation")
 
 == Java support ==
  * iDocIt! documentations are written into Javadoc comments into the Java source file
