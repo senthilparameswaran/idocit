@@ -2,7 +2,7 @@
 <feature
       id="de.akra.idocit.core.feature"
       label="iDocIt! Core"
-      version="0.0.4"
+      version="0.0.5"
       provider-name="AKRA GmbH">
 
    <description url="http://code.google.com/p/idocit/">
@@ -242,7 +242,7 @@
    </requires>
 
    <plugin
-         id="de.akra.idocit.core"
+         id="de.akra.idocit"
          download-size="0"
          install-size="0"
          version="0.0.0"
