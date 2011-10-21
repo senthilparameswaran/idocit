@@ -80,8 +80,6 @@ public class JavadocGeneratorTest
 	 */
 	private static final String EXPECTED_JAVADOC = "/** "
 			+ lineSeparator
-			+ " * @thematicgrid Searching Operations"
-			+ lineSeparator
 			+ " * <table name=\"idocit\" border=\"1\" cellspacing=\"0\">"
 			+ lineSeparator
 			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
@@ -147,7 +145,9 @@ public class JavadocGeneratorTest
 			+ "<tr><td><b>Developer</b>:</td><td>Developer: Result as floating-point number.</td></tr>"
 			+ lineSeparator
 			+ "<tr><td><b>Manager</b>:</td><td>Manager: Result as floating-point number.</td></tr>"
-			+ lineSeparator + "</table>" + lineSeparator + " */" + lineSeparator;
+			+ lineSeparator + "</table>" + lineSeparator
+			+ " * @thematicgrid Searching Operations" + lineSeparator + " */"
+			+ lineSeparator;
 
 	/**
 	 * The delimiters for Java.
@@ -184,6 +184,13 @@ public class JavadocGeneratorTest
 		AST ast = absTypeDecl.getAST();
 		Javadoc javadoc = ast.newJavadoc();
 
+		List<Documentation> documentations = createParamDocumentations();
+		JavadocGenerator.appendDocsToJavadoc(documentations, null, null, javadoc);
+		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_PARAM,
+				"person", javadoc);
+		JavadocGenerator.appendDocsToJavadoc(createReturnDocumentations(),
+				TagElement.TAG_RETURN, null, javadoc);
+
 		TagElement tagElement = ast.newTagElement();
 		tagElement.setTagName(JavadocParser.JAVADOC_TAG_THEMATICGRID);
 
@@ -195,13 +202,6 @@ public class JavadocGeneratorTest
 		List<TagElement> tags = javadoc.tags();
 		tags.add(tagElement);
 		
-		List<Documentation> documentations = createParamDocumentations();
-		JavadocGenerator.appendDocsToJavadoc(documentations, null, null, javadoc);
-		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_PARAM,
-				"person", javadoc);
-		JavadocGenerator.appendDocsToJavadoc(createReturnDocumentations(),
-				TagElement.TAG_RETURN, null, javadoc);
-
 		// logger.info(javadoc.toString());
 
 		Assert.assertEquals(EXPECTED_JAVADOC, javadoc.toString());
