@@ -70,8 +70,6 @@ public class EclipsePersistenceService implements PersistenceService {
 	 */
 	private static final String XML_ALIAS_ADDRESSEE = "addressee";
 
-	private static final int MAX_CHARACTERS_PER_DESCRIPTION_LINE = 80;
-
 	private static long LAST_SAVE_TIME_OF_THEMATIC_GRIDS = -1;
 	private static long LAST_SAVE_TIME_OF_THEMATIC_ROLES = -1;
 	private static long LAST_SAVE_TIME_OF_ADDRESSEES = -1;
@@ -195,10 +193,6 @@ public class EclipsePersistenceService implements PersistenceService {
 		while (keys.hasMoreElements()) {
 			String role = keys.nextElement();
 			String description = resBundle.getString(role);
-			if (description != null) {
-				description = StringUtils.addLineBreaks(description,
-						MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' ');
-			}
 
 			roles.put(role, description);
 		}
@@ -325,14 +319,6 @@ public class EclipsePersistenceService implements PersistenceService {
 		if (!prefVal.isEmpty()) {
 			try {
 				addressees = (List<Addressee>) stream.fromXML(prefVal);
-
-				for (Addressee a : addressees) {
-					if (a.getDescription() != null) {
-						a.setDescription(StringUtils.addLineBreaks(
-								a.getDescription(),
-								MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' '));
-					}
-				}
 			} catch (XStreamException e) {
 				logger.log(Level.WARNING, "No addressees were loaded.", e);
 			}
@@ -359,14 +345,6 @@ public class EclipsePersistenceService implements PersistenceService {
 		if (!prefVal.isEmpty()) {
 			try {
 				roles = (List<ThematicRole>) stream.fromXML(prefVal);
-
-				for (ThematicRole role : roles) {
-					if (role.getDescription() != null) {
-						role.setDescription(StringUtils.addLineBreaks(
-								role.getDescription(),
-								MAX_CHARACTERS_PER_DESCRIPTION_LINE, ' '));
-					}
-				}
 			} catch (XStreamException e) {
 				logger.log(Level.WARNING, "No thematic role were loaded.", e);
 			}
