@@ -208,7 +208,7 @@ public class StringUtils
 	{
 		// Changes due to Issue #29
 		return text.replaceAll("[" + ASCII_CR + ASCII_LF + ASCII_TAB + "]+", " ")
-				.replaceAll("[ ]+", " ");
+				.replaceAll("[ ]+", " ").trim();
 		// End changes due to Issue #29
 	}
 
