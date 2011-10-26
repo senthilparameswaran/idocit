@@ -153,10 +153,10 @@ public class DocumentationParser {
 	 * Returns the name of the thematic grid in the given documentation-element.
 	 * 
 	 * Please note: This method returns the name of the first thematic grid
-	 * found in the list of documentation's children.</li>
+	 * found in the list of documentation's children.
 	 * 
 	 * @param docElemWithThematicGrid
-	 *            The <documentation>-element containing the thematic grid.
+	 *            The &lt;documentation&gt;-element containing the thematic grid.
 	 * 
 	 * @return The name of the first found thematic grid
 	 */
