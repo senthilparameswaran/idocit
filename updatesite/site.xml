@@ -3,7 +3,7 @@
    <description name="iDocIt! Update Site" url="http://idocit.googlecode.com/svn/updatesite/">
       iDocIt! is an Eclipse-based editor for API documentation. It analyses the identifiers of an interface and suggests aspects to document based on this analysis. By applying this approach it helps to write more complete high quality API-documentation. It currently supports WSDL- and Java-interfaces and could easily be extended with more languages.
    </description>
-   <feature url="features/de.akra.idocit.core.feature_0.0.6.jar" id="de.akra.idocit.core.feature" version="0.0.6">
+   <feature url="features/de.akra.idocit.core.feature_0.0.7.jar" id="de.akra.idocit.core.feature" version="0.0.7">
       <category name="de.akra.idocit"/>
    </feature>
    <feature url="features/de.akra.idocit.java.feature_0.0.3.jar" id="de.akra.idocit.java.feature" version="0.0.3">
