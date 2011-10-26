@@ -17,7 +17,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.akra.idocit</groupId>
 	<artifactId>de.akra.idocit.common</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1</version>
@@ -27,6 +26,7 @@
 		<version>0.0.1</version>
 		<groupId>de.akra.idocit</groupId>
 		<artifactId>parent</artifactId>
+		<relativePath>../parent-pom/pom.xml</relativePath>
 	</parent>
 	
 	<dependencies>
