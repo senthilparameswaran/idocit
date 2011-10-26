@@ -28,10 +28,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<platform-version-name>helios</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
+		<idocit-platform-version>0.0.7</idocit-platform-version>
 	</properties>
 
 	<modules>
-		<module>../de.akra.idocit</module>
+		<module>../de.akra.idocit.core</module>
 		<module>../de.akra.idocit.java</module>
 		<module>../de.akra.idocit.ui</module>
 		<module>../de.akra.idocit.wsdl</module>

@@ -22,14 +22,6 @@
 	<version>0.0.5</version>
 	<name>iDocIt! GUI</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>de.akra.idocit</groupId>
-			<artifactId>de.akra.idocit</artifactId>
-			<version>0.0.4</version>
-		</dependency>
-	</dependencies>
-
 	<parent>
 		<version>0.0.1</version>
 		<groupId>de.akra.idocit</groupId>
