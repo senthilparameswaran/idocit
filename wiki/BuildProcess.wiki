@@ -45,6 +45,8 @@ http://idocit.googlecode.com/svn/images/build_participants.png
 </settings>
 }}}
 
+ * Each generated JAR-file (plugins and features) has a unique build id (timestamp). This is achieved by adding the postfix ".qualifier" to each plugin / feature version. The PDE build replaces this string with a unique timestamp automatically. Visit [http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.pde.doc.user/tasks/pde_version_qualifiers.htm this page] for further information.
+
 = Further Issues =
 
 Add your content here.
