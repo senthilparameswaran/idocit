@@ -117,7 +117,6 @@
 			<id>nightly-build</id>
 			<properties>
 				<idocit-update-site-url>scpexe://idocit.akra.de/home/idocit/http/updatesite-nb</idocit-update-site-url>
-				<idocit-release-id>${timestamp}</idocit-release-id>
 			</properties>
 		</profile>
 
@@ -125,7 +124,6 @@
 			<id>release-build</id>
 			<properties>
 				<idocit-update-site-url>scpexe://idocit.akra.de/home/idocit/http/updatesite</idocit-update-site-url>
-				<idocit-release-id>final</idocit-release-id>
 			</properties>
 		</profile>
 	</profiles>
