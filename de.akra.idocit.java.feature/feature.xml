@@ -2,7 +2,7 @@
 <feature
       id="de.akra.idocit.java.feature"
       label="iDocIt! Java Support"
-      version="0.0.3"
+      version="0.0.4.qualifier"
       provider-name="ARKA GmbH">
 
    <description url="http://code.google.com/p/idocit/">

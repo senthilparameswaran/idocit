@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright 2011 AKRA GmbH
    
@@ -13,7 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
  -->
- <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -24,23 +25,24 @@
 	<name>iDocIt! Parent</name>
 
 	<properties>
-		<tycho-version>0.11.1</tycho-version>
+		<tycho-version>0.13.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<platform-version-name>helios</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-		<idocit-platform-version>0.0.7</idocit-platform-version>
 	</properties>
 
 	<modules>
 		<module>../de.akra.idocit.core</module>
+		<module>../de.akra.idocit.core.feature</module>
 		<module>../de.akra.idocit.java</module>
+		<module>../de.akra.idocit.java.feature</module>
 		<module>../de.akra.idocit.ui</module>
+		<module>../de.akra.idocit.ui.feature</module>
 		<module>../de.akra.idocit.wsdl</module>
-<!--
-		<module>../de.akra.idocit.wsdl.tests</module>
--->
+		<module>../de.akra.idocit.wsdl.feature</module>
+		<module>../../updatesite</module>
 	</modules>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>de.akra.idocit</groupId>
@@ -54,13 +56,13 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.sonatype.tycho</groupId>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
-				<groupId>org.sonatype.tycho</groupId>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>maven-osgi-compiler-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
@@ -70,45 +72,28 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.sonatype.tycho</groupId>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
 					<resolver>p2</resolver>
-<!-- Platform-dependent builds are not required at the moment:
-
-					<environments>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
--->
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>						
 		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<repositories>
@@ -118,4 +103,31 @@
 			<url>${eclipse-site}</url>
 		</repository>
 	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>idocit-update-site</id>
+			<name>iDocIt! Update Site</name>
+			<url>scpexe://idocit.akra.de/home/idocit/http/updatesite</url>
+		</repository>
+	</distributionManagement>
+
+	<profiles>
+		<profile>
+			<id>nightly-build</id>
+			<properties>
+				<idocit-update-site-url>scpexe://idocit.akra.de/home/idocit/http/updatesite-nb</idocit-update-site-url>
+				<idocit-release-id>${timestamp}</idocit-release-id>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>release-build</id>
+			<properties>
+				<idocit-update-site-url>scpexe://idocit.akra.de/home/idocit/http/updatesite</idocit-update-site-url>
+				<idocit-release-id>final</idocit-release-id>
+			</properties>
+		</profile>
+	</profiles>
+
 </project>
