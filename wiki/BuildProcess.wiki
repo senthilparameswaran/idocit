@@ -18,11 +18,32 @@ The following figure shows the systems and their maintainers participating in th
 
 http://idocit.googlecode.com/svn/images/build_participants.png
 
-= Project Structure =
-
 = Implementation =
 
-Add your content here.
+ * The complete build and upload to an update site is started by executing the command "mvn package -P <PROFILE>" on the parent-project (/trunk/parent-pom).
+* <PROFILE> could be "nightly-build" or "release-build". The profiles define the update site to which the binaries are uploaded.
+* The user executing Maven must have a settings.xml defining the username and password for server with id "idocit-update-site" (see the following example).
+
+{{{
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<servers>
+		<server>
+			<id>idocit-update-site</id>
+			<username>USERNAME</username>
+			<password>PASSWORD</password>
+			<configuration>
+        			<scpExecutable>scp</scpExecutable>
+        			<sshExecutable>ssh</sshExecutable>
+        			<scpArgs>-v</scpArgs>
+        			<sshArgs>-v</sshArgs>
+      		</configuration>
+		</server>
+	</servers>
+</settings>
+}}}
 
 = Further Issues =
 
