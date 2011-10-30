@@ -4,9 +4,9 @@
 
 The build-process of iDocIt! should be automated to achieve the following goals:
 
-# Save time and ensure consistency when releasing a new version of iDocIt!
-# Use the latest development state in projects to collect first experiences with our new features.
-# Identify bugs and side effects through automated tests very early after their implementation.
+ # Save time and ensure consistency when releasing a new version of iDocIt!
+ # Use the latest development state in projects to collect first experiences with our new features.
+ # Identify bugs and side effects through automated tests very early after their implementation.
 
 = Build Process and Architecture=
 
