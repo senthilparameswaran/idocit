@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright 2011 AKRA GmbH
    
@@ -17,11 +18,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>de.akra.idocit.core</artifactId>
-	<packaging>eclipse-plugin</packaging>
+	<artifactId>de.akra.idocit.core.feature</artifactId>
+	<packaging>eclipse-feature</packaging>
 	<version>0.0.8.qualifier</version>
-	<name>iDocIt! Core</name>
-
+	<name>iDocIt! Core Feature</name>
+	
 	<parent>
 		<version>0.0.1</version>
 		<groupId>de.akra.idocit</groupId>
@@ -29,12 +30,4 @@
 		<relativePath>../parent-pom/pom.xml</relativePath>
 	</parent>
 	
-	<dependencies>
-		<dependency>
-      		<groupId>de.akra.idocit</groupId>
-      		<artifactId>de.akra.idocit.common</artifactId>
-      		<version>0.0.1</version>
-      		<scope>provided</scope>
-    	</dependency>
-	</dependencies>
 </project>
