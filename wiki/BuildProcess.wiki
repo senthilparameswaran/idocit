@@ -14,6 +14,10 @@ We use Maven 3 to implement iDocIt!'s build process. The following figure illust
 
 http://idocit.googlecode.com/svn/images/idocit_build_impl_state.png
 
+The following figure shows the systems and their maintainers participating in the build system. The source code of iDocIt! is hosted by Google at Google Code. At AKRA we have a Hudson instance which checks out the source code and starts the Maven build. After building Maven uploads the Updates to one of iDocIt!'s update sites.
+
+http://idocit.googlecode.com/svn/images/build_participants.png
+
 = Implementation =
 
 Add your content here.
