@@ -49,4 +49,6 @@ http://idocit.googlecode.com/svn/images/build_participants.png
 
 = Further Issues =
 
-Add your content here.
+ * Run the Unit-Tests with each build (issue ).
+ * Generate and provide the Javadoc of iDocIt! during the build (issue ).
+ * Integrate FindBugs into the build (issue ).
