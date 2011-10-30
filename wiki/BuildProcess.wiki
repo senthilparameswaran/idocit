@@ -18,6 +18,8 @@ The following figure shows the systems and their maintainers participating in th
 
 http://idocit.googlecode.com/svn/images/build_participants.png
 
+= Project Structure =
+
 = Implementation =
 
 Add your content here.
