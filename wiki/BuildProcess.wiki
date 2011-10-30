@@ -10,7 +10,7 @@ The build-process of iDocIt! should be automated to achieve the following goals:
 
 = Build Process and Architecture=
 
-We use Maven 3 to implement iDocIt!'s build process. The following figure illustrates the default build lifecycle of Maven 3 and the current implementation state of each phase. 
+We use Maven 3 to implement iDocIt!'s build process. The following figure illustrates the default build lifecycle of Maven 3 and the current implementation state of each phase. The default build lifecycle of Maven is described [http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html here] in detail.
 
 http://idocit.googlecode.com/svn/images/idocit_build_impl_state.png
 
