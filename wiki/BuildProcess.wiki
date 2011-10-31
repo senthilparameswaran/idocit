@@ -57,4 +57,4 @@ ssh idocit@idocit.akra.de "rm -rf /home/idocit/http/updatesite-nb/*"
 
  * Run the Unit-Tests with each build (issue [http://code.google.com/p/idocit/issues/detail?id=78 #78]).
  * Generate and provide the Javadoc of iDocIt! during the build (issue [http://code.google.com/p/idocit/issues/detail?id=76 #76]).
- * Integrate FindBugs into the build (issue [http://code.google.com/p/idocit/issues/detail?id=77 #77].
+ * Integrate FindBugs into the build (issue [http://code.google.com/p/idocit/issues/detail?id=77 #77]).
