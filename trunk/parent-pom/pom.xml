@@ -32,6 +32,7 @@
 	</properties>
 
 	<modules>
+		<module>../de.akra.idocit.common</module>
 		<module>../de.akra.idocit.core</module>
 		<module>../de.akra.idocit.core.feature</module>
 		<module>../de.akra.idocit.java</module>
