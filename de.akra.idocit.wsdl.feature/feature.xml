@@ -235,7 +235,7 @@ limitations under the License.
 
    <requires>
       <import feature="de.akra.idocit.core.feature" version="0.0.1"/>
-      <import plugin="de.akra.idocit" version="0.0.1" match="greaterOrEqual"/>
+      <import plugin="de.akra.idocit.core" version="0.0.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.junit4" version="4.8.1" match="greaterOrEqual"/>
