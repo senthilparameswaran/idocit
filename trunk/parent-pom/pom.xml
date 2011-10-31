@@ -44,16 +44,6 @@
 		<module>../updatesite</module>
 	</modules>
 
-	<dependencies>
-		<dependency>
-			<groupId>de.akra.idocit</groupId>
-			<artifactId>de.akra.idocit.common</artifactId>
-			<version>0.0.1</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
