@@ -51,10 +51,10 @@ ssh idocit@idocit.akra.de "rm -rf /home/idocit/http/updatesite-nb/*"
 }}}
 
  * Each generated JAR-file (plugins and features) has a unique build id (timestamp). This is achieved by adding the postfix ".qualifier" to each plugin / feature version. The PDE build replaces this string with a unique timestamp automatically. Visit [http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.pde.doc.user/tasks/pde_version_qualifiers.htm this page] for further information.
- * The nightly-build is scheduled to "00 00 * * *".
+ * The nightly-build is scheduled to {{{00 00 * * *}}}.
 
 = Further Issues =
 
  * Run the Unit-Tests with each build (issue [http://code.google.com/p/idocit/issues/detail?id=78 #78]).
- * Generate and provide the Javadoc of iDocIt! during the build (issue [http://code.google.com/p/idocit/issues/detail?id=76 #76].
+ * Generate and provide the Javadoc of iDocIt! during the build (issue [http://code.google.com/p/idocit/issues/detail?id=76 #76]).
  * Integrate FindBugs into the build (issue [http://code.google.com/p/idocit/issues/detail?id=77 #77].
