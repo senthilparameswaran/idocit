@@ -242,7 +242,7 @@
    </requires>
 
    <plugin
-         id="de.akra.idocit"
+         id="de.akra.idocit.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
