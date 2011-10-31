@@ -27,7 +27,7 @@
 		<version>0.0.1</version>
 		<groupId>de.akra.idocit</groupId>
 		<artifactId>parent</artifactId>
-		<relativePath>../trunk/parent-pom/pom.xml</relativePath>
+		<relativePath>../parent-pom/pom.xml</relativePath>
 	</parent>
 	
 	<build>
