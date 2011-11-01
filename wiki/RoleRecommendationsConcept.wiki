@@ -40,5 +40,11 @@ SignatureElement := DataStructure from de.akra.idocit.common
 
 = Implementation =
 
+To be described here
+
 = TODOs =
- * 
+ * Which service provides the operations to execute the rules?
+ * Which signature do the operations have?
+ * In which way do the rules affect the GUI and the use model?
+ * Which changes to the data structures in the common-project are required and where are these new attributes assigned to values?
+ * How is the rule language implemented (Parser and Interpreter)
