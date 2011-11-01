@@ -7,6 +7,7 @@ The aim of context sensitive role recommendation is to reduce the set of recomme
 = Issues =
 
 The following issues refer to this feature:
+
 [http://code.google.com/p/idocit/issues/detail?id=79 Issue 79]
 
 = Concept =
