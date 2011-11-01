@@ -18,6 +18,8 @@ package de.akra.idocit.common.structure;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import de.akra.idocit.common.services.RuleServiceTest;
+
 /**
  * All tests.
  * 
@@ -26,7 +28,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ DocumentationTest.class, InterfaceArtifactTest.class,
-		InterfaceTest.class, OperationTest.class, ParameterTest.class })
+		InterfaceTest.class, OperationTest.class, ParameterTest.class, RuleServiceTest.class })
 public class AllIDocItCommonTests
 {
 
