@@ -37,6 +37,8 @@ SimplePredicate := isSingular (Role, SignatureElement)
 
 CompositePredicate := ( Predicate BinaryOperator Predicate)
 
+NegatedPredicate := not ( Predicate)
+
 BinaryOperator := AND | OR
 
 Role := AGENT | ACTION | COMPARISON | ...
