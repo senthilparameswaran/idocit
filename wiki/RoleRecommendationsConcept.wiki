@@ -38,4 +38,7 @@ Role := AGENT | ACTION | COMPARISON | ...
 SignatureElement := DataStructure from de.akra.idocit.common
 }}}
 
+= Implementation =
+
 = TODOs =
+ * 
