@@ -37,7 +37,7 @@ For projects:
  * de.akra.idocit.common
 
 {{{
-Copyright 2011 AKRA GmbH
+Copyright ${date} AKRA GmbH
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
