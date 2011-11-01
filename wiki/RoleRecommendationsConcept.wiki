@@ -56,11 +56,14 @@ http://idocit.googlecode.com/svn/images/draft_ss_thematic_role_pp.png
 
 === Preference Page: Thematic Grids ===
 
-To be done
+ * We add a new button "Edit grid-based rule" below the table of thematic roles. After pressing this button, the rule is passed to a modal dialog (see below). 
+ * The rule should be entered in a small modal dialog with CANCEL- and OK-buttons. It is validated after pressing the OK-button.
+ * The thematic role table will be extended with a new column "rule" which displays the rule for each thematic role. This way the user could read the rules quickly and decide whether they are ok or not.
 
 === EditorPart ===
 
-To be done
+ * We have two use cases for the rule execution: grid-recommendation and and thematic role-combobox.
+ * The thematic role combo will the replaced by a two level-contextmenu: the first level contains all first level recommendations (see Services) and an item "More roles >". Via this item, the remaining roles could be accessed. All roles are sorted alphabetically.
 
 === Services ===
 
