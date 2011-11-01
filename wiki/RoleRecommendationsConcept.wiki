@@ -40,7 +40,19 @@ SignatureElement := DataStructure from de.akra.idocit.common
 
 = Implementation =
 
-To be described here
+== Graphical User Interface and Use Model ==
+
+===Preference Page: Thematic Roles ===
+
+http://idocit.googlecode.com/svn/images/draft_ss_thematic_role_pp.png
+
+=== Preference Page: Thematic Grids ===
+
+To be done
+
+=== EditorPart ===
+
+To be done
 
 = TODOs =
  * Which service provides the operations to execute the rules?
