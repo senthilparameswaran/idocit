@@ -4,6 +4,11 @@
 
 The aim of context sensitive role recommendation is to reduce the set of recommended thematic roles for the selected signature element. This way we want to simplify the usage of iDocIt!.
 
+= Issues =
+
+The following issues refer to this feature:
+[http://code.google.com/p/idocit/issues/detail?id=79 Issue 79]
+
 = Concept =
 
 The basic idea is to define rules which enable or disable the recommendation of a thematic role for a given signature element.
