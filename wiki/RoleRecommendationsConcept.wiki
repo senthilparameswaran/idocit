@@ -66,6 +66,7 @@ To be done
 
  * We implement the [http://code.google.com/p/idocit/source/browse/trunk/de.akra.idocit.common/src/main/java/de/akra/idocit/common/services/RuleService.java RuleService] which executes the rules.
  * The RuleService bases on the [http://download.oracle.com/javase/6/docs/api/javax/script/package-summary.html Java Scripting API] and is realized in Java Script.
+ * The predicates are implemented as Java Script-functions and stored within its own js-file in the src/main/resources-folders.
 
 = TODOs =
  * Which service provides the operations to execute the rules?
