@@ -22,7 +22,7 @@ http://idocit.googlecode.com/svn/images/build_participants.png
 
  * Before starting the Maven Build Hudson sends the following command to idocit.akra.de. This is neccessary to remove the JARs of old builds, since we don't want to keep old nightly-builds.
 {{{
-ssh idocit@idocit.akra.de "rm -rf /home/idocit/http/updatesite-nb/*"
+ssh USERNAME@idocit.akra.de "rm -rf /home/idocit/http/updatesite-nb/*"
 }}}
 
  * The complete build and upload to an update site is started by executing the command "mvn package -P _PROFILE_" on the parent-project (/trunk/parent-pom).
