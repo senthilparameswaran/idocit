@@ -61,7 +61,7 @@ public abstract class Parameter extends SignatureElement
 	 * Further inner structure of a complex type.
 	 */
 	private List<Parameter> complexType;
-
+	
 	/**
 	 * Constructor.
 	 * 
@@ -70,9 +70,9 @@ public abstract class Parameter extends SignatureElement
 	 * @param category
 	 *            The category of this element.
 	 */
-	public Parameter(SignatureElement parent, String category)
+	public Parameter(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 		this.complexType = Collections.emptyList();
 	}
 
@@ -302,12 +302,7 @@ public abstract class Parameter extends SignatureElement
 	{
 		this.dataTypeName = dataTypeName;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	
 	@Override
 	public int hashCode()
 	{
@@ -323,95 +318,53 @@ public abstract class Parameter extends SignatureElement
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
 		if (!super.equals(obj))
-		{
 			return false;
-		}
-		if (!(obj instanceof Parameter))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		Parameter other = (Parameter) obj;
 		if (complexType == null)
 		{
 			if (other.complexType != null)
-			{
 				return false;
-			}
 		}
 		else if (!complexType.equals(other.complexType))
-		{
 			return false;
-		}
 		if (dataTypeName == null)
 		{
 			if (other.dataTypeName != null)
-			{
 				return false;
-			}
 		}
 		else if (!dataTypeName.equals(other.dataTypeName))
-		{
 			return false;
-		}
 		if (qualifiedDataTypeName == null)
 		{
 			if (other.qualifiedDataTypeName != null)
-			{
 				return false;
-			}
 		}
 		else if (!qualifiedDataTypeName.equals(other.qualifiedDataTypeName))
-		{
 			return false;
-		}
 		if (signatureElementPath == null)
 		{
 			if (other.signatureElementPath != null)
-			{
 				return false;
-			}
 		}
 		else if (!signatureElementPath.equals(other.signatureElementPath))
-		{
 			return false;
-		}
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("Parameter [dataTypeName=");
-		builder.append(dataTypeName);
-		builder.append(", qualifiedDataTypeName=");
-		builder.append(qualifiedDataTypeName);
-		builder.append(", signatureElementPath=");
-		builder.append(signatureElementPath);
-		builder.append(", complexType=");
-		builder.append(complexType);
-		builder.append(", getIdentifier()=");
-		builder.append(getIdentifier());
-		builder.append("]");
-		return builder.toString();
+		return "Parameter [dataTypeName=" + dataTypeName + ", qualifiedDataTypeName="
+				+ qualifiedDataTypeName + ", signatureElementPath="
+				+ signatureElementPath + ", complexType=" + complexType + "]";
 	}
 
 }

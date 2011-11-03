@@ -16,6 +16,7 @@
 package de.akra.idocit.common.structure.impl;
 
 import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
@@ -33,9 +34,9 @@ public class TestInterface extends Interface
 	 * @param parent
 	 * @param category
 	 */
-	public TestInterface(SignatureElement parent, String category)
+	public TestInterface(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 	}
 
 	/*
@@ -48,7 +49,7 @@ public class TestInterface extends Interface
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new TestInterface(parent, super.getCategory());
+		return new TestInterface(parent, super.getCategory(), super.getNumerus());
 	}
 
 	/*

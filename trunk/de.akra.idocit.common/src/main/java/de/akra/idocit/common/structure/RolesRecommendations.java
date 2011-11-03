@@ -15,33 +15,40 @@
  *******************************************************************************/
 package de.akra.idocit.common.structure;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class RolesRecommendations
 {
 
-	private List<ThematicRole> firstLevelRecommendations;
+	private final List<ThematicRole> firstLevelRecommendations;
+	private final List<ThematicRole> secondLevelRecommendations;
 	
-	private List<ThematicRole> secondLevelRecommendations;
-
-	public List<ThematicRole> getFirstLevelRecommendations()
-	{
-		return firstLevelRecommendations;
-	}
-
-	public void setFirstLevelRecommendations(List<ThematicRole> firstLevelRecommendations)
+	public RolesRecommendations(final List<ThematicRole> firstLevelRecommendations,
+			final List<ThematicRole> secondLevelRecommendations)
 	{
 		this.firstLevelRecommendations = firstLevelRecommendations;
+		this.secondLevelRecommendations = secondLevelRecommendations;
+	}
+	
+	public List<ThematicRole> getFirstLevelRecommendations()
+	{
+		return Collections.unmodifiableList(this.firstLevelRecommendations);
 	}
 
+	public RolesRecommendations setFirstLevelRecommendations(List<ThematicRole> firstLevelRecommendations)
+	{
+		return new RolesRecommendations(firstLevelRecommendations, this.secondLevelRecommendations);
+	}
+	
 	public List<ThematicRole> getSecondLevelRecommendations()
 	{
-		return secondLevelRecommendations;
+		return Collections.unmodifiableList(this.secondLevelRecommendations);
 	}
 
-	public void setSecondLevelRecommendations(List<ThematicRole> secondLevelRecommendations)
+	public RolesRecommendations setSecondLevelRecommendations(List<ThematicRole> secondLevelRecommendations)
 	{
-		this.secondLevelRecommendations = secondLevelRecommendations;
+		return new RolesRecommendations(this.firstLevelRecommendations, secondLevelRecommendations);
 	}
 
 	/**

@@ -16,6 +16,7 @@
 package de.akra.idocit.common.structure.impl;
 
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
@@ -35,15 +36,15 @@ public class TestInterfaceArtifact extends InterfaceArtifact
 	 * @param category
 	 *            The category of this element.
 	 */
-	public TestInterfaceArtifact(SignatureElement parent, String category)
+	public TestInterfaceArtifact(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 	}
 
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new TestInterfaceArtifact(parent, super.getCategory());
+		return new TestInterfaceArtifact(parent, super.getCategory(), super.getNumerus());
 	}
 
 	@Override

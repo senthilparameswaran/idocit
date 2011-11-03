@@ -15,6 +15,11 @@
  *******************************************************************************/
 package de.akra.idocit.common.utils;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -283,5 +288,35 @@ public class StringUtils
 		}
 
 		return blankCamelSyntax;
+	}
+
+	public static String toString(final InputStream stream)
+	{
+		InputStreamReader isr;
+		if (stream instanceof BufferedInputStream)
+		{
+			isr = new InputStreamReader(stream);
+		}
+		else
+		{
+			isr = new InputStreamReader(new BufferedInputStream(stream));
+		}
+		final StringWriter sw = new StringWriter();
+
+		try
+		{
+			char[] buffer = new char[256];
+	        int n = 0;
+	        while (-1 != (n = isr.read(buffer))) {
+	            sw.write(buffer, 0, n);
+	        }
+        }
+		
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return sw.toString();
 	}
 }

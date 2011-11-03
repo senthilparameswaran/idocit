@@ -48,9 +48,9 @@ public abstract class InterfaceArtifact extends SignatureElement
 	 * @param category
 	 *            The category of this element.
 	 */
-	public InterfaceArtifact(SignatureElement parent, String category)
+	public InterfaceArtifact(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 	}
 
 	/**
@@ -205,12 +205,12 @@ public abstract class InterfaceArtifact extends SignatureElement
 
 		public NotSupportedArtifact()
 		{
-			super(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "");
+			super(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", Numerus.SINGULAR);
 			setIdentifier(msg);
 			setDocumentationAllowed(false);
 			
 			// Changes due to Issue #59
-			Interface i = new Interface(this, "") {
+			Interface i = new Interface(this, "", Numerus.SINGULAR) {
 				
 				@Override
 				protected void doCopyTo(SignatureElement signatureElement)

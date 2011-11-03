@@ -56,8 +56,8 @@ public abstract class Operation extends SignatureElement {
 	 *            The name of the reference thematic grid of this operation
 	 */
 	public Operation(SignatureElement parent, String category,
-			String thematicGridName) {
-		super(parent, category);
+			String thematicGridName, Numerus numerus) {
+		super(parent, category, numerus);
 		exceptions = Collections.emptyList();
 		this.thematicGridName = thematicGridName;
 	}
