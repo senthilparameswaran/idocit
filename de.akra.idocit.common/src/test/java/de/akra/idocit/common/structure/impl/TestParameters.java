@@ -15,6 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.common.structure.impl;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -33,9 +34,9 @@ public class TestParameters extends Parameters
 	 * @param parent
 	 * @param category
 	 */
-	public TestParameters(SignatureElement parent, String category)
+	public TestParameters(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 	}
 
 	/*
@@ -48,7 +49,7 @@ public class TestParameters extends Parameters
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new TestParameters(parent, super.getCategory());
+		return new TestParameters(parent, super.getCategory(), super.getNumerus());
 	}
 
 	/*

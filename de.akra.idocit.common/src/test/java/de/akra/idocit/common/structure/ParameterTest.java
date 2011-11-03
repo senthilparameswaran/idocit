@@ -93,13 +93,13 @@ public class ParameterTest
 	 */
 	public static Parameter createParameter(SignatureElement parent)
 	{
-		Parameter param = new TestParameter(parent, "");
+		Parameter param = new TestParameter(parent, "", Numerus.SINGULAR);
 		param.setDataTypeName("Customer");
 		param.setIdentifier("cust");
 		param.setSignatureElementPath("find.cust(Customer)");
 		param.addDocpart(DocumentationTest.createDocumentation());
 
-		Parameter innerParam = new TestParameter(param, "");
+		Parameter innerParam = new TestParameter(param, "", Numerus.SINGULAR);
 		innerParam.setDataTypeName("int");
 		innerParam.setQualifiedDataTypeName("int");
 		innerParam.setIdentifier("id");

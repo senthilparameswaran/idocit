@@ -54,7 +54,7 @@ public abstract class SignatureElement
 	 * The empty SignatureElement represents the parent of the root SignatureElement.
 	 */
 	public static final SignatureElement EMPTY_SIGNATURE_ELEMENT = new SignatureElement(
-			null, "") {
+			null, "", Numerus.SINGULAR) {
 
 		@Override
 		public int size()
@@ -136,6 +136,8 @@ public abstract class SignatureElement
 	 * @since 0.0.2
 	 */
 	private boolean documentationChanged = false;
+	
+	private Numerus numerus;
 
 	/**
 	 * Constructor.
@@ -146,12 +148,13 @@ public abstract class SignatureElement
 	 * @param category
 	 *            The category of this element.
 	 */
-	public SignatureElement(SignatureElement parent, String category)
+	public SignatureElement(SignatureElement parent, String category, Numerus numerus)
 	{
 		this.id = ID_COUNTER++;
 		this.parent = parent;
 		this.category = category;
 		this.documentations = Collections.emptyList();
+		this.numerus = numerus;
 	}
 
 	/**
@@ -416,11 +419,16 @@ public abstract class SignatureElement
 		this.documentationChanged = documentationChanged;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	public Numerus getNumerus()
+	{
+		return numerus;
+	}
+
+	public void setNumerus(Numerus numerus)
+	{
+		this.numerus = numerus;
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -433,16 +441,13 @@ public abstract class SignatureElement
 				+ ((documentations == null) ? 0 : documentations.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
+		result = prime * result + ((numerus == null) ? 0 : numerus.hashCode());
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
 		result = prime * result
 				+ ((qualifiedIdentifier == null) ? 0 : qualifiedIdentifier.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -480,6 +485,15 @@ public abstract class SignatureElement
 		}
 		else if (!identifier.equals(other.identifier))
 			return false;
+		if (numerus != other.numerus)
+			return false;
+		if (parent == null)
+		{
+			if (other.parent != null)
+				return false;
+		}
+		else if (!parent.equals(other.parent))
+			return false;
 		if (qualifiedIdentifier == null)
 		{
 			if (other.qualifiedIdentifier != null)
@@ -490,30 +504,14 @@ public abstract class SignatureElement
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("SignatureElement [id=");
-		builder.append(id);
-		builder.append(", documentations=");
-		builder.append(documentations);
-		builder.append(", identifier=");
-		builder.append(identifier);
-		builder.append(", qualifiedIdentifier=");
-		builder.append(qualifiedIdentifier);
-		builder.append(", category=");
-		builder.append(category);
-		builder.append(", documentationAllowed=");
-		builder.append(documentationAllowed);
-		builder.append(", documentationChanged=");
-		builder.append(documentationChanged);
-		builder.append("]");
-		return builder.toString();
+		return "SignatureElement [parent=" + parent + ", id=" + id + ", documentations="
+				+ documentations + ", identifier=" + identifier
+				+ ", qualifiedIdentifier=" + qualifiedIdentifier + ", category="
+				+ category + ", documentationAllowed=" + documentationAllowed
+				+ ", documentationChanged=" + documentationChanged + ", numerus="
+				+ numerus + "]";
 	}
 }

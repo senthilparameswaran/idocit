@@ -33,6 +33,8 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 	private String name;
 
 	private String description;
+	
+	private String roleBasedRule;
 
 	/**
 	 * Constructor.
@@ -86,6 +88,16 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 	{
 		this.description = description;
 	}
+	
+	public String getRoleBasedRule()
+	{
+		return roleBasedRule;
+	}
+
+	public void setRoleBasedRule(String roleBasedRule)
+	{
+		this.roleBasedRule = roleBasedRule;
+	}
 
 	@Override
 	public int hashCode()
@@ -94,6 +106,8 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((roleBasedRule == null) ? 0 : roleBasedRule.hashCode());
 		return result;
 	}
 
@@ -121,19 +135,21 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 		}
 		else if (!name.equals(other.name))
 			return false;
+		if (roleBasedRule == null)
+		{
+			if (other.roleBasedRule != null)
+				return false;
+		}
+		else if (!roleBasedRule.equals(other.roleBasedRule))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("ThematicRole [name=");
-		builder.append(name);
-		builder.append(", description=");
-		builder.append(description);
-		builder.append("]");
-		return builder.toString();
+		return "ThematicRole [name=" + name + ", description=" + description
+				+ ", roleBasedRule=" + roleBasedRule + "]";
 	}
 
 	/**

@@ -15,6 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.common.structure.impl;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -33,15 +34,15 @@ public class TestOperation extends Operation
 	 * @param parent
 	 * @param category
 	 */
-	public TestOperation(SignatureElement parent, String category, String thematicGridName)
+	public TestOperation(SignatureElement parent, String category, String thematicGridName, Numerus numerus)
 	{
-		super(parent, category, thematicGridName);
+		super(parent, category, thematicGridName, numerus);
 	}
 
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new TestOperation(parent, super.getCategory(), super.getThematicGridName());
+		return new TestOperation(parent, super.getCategory(), super.getThematicGridName(), super.getNumerus());
 	}
 
 	@Override

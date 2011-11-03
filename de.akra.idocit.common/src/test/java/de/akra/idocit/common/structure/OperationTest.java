@@ -93,30 +93,30 @@ public class OperationTest
 
 	private Operation createOperation(SignatureElement parent)
 	{
-		Operation op = new TestOperation(parent, "Operation", "Searching Operations");
+		Operation op = new TestOperation(parent, "Operation", "Searching Operations", Numerus.SINGULAR);
 		op.setIdentifier("findSomething");
 
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new TestParameters(op, "InputMessage");
+		Parameters inputParameters = new TestParameters(op, "InputMessage", Numerus.SINGULAR);
 		inputParameters.setIdentifier("findIn");
 		op.setInputParameters(inputParameters);
 
-		Parameter paramCust = new TestParameter(inputParameters, "Part");
+		Parameter paramCust = new TestParameter(inputParameters, "Part", Numerus.SINGULAR);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
 		paramCust.setSignatureElementPath("findIn.Cust(Customer)");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new TestParameter(paramCust, "");
+		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramId.setDocumentationChanged(true);
 		paramId.setSignatureElementPath("findIn.Cust(Customer).id(int)");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new TestParameter(paramCust, "");
+		Parameter paramNameIn = new TestParameter(paramCust, "", Numerus.SINGULAR);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
 		paramNameIn.setSignatureElementPath("findIn.Cust(Customer).name(String)");
@@ -125,34 +125,34 @@ public class OperationTest
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new TestParameters(op, "OutputMessage");
+		Parameters outputParameters = new TestParameters(op, "OutputMessage", Numerus.SINGULAR);
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new TestParameter(outputParameters, "Part");
+		Parameter paramCustOut = new TestParameter(outputParameters, "Part", Numerus.SINGULAR);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		paramCustOut.setSignatureElementPath("findOut.Cust(Customer)");
 		outputParameters.addParameter(paramCustOut);
 
-		Parameter paramIdOut = new TestParameter(paramCustOut, "");
+		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setSignatureElementPath("findOut.Cust(Customer).id(int)");
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new TestParameter(paramCustOut, "");
+		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramNameOut.setSignatureElementPath("findOut.Cust(Customer).name(String)");
 		paramCustOut.addParameter(paramNameOut);
 
-		Parameter test1 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "");
+		Parameter test1 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", Numerus.SINGULAR);
 		test1.setIdentifier("id");
 		test1.setDataTypeName("int");
 		test1.setSignatureElementPath("findOut.Cust(Customer).id(int)");
 
-		Parameter test2 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "");
+		Parameter test2 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", Numerus.SINGULAR);
 		test2.setIdentifier("id");
 		test2.setDataTypeName("int");
 		test2.setSignatureElementPath("findOu2.Cust(Customer).id(int)");
@@ -162,11 +162,11 @@ public class OperationTest
 		 */
 		List<Parameters> exceptions = new Vector<Parameters>();
 
-		Parameters exception = new TestParameters(op, "FaultMessage");
+		Parameters exception = new TestParameters(op, "FaultMessage", Numerus.SINGULAR);
 		exception.setIdentifier("fault");
 		exceptions.add(exception);
 
-		Parameter exParam = new TestParameter(exception, "Part");
+		Parameter exParam = new TestParameter(exception, "Part", Numerus.SINGULAR);
 		exParam.setIdentifier("Exception");
 		exParam.setDataTypeName("ExType");
 		exParam.setSignatureElementPath("fault.Exception(ExType)");

@@ -15,11 +15,31 @@
  *******************************************************************************/
 package de.akra.idocit.common.services;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.script.Compilable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.DescribedItemNameComparator;
+import de.akra.idocit.common.utils.SignatureElementUtils;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * <table name="idocit" border="1" cellspacing="0">
@@ -30,7 +50,7 @@ import de.akra.idocit.common.structure.ThematicGrid;
  * <tr>
  * <td><b>Developer</b>:</td>
  * <td>Service to execute role-based and grid-based rules. Rules are used to reduce the
- * gridto the minimum set of roles required to be documented.</td>
+ * grid to the minimum set of roles required to be documented.</td>
  * </tr>
  * </table>
  * 
@@ -40,6 +60,7 @@ import de.akra.idocit.common.structure.ThematicGrid;
  */
 public final class RuleService
 {
+	private static final Logger LOG = Logger.getLogger(RuleService.class.getName());
 
 	/**
 	 * <table name="idocit" border="1" cellspacing="0">
@@ -72,8 +93,8 @@ public final class RuleService
 	 *            <tr>
 	 *            <td>Element:</td>
 	 *            <td>
-	 *            selectedSignatureElement:de.akra.idocit.common.structure.SignatureElement
-	 *            </td>
+	 *            selectedSignatureElement:de.akra.idocit.common.structure.
+	 *            SignatureElement</td>
 	 *            </tr>
 	 *            <tr>
 	 *            <td>Role:</td>
@@ -88,8 +109,8 @@ public final class RuleService
 	 *         <tr>
 	 *         <td>Element:</td>
 	 *         <td>
-	 *         de.akra.idocit.common.structure.ThematicGrid:de.akra.idocit.common.structure
-	 *         .ThematicGrid</td>
+	 *         de.akra.idocit.common.structure.ThematicGrid:de.akra.idocit.common.
+	 *         structure .ThematicGrid</td>
 	 *         </tr>
 	 *         <tr>
 	 *         <td>Role:</td>
@@ -102,8 +123,8 @@ public final class RuleService
 	 *         </table>
 	 * @thematicgrid None
 	 */
-	public static ThematicGrid reduceGrid(ThematicGrid gridToReduce,
-			SignatureElement selectedSignatureElement)
+	public static ThematicGrid reduceGrid(final ThematicGrid gridToReduce,
+			final SignatureElement selectedSignatureElement)
 	{
 		throw new RuntimeException("Not yet implemented");
 	}
@@ -117,7 +138,7 @@ public final class RuleService
 	 * <tr>
 	 * <td><b>Developer</b>:</td>
 	 * <td>Splits the defined thematic roles into two groups:1st level: these roles are
-	 * recommended to document 2nd level: these roles could bedocumented, but they do not
+	 * recommended to document 2nd level: these roles could be documented, but they do not
 	 * need to</td>
 	 * </tr>
 	 * </table>
@@ -129,12 +150,39 @@ public final class RuleService
 	 * </tr>
 	 * <tr>
 	 * <td><b>Developer</b>:</td>
-	 * <td>The derivation algorithm in pseudo code:For each defined thematic role {Execute
-	 * role-based ruleif(role-rule == true) {add role to 1st level list} else {add role to
-	 * 2nd level list} }Get the Operation which the given signature element belongs to.If
-	 * a reference grid exists or the given collection contains only 1 grid {for each role
-	 * in grid {if role exists in 1st level list {Execute grid-based ruleif(grid-rule ==
-	 * false){Remove rule from first level list}}}}</td>
+	 * <td>The derivation algorithm in pseudo code:
+	 * 
+	 * <pre>
+	 * For each defined thematic role
+	 * {
+	 * 	Execute role-based rule
+	 * 	if(role-rule == true)
+	 * 	{
+	 * 		add role to 1st level list
+	 * 	}
+	 * 	else
+	 * 	{
+	 * 		add role to 2nd level list
+	 * 	}
+	 * }
+	 * Get the Operation which the given signature element belongs to.
+	 * If a reference grid exists or the given collection contains only 1 grid
+	 * {
+	 * 	for each role in grid
+	 * 	{
+	 * 		if role exists in 1st level list
+	 * 		{
+	 * 			Execute grid-based rule
+	 * 			if(grid-rule == false)
+	 * 			{
+	 * 				Remove rule from first level list
+	 * 			}
+	 * 		}
+	 * 	}
+	 * }
+	 * </pre>
+	 * 
+	 * </td>
 	 * </tr>
 	 * </table>
 	 * <br />
@@ -175,8 +223,8 @@ public final class RuleService
 	 *            <tr>
 	 *            <td>Element:</td>
 	 *            <td>
-	 *            selectedSignatureElement:de.akra.idocit.common.structure.SignatureElement
-	 *            </td>
+	 *            selectedSignatureElement:de.akra.idocit.common.structure.
+	 *            SignatureElement</td>
 	 *            </tr>
 	 *            <tr>
 	 *            <td>Role:</td>
@@ -204,10 +252,184 @@ public final class RuleService
 	 * @thematicgrid Creating Operations
 	 */
 	public static RolesRecommendations deriveRolesRecommendation(
-			Collection<ThematicGrid> matchingGrids,
-			SignatureElement selectedSignatureElement)
+			final Collection<ThematicGrid> matchingGrids,
+			final SignatureElement selectedSignatureElement)
 	{
-		throw new RuntimeException("Not yet implemented");
+		final Set<ThematicRole> firstLevel = new HashSet<ThematicRole>();
+		final Set<ThematicRole> secondLevel = new HashSet<ThematicRole>();
+
+		if (matchingGrids != null)
+		{
+			evaluateRoleBasedRules(matchingGrids, selectedSignatureElement, firstLevel,
+					secondLevel);
+
+			evaluateGridBasedRules(matchingGrids, selectedSignatureElement, firstLevel,
+					secondLevel);
+
+		}
+
+		return new RolesRecommendations(sortByName(firstLevel), sortByName(secondLevel));
+	}
+
+	private static void evaluateRoleBasedRules(
+			final Collection<ThematicGrid> matchingGrids,
+			final SignatureElement selectedSignatureElement,
+			final Set<ThematicRole> firstLevel, final Set<ThematicRole> secondLevel)
+	{
+		for (final ThematicGrid grid : matchingGrids)
+		{
+			final Map<ThematicRole, Boolean> roles = grid.getRoles();
+
+			if (roles != null)
+			{
+				for (final ThematicRole role : roles.keySet())
+				{
+					if (role.getRoleBasedRule() != null
+							&& !role.getRoleBasedRule().isEmpty())
+					{
+						if (evaluateRule(role.getRoleBasedRule(), role,
+								selectedSignatureElement))
+						{
+							firstLevel.add(role);
+						}
+						else
+						{
+							secondLevel.add(role);
+						}
+					}
+					else
+					{
+						LOG.log(Level.SEVERE, "No role-based-rule found for role " + role);
+						throw new IllegalStateException(
+								"No Role-based rule found for role " + role.getName());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Important: The Sets must not be null!
+	 * 
+	 * @param matchingGrids
+	 * @param selectedSignatureElement
+	 * @param firstLevel
+	 * @param secondLevel
+	 */
+	private static void evaluateGridBasedRules(final Collection<ThematicGrid> matchingGrids,
+			final SignatureElement selectedSignatureElement,
+			final Set<ThematicRole> firstLevel, final Set<ThematicRole> secondLevel)
+	{
+		final Operation op = (Operation) SignatureElementUtils.findOperationForParameter(selectedSignatureElement);
+		final ThematicGrid theOne = getUnambiguousGrid(matchingGrids, op);
+
+		if (theOne != null)
+		{
+			final Set<ThematicRole> gridRoles = theOne.getRoles().keySet();
+			
+			for (final ThematicRole role : firstLevel) {
+				if (!gridRoles.contains(role))
+				{
+					//Remove roles that are not within the reference/only available thematic grid:
+					firstLevel.remove(role);
+					secondLevel.add(role);
+				}
+				else if (!evaluateRule(theOne.getGridBasedRule(), role, selectedSignatureElement)) {
+					//Remove role if the grid-based-rule does not apply:
+					firstLevel.remove(role);
+					secondLevel.add(role);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Evaluates the given rule for the given {@link SignatureElement}. The rule can
+	 * either be role- or grid-based.
+	 * 
+	 * @param rule
+	 *            The rule to evaluate.
+	 * @param sigElem
+	 *            The {@link SignatureElement} to apply the rule to.
+	 * @return The result of the rule-evaluation, thus either <code>true</code> or
+	 *         <code>false</code>
+	 */
+	public static boolean evaluateRule(final String rule, final ThematicRole role,
+			final SignatureElement sigElem)
+	{
+		Boolean result;
+		final ScriptEngine engine = getScriptEngine();
+
+		engine.put("role", role);
+		engine.put("operation", SignatureElementUtils.findOperationForParameter(sigElem));
+
+		try
+		{
+			result = (Boolean) engine.eval(rule);
+		}
+		catch (ScriptException e)
+		{
+			LOG.log(Level.SEVERE, "Error evaluating rule \"" + rule + "\".", e);
+			throw new IllegalArgumentException("Error evaluating rule \"" + rule + "\".");
+		}
+
+		return result.booleanValue();
+	}
+
+	/**
+	 * Filters the given collection of ThematicGrids to return either the reference-grid,
+	 * or - in case the collection contains only one grid - the only available grid.
+	 * 
+	 * If the collection is empty or no reference grid is chosen, this method will return
+	 * <code>null</code>
+	 * 
+	 * @param grids
+	 *            A collection of ThematicGrids.
+	 * @param operation
+	 *            The current {@link Operation} to get the reference-grid's name from.
+	 * @return Either the only available grid, the reference grid or <code>null</code>
+	 */
+	private static ThematicGrid getUnambiguousGrid(final Collection<ThematicGrid> grids,
+			final Operation operation)
+	{
+		ThematicGrid result = null;
+
+		if (grids != null && !grids.isEmpty())
+		{
+			if (grids.size() == 1)
+			{
+				// There's only one grid. No big choice, using this one.
+				result = grids.iterator().next();
+			}
+			else if (operation.getThematicGridName() != null)
+			{
+				// Get the thematic grid matching the reference name from the operation:
+				for (final ThematicGrid grid : grids)
+				{
+					if (grid.getName().equals(operation.getThematicGridName()))
+					{
+						result = grid;
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Sorts the given {@link Set} of {@link ThematicRole}s by name.
+	 * 
+	 * @param roles
+	 *            Unsorted (well, it's a Set...) roles.
+	 * @return A List of the given roles, sorted by name.
+	 */
+	private static List<ThematicRole> sortByName(final Set<ThematicRole> roles)
+	{
+		final List<ThematicRole> result = new ArrayList<ThematicRole>(roles);
+		Collections.sort(result, DescribedItemNameComparator.getInstance());
+
+		return result;
 	}
 
 	/**
@@ -260,6 +482,58 @@ public final class RuleService
 	 */
 	public static boolean isRuleValid(String ruleExpression)
 	{
-		throw new RuntimeException("Not yet implemented");
+		final ScriptEngine engine = getScriptEngine();
+		boolean valid = false;
+
+		try
+		{
+			((Compilable) engine).compile(ruleExpression);
+			valid = true;
+		}
+		catch (final ScriptException e)
+		{
+			LOG.log(Level.INFO, "Cannot compile rule \"" + ruleExpression + "\".", e);
+		}
+
+		return valid;
+	}
+
+	/**
+	 * Prepares and returns a {@link ScriptEngine}. With this ScriptEngine the rules
+	 * (either role- or grid-based) can be evaluated.
+	 * 
+	 * Currently the ScriptEngine used is meant for JavaScript. Maybe at some time it
+	 * might be necessary to implement a specific ScriptEngine to support only elements
+	 * used for the rule-syntax.
+	 * 
+	 * @return A ScriptEngine for evaluating the rules.
+	 */
+	private static ScriptEngine getScriptEngine()
+	{
+		// final String predicates =
+		// StringUtils.toString(RuleService.class.getResourceAsStream("basicRules.js"));
+		String predicates = "";
+		try
+		{
+			predicates = StringUtils.toString(new FileInputStream(
+					"src/main/resources/basicRules.js"));
+			//TODO: Load basicRules.js via FileLocator
+		}
+		catch (FileNotFoundException e1)
+		{}
+
+		final ScriptEngine engine = new ScriptEngineManager()
+				.getEngineByName("JavaScript");
+
+		try
+		{
+			engine.eval(predicates);
+		}
+		catch (final ScriptException e)
+		{
+			LOG.log(Level.SEVERE, "Error loading basic predicates.", e);
+		}
+
+		return engine;
 	}
 }

@@ -15,13 +15,19 @@
  *******************************************************************************/
 package de.akra.idocit.common.services;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.ParameterTest;
+import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicRole;
+
 public class RuleServiceTest
 {
-
+	
 	@Test
 	public void testReduceGrid()
 	{
@@ -57,16 +63,29 @@ public class RuleServiceTest
 	@Test
 	public void testIsRuleValid()
 	{
-		// Positive tests
-		// ******************************************************************************
+		/*
+		 * Negative tests
+		 * ***************************************************************************
+		 * Test case #1: Check if a valid snippet of JS is regarded as valid rule.
+		 * ****************************************************************************
+		 */
 		{
-			
+			assertTrue(RuleService.isRuleValid("println('Hello World!');"));
+		}
+		{
+			final Parameter param = ParameterTest.createParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+			final ThematicRole role = new ThematicRole("testRole", "This is a role for testing");
+			RuleService.evaluateRule("info()", role, param);
 		}
 		
-		// Negative tests
-		// ******************************************************************************
+		/*
+		 * Negative tests
+		 * ***************************************************************************
+		 * Test case #1: Check the validity of a random rule-expression.
+		 * ****************************************************************************
+		 */
 		{
-			
+			assertFalse(RuleService.isRuleValid("foo bar baz"));
 		}
 	}
 }
