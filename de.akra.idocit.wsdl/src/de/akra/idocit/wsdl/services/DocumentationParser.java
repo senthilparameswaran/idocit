@@ -33,7 +33,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.core.utils.DescribedItemUtils;
 
 /**
  * The parser for WSDL documentation elements.
@@ -252,7 +252,7 @@ public class DocumentationParser {
 					THEMATIC_ROLE_ATTRIBUTE_NAME + "=\"" + attr.getNodeValue()
 							+ "\"");
 
-			ThematicRole role = ObjectStructureUtils.findThematicRole(attr
+			ThematicRole role = DescribedItemUtils.findThematicRole(attr
 					.getNodeValue());
 			doc.setThematicRole(role);
 		}
@@ -308,7 +308,7 @@ public class DocumentationParser {
 				Node attribute = attributes
 						.getNamedItem(ADDRESSEE_GROUP_ATTRIBUTE_NAME);
 
-				Addressee addressee = ObjectStructureUtils
+				Addressee addressee = DescribedItemUtils
 						.findAddressee(attribute.getNodeValue());
 				logger.log(Level.FINE, attribute.getNodeName() + " -> "
 						+ attribute.getNodeValue() + " | Addressee="
