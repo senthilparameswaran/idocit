@@ -34,7 +34,7 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.structure.Addressee;
-import de.akra.idocit.core.utils.DescribedItemNameComparator;
+import de.akra.idocit.common.utils.DescribedItemNameComparator;
 import de.akra.idocit.ui.constants.DialogConstants;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 
