@@ -50,13 +50,13 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.DescribedItemNameComparator;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
 import de.akra.idocit.core.services.PersistenceService;
-import de.akra.idocit.core.utils.DescribedItemNameComparator;
 
 /**
  * Provides services to load and to write an {@link InterfaceArtifact}.
