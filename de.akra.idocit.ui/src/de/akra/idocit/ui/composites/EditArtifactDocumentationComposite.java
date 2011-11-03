@@ -49,10 +49,10 @@ import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.impl.ServiceManager;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
@@ -276,7 +276,7 @@ public class EditArtifactDocumentationComposite
 					DisplayRecommendedRolesCompositeSelection selection,
 					PocUIComposite<DisplayRecommendedRolesCompositeSelection> comp)
 			{
-				SignatureElement operation = ObjectStructureUtils
+				SignatureElement operation = SignatureElementUtils
 						.findOperationForParameter(getSelection()
 								.getSelectedSignatureElement());
 
@@ -443,7 +443,7 @@ public class EditArtifactDocumentationComposite
 		Map<String, Map<ThematicRole, Boolean>> roles = new HashMap<String, Map<ThematicRole, Boolean>>();
 		Set<ThematicRole> associatedThematicRoles = Collections.emptySet();
 
-		SignatureElement operation = ObjectStructureUtils
+		SignatureElement operation = SignatureElementUtils
 				.findOperationForParameter(selectedSigElem);
 
 		// recommended roles are only provided for operations
@@ -475,7 +475,7 @@ public class EditArtifactDocumentationComposite
 			// End changes due to Issue #23
 
 			associatedThematicRoles = new TreeSet<ThematicRole>();
-			ObjectStructureUtils.collectAssociatedThematicRoles(associatedThematicRoles,
+			SignatureElementUtils.collectAssociatedThematicRoles(associatedThematicRoles,
 					selectedSigElem);
 		}
 		else

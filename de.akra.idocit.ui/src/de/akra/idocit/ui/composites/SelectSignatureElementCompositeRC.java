@@ -37,7 +37,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ParameterType;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.ui.Activator;
 
 /**
@@ -104,7 +104,7 @@ public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 		}
 		else if (sigElement instanceof Parameter)
 		{
-			ParameterType type = ObjectStructureUtils.findParameterType(sigElement,
+			ParameterType type = SignatureElementUtils.findParameterType(sigElement,
 					sigElement);
 
 			switch (type)
