@@ -53,8 +53,8 @@ import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.core.constants.ThematicGridConstants;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -395,7 +395,7 @@ public class JavaInterfaceParser {
 			for (SingleVariableDeclaration parameter : parameters) {
 				JavaParameter param = processParameter(inputParameters,
 						parameter);
-				ObjectStructureUtils.setParametersPaths(delimiters,
+				SignatureElementUtils.setParametersPaths(delimiters,
 						inputParameters.getQualifiedIdentifier(), param);
 				inputParameters.addParameter(param);
 			}
@@ -421,7 +421,7 @@ public class JavaInterfaceParser {
 			outputParameters.setQualifiedIdentifier("");
 			outputParameters.addParameter(returnType);
 
-			ObjectStructureUtils.setParametersPaths(delimiters,
+			SignatureElementUtils.setParametersPaths(delimiters,
 					outputParameters.getQualifiedIdentifier(), returnType);
 
 			if (convertedJavadoc == null) {
@@ -717,7 +717,7 @@ public class JavaInterfaceParser {
 				exception.setQualifiedDataTypeName(qIdentifier);
 			}
 
-			ObjectStructureUtils.setParametersPaths(delimiters,
+			SignatureElementUtils.setParametersPaths(delimiters,
 					exceptions.getQualifiedIdentifier(), exception);
 
 			exceptions.addParameter(exception);

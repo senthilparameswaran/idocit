@@ -36,7 +36,7 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.core.utils.DescribedItemUtils;
 
 /**
  * Parser for the HTML tables in the {@link Javadoc} comments.
@@ -167,7 +167,7 @@ public class HTMLTableParser
 				lastValue = LAST_VALUE.NONE;
 				break;
 			case ROLE:
-				ThematicRole thematicRole = ObjectStructureUtils.findThematicRole(value);
+				ThematicRole thematicRole = DescribedItemUtils.findThematicRole(value);
 				currentDoc.setThematicRole(thematicRole);
 				lastValue = LAST_VALUE.NONE;
 				break;
@@ -211,7 +211,7 @@ public class HTMLTableParser
 					}
 					else
 					{
-						currentAddressee = ObjectStructureUtils.findAddressee(value);
+						currentAddressee = DescribedItemUtils.findAddressee(value);
 						lastValue = LAST_VALUE.ADDRESSEE;
 					}
 				}

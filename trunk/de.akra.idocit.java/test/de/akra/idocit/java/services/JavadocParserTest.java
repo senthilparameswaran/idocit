@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Scope;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.core.utils.DescribedItemUtils;
 
 /**
  * Tests for {@link JavadocParser}.
