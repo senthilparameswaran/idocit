@@ -53,7 +53,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.core.constants.ThematicGridConstants;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.core.utils.DescribedItemUtils;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;

@@ -29,7 +29,7 @@ import org.eclipse.jdt.core.dom.TextElement;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -107,7 +107,7 @@ public class JavaInterfaceGenerator
 	{
 		for (JavaMethod method : methods)
 		{
-			if (ObjectStructureUtils.isOperationsDocChanged(method))
+			if (SignatureElementUtils.isOperationsDocChanged(method))
 			{
 				List<JavadocTagElement> jDocTags = createMethodJavadocTagElements(method);
 

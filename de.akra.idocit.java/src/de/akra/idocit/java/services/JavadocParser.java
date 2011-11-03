@@ -39,7 +39,7 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.SignatureElement;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
+import de.akra.idocit.core.utils.DescribedItemUtils;
 
 /**
  * Parser for {@link Javadoc}. It converts a Javadoc to a list of
@@ -171,7 +171,7 @@ public class JavadocParser {
 		if (javadoc != null) {
 			foundDocs = new ArrayList<Documentation>(javadoc.tags().size());
 			// TODO make the used addressee adjustable via the Preference Pages
-			Addressee developer = ObjectStructureUtils
+			Addressee developer = DescribedItemUtils
 					.findAddressee("Developer");
 
 			for (TagElement tag : (List<TagElement>) javadoc.tags()) {
