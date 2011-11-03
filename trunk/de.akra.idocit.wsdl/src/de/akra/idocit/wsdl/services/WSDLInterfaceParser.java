@@ -41,8 +41,8 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ParameterPathElement;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.core.constants.ThematicGridConstants;
-import de.akra.idocit.core.utils.ObjectStructureUtils;
 import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLMessage;
@@ -308,7 +308,7 @@ public class WSDLInterfaceParser {
 			wsdlMessage = new WSDLMessage(parent, category);
 
 			String firstPath = rolePaths.get(0);
-			ParameterPathElement msgPathElem = ObjectStructureUtils
+			ParameterPathElement msgPathElem = SignatureElementUtils
 					.parsePathElement(delimiters, extractMessageName(firstPath));
 
 			wsdlMessage.setIdentifier(msgPathElem.getIdentifier());
@@ -323,7 +323,7 @@ public class WSDLInterfaceParser {
 				if (pathArray.length > 1) {
 					// search for existing Parameter
 					// TODO test qualified name things
-					ParameterPathElement paramPathElem = ObjectStructureUtils
+					ParameterPathElement paramPathElem = SignatureElementUtils
 							.parsePathElement(delimiters, pathArray[1]);
 					Parameter partElem = findExistingParameter(
 							wsdlMessage.getParameters(),
@@ -347,7 +347,7 @@ public class WSDLInterfaceParser {
 					// build hierarchy of the part parameters
 					buildParameterHierarchy(pathArray, 2, partElem);
 
-					ObjectStructureUtils.setParametersPaths(delimiters,
+					SignatureElementUtils.setParametersPaths(delimiters,
 							wsdlMessage.getIdentifier(), partElem);
 				}
 			}
@@ -376,7 +376,7 @@ public class WSDLInterfaceParser {
 		if (offset != elemPath.length) {
 			// search for existing Parameter
 			// TODO test qualified things
-			ParameterPathElement paramPathElem = ObjectStructureUtils
+			ParameterPathElement paramPathElem = SignatureElementUtils
 					.parsePathElement(delimiters, elemPath[offset]);
 			Parameter param = findExistingParameter(parent.getComplexType(),
 					paramPathElem.getQualifiedIdentifier(),
