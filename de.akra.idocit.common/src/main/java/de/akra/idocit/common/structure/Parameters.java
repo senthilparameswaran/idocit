@@ -43,10 +43,13 @@ public abstract class Parameters extends SignatureElement
 	 *            The parent of this SignatureElement.
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The numerus
 	 */
-	public Parameters(SignatureElement parent, String category, Numerus numerus)
+	public Parameters(SignatureElement parent, String category, Numerus numerus,
+			boolean hasPublicAccessibleAttributes)
 	{
-		super(parent, category, numerus);
+		super(parent, category, numerus, false);
 		parameters = Collections.emptyList();
 	}
 

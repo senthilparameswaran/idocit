@@ -28,7 +28,8 @@ import de.akra.idocit.common.services.RuleServiceTest;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ DocumentationTest.class, InterfaceArtifactTest.class,
-		InterfaceTest.class, OperationTest.class, ParameterTest.class, RuleServiceTest.class })
+		InterfaceTest.class, OperationTest.class, ParameterTest.class,
+		RuleServiceTest.class })
 public class AllIDocItCommonTests
 {
 

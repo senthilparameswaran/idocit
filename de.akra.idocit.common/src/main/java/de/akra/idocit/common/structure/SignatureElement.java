@@ -54,7 +54,7 @@ public abstract class SignatureElement
 	 * The empty SignatureElement represents the parent of the root SignatureElement.
 	 */
 	public static final SignatureElement EMPTY_SIGNATURE_ELEMENT = new SignatureElement(
-			null, "", Numerus.SINGULAR) {
+			null, "", Numerus.SINGULAR, false) {
 
 		@Override
 		public int size()
@@ -136,8 +136,18 @@ public abstract class SignatureElement
 	 * @since 0.0.2
 	 */
 	private boolean documentationChanged = false;
-	
-	private Numerus numerus;
+
+	/**
+	 * The numerus of this signature element derived from the data structure which is
+	 * represented by it. In doubt this attribute is singular.
+	 */
+	private Numerus numerus = Numerus.SINGULAR;
+
+	/**
+	 * Is true if the corresponding signature element has an internal structure of member
+	 * variables or attributes, which is accessable from "outside".
+	 */
+	private boolean hasPublicAccessibleAttributes = false;
 
 	/**
 	 * Constructor.
@@ -148,13 +158,14 @@ public abstract class SignatureElement
 	 * @param category
 	 *            The category of this element.
 	 */
-	public SignatureElement(SignatureElement parent, String category, Numerus numerus)
+	public SignatureElement(SignatureElement parent, String category, Numerus numerus, boolean hasPublicAccessibleAttributes)
 	{
 		this.id = ID_COUNTER++;
 		this.parent = parent;
 		this.category = category;
 		this.documentations = Collections.emptyList();
 		this.numerus = numerus;
+		this.hasPublicAccessibleAttributes = hasPublicAccessibleAttributes;
 	}
 
 	/**
@@ -222,6 +233,8 @@ public abstract class SignatureElement
 		signatureElement.setDocumentationAllowed(documentationAllowed);
 		signatureElement.setDocumentationChanged(documentationChanged);
 		signatureElement.setId(id);
+		signatureElement.setNumerus(numerus);
+		signatureElement.setHasPublicAccessibleAttributes(hasPublicAccessibleAttributes);
 
 		List<Documentation> newDocparts = Collections.emptyList();
 		if (documentations != Collections.EMPTY_LIST)
@@ -429,29 +442,38 @@ public abstract class SignatureElement
 		this.numerus = numerus;
 	}
 
+	public boolean hasPublicAccessibleAttributes()
+	{
+		return hasPublicAccessibleAttributes;
+	}
+
+	public void setHasPublicAccessibleAttributes(boolean hasPublicAccessibleAttributes)
+	{
+		this.hasPublicAccessibleAttributes = hasPublicAccessibleAttributes;
+	}
+
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((category == null) ? 0 : category.hashCode());
+		result = prime * result + ((category == null) ? 0 : category.hashCode());
 		result = prime * result + (documentationAllowed ? 1231 : 1237);
 		result = prime * result + (documentationChanged ? 1231 : 1237);
 		result = prime * result
 				+ ((documentations == null) ? 0 : documentations.hashCode());
+		result = prime * result + (hasPublicAccessibleAttributes ? 1231 : 1237);
 		result = prime * result + id;
-		result = prime * result
-				+ ((identifier == null) ? 0 : identifier.hashCode());
+		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
 		result = prime * result + ((numerus == null) ? 0 : numerus.hashCode());
-		result = prime
-				* result
-				+ ((qualifiedIdentifier == null) ? 0 : qualifiedIdentifier
-						.hashCode());
+		result = prime * result
+				+ ((qualifiedIdentifier == null) ? 0 : qualifiedIdentifier.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -459,39 +481,50 @@ public abstract class SignatureElement
 		if (getClass() != obj.getClass())
 			return false;
 		SignatureElement other = (SignatureElement) obj;
-		if (category == null) {
+		if (category == null)
+		{
 			if (other.category != null)
 				return false;
-		} else if (!category.equals(other.category))
+		}
+		else if (!category.equals(other.category))
 			return false;
 		if (documentationAllowed != other.documentationAllowed)
 			return false;
 		if (documentationChanged != other.documentationChanged)
 			return false;
-		if (documentations == null) {
+		if (documentations == null)
+		{
 			if (other.documentations != null)
 				return false;
-		} else if (!documentations.equals(other.documentations))
+		}
+		else if (!documentations.equals(other.documentations))
+			return false;
+		if (hasPublicAccessibleAttributes != other.hasPublicAccessibleAttributes)
 			return false;
 		if (id != other.id)
 			return false;
-		if (identifier == null) {
+		if (identifier == null)
+		{
 			if (other.identifier != null)
 				return false;
-		} else if (!identifier.equals(other.identifier))
+		}
+		else if (!identifier.equals(other.identifier))
 			return false;
 		if (numerus != other.numerus)
 			return false;
-		if (qualifiedIdentifier == null) {
+		if (qualifiedIdentifier == null)
+		{
 			if (other.qualifiedIdentifier != null)
 				return false;
-		} else if (!qualifiedIdentifier.equals(other.qualifiedIdentifier))
+		}
+		else if (!qualifiedIdentifier.equals(other.qualifiedIdentifier))
 			return false;
 		return true;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("SignatureElement [id=");
 		builder.append(id);
@@ -509,6 +542,8 @@ public abstract class SignatureElement
 		builder.append(documentationChanged);
 		builder.append(", numerus=");
 		builder.append(numerus);
+		builder.append(", hasPublicAccessibleAttributes=");
+		builder.append(hasPublicAccessibleAttributes);
 		builder.append("]");
 		return builder.toString();
 	}

@@ -46,10 +46,12 @@ public abstract class Interface extends SignatureElement
 	 *            The parent of this SignatureElement.
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The numerus
 	 */
 	public Interface(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category, numerus);
+		super(parent, category, numerus, false);
 	}
 
 	/**

@@ -118,17 +118,17 @@ public class InterfaceArtifactTest
 		inputParameters.setIdentifier("findIn");
 		op.setInputParameters(inputParameters);
 
-		Parameter paramCust = new TestParameter(inputParameters, "Part", Numerus.SINGULAR);
+		Parameter paramCust = new TestParameter(inputParameters, "Part", Numerus.SINGULAR, true);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR);
+		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new TestParameter(paramCust, "", Numerus.SINGULAR);
+		Parameter paramNameIn = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
 		paramCust.addParameter(paramNameIn);
@@ -140,18 +140,18 @@ public class InterfaceArtifactTest
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new TestParameter(outputParameters, "Part", Numerus.SINGULAR);
+		Parameter paramCustOut = new TestParameter(outputParameters, "Part", Numerus.SINGULAR, true);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		outputParameters.addParameter(paramCust);
 
-		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR);
+		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setDocumentationChanged(true);
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR);
+		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramCustOut.addParameter(paramNameOut);

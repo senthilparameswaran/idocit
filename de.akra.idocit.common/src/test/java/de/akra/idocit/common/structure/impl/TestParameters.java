@@ -33,10 +33,11 @@ public class TestParameters extends Parameters
 	 * 
 	 * @param parent
 	 * @param category
+	 * @param numerus
 	 */
 	public TestParameters(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category, numerus);
+		super(parent, category, numerus, false);
 	}
 
 	/*
