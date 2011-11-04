@@ -15,11 +15,17 @@
  *******************************************************************************/
 package de.akra.idocit.common.services;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -29,7 +35,10 @@ import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.RoleScope;
+import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.structure.impl.TestInterface;
 import de.akra.idocit.common.structure.impl.TestOperation;
@@ -46,6 +55,102 @@ import de.akra.idocit.common.structure.impl.TestParameters;
 public class RuleServiceTest
 {
 
+	private ThematicGrid createFindingOperationsGrid()
+	{
+		Map<String, String> gridBasedRules = new HashMap<String, String>();
+		gridBasedRules.put("COMPARISON", "!exists(\"PRIMARY_KEY\")");
+		gridBasedRules.put("PRIMARY_KEY", "!exists(\"COMPARISON\")");
+		gridBasedRules.put("SOURCE", "def()");
+
+		ThematicGrid findingOperationsGrid = new ThematicGrid();
+		findingOperationsGrid.setDescription("");
+		findingOperationsGrid.setGridBasedRules(gridBasedRules);
+		findingOperationsGrid.setName("Finding Operations");
+		findingOperationsGrid.setRefernceVerb("find");
+
+		ThematicRole roleAGENT = new ThematicRole("AGENT", "", RoleScope.INTERFACE_LEVEL);
+		roleAGENT.setRoleScope(RoleScope.INTERFACE_LEVEL);
+		ThematicRole roleSOURCE = new ThematicRole("SOURCE", "", RoleScope.BOTH);
+		ThematicRole roleCOMPARISON = new ThematicRole("COMPARISON", "", RoleScope.BOTH);
+		ThematicRole rolePRIMARY_KEY = new ThematicRole("PRIMARY_KEY", "", RoleScope.BOTH);
+
+		Map<ThematicRole, Boolean> roles = new HashMap<ThematicRole, Boolean>();
+		roles.put(roleSOURCE, Boolean.TRUE);
+		roles.put(roleCOMPARISON, Boolean.TRUE);
+		roles.put(rolePRIMARY_KEY, Boolean.TRUE);
+		roles.put(roleAGENT, Boolean.TRUE);
+		findingOperationsGrid.setRoles(roles);
+
+		Set<String> verbs = new HashSet<String>();
+		verbs.add("find");
+		verbs.add("search");
+		findingOperationsGrid.setVerbs(verbs);
+
+		return findingOperationsGrid;
+	}
+
+	private Collection<ThematicGrid> createMatchingGrids()
+	{
+		List<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
+		matchingGrids.add(createFindingOperationsGrid());
+
+		return matchingGrids;
+	}
+
+	private List<ThematicRole> createDefinedRoles()
+	{
+		List<ThematicRole> definedThematicRoles = new ArrayList<ThematicRole>();
+
+		definedThematicRoles.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+		definedThematicRoles.add(new ThematicRole("PRIMARY_KEY", "", RoleScope.BOTH));
+		definedThematicRoles.add(new ThematicRole("COMPARISON", "", RoleScope.BOTH));
+		definedThematicRoles
+				.add(new ThematicRole("ACTION", "", RoleScope.OPERATION_LEVEL));
+		definedThematicRoles
+				.add(new ThematicRole("AGENT", "", RoleScope.INTERFACE_LEVEL));
+
+		return definedThematicRoles;
+	}
+
+	/**
+	 * Test cases for
+	 * {@link RuleService#deriveRolesRecommendation(java.util.Collection, SignatureElement)}
+	 */
+	@Test
+	public void testDeriveRolesRecommendation()
+	{
+		// Positive tests
+		// ******************************************************************************
+		{
+			// Test case #1: if a COMPARISON is documented for a "Finding Operation", the
+			// PRIMARY_KEY should be a second-level-recommendation.
+			Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
+			Collection<ThematicGrid> matchingGrids = createMatchingGrids();
+			List<ThematicRole> definedRoles = createDefinedRoles();
+
+			List<ThematicRole> firstLevelRoles = new ArrayList<ThematicRole>();
+			firstLevelRoles.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+
+			List<ThematicRole> secondLevelRoles = new ArrayList<ThematicRole>();
+			secondLevelRoles.add(new ThematicRole("PRIMARY_KEY", "", RoleScope.BOTH));
+			secondLevelRoles.add(new ThematicRole("COMPARISON", "", RoleScope.BOTH));
+
+			RolesRecommendations referenceRecommendation = new RolesRecommendations(
+					firstLevelRoles, secondLevelRoles);
+
+			RolesRecommendations actualRecommendation = RuleService
+					.deriveRolesRecommendation(matchingGrids, definedRoles,
+							findingOperation);
+
+		}
+
+		// Negative tests
+		// ******************************************************************************
+		{
+
+		}
+	}
+
 	/**
 	 * Test cases for
 	 * {@link RuleService#reduceGrid(de.akra.idocit.common.structure.ThematicGrid, SignatureElement)}
@@ -56,7 +161,9 @@ public class RuleServiceTest
 		// Positive tests
 		// ******************************************************************************
 		{
-
+			// Test case #1: for a finding operation a COMPARISON xor a PRIMARY_KEY needs
+			// to be defined.
+			// TODO Implement
 		}
 
 		// Negative tests
@@ -65,7 +172,105 @@ public class RuleServiceTest
 
 		}
 	}
-	
+
+	/**
+	 * Returns the {@link Operation} for test purposes of predicate "onInterfaceLevel()".
+	 * 
+	 * @return The {@link Operation} for test purposes of predicate "onInterfaceLevel()"
+	 */
+	@Test
+	public void testOnInterfaceLevel()
+	{
+		// Positive tests
+		// ******************************************************************************
+		{
+			// Test case #1: for a selected interface, only the role AGENT should be
+			// included on recommended first level.
+			Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
+			// On Intrface-Level we have no ThematicGrids (because of the missing verb).
+			Collection<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
+			List<ThematicRole> definedRoles = createDefinedRoles();
+
+			RolesRecommendations actualRolesRecommendations = RuleService
+					.deriveRolesRecommendation(matchingGrids, definedRoles,
+							findingOperation.getParent());
+
+			// Keep in mind: the roles were sorted by name by the RuleService!
+			List<ThematicRole> firstLevelRecommendations = new ArrayList<ThematicRole>();
+			firstLevelRecommendations.add(new ThematicRole("AGENT", "",
+					RoleScope.INTERFACE_LEVEL));
+			firstLevelRecommendations.add(new ThematicRole("COMPARISON", "",
+					RoleScope.BOTH));
+			firstLevelRecommendations.add(new ThematicRole("PRIMARY_KEY", "",
+					RoleScope.BOTH));
+			firstLevelRecommendations.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+
+			List<ThematicRole> secondLevelRecommendations = new ArrayList<ThematicRole>();
+			secondLevelRecommendations.add(new ThematicRole("ACTION", "",
+					RoleScope.OPERATION_LEVEL));
+
+			RolesRecommendations referenceRolesRecommendations = new RolesRecommendations(
+					firstLevelRecommendations, secondLevelRecommendations);
+
+			assertEquals(referenceRolesRecommendations, actualRolesRecommendations);
+		}
+
+		// Negative tests
+		// ******************************************************************************
+		{
+
+		}
+	}
+
+	/**
+	 * Returns the {@link Operation} for test purposes of predicate "onOperationLevel()".
+	 * 
+	 * @return The {@link Operation} for test purposes of predicate "onOperationLevel()"
+	 */
+	@Test
+	public void testOnOperationLevel()
+	{
+		// Positive tests
+		// ******************************************************************************
+		{
+			// Test case #1: for a selected interface, only the role AGENT should be
+			// included on recommended first level.
+			Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
+			// On Intrface-Level we have no ThematicGrids (because of the missing verb).
+			Collection<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
+			List<ThematicRole> definedRoles = createDefinedRoles();
+
+			RolesRecommendations actualRolesRecommendations = RuleService
+					.deriveRolesRecommendation(matchingGrids, definedRoles,
+							findingOperation);
+
+			// Keep in mind: the roles were sorted by name by the RuleService!
+			List<ThematicRole> firstLevelRecommendations = new ArrayList<ThematicRole>();
+			firstLevelRecommendations.add(new ThematicRole("ACTION", "",
+					RoleScope.OPERATION_LEVEL));
+			firstLevelRecommendations.add(new ThematicRole("COMPARISON", "",
+					RoleScope.BOTH));
+			firstLevelRecommendations.add(new ThematicRole("PRIMARY_KEY", "",
+					RoleScope.BOTH));
+			firstLevelRecommendations.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+
+			List<ThematicRole> secondLevelRecommendations = new ArrayList<ThematicRole>();
+			secondLevelRecommendations.add(new ThematicRole("AGENT", "",
+					RoleScope.INTERFACE_LEVEL));
+
+			RolesRecommendations referenceRolesRecommendations = new RolesRecommendations(
+					firstLevelRecommendations, secondLevelRecommendations);
+
+			assertEquals(referenceRolesRecommendations, actualRolesRecommendations);
+		}
+
+		// Negative tests
+		// ******************************************************************************
+		{
+
+		}
+	}
+
 	/**
 	 * Returns the {@link Operation} for test purposes of predicate "isSingular()".
 	 * 
@@ -94,7 +299,8 @@ public class RuleServiceTest
 
 		List<Documentation> documentationsInput = new ArrayList<Documentation>();
 		Documentation documentationCOMPARISON = new Documentation();
-		documentationCOMPARISON.setThematicRole(new ThematicRole("COMPARISON", ""));
+		documentationCOMPARISON.setThematicRole(new ThematicRole("COMPARISON", "",
+				RoleScope.BOTH));
 		documentationsInput.add(documentationCOMPARISON);
 
 		paramLastName.setDocumentations(documentationsInput);
@@ -114,7 +320,8 @@ public class RuleServiceTest
 		List<Documentation> documentations = new ArrayList<Documentation>();
 
 		Documentation documentationOBJECT = new Documentation();
-		documentationOBJECT.setThematicRole(new ThematicRole("OBJECT", ""));
+		documentationOBJECT
+				.setThematicRole(new ThematicRole("OBJECT", "", RoleScope.BOTH));
 		documentations.add(documentationOBJECT);
 
 		resultCustomerList.setDocumentations(documentations);
@@ -150,7 +357,8 @@ public class RuleServiceTest
 
 		List<Documentation> documentationsInput = new ArrayList<Documentation>();
 		Documentation documentationCOMPARISON = new Documentation();
-		documentationCOMPARISON.setThematicRole(new ThematicRole("COMPARISON", ""));
+		documentationCOMPARISON.setThematicRole(new ThematicRole("COMPARISON", "",
+				RoleScope.BOTH));
 		documentationsInput.add(documentationCOMPARISON);
 
 		paramLastName.setDocumentations(documentationsInput);
@@ -170,7 +378,8 @@ public class RuleServiceTest
 		List<Documentation> documentations = new ArrayList<Documentation>();
 
 		Documentation documentationOBJECT = new Documentation();
-		documentationOBJECT.setThematicRole(new ThematicRole("OBJECT", ""));
+		documentationOBJECT
+				.setThematicRole(new ThematicRole("OBJECT", "", RoleScope.BOTH));
 		documentations.add(documentationOBJECT);
 
 		resultCustomerList.setDocumentations(documentations);
@@ -206,7 +415,8 @@ public class RuleServiceTest
 
 		List<Documentation> documentationsInput = new ArrayList<Documentation>();
 		Documentation documentationCOMPARISON = new Documentation();
-		documentationCOMPARISON.setThematicRole(new ThematicRole("COMPARISON", ""));
+		documentationCOMPARISON.setThematicRole(new ThematicRole("COMPARISON", "",
+				RoleScope.BOTH));
 		documentationsInput.add(documentationCOMPARISON);
 
 		paramLastName.setDocumentations(documentationsInput);
@@ -229,7 +439,8 @@ public class RuleServiceTest
 
 		List<Documentation> parameterDocumentations = new ArrayList<Documentation>();
 		Documentation documentationCustomerOBJECT = new Documentation();
-		documentationCustomerOBJECT.setThematicRole(new ThematicRole("OBJECT", ""));
+		documentationCustomerOBJECT.setThematicRole(new ThematicRole("OBJECT", "",
+				RoleScope.BOTH));
 		parameterDocumentations.add(documentationCOMPARISON);
 		customerParameter.setDocumentations(parameterDocumentations);
 
@@ -238,7 +449,8 @@ public class RuleServiceTest
 		List<Documentation> documentations = new ArrayList<Documentation>();
 
 		Documentation documentationOBJECT = new Documentation();
-		documentationOBJECT.setThematicRole(new ThematicRole("OBJECT", ""));
+		documentationOBJECT
+				.setThematicRole(new ThematicRole("OBJECT", "", RoleScope.BOTH));
 		documentations.add(documentationOBJECT);
 
 		resultCustomerList.setDocumentations(documentations);

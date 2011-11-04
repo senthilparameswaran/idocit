@@ -28,20 +28,30 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 	/**
 	 * Role representation if there aren't any.
 	 */
-	public static final ThematicRole EMPTY_ROLE = new ThematicRole("No Roles found"); 
-	
+	public static final ThematicRole EMPTY_ROLE = new ThematicRole("No Roles found");
+
 	private String name;
 
 	private String description;
-	
-	private String roleBasedRule;
+
+	private RoleScope roleScope;
+
+	public RoleScope getRoleScope()
+	{
+		return roleScope;
+	}
+
+	public void setRoleScope(RoleScope roleScope)
+	{
+		this.roleScope = roleScope;
+	}
 
 	/**
 	 * Constructor.
 	 */
 	public ThematicRole()
 	{
-		this(SignatureElement.ANONYMOUS_IDENTIFIER, null);
+		this(SignatureElement.ANONYMOUS_IDENTIFIER, null, RoleScope.BOTH);
 	}
 
 	/**
@@ -52,7 +62,7 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 	 */
 	public ThematicRole(String name)
 	{
-		this(name, null);
+		this(name, null, RoleScope.BOTH);
 	}
 
 	/**
@@ -62,11 +72,14 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 	 *            Name of the thematic role.
 	 * @param description
 	 *            Description for the thematic role.
+	 * @param roleScope
+	 *            The {@link RoleScope}
 	 */
-	public ThematicRole(String name, String description)
+	public ThematicRole(String name, String description, RoleScope roleScope)
 	{
 		this.name = name;
 		this.description = description;
+		this.roleScope = roleScope;
 	}
 
 	public String getName()
@@ -88,16 +101,6 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 	{
 		this.description = description;
 	}
-	
-	public String getRoleBasedRule()
-	{
-		return roleBasedRule;
-	}
-
-	public void setRoleBasedRule(String roleBasedRule)
-	{
-		this.roleBasedRule = roleBasedRule;
-	}
 
 	@Override
 	public int hashCode()
@@ -106,8 +109,7 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((roleBasedRule == null) ? 0 : roleBasedRule.hashCode());
+		result = prime * result + ((roleScope == null) ? 0 : roleScope.hashCode());
 		return result;
 	}
 
@@ -135,12 +137,7 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 		}
 		else if (!name.equals(other.name))
 			return false;
-		if (roleBasedRule == null)
-		{
-			if (other.roleBasedRule != null)
-				return false;
-		}
-		else if (!roleBasedRule.equals(other.roleBasedRule))
+		if (roleScope != other.roleScope)
 			return false;
 		return true;
 	}
@@ -148,8 +145,15 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 	@Override
 	public String toString()
 	{
-		return "ThematicRole [name=" + name + ", description=" + description
-				+ ", roleBasedRule=" + roleBasedRule + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("ThematicRole [name=");
+		builder.append(name);
+		builder.append(", description=");
+		builder.append(description);
+		builder.append(", roleScope=");
+		builder.append(roleScope);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	/**

@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,9 +33,12 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
@@ -45,6 +48,7 @@ import de.akra.idocit.common.utils.DescribedItemNameComparator;
 import de.akra.idocit.common.utils.Preconditions;
 import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.common.utils.StringUtils;
+import de.akra.idocit.common.utils.ThematicRoleUtils;
 
 /**
  * <table name="idocit" border="1" cellspacing="0">
@@ -258,16 +262,17 @@ public final class RuleService
 	 */
 	public static RolesRecommendations deriveRolesRecommendation(
 			final Collection<ThematicGrid> matchingGrids,
+			final List<ThematicRole> definedRoles,
 			final SignatureElement selectedSignatureElement)
 	{
 		final Set<ThematicRole> firstLevel = new HashSet<ThematicRole>();
 		final Set<ThematicRole> secondLevel = new HashSet<ThematicRole>();
 
-		if (matchingGrids != null)
-		{
-			evaluateRoleBasedRules(matchingGrids, selectedSignatureElement, firstLevel,
-					secondLevel);
+		evaluateRoleBasedRules(definedRoles, selectedSignatureElement, firstLevel,
+				secondLevel);
 
+		if ((matchingGrids != null) && (!matchingGrids.isEmpty()))
+		{
 			evaluateGridBasedRules(matchingGrids, selectedSignatureElement, firstLevel,
 					secondLevel);
 
@@ -276,38 +281,28 @@ public final class RuleService
 		return new RolesRecommendations(sortByName(firstLevel), sortByName(secondLevel));
 	}
 
-	private static void evaluateRoleBasedRules(
-			final Collection<ThematicGrid> matchingGrids,
+	private static boolean isInterfaceLevel(SignatureElement sigElem)
+	{
+		return (sigElem instanceof Interface) || (sigElem instanceof InterfaceArtifact);
+	}
+
+	private static void evaluateRoleBasedRules(final List<ThematicRole> roles,
 			final SignatureElement selectedSignatureElement,
 			final Set<ThematicRole> firstLevel, final Set<ThematicRole> secondLevel)
 	{
-		for (final ThematicGrid grid : matchingGrids)
+		if (roles != null)
 		{
-			final Map<ThematicRole, Boolean> roles = grid.getRoles();
-
-			if (roles != null)
+			for (final ThematicRole role : roles)
 			{
-				for (final ThematicRole role : roles.keySet())
+				if (RoleScope.BOTH.equals(role.getRoleScope())
+						|| ((RoleScope.INTERFACE_LEVEL.equals(role.getRoleScope()) && (isInterfaceLevel(selectedSignatureElement))))
+						|| (RoleScope.OPERATION_LEVEL.equals(role.getRoleScope()) && (!isInterfaceLevel(selectedSignatureElement))))
 				{
-					if (role.getRoleBasedRule() != null
-							&& !role.getRoleBasedRule().isEmpty())
-					{
-						if (evaluateRule(role.getRoleBasedRule(),
-								selectedSignatureElement))
-						{
-							firstLevel.add(role);
-						}
-						else
-						{
-							secondLevel.add(role);
-						}
-					}
-					else
-					{
-						LOG.log(Level.SEVERE, "No role-based-rule found for role " + role);
-						throw new IllegalStateException(
-								"No Role-based rule found for role " + role.getName());
-					}
+					firstLevel.add(role);
+				}
+				else
+				{
+					secondLevel.add(role);
 				}
 			}
 		}
@@ -332,23 +327,27 @@ public final class RuleService
 
 		if (theOne != null)
 		{
-			final Set<ThematicRole> gridRoles = theOne.getRoles().keySet();
-
-			for (final ThematicRole role : firstLevel)
+			if (theOne.getGridBasedRules() != null)
 			{
-				if (!gridRoles.contains(role))
+				for (final Entry<String, String> entry : theOne.getGridBasedRules()
+						.entrySet())
 				{
-					// Remove roles that are not within the reference/only
-					// available thematic grid:
-					firstLevel.remove(role);
-					secondLevel.add(role);
-				}
-				else if (!evaluateRule(theOne.getGridBasedRule(),
-						selectedSignatureElement))
-				{
-					// Remove role if the grid-based-rule does not apply:
-					firstLevel.remove(role);
-					secondLevel.add(role);
+					ThematicRole role = ThematicRoleUtils.findRoleByName(entry.getKey(),
+							theOne.getRoles().keySet());
+
+					if (role != null)
+					{
+						// Remove roles that are not within the reference/only
+						// available thematic grid:
+						firstLevel.remove(role);
+						secondLevel.add(role);
+					}
+					else if (!evaluateRule(entry.getValue(), selectedSignatureElement))
+					{
+						// Remove role if the grid-based-rule does not apply:
+						firstLevel.remove(role);
+						secondLevel.add(role);
+					}
 				}
 			}
 		}
@@ -435,7 +434,8 @@ public final class RuleService
 			for (Parameter parameter : parameters)
 			{
 				createThematicRoleContexts(thematicRoleContexts, parameter);
-				createThematicRoleContexts(thematicRoleContexts, parameter.getComplexType());
+				createThematicRoleContexts(thematicRoleContexts,
+						parameter.getComplexType());
 			}
 		}
 	}
@@ -460,7 +460,8 @@ public final class RuleService
 
 		if (signatureElement != null)
 		{
-			final List<Documentation> documentations = signatureElement.getDocumentations();
+			final List<Documentation> documentations = signatureElement
+					.getDocumentations();
 
 			if (documentations != null)
 			{
@@ -471,7 +472,7 @@ public final class RuleService
 						final ThematicRole role = documentation.getThematicRole();
 						final ThematicRoleContext context = new ThematicRoleContext(role,
 								signatureElement.getNumerus(),
-								signatureElement.hasPublicAccessibleAttributes());
+								signatureElement.hasPublicAccessibleAttributes(), false);
 
 						thematicRoleContexts.add(context);
 					}
@@ -500,15 +501,28 @@ public final class RuleService
 		Preconditions.checkNotNull(rule, "The rule miust not be null.");
 		Preconditions.checkNotNull(sigElem, "The SignatureElement must not be null.");
 
-		Boolean result;
 		final ScriptEngine engine = getScriptEngine();
-		final Operation operation = (Operation) SignatureElementUtils
+		engine.put("EMPTY_SIGNATURE_ELEMENT", SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+		engine.put(
+				"interfaceLevel",
+				Boolean.valueOf((sigElem instanceof Interface)
+						|| (sigElem instanceof InterfaceArtifact)));
+
+		final SignatureElement operationElement = SignatureElementUtils
 				.findOperationForParameter(sigElem);
 
-		engine.put("EMPTY_SIGNATURE_ELEMENT", SignatureElement.EMPTY_SIGNATURE_ELEMENT);
-		engine.put("thematicRoleContexts",
-				createThematicRolesContextsForOperation(operation));
+		if (!SignatureElement.EMPTY_SIGNATURE_ELEMENT.equals(operationElement))
+		// In this case we have a signature element on operation level or below.
+		{
 
+			final Operation operation = (Operation) SignatureElementUtils
+					.findOperationForParameter(sigElem);
+
+			engine.put("thematicRoleContexts",
+					createThematicRolesContextsForOperation(operation));
+		}
+
+		Boolean result;
 		try
 		{
 			result = (Boolean) engine.eval(rule);

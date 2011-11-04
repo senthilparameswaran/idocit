@@ -51,15 +51,15 @@ public class ThematicGrid implements DescribedItem, Cloneable
 	/**
 	 * The main verb of the grid which generalizes all other associated verbs.
 	 * 
-	 * Invariant: the reference verb must be an element of the set of associated
-	 * verbs!
+	 * Invariant: the reference verb must be an element of the set of associated verbs!
 	 */
 	private String referenceVerb;
 
 	/**
-	 * A rule for showing/sorting associated thematic roles.
+	 * Map of Thematic Grid Name > Rule: rule answers whether the corresponding role
+	 * shosuld be shown or not?
 	 */
-	private String gridBasedRule;
+	private Map<String, String> gridBasedRules;
 
 	/**
 	 * @return the roles
@@ -125,14 +125,14 @@ public class ThematicGrid implements DescribedItem, Cloneable
 		this.referenceVerb = refernceVerb;
 	}
 
-	public String getGridBasedRule()
+	public Map<String, String> getGridBasedRules()
 	{
-		return gridBasedRule;
+		return gridBasedRules;
 	}
 
-	public void setGridBasedRule(String gridBasedRule)
+	public void setGridBasedRules(Map<String, String> gridBasedRules)
 	{
-		this.gridBasedRule = gridBasedRule;
+		this.gridBasedRules = gridBasedRules;
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class ThematicGrid implements DescribedItem, Cloneable
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result
-				+ ((gridBasedRule == null) ? 0 : gridBasedRule.hashCode());
+				+ ((gridBasedRules == null) ? 0 : gridBasedRules.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
 				+ ((referenceVerb == null) ? 0 : referenceVerb.hashCode());
@@ -168,12 +168,12 @@ public class ThematicGrid implements DescribedItem, Cloneable
 		}
 		else if (!description.equals(other.description))
 			return false;
-		if (gridBasedRule == null)
+		if (gridBasedRules == null)
 		{
-			if (other.gridBasedRule != null)
+			if (other.gridBasedRules != null)
 				return false;
 		}
-		else if (!gridBasedRule.equals(other.gridBasedRule))
+		else if (!gridBasedRules.equals(other.gridBasedRules))
 			return false;
 		if (name == null)
 		{
@@ -225,8 +225,8 @@ public class ThematicGrid implements DescribedItem, Cloneable
 		builder.append(roles);
 		builder.append(", rerferenceVerb=");
 		builder.append(referenceVerb);
-		builder.append(", gridBasedRule=");
-		builder.append(gridBasedRule);
+		builder.append(", gridBasedRules=");
+		builder.append(gridBasedRules);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -244,7 +244,7 @@ public class ThematicGrid implements DescribedItem, Cloneable
 			clone.setDescription(description);
 			clone.setName(name);
 			clone.setRefernceVerb(referenceVerb);
-			clone.setGridBasedRule(gridBasedRule);
+			clone.setGridBasedRules(gridBasedRules);
 
 			Set<String> cloneVerbs = new HashSet<String>(verbs);
 			clone.setVerbs(cloneVerbs);
