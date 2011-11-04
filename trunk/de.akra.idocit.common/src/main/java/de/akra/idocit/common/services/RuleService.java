@@ -32,12 +32,17 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.structure.ThematicRoleContext;
 import de.akra.idocit.common.utils.DescribedItemNameComparator;
+import de.akra.idocit.common.utils.Preconditions;
 import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.common.utils.StringUtils;
 
@@ -109,7 +114,7 @@ public final class RuleService
 	 *         <tr>
 	 *         <td>Element:</td>
 	 *         <td>
-	 *         de.akra.idocit.common.structure.ThematicGrid:de.akra.idocit.common.
+	 *         de.akra.idocit.common.structure.ThematicGrid:de.akra.idocit. common.
 	 *         structure .ThematicGrid</td>
 	 *         </tr>
 	 *         <tr>
@@ -241,7 +246,7 @@ public final class RuleService
 	 *         <tr>
 	 *         <td>Element:</td>
 	 *         <td>
-	 *         de.akra.idocit.common.structure.RolesRecommendations:de.akra.idocit.common
+	 *         de.akra.idocit.common.structure.RolesRecommendations:de.akra. idocit.common
 	 *         .structure.RolesRecommendations</td>
 	 *         </tr>
 	 *         <tr>
@@ -287,7 +292,7 @@ public final class RuleService
 					if (role.getRoleBasedRule() != null
 							&& !role.getRoleBasedRule().isEmpty())
 					{
-						if (evaluateRule(role.getRoleBasedRule(), role,
+						if (evaluateRule(role.getRoleBasedRule(),
 								selectedSignatureElement))
 						{
 							firstLevel.add(role);
@@ -316,28 +321,160 @@ public final class RuleService
 	 * @param firstLevel
 	 * @param secondLevel
 	 */
-	private static void evaluateGridBasedRules(final Collection<ThematicGrid> matchingGrids,
+	private static void evaluateGridBasedRules(
+			final Collection<ThematicGrid> matchingGrids,
 			final SignatureElement selectedSignatureElement,
 			final Set<ThematicRole> firstLevel, final Set<ThematicRole> secondLevel)
 	{
-		final Operation op = (Operation) SignatureElementUtils.findOperationForParameter(selectedSignatureElement);
+		final Operation op = (Operation) SignatureElementUtils
+				.findOperationForParameter(selectedSignatureElement);
 		final ThematicGrid theOne = getUnambiguousGrid(matchingGrids, op);
 
 		if (theOne != null)
 		{
 			final Set<ThematicRole> gridRoles = theOne.getRoles().keySet();
-			
-			for (final ThematicRole role : firstLevel) {
+
+			for (final ThematicRole role : firstLevel)
+			{
 				if (!gridRoles.contains(role))
 				{
-					//Remove roles that are not within the reference/only available thematic grid:
+					// Remove roles that are not within the reference/only
+					// available thematic grid:
 					firstLevel.remove(role);
 					secondLevel.add(role);
 				}
-				else if (!evaluateRule(theOne.getGridBasedRule(), role, selectedSignatureElement)) {
-					//Remove role if the grid-based-rule does not apply:
+				else if (!evaluateRule(theOne.getGridBasedRule(),
+						selectedSignatureElement))
+				{
+					// Remove role if the grid-based-rule does not apply:
 					firstLevel.remove(role);
 					secondLevel.add(role);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Creates a list of {@link ThematicRoleContext}s all {@link ThematicRoles} documented
+	 * or inherited for / by the given {@link Operation}.
+	 * 
+	 * @param operation
+	 *            The {@link Operation} to create the contexts for. Must not be
+	 *            <code>null</code>.
+	 * 
+	 * @return The list of created contexts
+	 */
+	private static List<ThematicRoleContext> createThematicRolesContextsForOperation(
+			Operation operation)
+	{
+		Preconditions.checkNotNull(operation, "The operation must not be null.");
+
+		final List<ThematicRoleContext> thematicRoleContexts = new ArrayList<ThematicRoleContext>();
+
+		// Create the context for ...
+		// ... the operation itsself.
+		createThematicRoleContexts(thematicRoleContexts, operation);
+
+		// ... the inputs.
+		if (operation.getInputParameters() != null)
+		{
+			createThematicRoleContexts(thematicRoleContexts, operation
+					.getInputParameters().getParameters());
+		}
+
+		// ... the outputs.
+		if (operation.getOutputParameters() != null)
+		{
+			createThematicRoleContexts(thematicRoleContexts, operation
+					.getOutputParameters().getParameters());
+		}
+
+		// ... the exceptions.
+		if (operation.getExceptions() != null)
+		{
+			// TODO clarify why exceptions are declared as Lists of Parameters and
+			// refactor this declaration if necessary.
+			for (Parameters parameters : operation.getExceptions())
+			{
+				createThematicRoleContexts(thematicRoleContexts, parameters);
+			}
+		}
+
+		// ... and the parent interfaces.
+		SignatureElement parent = operation.getParent();
+		while (!SignatureElement.EMPTY_SIGNATURE_ELEMENT.equals(parent)
+				&& (parent != null))
+		{
+			createThematicRoleContexts(thematicRoleContexts, parent);
+			parent = parent.getParent();
+		}
+
+		return thematicRoleContexts;
+	}
+
+	/**
+	 * Convenience-Method to use {@link this#createThematicRoleContexts(List,
+	 * SignatureElement)} with lists.
+	 * 
+	 * @param thematicRoleContexts
+	 *            All created ThematicRoleContexts will be added to this list. It must not
+	 *            be <code>null</code>.
+	 * @param parameters
+	 *            The list of {@link Parameter}s to create contexts for
+	 * 
+	 * @see {@link this#createThematicRoleContexts(List, SignatureElement)}
+	 */
+	private static void createThematicRoleContexts(
+			List<ThematicRoleContext> thematicRoleContexts, List<Parameter> parameters)
+	{
+		Preconditions.checkNotNull(thematicRoleContexts,
+				"The list for the contexts to add must not be null");
+
+		if (parameters != null)
+		{
+			for (Parameter parameter : parameters)
+			{
+				createThematicRoleContexts(thematicRoleContexts, parameter);
+				createThematicRoleContexts(thematicRoleContexts, parameter.getComplexType());
+			}
+		}
+	}
+
+	/**
+	 * Creats {@link ThematicRoleContext}s for the {@link Documentation}s of the given
+	 * {@link SignatureElement} and adds them to the given list. A context is created for
+	 * each documented {@link ThematicRole}.
+	 * 
+	 * @param thematicRoleContexts
+	 *            All created ThematicRoleContexts will be added to this list. It must not
+	 *            be <code>null</code>.
+	 * @param signatureElement
+	 *            The SignatureElement to create the contexts for.
+	 */
+	private static void createThematicRoleContexts(
+			List<ThematicRoleContext> thematicRoleContexts,
+			SignatureElement signatureElement)
+	{
+		Preconditions.checkNotNull(thematicRoleContexts,
+				"The list for the contexts to add must not be null");
+
+		if (signatureElement != null)
+		{
+			final List<Documentation> documentations = signatureElement.getDocumentations();
+
+			if (documentations != null)
+			{
+				for (Documentation documentation : documentations)
+				{
+					if (documentation.getThematicRole() != null)
+					{
+						final ThematicRole role = documentation.getThematicRole();
+						final ThematicRoleContext context = new ThematicRoleContext(role,
+								signatureElement.getNumerus(),
+								signatureElement.hasPublicAccessibleAttributes());
+
+						thematicRoleContexts.add(context);
+					}
 				}
 			}
 		}
@@ -348,20 +485,29 @@ public final class RuleService
 	 * either be role- or grid-based.
 	 * 
 	 * @param rule
-	 *            The rule to evaluate.
+	 *            The rule to evaluate. (OBJECT). Must not be <code>null</code>.
 	 * @param sigElem
-	 *            The {@link SignatureElement} to apply the rule to.
+	 *            The {@link SignatureElement} to apply the rule to. Must not be
+	 *            <code>null</code>.
 	 * @return The result of the rule-evaluation, thus either <code>true</code> or
 	 *         <code>false</code>
+	 * 
+	 * @throws IllegalArgumentException
+	 *             If one of the parameters is <code>null</code>
 	 */
-	public static boolean evaluateRule(final String rule, final ThematicRole role,
-			final SignatureElement sigElem)
+	public static boolean evaluateRule(final String rule, final SignatureElement sigElem)
 	{
+		Preconditions.checkNotNull(rule, "The rule miust not be null.");
+		Preconditions.checkNotNull(sigElem, "The SignatureElement must not be null.");
+
 		Boolean result;
 		final ScriptEngine engine = getScriptEngine();
+		final Operation operation = (Operation) SignatureElementUtils
+				.findOperationForParameter(sigElem);
 
-		engine.put("role", role);
-		engine.put("operation", SignatureElementUtils.findOperationForParameter(sigElem));
+		engine.put("EMPTY_SIGNATURE_ELEMENT", SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+		engine.put("thematicRoleContexts",
+				createThematicRolesContextsForOperation(operation));
 
 		try
 		{
@@ -403,7 +549,8 @@ public final class RuleService
 			}
 			else if (operation.getThematicGridName() != null)
 			{
-				// Get the thematic grid matching the reference name from the operation:
+				// Get the thematic grid matching the reference name from the
+				// operation:
 				for (final ThematicGrid grid : grids)
 				{
 					if (grid.getName().equals(operation.getThematicGridName()))
@@ -517,7 +664,7 @@ public final class RuleService
 		{
 			predicates = StringUtils.toString(new FileInputStream(
 					"src/main/resources/basicRules.js"));
-			//TODO: Load basicRules.js via FileLocator
+			// TODO: Load basicRules.js via FileLocator
 		}
 		catch (FileNotFoundException e1)
 		{}

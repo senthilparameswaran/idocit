@@ -33,10 +33,13 @@ public class TestParameter extends Parameter
 	 * 
 	 * @param parent
 	 * @param category
+	 * @param numerus
+	 * @param hasPublicAccessibleAttributes
 	 */
-	public TestParameter(SignatureElement parent, String category, Numerus numerus)
+	public TestParameter(SignatureElement parent, String category, Numerus numerus,
+			boolean hasPublicAccessibleAttributes)
 	{
-		super(parent, category, numerus);
+		super(parent, category, numerus, hasPublicAccessibleAttributes);
 	}
 
 	/*
@@ -49,7 +52,7 @@ public class TestParameter extends Parameter
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new TestParameter(parent, super.getCategory(), Numerus.SINGULAR);
+		return new TestParameter(parent, super.getCategory(), Numerus.SINGULAR, false);
 	}
 
 	/*

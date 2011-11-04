@@ -1,41 +1,47 @@
-function defaultRule(role) {
+function defaultRule() {
 	return true;
 }
 
 function isSingular(role) {
-	println('isSingular() is not implemented yet!');
-	return true;
+	if(thematicRoleContexts != null){
+		for(var i = 0; i < thematicRoleContexts.size(); i++){
+			var thematicRoleContext = thematicRoleContexts.get(i);
+			
+			if((thematicRoleContext.role.name == role) && (thematicRoleContext.getNumerus().name() == "SINGULAR")){
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 function isPlural(role) {
-	//First check the input-parameters:
-	for (param in operation.inputParameters.parameters) {
-		
-	}
-	//Next are the output-parameters:
-	for (param in operation.inputParameters.parameters) {
-		
+	if(thematicRoleContexts != null){
+		for(var i = 0; i < thematicRoleContexts.size(); i++){
+			var thematicRoleContext = thematicRoleContexts.get(i);
+			
+			if((thematicRoleContext.role.name == role) && (thematicRoleContext.getNumerus().name() == "PLURAL")){
+				return true;
+			}
+		}
 	}
 
-	//And eventually we're walking up the tree until we find the root:
-	while ((parent = operation.parent) != SignatureElement.EMPTY_SIGNATURE_ELEMENT) {
-		
-	}
-	//foreach param : operation.getInputParameters().getParameters()
-	// foreach documentation : param.getDocumentations()
-	//  ThematicRole role = documentation.getThematicRole()
-	//  if (role.getNumerus() == Numerus.PLURAL) return true
-	// //Done descending tree - next: Ascending.
-	//while (SigElem parent = operation.getParent() != SignatureElement.EMPTY_SIGNATURE_ELEMENT)
-	// foreach documentation : parent.getDocumentation();
-	//  ThematicRole role = documentation.getThematicRole()
-	//  if (role.getNumerus() == Numerus.PLURAL) return true
-	return true;
+	return false;
 }
 
 function hasAttributes(role) {
-	println('hasAttributes() is not implemented yet!');
-	return true;
+	if(thematicRoleContexts != null){
+		for(var i = 0; i < thematicRoleContexts.size(); i++){
+			var thematicRoleContext = thematicRoleContexts.get(i);
+			
+			if((thematicRoleContext.role.name == role) && thematicRoleContext.hasPulicAccessableAttributes()){
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 function exists(role) {
@@ -44,7 +50,7 @@ function exists(role) {
 }
 
 function info() {
-	for (var attrib in operation) {
+	for (var attrib in thematicRoleContexts) {
 		println('Found attrib ' + attrib);
 	}
 	return true;

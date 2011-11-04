@@ -61,7 +61,7 @@ public abstract class Parameter extends SignatureElement
 	 * Further inner structure of a complex type.
 	 */
 	private List<Parameter> complexType;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -69,10 +69,15 @@ public abstract class Parameter extends SignatureElement
 	 *            The parent of this SignatureElement.
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The numerus
+	 * @param hasPublicAccessibleAttributes
+	 *            True if this parameters has a public accessable internal structure
 	 */
-	public Parameter(SignatureElement parent, String category, Numerus numerus)
+	public Parameter(SignatureElement parent, String category, Numerus numerus,
+			boolean hasPublicAccessibleAttributes)
 	{
-		super(parent, category, numerus);
+		super(parent, category, numerus, hasPublicAccessibleAttributes);
 		this.complexType = Collections.emptyList();
 	}
 
@@ -302,7 +307,7 @@ public abstract class Parameter extends SignatureElement
 	{
 		this.dataTypeName = dataTypeName;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -360,7 +365,8 @@ public abstract class Parameter extends SignatureElement
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("Parameter [dataTypeName=");
 		builder.append(dataTypeName);
