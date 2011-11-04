@@ -1,22 +1,14 @@
-function defaultRule() {
+function def() {
 	return true;
 }
 
 function isSingular(role) {
-	if(thematicRoleContexts != null){
-		for(var i = 0; i < thematicRoleContexts.size(); i++){
-			var thematicRoleContext = thematicRoleContexts.get(i);
-			
-			if((thematicRoleContext.role.name == role) && (thematicRoleContext.getNumerus().name() == "SINGULAR")){
-				return true;
-			}
-		}
-	}
-
-	return false;
+	return !isPlural(role);
 }
 
 function isPlural(role) {
+	checkNotNull(role);
+	
 	if(thematicRoleContexts != null){
 		for(var i = 0; i < thematicRoleContexts.size(); i++){
 			var thematicRoleContext = thematicRoleContexts.get(i);
@@ -31,6 +23,8 @@ function isPlural(role) {
 }
 
 function hasAttributes(role) {
+	checkNotNull(role);
+	
 	if(thematicRoleContexts != null){
 		for(var i = 0; i < thematicRoleContexts.size(); i++){
 			var thematicRoleContext = thematicRoleContexts.get(i);
@@ -45,8 +39,20 @@ function hasAttributes(role) {
 }
 
 function exists(role) {
-	println('exists() is not implemented yet!');
-	return true;
+	checkNotNull(role);
+	
+	if(thematicRoleContexts != null){
+		for(var i = 0; i < thematicRoleContexts.size(); i++){
+			var thematicRoleContext = thematicRoleContexts.get(i);
+			
+			if(thematicRoleContext.role.name == role){
+				return true;
+			}
+		}
+	}
+
+	return false;
+
 }
 
 function info() {
@@ -54,4 +60,10 @@ function info() {
 		println('Found attrib ' + attrib);
 	}
 	return true;
+}
+
+function checkNotNull(object){
+	if(object == null){
+		throw "IllegalArgumentException: each predicate expects a value as parameter and not null!";
+	}
 }
