@@ -36,9 +36,20 @@ import de.akra.idocit.common.structure.impl.TestOperation;
 import de.akra.idocit.common.structure.impl.TestParameter;
 import de.akra.idocit.common.structure.impl.TestParameters;
 
+/**
+ * Test cases for {@link RuleService}
+ * 
+ * @author Jan Christian Krause
+ * @author Florian Stumpf
+ * 
+ */
 public class RuleServiceTest
 {
 
+	/**
+	 * Test cases for
+	 * {@link RuleService#reduceGrid(de.akra.idocit.common.structure.ThematicGrid, SignatureElement)}
+	 */
 	@Test
 	public void testReduceGrid()
 	{
@@ -54,7 +65,12 @@ public class RuleServiceTest
 
 		}
 	}
-
+	
+	/**
+	 * Returns the {@link Operation} for test purposes of predicate "isSingular()".
+	 * 
+	 * @return The {@link Operation} for test purposes of predicate "isSingular()"
+	 */
 	private Operation createFindCustomer_SINGULAR_ByNameOperation()
 	{
 		Interface interfaceCustomerService = new TestInterface(
@@ -106,6 +122,11 @@ public class RuleServiceTest
 		return operationFindCustomerByName;
 	}
 
+	/**
+	 * Returns the {@link Operation} for test purposes of predicate "isPlural()".
+	 * 
+	 * @return The {@link Operation} for test purposes of predicate "isPlural()"
+	 */
 	private Operation createFindCustomers_PLURAL_ByNameOperation()
 	{
 		Interface interfaceCustomerService = new TestInterface(
@@ -157,6 +178,11 @@ public class RuleServiceTest
 		return operationFindCustomersByName;
 	}
 
+	/**
+	 * Returns the {@link Operation} for test purposes of predicate "hasAttributes()".
+	 * 
+	 * @return The {@link Operation} for test purposes of predicate "hasAttributes()"
+	 */
 	private Operation createFindCustomers_ATTRIBUTES_ByNameOperation()
 	{
 		Interface interfaceCustomerService = new TestInterface(
@@ -220,6 +246,9 @@ public class RuleServiceTest
 		return operationFindCustomersByName;
 	}
 
+	/**
+	 * Test cases for JavaScript-predicate isPlural(ROLE)
+	 */
 	@Test
 	public void testIsPlural()
 	{
@@ -231,22 +260,118 @@ public class RuleServiceTest
 			// then the predicate isPlural("OBJECT") should evaluate to true
 			// for this operation.
 			Operation operationFindCustomer_PLURAL_ByLastname = createFindCustomers_PLURAL_ByNameOperation();
-
 			assertTrue(RuleService.evaluateRule("isPlural(\"OBJECT\");",
 					operationFindCustomer_PLURAL_ByLastname));
 
+			Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+			assertFalse(RuleService.evaluateRule("isPlural(\"OBJECT\");",
+					operationFindCustomer_SINGULAR_ByLastname));
 		}
 
 		// Negative tests
 		// ******************************************************************************
 		{
-			Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+			// Test case #1: if no role is specified, an IllegalArgumentException is
+			// thrown.
+			{
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule("isPlural(null);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
 
-			assertFalse(RuleService.evaluateRule("isPlural(\"OBJECT\");",
-					operationFindCustomer_SINGULAR_ByLastname));
+				assertTrue(illegalArgumentExceptionCaught);
+			}
+
+			{
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule(
+							"isPlural(notDeclaredVariableIdentifier);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
+
+				assertTrue(illegalArgumentExceptionCaught);
+			}
 		}
 	}
 
+	/**
+	 * Test cases for JavaScript-predicate exists(ROLE)
+	 */
+	@Test
+	public void testExists()
+	{
+		// Positive tests
+		// ******************************************************************************
+		{
+			Operation operationFindCustomer_ATTRIBUTES_ByLastname = createFindCustomers_ATTRIBUTES_ByNameOperation();
+
+			assertTrue(RuleService.evaluateRule("exists(\"COMPARISON\");",
+					operationFindCustomer_ATTRIBUTES_ByLastname));
+
+			assertTrue(RuleService.evaluateRule("exists(\"OBJECT\");",
+					operationFindCustomer_ATTRIBUTES_ByLastname));
+
+			assertFalse(RuleService.evaluateRule("exists(\"AGENT\");",
+					operationFindCustomer_ATTRIBUTES_ByLastname));
+		}
+
+		// Negative tests
+		// ******************************************************************************
+		{
+			{
+				// Test case #1: if no role is specified, an IllegalArgumentException is
+				// thrown.
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule("exists(null);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
+
+				assertTrue(illegalArgumentExceptionCaught);
+			}
+
+			{
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule(
+							"isPlural(notDeclaredVariableIdentifier);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
+
+				assertTrue(illegalArgumentExceptionCaught);
+			}
+		}
+	}
+
+	/**
+	 * Test cases for JavaScript-predicate hasAttributes(ROLE)
+	 */
 	@Test
 	public void testHasAttributes()
 	{
@@ -258,18 +383,54 @@ public class RuleServiceTest
 			assertTrue(RuleService.evaluateRule("hasAttributes(\"COMPARISON\");",
 					operationFindCustomer_ATTRIBUTES_ByLastname));
 
+			assertFalse(RuleService.evaluateRule("hasAttributes(\"OBJECT\");",
+					operationFindCustomer_ATTRIBUTES_ByLastname));
+
 		}
 
 		// Negative tests
 		// ******************************************************************************
 		{
-			Operation operationFindCustomer_ATTRIBUTES_ByLastname = createFindCustomers_ATTRIBUTES_ByNameOperation();
+			{
+				// Test case #1: if no role is specified, an IllegalArgumentException is
+				// thrown.
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule("hasAttributes(null);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
 
-			assertFalse(RuleService.evaluateRule("hasAttributes(\"OBJECT\");",
-					operationFindCustomer_ATTRIBUTES_ByLastname));
+				assertTrue(illegalArgumentExceptionCaught);
+			}
+
+			{
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule(
+							"hasAttributes(notDeclaredVariableIdentifier);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
+
+				assertTrue(illegalArgumentExceptionCaught);
+			}
 		}
 	}
 
+	/**
+	 * Test cases for JavaScript-predicate isSingular(ROLE)
+	 */
 	@Test
 	public void testIsSingular()
 	{
@@ -279,18 +440,56 @@ public class RuleServiceTest
 			Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
 			assertTrue(RuleService.evaluateRule("isSingular(\"OBJECT\");",
 					operationFindCustomer_SINGULAR_ByLastname));
-		}
 
-		// Negative tests
-		// ******************************************************************************
-		{
 			Operation operationFindCustomer_PLURAL_ByLastname = createFindCustomers_PLURAL_ByNameOperation();
 
 			assertFalse(RuleService.evaluateRule("isSingular(\"OBJECT\");",
 					operationFindCustomer_PLURAL_ByLastname));
 		}
+
+		// Negative tests
+		// ******************************************************************************
+		{
+			{
+				// Test case #1: if no role is specified, an IllegalArgumentException is
+				// thrown.
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule("isSingular(null);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
+
+				assertTrue(illegalArgumentExceptionCaught);
+			}
+
+			{
+				boolean illegalArgumentExceptionCaught = false;
+				try
+				{
+					Operation operationFindCustomer_SINGULAR_ByLastname = createFindCustomer_SINGULAR_ByNameOperation();
+					assertFalse(RuleService.evaluateRule(
+							"isSingular(notDeclaredVariableIdentifier);",
+							operationFindCustomer_SINGULAR_ByLastname));
+				}
+				catch (IllegalArgumentException illEx)
+				{
+					illegalArgumentExceptionCaught = true;
+				}
+
+				assertTrue(illegalArgumentExceptionCaught);
+			}
+		}
 	}
 
+	/**
+	 * Test cases for {@link RuleService#evaluateRule(String, SignatureElement)}
+	 */
 	@Test
 	public void testEvaluateRecommendation()
 	{
@@ -336,6 +535,9 @@ public class RuleServiceTest
 		}
 	}
 
+	/**
+	 * Test cases for {@link RuleService#isRuleValid(String)}
+	 */
 	@Test
 	public void testIsRuleValid()
 	{
