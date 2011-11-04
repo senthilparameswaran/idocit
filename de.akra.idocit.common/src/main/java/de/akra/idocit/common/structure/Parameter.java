@@ -360,11 +360,18 @@ public abstract class Parameter extends SignatureElement
 	}
 
 	@Override
-	public String toString()
-	{
-		return "Parameter [dataTypeName=" + dataTypeName + ", qualifiedDataTypeName="
-				+ qualifiedDataTypeName + ", signatureElementPath="
-				+ signatureElementPath + ", complexType=" + complexType + "]";
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Parameter [dataTypeName=");
+		builder.append(dataTypeName);
+		builder.append(", qualifiedDataTypeName=");
+		builder.append(qualifiedDataTypeName);
+		builder.append(", signatureElementPath=");
+		builder.append(signatureElementPath);
+		builder.append(", complexType=");
+		builder.append(complexType);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

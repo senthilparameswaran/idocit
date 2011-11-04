@@ -430,27 +430,28 @@ public abstract class SignatureElement
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((category == null) ? 0 : category.hashCode());
+		result = prime * result
+				+ ((category == null) ? 0 : category.hashCode());
 		result = prime * result + (documentationAllowed ? 1231 : 1237);
 		result = prime * result + (documentationChanged ? 1231 : 1237);
 		result = prime * result
 				+ ((documentations == null) ? 0 : documentations.hashCode());
 		result = prime * result + id;
-		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
-		result = prime * result + ((numerus == null) ? 0 : numerus.hashCode());
-		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
 		result = prime * result
-				+ ((qualifiedIdentifier == null) ? 0 : qualifiedIdentifier.hashCode());
+				+ ((identifier == null) ? 0 : identifier.hashCode());
+		result = prime * result + ((numerus == null) ? 0 : numerus.hashCode());
+		result = prime
+				* result
+				+ ((qualifiedIdentifier == null) ? 0 : qualifiedIdentifier
+						.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -458,60 +459,57 @@ public abstract class SignatureElement
 		if (getClass() != obj.getClass())
 			return false;
 		SignatureElement other = (SignatureElement) obj;
-		if (category == null)
-		{
+		if (category == null) {
 			if (other.category != null)
 				return false;
-		}
-		else if (!category.equals(other.category))
+		} else if (!category.equals(other.category))
 			return false;
 		if (documentationAllowed != other.documentationAllowed)
 			return false;
 		if (documentationChanged != other.documentationChanged)
 			return false;
-		if (documentations == null)
-		{
+		if (documentations == null) {
 			if (other.documentations != null)
 				return false;
-		}
-		else if (!documentations.equals(other.documentations))
+		} else if (!documentations.equals(other.documentations))
 			return false;
 		if (id != other.id)
 			return false;
-		if (identifier == null)
-		{
+		if (identifier == null) {
 			if (other.identifier != null)
 				return false;
-		}
-		else if (!identifier.equals(other.identifier))
+		} else if (!identifier.equals(other.identifier))
 			return false;
 		if (numerus != other.numerus)
 			return false;
-		if (parent == null)
-		{
-			if (other.parent != null)
-				return false;
-		}
-		else if (!parent.equals(other.parent))
-			return false;
-		if (qualifiedIdentifier == null)
-		{
+		if (qualifiedIdentifier == null) {
 			if (other.qualifiedIdentifier != null)
 				return false;
-		}
-		else if (!qualifiedIdentifier.equals(other.qualifiedIdentifier))
+		} else if (!qualifiedIdentifier.equals(other.qualifiedIdentifier))
 			return false;
 		return true;
 	}
 
 	@Override
-	public String toString()
-	{
-		return "SignatureElement [parent=" + parent + ", id=" + id + ", documentations="
-				+ documentations + ", identifier=" + identifier
-				+ ", qualifiedIdentifier=" + qualifiedIdentifier + ", category="
-				+ category + ", documentationAllowed=" + documentationAllowed
-				+ ", documentationChanged=" + documentationChanged + ", numerus="
-				+ numerus + "]";
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SignatureElement [id=");
+		builder.append(id);
+		builder.append(", documentations=");
+		builder.append(documentations);
+		builder.append(", identifier=");
+		builder.append(identifier);
+		builder.append(", qualifiedIdentifier=");
+		builder.append(qualifiedIdentifier);
+		builder.append(", category=");
+		builder.append(category);
+		builder.append(", documentationAllowed=");
+		builder.append(documentationAllowed);
+		builder.append(", documentationChanged=");
+		builder.append(documentationChanged);
+		builder.append(", numerus=");
+		builder.append(numerus);
+		builder.append("]");
+		return builder.toString();
 	}
 }
