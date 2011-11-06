@@ -61,6 +61,7 @@ public class RuleServiceTest
 		gridBasedRules.put("COMPARISON", "!exists(\"PRIMARY_KEY\")");
 		gridBasedRules.put("PRIMARY_KEY", "!exists(\"COMPARISON\")");
 		gridBasedRules.put("SOURCE", "def()");
+		gridBasedRules.put("AGENT", "def()");
 
 		ThematicGrid findingOperationsGrid = new ThematicGrid();
 		findingOperationsGrid.setDescription("");
@@ -122,25 +123,123 @@ public class RuleServiceTest
 		// Positive tests
 		// ******************************************************************************
 		{
-			// Test case #1: if a COMPARISON is documented for a "Finding Operation", the
-			// PRIMARY_KEY should be a second-level-recommendation.
-			Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
-			Collection<ThematicGrid> matchingGrids = createMatchingGrids();
-			List<ThematicRole> definedRoles = createDefinedRoles();
+			// Test case #1: an undocumented operation with empty roles and no reference
+			// grid leads to empty recommendations.
+			{
+				Operation findingOperation = createUndocumentedFindCustomerByNameOperation();
+				Collection<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
+				List<ThematicRole> definedRoles = new ArrayList<ThematicRole>();
 
-			List<ThematicRole> firstLevelRoles = new ArrayList<ThematicRole>();
-			firstLevelRoles.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+				List<ThematicRole> firstLevelRoles = new ArrayList<ThematicRole>();
+				List<ThematicRole> secondLevelRoles = new ArrayList<ThematicRole>();
 
-			List<ThematicRole> secondLevelRoles = new ArrayList<ThematicRole>();
-			secondLevelRoles.add(new ThematicRole("PRIMARY_KEY", "", RoleScope.BOTH));
-			secondLevelRoles.add(new ThematicRole("COMPARISON", "", RoleScope.BOTH));
+				RolesRecommendations referenceRecommendation = new RolesRecommendations(
+						firstLevelRoles, secondLevelRoles);
 
-			RolesRecommendations referenceRecommendation = new RolesRecommendations(
-					firstLevelRoles, secondLevelRoles);
+				RolesRecommendations actualRecommendation = RuleService
+						.deriveRolesRecommendation(matchingGrids, definedRoles,
+								findingOperation);
 
-			RolesRecommendations actualRecommendation = RuleService
-					.deriveRolesRecommendation(matchingGrids, definedRoles,
-							findingOperation);
+				assertEquals(referenceRecommendation, actualRecommendation);
+			}
+
+			// Test case #2: for an undocumented operation the first level recommendations
+			// should contain the whole grid plus the ACTION role. The
+			{
+				Operation undocumentedFinder = createUndocumentedFindCustomerByNameOperation();
+				Collection<ThematicGrid> matchingGrids = createMatchingGrids();
+				List<ThematicRole> definedRoles = createDefinedRoles();
+
+				List<ThematicRole> firstLevelRoles = new ArrayList<ThematicRole>();
+				firstLevelRoles.add(new ThematicRole("ACTION", "",
+						RoleScope.OPERATION_LEVEL));
+				firstLevelRoles.add(new ThematicRole("COMPARISON", "", RoleScope.BOTH));
+				firstLevelRoles.add(new ThematicRole("PRIMARY_KEY", "", RoleScope.BOTH));
+				firstLevelRoles.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+
+				List<ThematicRole> secondLevelRoles = new ArrayList<ThematicRole>();
+				secondLevelRoles.add(new ThematicRole("AGENT", "",
+						RoleScope.INTERFACE_LEVEL));
+
+				RolesRecommendations referenceRecommendation = new RolesRecommendations(
+						firstLevelRoles, secondLevelRoles);
+
+				RolesRecommendations actualRecommendation = RuleService
+						.deriveRolesRecommendation(matchingGrids, definedRoles,
+								undocumentedFinder);
+
+				assertEquals(referenceRecommendation, actualRecommendation);
+			}
+
+			{
+				// Test case #3: documented role which are not required by the reference
+				// grid should be added into the second level recommendations.
+				Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
+				// On Interface-Level we have no ThematicGrids (because of the missing
+				// verb).
+				Collection<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
+				List<ThematicRole> definedRoles = createDefinedRoles();
+
+				RolesRecommendations actualRolesRecommendations = RuleService
+						.deriveRolesRecommendation(matchingGrids, definedRoles,
+								findingOperation);
+
+				// Keep in mind: the roles were sorted by name by the RuleService!
+				List<ThematicRole> firstLevelRecommendations = new ArrayList<ThematicRole>();
+				firstLevelRecommendations.add(new ThematicRole("ACTION", "",
+						RoleScope.OPERATION_LEVEL));
+				firstLevelRecommendations.add(new ThematicRole("PRIMARY_KEY", "",
+						RoleScope.BOTH));
+				firstLevelRecommendations.add(new ThematicRole("SOURCE", "",
+						RoleScope.BOTH));
+
+				List<ThematicRole> secondLevelRecommendations = new ArrayList<ThematicRole>();
+				secondLevelRecommendations.add(new ThematicRole("AGENT", "",
+						RoleScope.INTERFACE_LEVEL));
+				secondLevelRecommendations.add(new ThematicRole("COMPARISON", "",
+						RoleScope.BOTH));
+				secondLevelRecommendations.add(new ThematicRole("OBJECT", "",
+						RoleScope.BOTH));
+
+				RolesRecommendations referenceRolesRecommendations = new RolesRecommendations(
+						firstLevelRecommendations, secondLevelRecommendations);
+
+				assertEquals(referenceRolesRecommendations, actualRolesRecommendations);
+			}
+
+			{
+				// Test case #4: for a selected interface, only the role AGENT should be
+				// included on recommended first level.
+				Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
+				// On Intrface-Level we have no ThematicGrids (because of the missing
+				// verb).
+				Collection<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
+				List<ThematicRole> definedRoles = createDefinedRoles();
+
+				RolesRecommendations actualRolesRecommendations = RuleService
+						.deriveRolesRecommendation(matchingGrids, definedRoles,
+								findingOperation.getParent());
+
+				// Keep in mind: the roles were sorted by name by the RuleService!
+				List<ThematicRole> firstLevelRecommendations = new ArrayList<ThematicRole>();
+				firstLevelRecommendations.add(new ThematicRole("AGENT", "",
+						RoleScope.INTERFACE_LEVEL));
+				firstLevelRecommendations.add(new ThematicRole("COMPARISON", "",
+						RoleScope.BOTH));
+				firstLevelRecommendations.add(new ThematicRole("PRIMARY_KEY", "",
+						RoleScope.BOTH));
+				firstLevelRecommendations.add(new ThematicRole("SOURCE", "",
+						RoleScope.BOTH));
+
+				List<ThematicRole> secondLevelRecommendations = new ArrayList<ThematicRole>();
+				secondLevelRecommendations.add(new ThematicRole("ACTION", "",
+						RoleScope.OPERATION_LEVEL));
+
+				RolesRecommendations referenceRolesRecommendations = new RolesRecommendations(
+						firstLevelRecommendations, secondLevelRecommendations);
+
+				assertEquals(referenceRolesRecommendations, actualRolesRecommendations);
+			}
 
 		}
 
@@ -161,9 +260,39 @@ public class RuleServiceTest
 		// Positive tests
 		// ******************************************************************************
 		{
-			// Test case #1: for a finding operation a COMPARISON xor a PRIMARY_KEY needs
-			// to be defined.
-			// TODO Implement
+			// Test case #1: for a finding operation with a COMPARISON no PRIMARY_KEY
+			// needs to be defined.
+			{
+				ThematicGrid findingOperationsGrid = createFindingOperationsGrid();
+				ThematicGrid referenceGridComparison = (ThematicGrid) findingOperationsGrid
+						.clone();
+				referenceGridComparison.getRoles().remove(
+						new ThematicRole("PRIMARY_KEY", "", RoleScope.BOTH));
+				referenceGridComparison.getGridBasedRules().remove("PRIMARY_KEY");
+
+				Operation findingOperationWithComparison = createFindCustomer_SINGULAR_ByNameOperation();
+				ThematicGrid actualGridComparison = RuleService.reduceGrid(
+						findingOperationsGrid, findingOperationWithComparison);
+
+				assertEquals(referenceGridComparison, actualGridComparison);
+
+			}
+			// Test case #2: for a finding operation with a PRIMARY_KEY no COMPARISON
+			// needs to be defined.
+			{
+				ThematicGrid findingOperationsGrid = createFindingOperationsGrid();
+				ThematicGrid referenceGridPrimaryKey = (ThematicGrid) findingOperationsGrid
+						.clone();
+				referenceGridPrimaryKey.getRoles().remove(
+						new ThematicRole("COMPARISON", "", RoleScope.BOTH));
+				referenceGridPrimaryKey.getGridBasedRules().remove("COMPARISON");
+
+				Operation findingOperationWithPrimaryKey = createFindCustomer_SINGULAR_ByNameOperationWithPrimaryKey();
+				ThematicGrid actualGridPrimaryKey = RuleService.reduceGrid(
+						findingOperationsGrid, findingOperationWithPrimaryKey);
+
+				assertEquals(referenceGridPrimaryKey, actualGridPrimaryKey);
+			}
 		}
 
 		// Negative tests
@@ -174,101 +303,104 @@ public class RuleServiceTest
 	}
 
 	/**
-	 * Returns the {@link Operation} for test purposes of predicate "onInterfaceLevel()".
+	 * Returns the undocumented {@link Operation} for test purposes.
 	 * 
-	 * @return The {@link Operation} for test purposes of predicate "onInterfaceLevel()"
+	 * @return The undocumented {@link Operation} for test purposes
 	 */
-	@Test
-	public void testOnInterfaceLevel()
+	private Operation createUndocumentedFindCustomerByNameOperation()
 	{
-		// Positive tests
-		// ******************************************************************************
-		{
-			// Test case #1: for a selected interface, only the role AGENT should be
-			// included on recommended first level.
-			Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
-			// On Intrface-Level we have no ThematicGrids (because of the missing verb).
-			Collection<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
-			List<ThematicRole> definedRoles = createDefinedRoles();
+		Interface interfaceCustomerService = new TestInterface(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Interface", Numerus.SINGULAR);
 
-			RolesRecommendations actualRolesRecommendations = RuleService
-					.deriveRolesRecommendation(matchingGrids, definedRoles,
-							findingOperation.getParent());
+		List<Operation> operations = new ArrayList<Operation>();
+		Operation operationFindCustomerByName = new TestOperation(
+				interfaceCustomerService, "Operation", "Finding Operations",
+				Numerus.SINGULAR);
+		operations.add(operationFindCustomerByName);
+		interfaceCustomerService.setOperations(operations);
 
-			// Keep in mind: the roles were sorted by name by the RuleService!
-			List<ThematicRole> firstLevelRecommendations = new ArrayList<ThematicRole>();
-			firstLevelRecommendations.add(new ThematicRole("AGENT", "",
-					RoleScope.INTERFACE_LEVEL));
-			firstLevelRecommendations.add(new ThematicRole("COMPARISON", "",
-					RoleScope.BOTH));
-			firstLevelRecommendations.add(new ThematicRole("PRIMARY_KEY", "",
-					RoleScope.BOTH));
-			firstLevelRecommendations.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+		Parameters inputs = new TestParameters(operationFindCustomerByName, "Paratemers",
+				Numerus.SINGULAR);
+		operationFindCustomerByName.setInputParameters(inputs);
 
-			List<ThematicRole> secondLevelRecommendations = new ArrayList<ThematicRole>();
-			secondLevelRecommendations.add(new ThematicRole("ACTION", "",
-					RoleScope.OPERATION_LEVEL));
+		Parameter paramLastName = new TestParameter(inputs, "Parameter",
+				Numerus.SINGULAR, false);
+		paramLastName.setDataTypeName("java.lang.String");
+		paramLastName.setIdentifier("lastname");
 
-			RolesRecommendations referenceRolesRecommendations = new RolesRecommendations(
-					firstLevelRecommendations, secondLevelRecommendations);
+		inputs.addParameter(paramLastName);
 
-			assertEquals(referenceRolesRecommendations, actualRolesRecommendations);
-		}
+		Parameters outputs = new TestParameters(operationFindCustomerByName,
+				"Paratemers", Numerus.SINGULAR);
+		operationFindCustomerByName.setOutputParameters(outputs);
 
-		// Negative tests
-		// ******************************************************************************
-		{
+		Parameter resultCustomerList = new TestParameter(outputs, "Results",
+				Numerus.SINGULAR, false);
+		resultCustomerList.setDataTypeName("java.lang.String");
+		resultCustomerList.setIdentifier("result");
+		outputs.addParameter(resultCustomerList);
 
-		}
+		return operationFindCustomerByName;
 	}
 
 	/**
-	 * Returns the {@link Operation} for test purposes of predicate "onOperationLevel()".
+	 * Returns the {@link Operation} for test purposes of predicate "isSingular()" with a
+	 * documented primary key.
 	 * 
-	 * @return The {@link Operation} for test purposes of predicate "onOperationLevel()"
+	 * @return The {@link Operation} for test purposes of predicate
+	 *         "isSingular() with a documented primary keyÏ"
 	 */
-	@Test
-	public void testOnOperationLevel()
+	private Operation createFindCustomer_SINGULAR_ByNameOperationWithPrimaryKey()
 	{
-		// Positive tests
-		// ******************************************************************************
-		{
-			// Test case #1: for a selected interface, only the role AGENT should be
-			// included on recommended first level.
-			Operation findingOperation = createFindCustomer_SINGULAR_ByNameOperation();
-			// On Intrface-Level we have no ThematicGrids (because of the missing verb).
-			Collection<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
-			List<ThematicRole> definedRoles = createDefinedRoles();
+		Interface interfaceCustomerService = new TestInterface(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Interface", Numerus.SINGULAR);
 
-			RolesRecommendations actualRolesRecommendations = RuleService
-					.deriveRolesRecommendation(matchingGrids, definedRoles,
-							findingOperation);
+		List<Operation> operations = new ArrayList<Operation>();
+		Operation operationFindCustomerByName = new TestOperation(
+				interfaceCustomerService, "Operation", "Finding Operations",
+				Numerus.SINGULAR);
+		operations.add(operationFindCustomerByName);
+		interfaceCustomerService.setOperations(operations);
 
-			// Keep in mind: the roles were sorted by name by the RuleService!
-			List<ThematicRole> firstLevelRecommendations = new ArrayList<ThematicRole>();
-			firstLevelRecommendations.add(new ThematicRole("ACTION", "",
-					RoleScope.OPERATION_LEVEL));
-			firstLevelRecommendations.add(new ThematicRole("COMPARISON", "",
-					RoleScope.BOTH));
-			firstLevelRecommendations.add(new ThematicRole("PRIMARY_KEY", "",
-					RoleScope.BOTH));
-			firstLevelRecommendations.add(new ThematicRole("SOURCE", "", RoleScope.BOTH));
+		Parameters inputs = new TestParameters(operationFindCustomerByName, "Paratemers",
+				Numerus.SINGULAR);
+		operationFindCustomerByName.setInputParameters(inputs);
 
-			List<ThematicRole> secondLevelRecommendations = new ArrayList<ThematicRole>();
-			secondLevelRecommendations.add(new ThematicRole("AGENT", "",
-					RoleScope.INTERFACE_LEVEL));
+		Parameter paramLastName = new TestParameter(inputs, "Parameter",
+				Numerus.SINGULAR, false);
+		paramLastName.setDataTypeName("java.lang.String");
+		paramLastName.setIdentifier("lastname");
 
-			RolesRecommendations referenceRolesRecommendations = new RolesRecommendations(
-					firstLevelRecommendations, secondLevelRecommendations);
+		List<Documentation> documentationsInput = new ArrayList<Documentation>();
+		Documentation documentationPRIMARY_KEY = new Documentation();
+		documentationPRIMARY_KEY.setThematicRole(new ThematicRole("PRIMARY_KEY", "",
+				RoleScope.BOTH));
+		documentationsInput.add(documentationPRIMARY_KEY);
 
-			assertEquals(referenceRolesRecommendations, actualRolesRecommendations);
-		}
+		paramLastName.setDocumentations(documentationsInput);
 
-		// Negative tests
-		// ******************************************************************************
-		{
+		inputs.addParameter(paramLastName);
 
-		}
+		Parameters outputs = new TestParameters(operationFindCustomerByName,
+				"Paratemers", Numerus.SINGULAR);
+		operationFindCustomerByName.setOutputParameters(outputs);
+
+		Parameter resultCustomerList = new TestParameter(outputs, "Results",
+				Numerus.SINGULAR, false);
+		resultCustomerList.setDataTypeName("java.lang.String");
+		resultCustomerList.setIdentifier("result");
+		outputs.addParameter(resultCustomerList);
+
+		List<Documentation> documentations = new ArrayList<Documentation>();
+
+		Documentation documentationOBJECT = new Documentation();
+		documentationOBJECT
+				.setThematicRole(new ThematicRole("OBJECT", "", RoleScope.BOTH));
+		documentations.add(documentationOBJECT);
+
+		resultCustomerList.setDocumentations(documentations);
+
+		return operationFindCustomerByName;
 	}
 
 	/**

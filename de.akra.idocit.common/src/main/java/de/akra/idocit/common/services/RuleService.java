@@ -20,8 +20,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
@@ -135,7 +137,36 @@ public final class RuleService
 	public static ThematicGrid reduceGrid(final ThematicGrid gridToReduce,
 			final SignatureElement selectedSignatureElement)
 	{
-		throw new RuntimeException("Not yet implemented");
+		ThematicGrid reducedGrid = (ThematicGrid) gridToReduce.clone();
+		Map<ThematicRole, Boolean> reducedRoles = new HashMap<ThematicRole, Boolean>();
+		Map<String, String> reducedRules = new HashMap<String, String>();
+
+		if (gridToReduce.getRoles() != null)
+		{
+			for (Entry<ThematicRole, Boolean> entry : gridToReduce.getRoles().entrySet())
+			{
+				Map<String, String> gridBasedRules = gridToReduce.getGridBasedRules();
+				ThematicRole role = entry.getKey();
+				String gridRule = gridBasedRules.get(role.getName());
+
+				if (LOG.isLoggable(Level.INFO))
+				{
+					LOG.log(Level.INFO,
+							"Evaluating rule for thematic role " + role.getName());
+				}
+
+				if (evaluateRule(gridRule, selectedSignatureElement))
+				{
+					reducedRoles.put(role, entry.getValue());
+					reducedRules.put(role.getName(), gridRule);
+				}
+			}
+		}
+
+		reducedGrid.setGridBasedRules(reducedRules);
+		reducedGrid.setRoles(reducedRoles);
+
+		return reducedGrid;
 	}
 
 	/**
@@ -265,7 +296,12 @@ public final class RuleService
 			final List<ThematicRole> definedRoles,
 			final SignatureElement selectedSignatureElement)
 	{
+		// At the beginning every role is recommended. In the following steps we identify
+		// those roles, which do not need to be on first level recommendations and remove
+		// them from this list.
 		final Set<ThematicRole> firstLevel = new HashSet<ThematicRole>();
+		firstLevel.addAll(definedRoles);
+
 		final Set<ThematicRole> secondLevel = new HashSet<ThematicRole>();
 
 		evaluateRoleBasedRules(definedRoles, selectedSignatureElement, firstLevel,
@@ -275,8 +311,14 @@ public final class RuleService
 		{
 			evaluateGridBasedRules(matchingGrids, selectedSignatureElement, firstLevel,
 					secondLevel);
-
 		}
+
+		Set<ThematicRole> associatedThematicRoles = new HashSet<ThematicRole>();
+		SignatureElementUtils.collectAssociatedThematicRoles(associatedThematicRoles,
+				selectedSignatureElement);
+
+		firstLevel.removeAll(associatedThematicRoles);
+		secondLevel.addAll(associatedThematicRoles);
 
 		return new RolesRecommendations(sortByName(firstLevel), sortByName(secondLevel));
 	}
@@ -302,6 +344,7 @@ public final class RuleService
 				}
 				else
 				{
+					firstLevel.remove(role);
 					secondLevel.add(role);
 				}
 			}
@@ -329,6 +372,8 @@ public final class RuleService
 		{
 			if (theOne.getGridBasedRules() != null)
 			{
+				// Check for each role defined in the reference grid if its rule is
+				// fulfilled.
 				for (final Entry<String, String> entry : theOne.getGridBasedRules()
 						.entrySet())
 				{
@@ -337,16 +382,12 @@ public final class RuleService
 
 					if (role != null)
 					{
-						// Remove roles that are not within the reference/only
-						// available thematic grid:
-						firstLevel.remove(role);
-						secondLevel.add(role);
-					}
-					else if (!evaluateRule(entry.getValue(), selectedSignatureElement))
-					{
-						// Remove role if the grid-based-rule does not apply:
-						firstLevel.remove(role);
-						secondLevel.add(role);
+						if (!evaluateRule(entry.getValue(), selectedSignatureElement))
+						{
+							// Remove role if the grid-based-rule does not apply:
+							firstLevel.remove(role);
+							secondLevel.add(role);
+						}
 					}
 				}
 			}
@@ -498,7 +539,7 @@ public final class RuleService
 	 */
 	public static boolean evaluateRule(final String rule, final SignatureElement sigElem)
 	{
-		Preconditions.checkNotNull(rule, "The rule miust not be null.");
+		Preconditions.checkNotNull(rule, "The rule must not be null.");
 		Preconditions.checkNotNull(sigElem, "The SignatureElement must not be null.");
 
 		final ScriptEngine engine = getScriptEngine();
