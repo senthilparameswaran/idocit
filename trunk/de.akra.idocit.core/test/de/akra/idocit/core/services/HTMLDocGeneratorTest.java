@@ -13,6 +13,7 @@ import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
@@ -69,18 +70,18 @@ public class HTMLDocGeneratorTest
 	private InterfaceArtifact createInterfaceArtifact()
 	{
 		InterfaceArtifact artifact = new TestInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact");
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact", Numerus.SINGULAR);
 		artifact.setIdentifier("test.wsdl");
 
 		List<Interface> interfaceList = new Vector<Interface>();
-		Interface interf = new TestInterface(artifact, "PortType") {
+		Interface interf = new TestInterface(artifact, "PortType", Numerus.SINGULAR) {
 		};
 		interf.setIdentifier("CustomerService");
 		interf.addDocpart(createDocumentation());
 		interfaceList.add(interf);
 
 		List<Operation> operations = new Vector<Operation>();
-		Operation op = new TestOperation(interf, "Operation", "Searching Operations");
+		Operation op = new TestOperation(interf, "Operation", "Searching Operations", Numerus.SINGULAR);
 		op.setIdentifier("find");
 		op.addDocpart(createDocumentation());
 		operations.add(op);
@@ -89,22 +90,22 @@ public class HTMLDocGeneratorTest
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new TestParameters(op, "InputMessage");
+		Parameters inputParameters = new TestParameters(op, "InputMessage", Numerus.SINGULAR);
 		inputParameters.setIdentifier("findIn");
 		inputParameters.addDocpart(createDocumentation());
 		op.setInputParameters(inputParameters);
 
-		Parameter paramCust = new TestParameter(inputParameters, "Part");
+		Parameter paramCust = new TestParameter(inputParameters, "Part", Numerus.SINGULAR, true);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new TestParameter(paramCust, "");
+		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new TestParameter(paramCust, "");
+		Parameter paramNameIn = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
 		paramCust.addParameter(paramNameIn);
@@ -112,21 +113,21 @@ public class HTMLDocGeneratorTest
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new TestParameters(op, "OutputMessage");
+		Parameters outputParameters = new TestParameters(op, "OutputMessage", Numerus.SINGULAR);
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new TestParameter(outputParameters, "Part");
+		Parameter paramCustOut = new TestParameter(outputParameters, "Part", Numerus.SINGULAR, true);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		outputParameters.addParameter(paramCust);
 
-		Parameter paramIdOut = new TestParameter(paramCustOut, "");
+		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new TestParameter(paramCustOut, "");
+		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramCustOut.addParameter(paramNameOut);
