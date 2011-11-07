@@ -31,6 +31,7 @@ import org.pocui.swt.composites.ICompositeFactory;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
@@ -54,14 +55,16 @@ import de.akra.idocit.ui.services.CompositeTestPersistenceService;
  */
 public class EditArtifactDocumentationCompositeFactory
 		implements
-		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection> {
+		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection>
+{
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection> createComposite(
-			Composite pvParent) {
+			Composite pvParent)
+	{
 		ServiceManager.getInstance().setPersistenceService(
 				new CompositeTestPersistenceService());
 
@@ -101,7 +104,8 @@ public class EditArtifactDocumentationCompositeFactory
 					@Override
 					public void selectionChanged(
 							EditArtifactDocumentationCompositeSelection arg0,
-							PocUIComposite<EditArtifactDocumentationCompositeSelection> arg1) {
+							PocUIComposite<EditArtifactDocumentationCompositeSelection> arg1)
+					{
 						System.out.println(arg0);
 					}
 				});
@@ -109,19 +113,20 @@ public class EditArtifactDocumentationCompositeFactory
 		return editArtifactComp;
 	}
 
-	private InterfaceArtifact createInterfaceArtifact() {
+	private InterfaceArtifact createInterfaceArtifact()
+	{
 		InterfaceArtifact artifact = new TestInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact");
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact", Numerus.SINGULAR);
 		artifact.setIdentifier("test.wsdl");
 
 		List<Interface> interfaceList = new Vector<Interface>();
-		Interface interf = new TestInterface(artifact, "PortType");
+		Interface interf = new TestInterface(artifact, "PortType", Numerus.SINGULAR);
 		interf.setIdentifier("CustomerService");
 		interfaceList.add(interf);
 
 		List<Operation> operations = new Vector<Operation>();
-		Operation op = new TestOperation(interf, "Operation",
-				"Searching Operations");
+		Operation op = new TestOperation(interf, "Operation", "Searching Operations",
+				Numerus.SINGULAR);
 		op.setIdentifier("get");
 		operations.add(op);
 		interf.setOperations(operations);
@@ -129,67 +134,66 @@ public class EditArtifactDocumentationCompositeFactory
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new TestParameters(op, "InputMessage");
+		Parameters inputParameters = new TestParameters(op, "InputMessage",
+				Numerus.SINGULAR);
 		inputParameters.setIdentifier("getIn");
 		op.setInputParameters(inputParameters);
 
-		Parameter paramCust = new TestParameter(inputParameters, "Part");
+		Parameter paramCust = new TestParameter(inputParameters, "Part",
+				Numerus.SINGULAR, true);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
 		paramCust.setQualifiedDataTypeName("ns.Customer");
 		paramCust.setSignatureElementPath("getIn.Cust(Customer)");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new TestParameter(paramCust, "");
+		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramCust.setQualifiedDataTypeName("int");
 		paramId.setSignatureElementPath("getIn.Cust(Customer).id(int)");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new TestParameter(paramCust, "");
+		Parameter paramNameIn = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
-		paramNameIn
-				.setSignatureElementPath("getIn.Cust(Customer).name(String)");
+		paramNameIn.setSignatureElementPath("getIn.Cust(Customer).name(String)");
 		paramCust.addParameter(paramNameIn);
 
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new TestParameters(op, "OutputMessage");
+		Parameters outputParameters = new TestParameters(op, "OutputMessage",
+				Numerus.SINGULAR);
 		outputParameters.setIdentifier("getOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new TestParameter(outputParameters, "Part");
+		Parameter paramCustOut = new TestParameter(outputParameters, "Part", Numerus.SINGULAR, true);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		paramCust.setQualifiedDataTypeName("ns.Customer");
 		paramCustOut.setSignatureElementPath("getOut.Cust(Customer)");
 		outputParameters.addParameter(paramCustOut);
 
-		Parameter paramIdOut = new TestParameter(paramCustOut, "");
+		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setSignatureElementPath("getOut.Cust(Customer).id(int)");
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new TestParameter(paramCustOut, "");
+		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramCust.setQualifiedDataTypeName("java.lang.String");
-		paramNameOut
-				.setSignatureElementPath("getOut.Cust(Customer).name(String)");
+		paramNameOut.setSignatureElementPath("getOut.Cust(Customer).name(String)");
 		paramCustOut.addParameter(paramNameOut);
 
-		Parameter test1 = new TestParameter(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "");
+		Parameter test1 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", Numerus.SINGULAR, false);
 		test1.setIdentifier("id");
 		test1.setDataTypeName("int");
 		test1.setSignatureElementPath("getOut.Cust(Customer).id(int)");
 
-		Parameter test2 = new TestParameter(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "");
+		Parameter test2 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", Numerus.SINGULAR, false);
 		test2.setIdentifier("id");
 		test2.setDataTypeName("int");
 		test2.setSignatureElementPath("getOu2.Cust(Customer).id(int)");
@@ -203,7 +207,8 @@ public class EditArtifactDocumentationCompositeFactory
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EmptyResourceConfiguration getResourceConfiguration() {
+	public EmptyResourceConfiguration getResourceConfiguration()
+	{
 		return EmptyResourceConfiguration.getInstance();
 	}
 }

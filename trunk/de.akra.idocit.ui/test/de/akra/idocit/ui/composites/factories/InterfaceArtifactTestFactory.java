@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
@@ -55,17 +56,18 @@ public class InterfaceArtifactTestFactory
 	public static InterfaceArtifact createTestStructure()
 	{
 		InterfaceArtifact artifact = new TestInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact");
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact", Numerus.SINGULAR);
 
 		artifact.setIdentifier("test.file");
 
-		Interface iFace = new TestInterface(artifact, "PortType");
+		Interface iFace = new TestInterface(artifact, "PortType", Numerus.SINGULAR);
 		iFace.setIdentifier("TestServices");
 
 		List<Operation> opList = new Vector<Operation>();
 
 		// 1. Operation
-		Operation operation = new TestOperation(iFace, "Operation", "Test Operations");
+		Operation operation = new TestOperation(iFace, "Operation", "Test Operations",
+				Numerus.SINGULAR);
 		operation.setIdentifier("TestOperation_1");
 
 		Parameters paramList = createParameters(operation, "InputMessage", "TestOp_1_IN",
@@ -78,7 +80,8 @@ public class InterfaceArtifactTestFactory
 		opList.add(operation);
 
 		// 2. Operation
-		operation = new TestOperation(iFace, "Operation", "Test Operations");
+		operation = new TestOperation(iFace, "Operation", "Test Operations",
+				Numerus.SINGULAR);
 		operation.setIdentifier("TestOperation_2");
 
 		paramList = createParameters(operation, "InputMessage", "TestOp_2_IN", 5, 7);
@@ -113,7 +116,7 @@ public class InterfaceArtifactTestFactory
 	private static Parameters createParameters(SignatureElement parent, String category,
 			String identifier, int paramCount, int complexIndex)
 	{
-		Parameters paramList = new TestParameters(parent, category);
+		Parameters paramList = new TestParameters(parent, category, Numerus.SINGULAR);
 		paramList.setIdentifier(identifier);
 
 		for (int i = 0; i < paramCount; i++)
@@ -139,7 +142,7 @@ public class InterfaceArtifactTestFactory
 			return null;
 		}
 
-		Parameter param = new TestParameter(parent, "");
+		Parameter param = new TestParameter(parent, "", Numerus.SINGULAR, false);
 		param.setDataTypeName("TestType");
 
 		for (int i = 0; i < complexIndex; i++)
@@ -154,7 +157,7 @@ public class InterfaceArtifactTestFactory
 
 	/**
 	 * Sets to all {@link Parameter}s in the structure the attribute
-	 * {@link Parameter#setSignatureElementPath(String)}. 
+	 * {@link Parameter#setSignatureElementPath(String)}.
 	 * 
 	 * @param path
 	 *            The parent's path.
