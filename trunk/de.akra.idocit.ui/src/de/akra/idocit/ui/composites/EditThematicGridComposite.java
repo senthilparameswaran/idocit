@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -46,6 +48,7 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.common.services.RuleService;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
@@ -65,11 +68,13 @@ public class EditThematicGridComposite
 	private static final int MOUSE_BUTTON_RIGHT = 3;
 	private static final String TABLE_HEADER_THEMATIC_ROLE = "Thematic Role";
 	private static final String TABLE_HEADER_STATUS = "Status";
+	private static final String TABLE_HEADER_RULE = "Show Role when ...";
 	private static final String STATUS_MANDATORY = "mandatory";
 	private static final String STATUS_OPTIONAL = "optional";
 
 	private static final int ROLE_TABLE_COL_ROLE_NAME = 0;
 	private static final int ROLE_TABLE_COL_STATUS = 1;
+	private static final int ROLE_TABLE_COL_RULE = 2;
 
 	/*
 	 * Widgets
@@ -87,6 +92,7 @@ public class EditThematicGridComposite
 	private Menu tablePopUpMenu;
 	private MenuItem menuItemSetMandatory;
 	private MenuItem menuItemSetOptional;
+	private MenuItem menuItemEditRule;
 
 	/*
 	 * Listener
@@ -101,8 +107,12 @@ public class EditThematicGridComposite
 	private MenuDetectListener tableMenuDetectListener;
 	private MouseListener tableMouseListener;
 
+	private SelectionListener tabRolesSelectionListener;
 	private SelectionListener menuItemMandatorySelectionListener;
 	private SelectionListener menuItemOptionalSelectionListener;
+	private SelectionListener menuItemEditRuleSelectionListener;
+
+	private IInputValidator ruleValidator;
 
 	/**
 	 * Constructor.
@@ -145,19 +155,29 @@ public class EditThematicGridComposite
 		Label lblRoles = new Label(this, SWT.NONE);
 		lblRoles.setText("Associated Thematic Roles:");
 
+		Label lblHintContextMenu = new Label(this, SWT.NONE);
+		lblHintContextMenu
+				.setText("Please note: you can edit further attributes via a right click on the line in the table.");
+		lblHintContextMenu.setForeground(getDisplay()
+				.getSystemColor(SWT.COLOR_DARK_GREEN));
+
 		tabRoles = new Table(this, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL
 				| SWT.FULL_SELECTION);
 		GridDataFactory.fillDefaults().hint(500, 200).grab(true, true).applyTo(tabRoles);
 		tabRoles.setHeaderVisible(true);
 		tabRoles.setToolTipText("Use the context menu to change the status.");
-		
+
 		TableColumn colRoles = new TableColumn(tabRoles, SWT.LEFT);
 		colRoles.setText(TABLE_HEADER_THEMATIC_ROLE);
 
 		TableColumn colMandatory = new TableColumn(tabRoles, SWT.CENTER);
 		colMandatory.setText(TABLE_HEADER_STATUS);
 		colMandatory.setWidth(80);
-		
+
+		TableColumn colRule = new TableColumn(tabRoles, SWT.LEFT);
+		colRule.setText(TABLE_HEADER_RULE);
+		colRule.setWidth(300);
+
 		tablePopUpMenu = new Menu(this.getShell(), SWT.POP_UP);
 		// tabRoles.setMenu(tablePopUpMenu);
 
@@ -165,6 +185,8 @@ public class EditThematicGridComposite
 		menuItemSetMandatory.setText("Set mandatory");
 		menuItemSetOptional = new MenuItem(tablePopUpMenu, SWT.CASCADE);
 		menuItemSetOptional.setText("Set optional");
+		menuItemEditRule = new MenuItem(tablePopUpMenu, SWT.PUSH);
+		menuItemEditRule.setText("Edit rule");
 	}
 
 	/**
@@ -285,12 +307,33 @@ public class EditThematicGridComposite
 				if ((isMandatory = newSelectedRoles.get(role)) != null)
 				{
 					items[i].setChecked(true);
+
 					if (!isMandatory)
 					{
 						items[i].setText(ROLE_TABLE_COL_STATUS, STATUS_OPTIONAL);
 					}
 				}
+
+				ThematicGrid activeGrid = newSelection.getActiveThematicGrid();
+				if (activeGrid != null)
+				{
+					Map<String, String> gridBasedRules = activeGrid.getGridBasedRules();
+
+					if (gridBasedRules != null)
+					{
+						String rule = gridBasedRules.get(role.getName());
+						items[i].setText(ROLE_TABLE_COL_RULE, rule);
+					}
+				}
+
 				i++;
+			}
+
+			ThematicRole activeRole = newSelection.getActiveRole();
+			if (activeRole != null)
+			{
+				int selectionIndex = roles.indexOf(activeRole);
+				tabRoles.select(selectionIndex);
 			}
 		}
 	}
@@ -410,6 +453,91 @@ public class EditThematicGridComposite
 				widgetSelected(e);
 			}
 		};
+
+		ruleValidator = new IInputValidator() {
+
+			@Override
+			public String isValid(String rule)
+			{
+				boolean isValid = RuleService.isRuleValid(rule);
+
+				return isValid ? null : "Rule has invalid syntax. Please correct it.";
+			}
+		};
+
+		menuItemEditRuleSelectionListener = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0)
+			{
+				ThematicRole selectedRole = getSelection().getActiveRole();
+
+				if (selectedRole != null)
+				{
+					EditThematicGridCompositeSelection selection = getSelection();
+					ThematicGrid activeGrid = selection.getActiveThematicGrid();
+					String gridBasedRule = activeGrid.getGridBasedRules().get(
+							selectedRole.getName());
+
+					InputDialog ruleInputDialog = new InputDialog(
+							getShell(),
+							"",
+							"Please specify when the role "
+									+ selectedRole.getName()
+									+ " should be recommended in the thematic grid "
+									+ activeGrid.getName()
+									+ ".\n\nYou can use the following predicates (in JavaScript-Syntax):\ndef()\t\t\t\t\t\tTRUE (Default predicate)\nisSingular(\"ROLENAME\")\t\tTRUE, if the given role has numerus SINGULAR\nisPlural(\"ROLENAME\")\t\t\tTRUE, if the given role has numerus PLURAL\nexists(\"ROLENAME\")\t\t\tTRUE, if the given role exists in the documenation of the current operation\nhasAttributes(\"ROLENAME\")\tTRUE, if the signature element of given role has further internal attributes",
+							gridBasedRule, ruleValidator);
+
+					int dialogResult = ruleInputDialog.open();
+
+					if (dialogResult == InputDialog.OK)
+					{
+						activeGrid.getGridBasedRules().put(selectedRole.getName(),
+								ruleInputDialog.getValue());
+						selection = selection.setActiveThematicGrid(activeGrid);
+
+						setSelection(selection);
+					}
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0)
+			{
+				widgetSelected(arg0);
+			}
+		};
+
+		tabRolesSelectionListener = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0)
+			{
+				EditThematicGridCompositeSelection selection = getSelection();
+				int selectionIndex = tabRoles.getSelectionIndex();
+
+				if (selectionIndex >= 0)
+				{
+					ThematicRole selectedRole = getSelection().getRoles().get(
+							selectionIndex);
+
+					selection = selection.setActiveRole(selectedRole);
+				}
+				else
+				{
+					selection.setActiveRole(null);
+				}
+
+				setSelection(selection);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0)
+			{
+				widgetSelected(arg0);
+			}
+		};
 	}
 
 	/**
@@ -463,8 +591,10 @@ public class EditThematicGridComposite
 		tabRoles.addListener(SWT.Selection, tableItemMouseListener);
 		tabRoles.addMenuDetectListener(tableMenuDetectListener);
 		tabRoles.addMouseListener(tableMouseListener);
+		tabRoles.addSelectionListener(tabRolesSelectionListener);
 		menuItemSetMandatory.addSelectionListener(menuItemMandatorySelectionListener);
 		menuItemSetOptional.addSelectionListener(menuItemOptionalSelectionListener);
+		menuItemEditRule.addSelectionListener(menuItemEditRuleSelectionListener);
 	}
 
 	@Override
@@ -476,8 +606,10 @@ public class EditThematicGridComposite
 		tabRoles.removeListener(SWT.Selection, tableItemMouseListener);
 		tabRoles.removeMenuDetectListener(tableMenuDetectListener);
 		tabRoles.removeMouseListener(tableMouseListener);
+		tabRoles.removeSelectionListener(tabRolesSelectionListener);
 		menuItemSetMandatory.removeSelectionListener(menuItemMandatorySelectionListener);
 		menuItemSetOptional.removeSelectionListener(menuItemOptionalSelectionListener);
+		menuItemEditRule.removeSelectionListener(menuItemEditRuleSelectionListener);
 	}
 
 	@Override

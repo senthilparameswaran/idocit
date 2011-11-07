@@ -15,6 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,27 +39,91 @@ public class EditThematicGridCompositeSelection implements ISelection
 	 */
 	private ThematicGrid activeThematicGrid;
 
-
 	/**
 	 * All existing {@link ThematicRole}s that are defined in the preference page.
 	 */
 	private List<ThematicRole> roles = Collections.emptyList();
+
+	private ThematicRole activeRole;
+
+	public EditThematicGridCompositeSelection()
+	{
+
+	}
+
+	public EditThematicGridCompositeSelection(ThematicGrid activeThematicGrid,
+			List<ThematicRole> roles, ThematicRole activeRole)
+	{
+		if (activeThematicGrid != null)
+		{
+			this.activeThematicGrid = (ThematicGrid) activeThematicGrid.clone();
+		}
+
+		if (roles != null)
+		{
+			this.roles = cloneThematicRoles(roles);
+		}
+
+		if (activeRole != null)
+		{
+			this.activeRole = (ThematicRole) activeRole.clone();
+		}
+	}
+
+	private List<ThematicRole> cloneThematicRoles(List<ThematicRole> rolesToClone)
+	{
+		List<ThematicRole> clonedRole = new ArrayList<ThematicRole>(rolesToClone.size());
+
+		for (ThematicRole role : rolesToClone)
+		{
+			clonedRole.add((ThematicRole) role.clone());
+		}
+
+		return clonedRole;
+	}
+
+	public ThematicRole getActiveRole()
+	{
+		if (activeRole != null)
+		{
+			return activeRole.clone();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	public EditThematicGridCompositeSelection setActiveRole(ThematicRole activeRole)
+	{
+		return new EditThematicGridCompositeSelection(this.activeThematicGrid,
+				this.roles, activeRole);
+	}
 
 	/**
 	 * @return the activeThematicGrid
 	 */
 	public ThematicGrid getActiveThematicGrid()
 	{
-		return activeThematicGrid;
+		if (activeThematicGrid != null)
+		{
+			return activeThematicGrid.clone();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
 	 * @param activeThematicGrid
 	 *            the activeThematicGrid to set
 	 */
-	public void setActiveThematicGrid(ThematicGrid activeThematicGrid)
+	public EditThematicGridCompositeSelection setActiveThematicGrid(
+			ThematicGrid activeThematicGrid)
 	{
-		this.activeThematicGrid = activeThematicGrid;
+		return new EditThematicGridCompositeSelection(activeThematicGrid, roles,
+				activeRole);
 	}
 
 	/**
@@ -67,7 +132,14 @@ public class EditThematicGridCompositeSelection implements ISelection
 	 */
 	public List<ThematicRole> getRoles()
 	{
-		return roles;
+		if (roles != null)
+		{
+			return cloneThematicRoles(roles);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -75,32 +147,24 @@ public class EditThematicGridCompositeSelection implements ISelection
 	 * @param roles
 	 *            All available {@link ThematicRole}s.
 	 */
-	public void setRoles(List<ThematicRole> roles)
+	public EditThematicGridCompositeSelection setRoles(List<ThematicRole> roles)
 	{
-		this.roles = roles;
+		return new EditThematicGridCompositeSelection(activeThematicGrid, roles,
+				activeRole);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+		result = prime * result + ((activeRole == null) ? 0 : activeRole.hashCode());
 		result = prime * result
 				+ ((activeThematicGrid == null) ? 0 : activeThematicGrid.hashCode());
+		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -111,12 +175,12 @@ public class EditThematicGridCompositeSelection implements ISelection
 		if (getClass() != obj.getClass())
 			return false;
 		EditThematicGridCompositeSelection other = (EditThematicGridCompositeSelection) obj;
-		if (roles == null)
+		if (activeRole == null)
 		{
-			if (other.roles != null)
+			if (other.activeRole != null)
 				return false;
 		}
-		else if (!roles.equals(other.roles))
+		else if (!activeRole.equals(other.activeRole))
 			return false;
 		if (activeThematicGrid == null)
 		{
@@ -125,18 +189,27 @@ public class EditThematicGridCompositeSelection implements ISelection
 		}
 		else if (!activeThematicGrid.equals(other.activeThematicGrid))
 			return false;
+		if (roles == null)
+		{
+			if (other.roles != null)
+				return false;
+		}
+		else if (!roles.equals(other.roles))
+			return false;
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
-		return "EditThematicGridCompositeSelection [thematicGrid=" + activeThematicGrid
-				+ ", roles=" + roles + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("EditThematicGridCompositeSelection [activeThematicGrid=");
+		builder.append(activeThematicGrid);
+		builder.append(", roles=");
+		builder.append(roles);
+		builder.append(", activeRole=");
+		builder.append(activeRole);
+		builder.append("]");
+		return builder.toString();
 	}
 }
