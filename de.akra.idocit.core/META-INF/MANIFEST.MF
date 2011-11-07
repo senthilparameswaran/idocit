@@ -32,4 +32,5 @@ Bundle-ClassPath: .,
  lib/de.akra.idocit.common-0.0.1.jar,
  lib/idocit.wsdl.wsdl4j.jar,
  lib/xpp3_min-1.1.4c.jar,
- lib/xstream-1.3.jar
+ lib/xstream-1.3.jar,
+ lib/de.akra.idocit.common-0.0.1-tests.jar
