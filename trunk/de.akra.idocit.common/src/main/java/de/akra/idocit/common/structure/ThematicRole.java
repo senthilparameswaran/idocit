@@ -15,6 +15,11 @@
  *******************************************************************************/
 package de.akra.idocit.common.structure;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import de.akra.idocit.common.services.RuleService;
+
 /**
  * Representation for a thematic role.
  * 
@@ -23,12 +28,14 @@ package de.akra.idocit.common.structure;
  * @version 0.0.1
  * 
  */
-public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
+public class ThematicRole implements DescribedItem, Comparable<ThematicRole>, Cloneable
 {
 	/**
 	 * Role representation if there aren't any.
 	 */
 	public static final ThematicRole EMPTY_ROLE = new ThematicRole("No Roles found");
+
+	private static final Logger LOG = Logger.getLogger(ThematicRole.class.getName());
 
 	private String name;
 
@@ -174,5 +181,25 @@ public class ThematicRole implements DescribedItem, Comparable<ThematicRole>
 		}
 
 		return 0;
+	}
+
+	@Override
+	public ThematicRole clone()
+	{
+		try
+		{
+			ThematicRole clonedRole = (ThematicRole) super.clone();
+
+			clonedRole.setDescription(description);
+			clonedRole.setName(name);
+			clonedRole.setRoleScope(roleScope);
+
+			return clonedRole;
+		}
+		catch (CloneNotSupportedException cnsEx)
+		{
+			LOG.log(Level.SEVERE, "", cnsEx);
+			throw new RuntimeException(cnsEx);
+		}
 	}
 }

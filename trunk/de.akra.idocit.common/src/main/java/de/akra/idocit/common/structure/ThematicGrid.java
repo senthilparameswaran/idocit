@@ -235,7 +235,7 @@ public class ThematicGrid implements DescribedItem, Cloneable
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object clone()
+	public ThematicGrid clone()
 	{
 		try
 		{
