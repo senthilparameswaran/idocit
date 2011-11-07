@@ -141,7 +141,7 @@ public final class DescribedItemUtils
 		grid.setRoles(new HashMap<ThematicRole, Boolean>());
 		return grid;
 	}
-	
+
 	/**
 	 * Copies the oldRole and returns a new one.
 	 * 
@@ -151,7 +151,8 @@ public final class DescribedItemUtils
 	 */
 	public static ThematicRole copy(ThematicRole oldRole)
 	{
-		return new ThematicRole(oldRole.getName(), oldRole.getDescription());
+		return new ThematicRole(oldRole.getName(), oldRole.getDescription(),
+				oldRole.getRoleScope());
 	}
 
 	/**
