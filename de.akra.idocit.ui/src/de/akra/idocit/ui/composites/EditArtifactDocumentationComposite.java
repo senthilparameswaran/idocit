@@ -39,6 +39,7 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.common.services.RuleService;
 import de.akra.idocit.common.services.ThematicGridService;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
@@ -467,6 +468,7 @@ public class EditArtifactDocumentationComposite
 						.getPersistenceService().loadThematicGrids();
 				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier(),
 						thematicGrids);
+				roles = reduceGrids(roles.keySet(), thematicGrids, selectedSigElem);
 			}
 			catch (UnitializedIDocItException unEx)
 			{
@@ -512,6 +514,34 @@ public class EditArtifactDocumentationComposite
 		}
 
 		displayRecommendedRolesComposite.setSelection(recRolesCompSelection);
+	}
+
+	private Map<String, Map<ThematicRole, Boolean>> reduceGrids(
+			Set<String> thematicGridNames, List<ThematicGrid> grids,
+			SignatureElement selectedSigElem)
+	{
+		Map<String, Map<ThematicRole, Boolean>> reducedGrids = new HashMap<String, Map<ThematicRole, Boolean>>();
+
+		for (String thematicGridName : thematicGridNames)
+		{
+			ThematicGrid thematicGrid = ThematicGridService.findThematicGridByName(
+					thematicGridName, grids);
+
+			if (thematicGrid != null)
+			{
+				ThematicGrid reducedGrid = RuleService.reduceGrid(thematicGrid,
+						selectedSigElem);
+				reducedGrids.put(thematicGridName, reducedGrid.getRoles());
+			}
+			else
+			{
+				throw new RuntimeException("Invariant violated: the grid "
+						+ thematicGridName
+						+ " does not exist in the given list of grids.");
+			}
+		}
+
+		return reducedGrids;
 	}
 
 	/**
