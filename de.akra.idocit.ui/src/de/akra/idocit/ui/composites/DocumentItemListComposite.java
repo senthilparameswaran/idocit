@@ -45,6 +45,7 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.Preconditions;
 
@@ -204,7 +205,8 @@ public class DocumentItemListComposite
 
 			@Override
 			public void selectionChanged(DocumentItemCompositeSelection selection,
-					PocUIComposite<DocumentItemCompositeSelection> comp, Object sourceControl)
+					PocUIComposite<DocumentItemCompositeSelection> comp,
+					Object sourceControl)
 			{
 				Documentation newDoc = selection.getDocumentation();
 				List<Documentation> docs = getSelection().getDocumentations();
@@ -220,7 +222,7 @@ public class DocumentItemListComposite
 				// updated displayed Addressee tabs
 				getSelection().getDisplayedAddresseesForDocumentations().set(compIndex,
 						selection.getDisplayedAddressees());
-			
+
 				fireChangeEvent(sourceControl);
 			}
 		};
@@ -282,11 +284,12 @@ public class DocumentItemListComposite
 		Documentation newDoc = new Documentation();
 		newDoc.setSignatureElementIdentifier(selection.getSignatureElementPath());
 		selection.getDocumentations().add(newDoc);
-		selection.getDisplayedAddresseesForDocumentations().add(new ArrayList<Addressee>());
+		selection.getDisplayedAddresseesForDocumentations().add(
+				new ArrayList<Addressee>());
 
 		// init it with the first tab as active.
 		selection.getActiveAddressees().add(0);
-		
+
 		fireChangeEvent(null);
 	}
 
@@ -385,7 +388,11 @@ public class DocumentItemListComposite
 						newInSelection.getAddresseeList(), usedAddressees);
 
 				List<ThematicRole> allAvailableThematicRoles = mergeCollections(
-						newInSelection.getThematicRoleList(), associatedThematicRoles);
+						newInSelection.getRolesRecommendations()
+								.getSecondLevelRecommendations(), associatedThematicRoles);
+
+				newInSelection.getRolesRecommendations().setSecondLevelRecommendations(
+						allAvailableThematicRoles);
 
 				for (int i = 0; i < documentations.size(); i++)
 				{
@@ -403,7 +410,7 @@ public class DocumentItemListComposite
 					}
 					addNewDocumentItemComposite(documentations.get(i),
 							activeAddressees.get(i), allAvailableAddressees,
-							displayedAddressees, allAvailableThematicRoles);
+							displayedAddressees, newInSelection.getRolesRecommendations());
 
 					addNewDeleteButton();
 				}
@@ -502,7 +509,7 @@ public class DocumentItemListComposite
 	 */
 	private void addNewDocumentItemComposite(Documentation documentation,
 			int activeAddressee, List<Addressee> addresseeList,
-			List<Addressee> displayedAddressees, List<ThematicRole> thematicRoleList)
+			List<Addressee> displayedAddressees, RolesRecommendations rolesRecommendations)
 	{
 		DocumentItemComposite docItemComp = new DocumentItemComposite(scrolledRoot,
 				SWT.NONE);
@@ -512,7 +519,7 @@ public class DocumentItemListComposite
 		selection.setActiveAddressee(activeAddressee);
 		selection.setAddresseeList(addresseeList);
 		selection.setDisplayedAddressees(displayedAddressees);
-		selection.setThematicRoleList(thematicRoleList);
+		selection.setRolesRecommendations(rolesRecommendations);
 
 		docItemComp.setSelection(selection);
 		docItemCompList.add(docItemComp);

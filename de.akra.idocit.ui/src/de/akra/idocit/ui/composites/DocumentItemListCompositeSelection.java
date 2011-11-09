@@ -23,8 +23,8 @@ import org.pocui.core.composites.ISelection;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.SignatureElement;
-import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Selection for {@link DocumentItemListComposite}.
@@ -60,7 +60,7 @@ public class DocumentItemListCompositeSelection implements ISelection
 	/**
 	 * List of all available thematic roles.
 	 */
-	private List<ThematicRole> thematicRoleList;
+	private RolesRecommendations rolesRecommendations;
 
 	/**
 	 * List of Addressees that are displayed with tabs for each {@link Documentation} in
@@ -136,18 +136,18 @@ public class DocumentItemListCompositeSelection implements ISelection
 	/**
 	 * @return the thematicRoleList
 	 */
-	public List<ThematicRole> getThematicRoleList()
+	public RolesRecommendations getRolesRecommendations()
 	{
-		return thematicRoleList;
+		return rolesRecommendations;
 	}
 
 	/**
 	 * @param thematicRoleList
 	 *            the thematicRoleList to set
 	 */
-	public void setThematicRoleList(List<ThematicRole> thematicRoleList)
+	public void setRolesRecommendations(RolesRecommendations rolesRecommendations)
 	{
-		this.thematicRoleList = thematicRoleList;
+		this.rolesRecommendations = rolesRecommendations;
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class DocumentItemListCompositeSelection implements ISelection
 		result = prime * result
 				+ ((signatureElementPath == null) ? 0 : signatureElementPath.hashCode());
 		result = prime * result
-				+ ((thematicRoleList == null) ? 0 : thematicRoleList.hashCode());
+				+ ((rolesRecommendations == null) ? 0 : rolesRecommendations.hashCode());
 		return result;
 	}
 
@@ -295,14 +295,14 @@ public class DocumentItemListCompositeSelection implements ISelection
 		{
 			return false;
 		}
-		if (thematicRoleList == null)
+		if (rolesRecommendations == null)
 		{
-			if (other.thematicRoleList != null)
+			if (other.rolesRecommendations != null)
 			{
 				return false;
 			}
 		}
-		else if (!thematicRoleList.equals(other.thematicRoleList))
+		else if (!rolesRecommendations.equals(other.rolesRecommendations))
 		{
 			return false;
 		}
@@ -327,7 +327,7 @@ public class DocumentItemListCompositeSelection implements ISelection
 		builder.append(", addresseeList=");
 		builder.append(addresseeList);
 		builder.append(", thematicRoleList=");
-		builder.append(thematicRoleList);
+		builder.append(rolesRecommendations);
 		builder.append(", displayedAddresseesOfDocumentations=");
 		builder.append(displayedAddresseesForDocumentations);
 		builder.append(", documentationAllowed=");

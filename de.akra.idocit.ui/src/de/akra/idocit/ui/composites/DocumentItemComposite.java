@@ -38,6 +38,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -54,6 +55,7 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.DescribedItemNameComparator;
@@ -85,7 +87,7 @@ public class DocumentItemComposite
 
 	private TabFolder addresseeTabFolder;
 
-	private Combo comboThematicRole;
+	private Button btnThematicRole;
 
 	private Combo comboScope;
 
@@ -94,6 +96,12 @@ public class DocumentItemComposite
 	private TabItem addAddresseeTab;
 
 	private TabItem removeAddresseeTab;
+
+	private Menu rolePopUpMenu;
+
+	private MenuItem[] roleFirstLevelItems;
+
+	private MenuItem[] roleSecondLevelItems;
 
 	/**
 	 * {@link LinkedHashMap} from Addressee to a {@link Text}-field, containing the
@@ -110,7 +118,7 @@ public class DocumentItemComposite
 	/**
 	 * {@link SelectionListener} for <code>comboThematicRole</code>.
 	 */
-	private SelectionListener comboThematicRoleSelectionListener;
+	private SelectionListener btnThematicRoleSelectionListener;
 
 	/**
 	 * {@link SelectionListener} for <code>comboScope</code>.
@@ -150,6 +158,11 @@ public class DocumentItemComposite
 	private boolean isInTextField = false;
 
 	/**
+	 * Selection Listener for Menu items in role-menu
+	 */
+	private SelectionListener roleMenuItemSelectionListener;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param pvParent
@@ -181,7 +194,7 @@ public class DocumentItemComposite
 
 		Label labelThematicRole = new Label(themRoleContainer, SWT.NONE);
 		labelThematicRole.setText("Thematic Role:");
-		comboThematicRole = new Combo(themRoleContainer, SWT.READ_ONLY);
+		btnThematicRole = new Button(themRoleContainer, SWT.PUSH);
 
 		// create container for scope information
 		Composite scopeContainer = new Composite(container, SWT.NONE);
@@ -202,6 +215,8 @@ public class DocumentItemComposite
 		addresseeDocTextField = new LinkedHashMap<Addressee, Text>();
 
 		addresseesMenu = new Menu(this.getShell(), SWT.POP_UP);
+
+		rolePopUpMenu = new Menu(this.getShell(), SWT.POP_UP);
 	}
 
 	@Override
@@ -276,18 +291,18 @@ public class DocumentItemComposite
 		};
 		textModifyCheckThread.start();
 
-		comboThematicRoleSelectionListener = new SelectionListener() {
+		btnThematicRoleSelectionListener = new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				comboThematicRoleSelectionChanged();
+				rolePopUpMenu.setVisible(true);
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e)
 			{
-				comboThematicRoleSelectionChanged();
+				widgetSelected(e);
 			}
 
 		};
@@ -306,6 +321,31 @@ public class DocumentItemComposite
 				comboScopeSelectionChanged();
 			}
 
+		};
+
+		roleMenuItemSelectionListener = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0)
+			{
+				ThematicRole role = (ThematicRole) ((MenuItem) arg0.getSource())
+						.getData();
+				DocumentItemCompositeSelection selection = getSelection();
+
+				Documentation documentation = selection.getDocumentation();
+				documentation.setThematicRole(role);
+
+				selection.setDocumentation(documentation);
+
+				setSelection(selection);
+				fireChangeEvent(btnThematicRole);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0)
+			{
+				widgetSelected(arg0);
+			}
 		};
 
 		addresseesMenuListener = new MenuListener() {
@@ -328,7 +368,8 @@ public class DocumentItemComposite
 				List<Addressee> allAddressees = getSelection().getAddresseeList();
 				List<Addressee> displayedAddressees = getSelection()
 						.getDisplayedAddressees();
-				Set<Addressee> orderedNotDisplayedAddressees = new TreeSet<Addressee>(DescribedItemNameComparator.getInstance());
+				Set<Addressee> orderedNotDisplayedAddressees = new TreeSet<Addressee>(
+						DescribedItemNameComparator.getInstance());
 
 				for (Addressee addressee : allAddressees)
 				{
@@ -527,25 +568,6 @@ public class DocumentItemComposite
 	 * Updates the selection with the new selected item and invokes
 	 * {@link DocumentItemComposite#fireChangeEvent()}.
 	 */
-	private void comboThematicRoleSelectionChanged()
-	{
-		// if nothing is selected in the combobox and ENTER is pressed, the
-		// index is -1 and not usable for the application and so ignored
-		int selIndex = comboThematicRole.getSelectionIndex();
-		if (selIndex >= 0)
-		{
-			DocumentItemCompositeSelection selection = getSelection();
-			ThematicRole thematicRole = selection.getThematicRoleList().get(selIndex);
-			selection.getDocumentation().setThematicRole(thematicRole);
-
-			fireChangeEvent(comboThematicRole);
-		}
-	}
-
-	/**
-	 * Updates the selection with the new selected item and invokes
-	 * {@link DocumentItemComposite#fireChangeEvent()}.
-	 */
 	private void comboScopeSelectionChanged()
 	{
 		// if nothing is selected in the combobox and ENTER is pressed, the
@@ -588,10 +610,10 @@ public class DocumentItemComposite
 		// create combobox items if thematic role list changed, in general by
 		// first use
 		if (oldInSelection == null
-				|| !newInSelection.getThematicRoleList().equals(
-						oldInSelection.getThematicRoleList()))
+				|| !newInSelection.getRolesRecommendations().equals(
+						oldInSelection.getRolesRecommendations()))
 		{
-			initThematicRolesCtrl(newInSelection.getThematicRoleList());
+			initThematicRolesCtrl(newInSelection.getRolesRecommendations());
 		}
 
 		Documentation doc = newInSelection.getDocumentation();
@@ -609,8 +631,15 @@ public class DocumentItemComposite
 				// if not set, use EXPLICIT as default
 				comboScope.select(Scope.EXPLICIT.ordinal());
 			}
-			comboThematicRole.select(newInSelection.getThematicRoleList().indexOf(
-					doc.getThematicRole()));
+
+			if (doc.getThematicRole() != null)
+			{
+				btnThematicRole.setText(doc.getThematicRole().getName());
+			}
+			else
+			{
+				btnThematicRole.setText("No role selected");
+			}
 
 			/*
 			 * set the documentation text for addressees
@@ -756,18 +785,72 @@ public class DocumentItemComposite
 		removeAddresseeTab.setToolTipText("Remove Addressee");
 	}
 
+	private void createMenuItems(List<ThematicRole> roles, MenuItem[] menuItems,
+			Menu parent)
+	{
+		for (int i = 0; i < roles.size(); i++)
+		{
+			ThematicRole role = roles.get(i);
+
+			menuItems[i] = new MenuItem(parent, SWT.PUSH);
+			menuItems[i].setText(role.getName());
+			menuItems[i].setData(role);
+		}
+
+	}
+
 	/**
 	 * Adds the items from <code>thematicRoles</code> to the thematic role combobox.
 	 * 
-	 * @param thematicRoles
+	 * @param rolesRecommendations
 	 *            The items for the thematic role combobox.
 	 */
-	private void initThematicRolesCtrl(List<ThematicRole> thematicRoles)
+	private void initThematicRolesCtrl(RolesRecommendations rolesRecommendations)
 	{
-		comboThematicRole.removeAll();
-		for (ThematicRole role : thematicRoles)
+		roleFirstLevelItems = new MenuItem[rolesRecommendations
+				.getFirstLevelRecommendations().size()];
+		roleSecondLevelItems = new MenuItem[rolesRecommendations
+				.getSecondLevelRecommendations().size()];
+
+		createMenuItems(rolesRecommendations.getFirstLevelRecommendations(),
+				roleFirstLevelItems, rolePopUpMenu);
+
+		List<ThematicRole> secondLevelRoles = rolesRecommendations
+				.getSecondLevelRecommendations();
+
+		if ((secondLevelRoles != null) && (!secondLevelRoles.isEmpty()))
 		{
-			comboThematicRole.add(role.getName());
+			final MenuItem openItem = new MenuItem(rolePopUpMenu, SWT.CASCADE);
+			openItem.setText("More");
+			final Menu submenu = new Menu(this.getShell(), SWT.DROP_DOWN);
+			openItem.setMenu(submenu);
+
+			createMenuItems(rolesRecommendations.getSecondLevelRecommendations(),
+					roleSecondLevelItems, submenu);
+		}
+	}
+
+	private void addSelectionListenerToMenuItems(SelectionListener listener,
+			MenuItem[] items)
+	{
+		if (items != null)
+		{
+			for (MenuItem menuItem : items)
+			{
+				menuItem.addSelectionListener(listener);
+			}
+		}
+	}
+
+	private void removeSelectionListenerToMenuItems(SelectionListener listener,
+			MenuItem[] items)
+	{
+		if (items != null)
+		{
+			for (MenuItem menuItem : items)
+			{
+				menuItem.removeSelectionListener(listener);
+			}
 		}
 	}
 
@@ -780,9 +863,14 @@ public class DocumentItemComposite
 			text.addModifyListener(textModifyListener);
 		}
 		comboScope.addSelectionListener(comboScopeSelectionListener);
-		comboThematicRole.addSelectionListener(comboThematicRoleSelectionListener);
+		btnThematicRole.addSelectionListener(btnThematicRoleSelectionListener);
 		addresseesMenu.addMenuListener(addresseesMenuListener);
 		addresseeTabFolder.addSelectionListener(addresseeTabFolderSelectionListener);
+
+		addSelectionListenerToMenuItems(roleMenuItemSelectionListener,
+				roleFirstLevelItems);
+		addSelectionListenerToMenuItems(roleMenuItemSelectionListener,
+				roleSecondLevelItems);
 	}
 
 	@Override
@@ -794,9 +882,14 @@ public class DocumentItemComposite
 			text.removeModifyListener(textModifyListener);
 		}
 		comboScope.removeSelectionListener(comboScopeSelectionListener);
-		comboThematicRole.removeSelectionListener(comboThematicRoleSelectionListener);
+		btnThematicRole.removeSelectionListener(btnThematicRoleSelectionListener);
 		addresseesMenu.removeMenuListener(addresseesMenuListener);
 		addresseeTabFolder.removeSelectionListener(addresseeTabFolderSelectionListener);
+
+		removeSelectionListenerToMenuItems(roleMenuItemSelectionListener,
+				roleFirstLevelItems);
+		removeSelectionListenerToMenuItems(roleMenuItemSelectionListener,
+				roleSecondLevelItems);
 	}
 
 	@Override
