@@ -15,8 +15,6 @@
  *******************************************************************************/
 package de.akra.idocit.common.services;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -300,8 +298,6 @@ public final class RuleService
 		// those roles, which do not need to be on first level recommendations and remove
 		// them from this list.
 		final Set<ThematicRole> firstLevel = new HashSet<ThematicRole>();
-		firstLevel.addAll(definedRoles);
-
 		final Set<ThematicRole> secondLevel = new HashSet<ThematicRole>();
 
 		evaluateRoleBasedRules(definedRoles, selectedSignatureElement, firstLevel,
@@ -319,6 +315,14 @@ public final class RuleService
 
 		firstLevel.removeAll(associatedThematicRoles);
 		secondLevel.addAll(associatedThematicRoles);
+
+		for (ThematicRole role : definedRoles)
+		{
+			if (!firstLevel.contains(role))
+			{
+				secondLevel.add(role);
+			}
+		}
 
 		return new RolesRecommendations(sortByName(firstLevel), sortByName(secondLevel));
 	}
@@ -351,6 +355,21 @@ public final class RuleService
 		}
 	}
 
+	private static void removeNonGridRoles(ThematicGrid grid, Set<ThematicRole> roles)
+	{
+		Set<ThematicRole> gridRoles = new HashSet<ThematicRole>(roles.size());
+		gridRoles.addAll(roles);
+		roles.clear();
+
+		for (ThematicRole role : gridRoles)
+		{
+			if (grid.getRoles().containsKey(role))
+			{
+				roles.add(role);
+			}
+		}
+	}
+
 	/**
 	 * Important: The Sets must not be null!
 	 * 
@@ -364,29 +383,35 @@ public final class RuleService
 			final SignatureElement selectedSignatureElement,
 			final Set<ThematicRole> firstLevel, final Set<ThematicRole> secondLevel)
 	{
-		final Operation op = (Operation) SignatureElementUtils
+		final SignatureElement sigElemOp = SignatureElementUtils
 				.findOperationForParameter(selectedSignatureElement);
-		final ThematicGrid theOne = getUnambiguousGrid(matchingGrids, op);
-
-		if (theOne != null)
+		if (!SignatureElement.EMPTY_SIGNATURE_ELEMENT.equals(sigElemOp))
 		{
-			if (theOne.getGridBasedRules() != null)
-			{
-				// Check for each role defined in the reference grid if its rule is
-				// fulfilled.
-				for (final Entry<String, String> entry : theOne.getGridBasedRules()
-						.entrySet())
-				{
-					ThematicRole role = ThematicRoleUtils.findRoleByName(entry.getKey(),
-							theOne.getRoles().keySet());
+			final Operation op = (Operation) sigElemOp;
+			final ThematicGrid theOne = getUnambiguousGrid(matchingGrids, op);
 
-					if (role != null)
+			if (theOne != null)
+			{
+				removeNonGridRoles(theOne, firstLevel);
+
+				if (theOne.getGridBasedRules() != null)
+				{
+					// Check for each role defined in the reference grid if its rule is
+					// fulfilled.
+					for (final Entry<String, String> entry : theOne.getGridBasedRules()
+							.entrySet())
 					{
-						if (!evaluateRule(entry.getValue(), selectedSignatureElement))
+						ThematicRole role = ThematicRoleUtils.findRoleByName(
+								entry.getKey(), theOne.getRoles().keySet());
+
+						if (role != null)
 						{
-							// Remove role if the grid-based-rule does not apply:
-							firstLevel.remove(role);
-							secondLevel.add(role);
+							if (!evaluateRule(entry.getValue(), selectedSignatureElement))
+							{
+								// Remove role if the grid-based-rule does not apply:
+								firstLevel.remove(role);
+								secondLevel.add(role);
+							}
 						}
 					}
 				}
@@ -714,7 +739,8 @@ public final class RuleService
 	{
 		// final String predicates =
 		// StringUtils.toString(RuleService.class.getResourceAsStream("basicRules.js"));
-		String predicates = StringUtils.toString(RuleService.class.getResourceAsStream("basicRules.js"));
+		String predicates = StringUtils.toString(RuleService.class
+				.getResourceAsStream("basicRules.js"));
 
 		final ScriptEngine engine = new ScriptEngineManager()
 				.getEngineByName("JavaScript");

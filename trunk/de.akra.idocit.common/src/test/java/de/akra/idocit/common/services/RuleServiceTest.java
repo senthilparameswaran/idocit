@@ -62,6 +62,7 @@ public class RuleServiceTest
 		gridBasedRules.put("PRIMARY_KEY", "!exists(\"COMPARISON\")");
 		gridBasedRules.put("SOURCE", "def()");
 		gridBasedRules.put("AGENT", "def()");
+		gridBasedRules.put("ACTION", "def()");
 
 		ThematicGrid findingOperationsGrid = new ThematicGrid();
 		findingOperationsGrid.setDescription("");
@@ -70,6 +71,7 @@ public class RuleServiceTest
 		findingOperationsGrid.setRefernceVerb("find");
 
 		ThematicRole roleAGENT = new ThematicRole("AGENT", "", RoleScope.INTERFACE_LEVEL);
+		ThematicRole roleACTION = new ThematicRole("ACTION", "", RoleScope.OPERATION_LEVEL);
 		roleAGENT.setRoleScope(RoleScope.INTERFACE_LEVEL);
 		ThematicRole roleSOURCE = new ThematicRole("SOURCE", "", RoleScope.BOTH);
 		ThematicRole roleCOMPARISON = new ThematicRole("COMPARISON", "", RoleScope.BOTH);
@@ -80,6 +82,7 @@ public class RuleServiceTest
 		roles.put(roleCOMPARISON, Boolean.TRUE);
 		roles.put(rolePRIMARY_KEY, Boolean.TRUE);
 		roles.put(roleAGENT, Boolean.TRUE);
+		roles.put(roleACTION, Boolean.TRUE);
 		findingOperationsGrid.setRoles(roles);
 
 		Set<String> verbs = new HashSet<String>();
