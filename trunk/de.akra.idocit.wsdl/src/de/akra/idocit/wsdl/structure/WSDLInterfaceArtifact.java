@@ -18,6 +18,7 @@ package de.akra.idocit.wsdl.structure;
 import javax.wsdl.Definition;
 
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
@@ -47,11 +48,13 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 	 *            The WSDL {@link Definition} structure of the WSDL file.
 	 * @param name
 	 *            The artifact name.
+	 * @param numerus
+	 *            The {@link Numerus}
 	 */
 	public WSDLInterfaceArtifact(SignatureElement parent, String category,
-			Definition wsdlDefinition, String name)
+			Definition wsdlDefinition, String name, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 		this.wsdlDefinition = wsdlDefinition;
 		super.setIdentifier(name);
 	}
@@ -66,7 +69,7 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
 		return new WSDLInterfaceArtifact(parent, super.getCategory(), wsdlDefinition,
-				parent.getIdentifier());
+				parent.getIdentifier(), super.getNumerus());
 	}
 
 	/**

@@ -17,6 +17,7 @@ package de.akra.idocit.wsdl.structure;
 
 import javax.wsdl.Message;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -38,10 +39,16 @@ public class WSDLParameter extends Parameter
 	 *            The parent of this SignatureElement.
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The {@link Numerus}
+	 * @param hasPublicAccessableAttributes
+	 *            <code>true</code>, if this parameters has internal attributes which
+	 *            could be modified from outside
 	 */
-	public WSDLParameter(SignatureElement parent, String category)
+	public WSDLParameter(SignatureElement parent, String category, Numerus numerus,
+			boolean hasPublicAccessableAttributes)
 	{
-		super(parent, category);
+		super(parent, category, numerus, hasPublicAccessableAttributes);
 	}
 
 	/**
@@ -52,7 +59,8 @@ public class WSDLParameter extends Parameter
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new WSDLParameter(parent, super.getCategory());
+		return new WSDLParameter(parent, super.getCategory(), super.getNumerus(),
+				super.hasPublicAccessibleAttributes());
 	}
 
 	/**

@@ -20,6 +20,7 @@ import javax.wsdl.Input;
 import javax.wsdl.Output;
 import javax.wsdl.WSDLElement;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -48,10 +49,16 @@ public class WSDLMessage extends Parameters
 	 * 
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The {@link Numerus}
+	 * @param hasPublicAccessableAttributes
+	 *            <code>true</code>, if this message has internal attributes which could
+	 *            be modified from outside
 	 */
-	public WSDLMessage(SignatureElement parent, String category)
+	public WSDLMessage(SignatureElement parent, String category, Numerus numerus,
+			boolean hasPublicAccessableAttributes)
 	{
-		super(parent, category);
+		super(parent, category, numerus, hasPublicAccessableAttributes);
 	}
 
 	/**
@@ -60,7 +67,8 @@ public class WSDLMessage extends Parameters
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new WSDLMessage(parent, super.getCategory());
+		return new WSDLMessage(parent, super.getCategory(), super.getNumerus(),
+				super.hasPublicAccessibleAttributes());
 	}
 
 	/**

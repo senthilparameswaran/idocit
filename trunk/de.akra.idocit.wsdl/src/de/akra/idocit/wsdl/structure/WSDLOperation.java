@@ -18,6 +18,7 @@ package de.akra.idocit.wsdl.structure;
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -45,10 +46,13 @@ public class WSDLOperation extends Operation
 	 * 
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The {@link Numerus}
 	 */
-	public WSDLOperation(SignatureElement parent, String category, String thematicGrid)
+	public WSDLOperation(SignatureElement parent, String category, String thematicGrid,
+			Numerus numerus)
 	{
-		super(parent, category, thematicGrid);
+		super(parent, category, thematicGrid, numerus);
 	}
 
 	/**
@@ -57,7 +61,8 @@ public class WSDLOperation extends Operation
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new WSDLOperation(parent, super.getCategory(), getThematicGridName());
+		return new WSDLOperation(parent, super.getCategory(),
+				super.getThematicGridName(), super.getNumerus());
 	}
 
 	/**
