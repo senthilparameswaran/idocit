@@ -125,7 +125,7 @@ public class EditAddresseeListComposite
 					// End changes due to Issue #32
 					setSelection(selection);
 
-					fireChangeEvent();
+					fireChangeEvent(btnAdd);
 				}
 				else
 				{
@@ -185,7 +185,7 @@ public class EditAddresseeListComposite
 						// End changes due to Issue #10
 
 						setSelection(selection);
-						fireChangeEvent();
+						fireChangeEvent(btnRemove);
 					}
 					else
 					{
@@ -230,7 +230,7 @@ public class EditAddresseeListComposite
 					selection.setActiveAddressees(new ArrayList<Addressee>());
 				}
 
-				fireChangeEvent();
+				fireChangeEvent(itemList);
 			}
 
 			@Override
@@ -243,7 +243,7 @@ public class EditAddresseeListComposite
 
 	@Override
 	protected void doSetSelection(EditAddresseeListCompositeSelection oldInSelection,
-			EditAddresseeListCompositeSelection newInSelection)
+			EditAddresseeListCompositeSelection newInSelection, Object sourceControl)
 	{
 		itemList.removeAll();
 

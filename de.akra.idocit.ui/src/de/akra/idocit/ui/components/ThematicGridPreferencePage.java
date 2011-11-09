@@ -22,6 +22,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
@@ -32,7 +33,6 @@ import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageThematicGridsComposite;
-import de.akra.idocit.ui.composites.ManageThematicGridsCompositeAC;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -45,25 +45,30 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  */
 public class ThematicGridPreferencePage
 		extends
-		AbsPreferencePage<ManageThematicGridsCompositeAC, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection> {
+		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>
+{
 
 	@Override
-	protected void initListener() throws CompositeInitializationException {
+	protected void initListener() throws CompositeInitializationException
+	{
 		// Nothing to do!
 	}
 
 	@Override
-	protected void addAllListener() {
+	protected void addAllListener()
+	{
 		// Nothing to do!
 	}
 
 	@Override
-	protected void removeAllListener() {
+	protected void removeAllListener()
+	{
 		// Nothing to do!
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isValid()
+	{
 		return !getSelection().isNameExists();
 	}
 
@@ -71,10 +76,12 @@ public class ThematicGridPreferencePage
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(IWorkbench workbench)
+	{
 		IPreferenceStore prefStore = getPreferenceStore();
 
-		if (prefStore == null) {
+		if (prefStore == null)
+		{
 			setPreferenceStore(PlatformUI.getPreferenceStore());
 			prefStore = getPreferenceStore();
 		}
@@ -82,8 +89,10 @@ public class ThematicGridPreferencePage
 		loadPreferences();
 	}
 
-	private void loadPreferences() {
-		try {
+	private void loadPreferences()
+	{
+		try
+		{
 			List<ThematicGrid> grids = ServiceManager.getInstance()
 					.getPersistenceService().loadThematicGrids();
 			List<ThematicRole> roles = ServiceManager.getInstance()
@@ -91,7 +100,8 @@ public class ThematicGridPreferencePage
 
 			ManageThematicGridsCompositeSelection selection = new ManageThematicGridsCompositeSelection();
 
-			if (!grids.isEmpty()) {
+			if (!grids.isEmpty())
+			{
 				selection.setActiveThematicGrid(grids.get(0));
 			}
 
@@ -101,7 +111,9 @@ public class ThematicGridPreferencePage
 					.getPersistenceService().getLastSaveTimeOfThematicRoles());
 
 			setSelection(selection);
-		} catch (UnitializedIDocItException unInitEx) {
+		}
+		catch (UnitializedIDocItException unInitEx)
+		{
 			setErrorMessage("iDocIt! has not been initialized completly yet. Please close this preference page and try again in a few seconds.");
 		}
 	}
@@ -112,8 +124,10 @@ public class ThematicGridPreferencePage
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	@Override
-	public boolean performOk() {
-		if (checkState()) {
+	public boolean performOk()
+	{
+		if (checkState())
+		{
 			performApply();
 			boolean saveState = super.performOk();
 			return saveState;
@@ -126,9 +140,11 @@ public class ThematicGridPreferencePage
 	 * 
 	 * @return true, if changes can be saved (all names are unique).
 	 */
-	private boolean checkState() {
+	private boolean checkState()
+	{
 		boolean res = isValid();
-		if (!res) {
+		if (!res)
+		{
 			MessageBoxUtils.openErrorBox(getShell(),
 					"Changes can not be saved. Names must be unique.");
 		}
@@ -136,7 +152,8 @@ public class ThematicGridPreferencePage
 	}
 
 	@Override
-	protected void performDefaults() {
+	protected void performDefaults()
+	{
 		PlatformUI.getPreferenceStore().setValue(
 				PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING, "");
 
@@ -144,14 +161,17 @@ public class ThematicGridPreferencePage
 	}
 
 	@Override
-	protected ManageThematicGridsComposite instanciateMask(Composite parent) {
+	protected ManageThematicGridsComposite instanciateMask(Composite parent)
+	{
 		return new ManageThematicGridsComposite(parent,
-				new ManageThematicGridsCompositeAC());
+				EmptyActionConfiguration.getInstance());
 	}
 
 	@Override
-	protected void performApply() {
-		if (checkState()) {
+	protected void performApply()
+	{
+		if (checkState())
+		{
 			List<ThematicGrid> grids = getSelection().getThematicGrids();
 			ServiceManager.getInstance().getPersistenceService()
 					.persistThematicGrids(grids);

@@ -183,14 +183,14 @@ public class SelectSignatureElementComposite
 		if (selection.getSelectedSignatureElement() != attachedSigElem)
 		{
 			selection.setSelectedSignatureElement(attachedSigElem);
-			fireChangeEvent();
+			fireChangeEvent(selectionTreeViewer);
 		}
 	}
 
 	@Override
 	protected void doSetSelection(
 			SelectSignatureElementCompositeSelection oldInSelection,
-			SelectSignatureElementCompositeSelection newInSelection)
+			SelectSignatureElementCompositeSelection newInSelection, Object sourceControl)
 	{
 		if (newInSelection != null && !newInSelection.equals(oldInSelection))
 		{

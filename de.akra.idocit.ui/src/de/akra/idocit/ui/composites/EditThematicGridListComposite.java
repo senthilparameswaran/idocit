@@ -87,7 +87,8 @@ public class EditThematicGridListComposite
 		lblEmpty.setText("");
 
 		itemList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(100, 300).grab(true, true).span(2, 1).applyTo(itemList);
+		GridDataFactory.fillDefaults().hint(100, 300).grab(true, true).span(2, 1)
+				.applyTo(itemList);
 
 		btnAdd = new Button(this, SWT.PUSH);
 		btnAdd.setText("Add Item");
@@ -125,7 +126,7 @@ public class EditThematicGridListComposite
 					// End changes due to Issue #32
 					setSelection(selection);
 
-					fireChangeEvent();
+					fireChangeEvent(btnAdd);
 				}
 				else
 				{
@@ -185,7 +186,7 @@ public class EditThematicGridListComposite
 						// End changes due to Issue #10
 						setSelection(selection);
 
-						fireChangeEvent();
+						fireChangeEvent(btnRemove);
 					}
 					else
 					{
@@ -232,7 +233,7 @@ public class EditThematicGridListComposite
 				}
 
 				setSelection(selection);
-				fireChangeEvent();
+				fireChangeEvent(itemList);
 			}
 
 			@Override
@@ -245,7 +246,7 @@ public class EditThematicGridListComposite
 
 	@Override
 	protected void doSetSelection(EditThematicGridListCompositeSelection oldInSelection,
-			EditThematicGridListCompositeSelection newInSelection)
+			EditThematicGridListCompositeSelection newInSelection, Object sourceControl)
 	{
 		itemList.removeAll();
 

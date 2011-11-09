@@ -48,7 +48,8 @@ import de.akra.idocit.ui.utils.DescribedItemUtils;
  */
 public class ManageThematicRoleComposite
 		extends
-		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection> {
+		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection>
+{
 	// Widgets
 	private EditThematicRoleListComposite editThematicRoleListComposite;
 
@@ -70,13 +71,15 @@ public class ManageThematicRoleComposite
 	 * @param parent
 	 *            The parent Composite.
 	 */
-	public ManageThematicRoleComposite(Composite parent) {
+	public ManageThematicRoleComposite(Composite parent)
+	{
 		super(parent, SWT.NONE, EmptyActionConfiguration.getInstance(),
 				EmptyResourceConfiguration.getInstance());
 	}
 
 	@Override
-	protected void addAllListener() {
+	protected void addAllListener()
+	{
 		editThematicRoleComposite
 				.addSelectionListener(editThematicRoleCompositeSelectionListener);
 		editThematicRoleListComposite
@@ -84,14 +87,15 @@ public class ManageThematicRoleComposite
 	}
 
 	@Override
-	protected void doCleanUp() {
+	protected void doCleanUp()
+	{
 		RED.dispose();
 	}
 
 	@Override
-	protected void doSetSelection(
-			ManageThematicRoleCompositeSelection oldSelection,
-			ManageThematicRoleCompositeSelection newSelection) {
+	protected void doSetSelection(ManageThematicRoleCompositeSelection oldSelection,
+			ManageThematicRoleCompositeSelection newSelection, Object sourceControl)
+	{
 		updateRoleList(newSelection);
 
 		errorLabel.setVisible(newSelection.isNameExists());
@@ -104,7 +108,8 @@ public class ManageThematicRoleComposite
 		ThematicRole activeRole = newSelection.getActiveThematicRole();
 		List<ThematicRole> activeRoles = new ArrayList<ThematicRole>();
 
-		if (activeRole != null) {
+		if (activeRole != null)
+		{
 			activeRoles.add(activeRole);
 		}
 
@@ -116,22 +121,26 @@ public class ManageThematicRoleComposite
 		EditThematicRoleCompositeSelection editThematicRoleCompositeSelection = new EditThematicRoleCompositeSelection();
 		editThematicRoleCompositeSelection.setItem(activeRole);
 
-		if (newSelection.isNameExists()) {
+		if (newSelection.isNameExists())
+		{
 			editThematicRoleCompositeSelection.setModifiedItem(newSelection
 					.getModifiedThematicRole());
-		} else {
-			if (activeRole != null) {
+		}
+		else
+		{
+			if (activeRole != null)
+			{
 				ThematicRole modifiedItem = DescribedItemUtils.copy(activeRole);
-				editThematicRoleCompositeSelection
-						.setModifiedItem(modifiedItem);
-			} else {
+				editThematicRoleCompositeSelection.setModifiedItem(modifiedItem);
+			}
+			else
+			{
 				editThematicRoleCompositeSelection.setModifiedItem(null);
 			}
 		}
 		editThematicRoleCompositeSelection.setLastCurserPosition(newSelection
 				.getLastCurserPosition());
-		editThematicRoleComposite
-				.setSelection(editThematicRoleCompositeSelection);
+		editThematicRoleComposite.setSelection(editThematicRoleCompositeSelection);
 	}
 
 	/**
@@ -140,24 +149,22 @@ public class ManageThematicRoleComposite
 	 * @param newSelection
 	 *            The new selection object to update.
 	 */
-	private void updateRoleList(
-			ManageThematicRoleCompositeSelection newSelection) {
-		if (newSelection.getLastSaveTimeThematicRoles() < ServiceManager
-				.getInstance().getPersistenceService()
-				.getLastSaveTimeOfThematicRoles()) {
-			newSelection.setLastSaveTimeThematicRoles(ServiceManager
-					.getInstance().getPersistenceService()
-					.getLastSaveTimeOfThematicRoles());
+	private void updateRoleList(ManageThematicRoleCompositeSelection newSelection)
+	{
+		if (newSelection.getLastSaveTimeThematicRoles() < ServiceManager.getInstance()
+				.getPersistenceService().getLastSaveTimeOfThematicRoles())
+		{
+			newSelection.setLastSaveTimeThematicRoles(ServiceManager.getInstance()
+					.getPersistenceService().getLastSaveTimeOfThematicRoles());
 			newSelection.setThematicRoles(ServiceManager.getInstance()
 					.getPersistenceService().loadThematicRoles());
 		}
 	}
 
 	@Override
-	protected void initGUI(Composite parent)
-			throws CompositeInitializationException {
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5)
-				.applyTo(this);
+	protected void initGUI(Composite parent) throws CompositeInitializationException
+	{
+		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
 		RED = this.getDisplay().getSystemColor(SWT.COLOR_RED);
@@ -172,32 +179,30 @@ public class ManageThematicRoleComposite
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(errorLabel);
 
 		Group grpEditList = new Group(this, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5)
-				.applyTo(grpEditList);
+		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).applyTo(grpEditList);
 		GridDataFactory.fillDefaults().grab(false, true).applyTo(grpEditList);
 		grpEditList.setText("Defined Thematic Roles:");
 
-		editThematicRoleListComposite = new EditThematicRoleListComposite(
-				grpEditList);
+		editThematicRoleListComposite = new EditThematicRoleListComposite(grpEditList);
 
 		Group grpEditDescribedItem = new Group(this, SWT.NONE);
 		GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5)
 				.applyTo(grpEditDescribedItem);
-		GridDataFactory.fillDefaults().grab(true, true)
-				.applyTo(grpEditDescribedItem);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(grpEditDescribedItem);
 		grpEditDescribedItem.setText("Edit selected Thematic Role:");
 
-		editThematicRoleComposite = new EditThematicRoleComposite(
-				grpEditDescribedItem);
+		editThematicRoleComposite = new EditThematicRoleComposite(grpEditDescribedItem);
 	}
 
 	@Override
-	protected void initListener() throws CompositeInitializationException {
+	protected void initListener() throws CompositeInitializationException
+	{
 		editThematicRoleCompositeSelectionListener = new ISelectionListener<EditThematicRoleCompositeSelection>() {
 			@Override
-			public void selectionChanged(
-					EditThematicRoleCompositeSelection selection,
-					PocUIComposite<EditThematicRoleCompositeSelection> changedComposite) {
+			public void selectionChanged(EditThematicRoleCompositeSelection selection,
+					PocUIComposite<EditThematicRoleCompositeSelection> changedComposite,
+					Object sourceControl)
+			{
 				// If this composite fires a change event, the active
 				// ThematicRole
 				// has been modified. We have to update this composite.
@@ -210,18 +215,18 @@ public class ManageThematicRoleComposite
 								editSelection.getThematicRoles()));
 
 				editSelection.setNameExists(foundSameName);
-				editSelection.setLastCurserPosition(selection
-						.getLastCurserPosition());
+				editSelection.setLastCurserPosition(selection.getLastCurserPosition());
 
-				if (foundSameName) {
-					editSelection.setModifiedThematicRole(selection
-							.getModifiedItem());
-				} else {
+				if (foundSameName)
+				{
+					editSelection.setModifiedThematicRole(selection.getModifiedItem());
+				}
+				else
+				{
 					// Get the role to change.
 					ThematicRole activeThematicRole = editSelection
 							.getActiveThematicRole();
-					List<ThematicRole> thematicRoles = editSelection
-							.getThematicRoles();
+					List<ThematicRole> thematicRoles = editSelection.getThematicRoles();
 
 					// Remove the old ThematicRole.
 					int roleIndex = thematicRoles.indexOf(activeThematicRole);
@@ -241,7 +246,7 @@ public class ManageThematicRoleComposite
 				}
 
 				setSelection(editSelection);
-				fireChangeEvent();
+				fireChangeEvent(null);
 			}
 		};
 
@@ -249,7 +254,9 @@ public class ManageThematicRoleComposite
 			@Override
 			public void selectionChanged(
 					EditThematicRoleListCompositeSelection selection,
-					PocUIComposite<EditThematicRoleListCompositeSelection> changedComposite) {
+					PocUIComposite<EditThematicRoleListCompositeSelection> changedComposite,
+					Object sourceControl)
+			{
 				// If this composite fires a change event, a new active role has
 				// been
 				// chosen.
@@ -258,22 +265,25 @@ public class ManageThematicRoleComposite
 				mySelection.setModifiedThematicRole(null);
 
 				if (selection.getActiveItems() != null
-						&& !selection.getActiveItems().isEmpty()) {
-					mySelection.setActiveThematicRole(selection
-							.getActiveItems().get(0));
-				} else {
+						&& !selection.getActiveItems().isEmpty())
+				{
+					mySelection.setActiveThematicRole(selection.getActiveItems().get(0));
+				}
+				else
+				{
 					mySelection.setActiveThematicRole(DescribedItemUtils
 							.createNewThematicRole());
 				}
 
 				setSelection(mySelection);
-				fireChangeEvent();
+				fireChangeEvent(null);
 			}
 		};
 	}
 
 	@Override
-	protected void removeAllListener() {
+	protected void removeAllListener()
+	{
 		editThematicRoleComposite
 				.removeSelectionListener(editThematicRoleCompositeSelectionListener);
 		editThematicRoleListComposite

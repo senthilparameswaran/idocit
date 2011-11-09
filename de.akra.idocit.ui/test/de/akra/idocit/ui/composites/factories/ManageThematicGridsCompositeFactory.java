@@ -23,14 +23,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.swt.widgets.Composite;
+import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.ICompositeFactory;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageThematicGridsComposite;
-import de.akra.idocit.ui.composites.ManageThematicGridsCompositeAC;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;
 import de.akra.idocit.ui.services.CompositeTestPersistenceService;
 
@@ -41,23 +42,25 @@ import de.akra.idocit.ui.services.CompositeTestPersistenceService;
  */
 public class ManageThematicGridsCompositeFactory
 		implements
-		ICompositeFactory<ManageThematicGridsCompositeAC, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>
+		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>
 {
 
 	@Override
-	public ManageThematicGridsComposite createComposite(Composite arg0)
+	public ManageThematicGridsComposite createComposite(Composite arg0, int style)
 	{
 		ServiceManager.getInstance().setPersistenceService(
 				new CompositeTestPersistenceService());
 
 		ManageThematicGridsComposite composite = new ManageThematicGridsComposite(arg0,
-				new ManageThematicGridsCompositeAC());
+				EmptyActionConfiguration.getInstance());
 
 		ManageThematicGridsCompositeSelection selection = new ManageThematicGridsCompositeSelection();
 
 		List<ThematicRole> roles = new ArrayList<ThematicRole>();
 		roles.add(new ThematicRole("AGENT"));
 		roles.add(new ThematicRole("ACTION"));
+		roles.add(new ThematicRole("OBJECT"));
+		roles.add(new ThematicRole("COMPARISON"));
 
 		selection.setRoles(roles);
 
@@ -81,6 +84,13 @@ public class ManageThematicGridsCompositeFactory
 		verbs.add("get");
 		verbs.add("put");
 		grid.setVerbs(verbs);
+
+		Map<String, String> gridRules = new HashMap<String, String>();
+		gridRules.put("AGENT", ThematicGridConstants.DEFAULT_RULE);
+		gridRules.put("ACTION", ThematicGridConstants.DEFAULT_RULE);
+		gridRules.put("OBJECT", ThematicGridConstants.DEFAULT_RULE);
+		gridRules.put("COMPARISON", ThematicGridConstants.DEFAULT_RULE);
+		grid.setGridBasedRules(gridRules);
 
 		composite.setSelection(selection);
 

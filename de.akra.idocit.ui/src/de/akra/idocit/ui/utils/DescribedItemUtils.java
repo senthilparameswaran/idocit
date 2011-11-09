@@ -139,6 +139,7 @@ public final class DescribedItemUtils
 		grid.setDescription("");
 		grid.setVerbs(new HashSet<String>());
 		grid.setRoles(new HashMap<ThematicRole, Boolean>());
+		grid.setGridBasedRules(new HashMap<String, String>());
 		return grid;
 	}
 

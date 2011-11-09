@@ -47,28 +47,29 @@ public class DocumentItemCompositeFactory
 	 */
 	@Override
 	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, DocumentItemCompositeSelection> createComposite(
-			Composite pvParent)
+			Composite pvParent, int style)
 	{
 		DocumentItemComposite docItemComp = new DocumentItemComposite(pvParent, SWT.NONE);
 		DocumentItemCompositeSelection selection = new DocumentItemCompositeSelection();
 
 		List<Addressee> addresseeList = new ArrayList<Addressee>();
-		// Here we have to use the same roles as returned by DocumentationTestFactory.createDocumentation().
+		// Here we have to use the same roles as returned by
+		// DocumentationTestFactory.createDocumentation().
 		Addressee addresseeDeveloper = new Addressee("Developer");
 		Addressee addresseeArchitect = new Addressee("Tester");
 		Addressee addresseeProjectManager = new Addressee("Manager");
-		
+
 		addresseeList.add(addresseeDeveloper);
 		addresseeList.add(addresseeArchitect);
 		addresseeList.add(addresseeProjectManager);
-		
+
 		List<ThematicRole> thematicRoleList = new ArrayList<ThematicRole>();
 		ThematicRole roleAGENT = new ThematicRole("AGENT");
 		ThematicRole roleACTION = new ThematicRole("ACTION");
-		
+
 		thematicRoleList.add(roleAGENT);
 		thematicRoleList.add(roleACTION);
-		
+
 		selection.setAddresseeList(addresseeList);
 		selection.setThematicRoleList(thematicRoleList);
 

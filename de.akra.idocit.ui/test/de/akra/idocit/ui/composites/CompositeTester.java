@@ -142,7 +142,7 @@ public class CompositeTester
 					}
 					case 10:
 					{
-						viewer = new CompositeViewer<ManageThematicGridsCompositeAC, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>(
+						viewer = new CompositeViewer<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>(
 								shell, new ManageThematicGridsCompositeFactory());
 						viewer.setBlockOnOpen(true);
 						viewer.open();

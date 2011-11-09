@@ -204,7 +204,7 @@ public class DocumentItemListComposite
 
 			@Override
 			public void selectionChanged(DocumentItemCompositeSelection selection,
-					PocUIComposite<DocumentItemCompositeSelection> comp)
+					PocUIComposite<DocumentItemCompositeSelection> comp, Object sourceControl)
 			{
 				Documentation newDoc = selection.getDocumentation();
 				List<Documentation> docs = getSelection().getDocumentations();
@@ -221,7 +221,7 @@ public class DocumentItemListComposite
 				getSelection().getDisplayedAddresseesForDocumentations().set(compIndex,
 						selection.getDisplayedAddressees());
 			
-				fireChangeEvent();
+				fireChangeEvent(sourceControl);
 			}
 		};
 
@@ -287,7 +287,7 @@ public class DocumentItemListComposite
 		// init it with the first tab as active.
 		selection.getActiveAddressees().add(0);
 		
-		fireChangeEvent();
+		fireChangeEvent(null);
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class DocumentItemListComposite
 		listSelection.getActiveAddressees().remove(row);
 		listSelection.getDisplayedAddresseesForDocumentations().remove(row);
 
-		fireChangeEvent();
+		fireChangeEvent(e.widget);
 	}
 
 	/**
@@ -321,7 +321,7 @@ public class DocumentItemListComposite
 	 */
 	@Override
 	protected void doSetSelection(DocumentItemListCompositeSelection oldInSelection,
-			DocumentItemListCompositeSelection newInSelection)
+			DocumentItemListCompositeSelection newInSelection, Object sourceControl)
 			throws IllegalArgumentException
 	{
 		if (newInSelection != null

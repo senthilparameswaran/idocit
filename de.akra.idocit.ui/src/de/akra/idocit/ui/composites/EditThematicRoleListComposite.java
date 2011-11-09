@@ -87,7 +87,8 @@ public class EditThematicRoleListComposite
 		lblEmpty.setText("");
 
 		itemList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true).hint(100, 100).span(2, 1).applyTo(itemList);
+		GridDataFactory.fillDefaults().grab(true, true).hint(100, 100).span(2, 1)
+				.applyTo(itemList);
 
 		btnAdd = new Button(this, SWT.PUSH);
 		btnAdd.setText("Add Item");
@@ -125,7 +126,7 @@ public class EditThematicRoleListComposite
 					// End changes due to Issue #32
 
 					setSelection(selection);
-					fireChangeEvent();
+					fireChangeEvent(btnAdd);
 				}
 				else
 				{
@@ -182,9 +183,9 @@ public class EditThematicRoleListComposite
 										items.subList(nextSelIndex, nextSelIndex + 1))
 										: null);
 						// End changes due to Issue #10
-						
+
 						setSelection(selection);
-						fireChangeEvent();
+						fireChangeEvent(btnRemove);
 					}
 					else
 					{
@@ -230,7 +231,7 @@ public class EditThematicRoleListComposite
 				}
 
 				setSelection(selection);
-				fireChangeEvent();
+				fireChangeEvent(itemList);
 			}
 
 			@Override
@@ -243,7 +244,7 @@ public class EditThematicRoleListComposite
 
 	@Override
 	protected void doSetSelection(EditThematicRoleListCompositeSelection oldInSelection,
-			EditThematicRoleListCompositeSelection newInSelection)
+			EditThematicRoleListCompositeSelection newInSelection, Object sourceControl)
 	{
 		itemList.removeAll();
 

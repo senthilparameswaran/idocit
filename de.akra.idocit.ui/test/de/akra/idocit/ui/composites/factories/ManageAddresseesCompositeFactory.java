@@ -41,7 +41,7 @@ public class ManageAddresseesCompositeFactory
 {
 
 	@Override
-	public ManageAddresseeComposite createComposite(Composite parent)
+	public ManageAddresseeComposite createComposite(Composite parent, int style)
 	{
 		ManageAddresseeComposite composite = new ManageAddresseeComposite(parent);
 

@@ -15,6 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,7 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.services.RuleService;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
@@ -157,7 +159,7 @@ public class EditThematicGridComposite
 
 		Label lblHintContextMenu = new Label(this, SWT.NONE);
 		lblHintContextMenu
-				.setText("Please note: you can edit further attributes via a right click on the line in the table.");
+				.setText("Please note: you can edit further attributes via a right click on the table.");
 		lblHintContextMenu.setForeground(getDisplay()
 				.getSystemColor(SWT.COLOR_DARK_GREEN));
 
@@ -218,37 +220,31 @@ public class EditThematicGridComposite
 
 	@Override
 	protected void doSetSelection(EditThematicGridCompositeSelection oldSelection,
-			EditThematicGridCompositeSelection newSelection)
+			EditThematicGridCompositeSelection newSelection, Object sourceControl)
 	{
 		if (!newSelection.equals(oldSelection)
 				&& newSelection.getActiveThematicGrid() != null)
 		{
 			String newName = newSelection.getActiveThematicGrid().getName();
-			String oldName = (oldSelection != null && oldSelection
-					.getActiveThematicGrid() != null) ? oldSelection
-					.getActiveThematicGrid().getName() : null;
 
-			if (!newName.equals(oldName))
+			if ((sourceControl == null)
+					|| ((sourceControl != null) && (!sourceControl.equals(txtName))))
 			{
 				txtName.setText(newName);
 			}
 
 			String newDescription = newSelection.getActiveThematicGrid().getDescription();
-			String oldDescription = (oldSelection != null && oldSelection
-					.getActiveThematicGrid() != null) ? oldSelection
-					.getActiveThematicGrid().getDescription() : null;
 
-			if (!newDescription.equals(oldDescription))
+			if ((sourceControl == null)
+					|| ((sourceControl != null) && (!sourceControl.equals(txtDescription))))
 			{
 				txtDescription.setText(newDescription);
 			}
 
 			Set<String> newVerbs = newSelection.getActiveThematicGrid().getVerbs();
-			Set<String> oldVerbs = (oldSelection != null && oldSelection
-					.getActiveThematicGrid() != null) ? oldSelection
-					.getActiveThematicGrid().getVerbs() : null;
 
-			if (!newVerbs.equals(oldVerbs))
+			if ((sourceControl == null)
+					|| ((sourceControl != null) && (!sourceControl.equals(txtVerbs))))
 			{
 				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newVerbs));
 			}
@@ -292,6 +288,7 @@ public class EditThematicGridComposite
 				{
 					items[i].setChecked(false);
 					items[i].setText(ROLE_TABLE_COL_STATUS, STATUS_MANDATORY);
+					items[i].setText(ROLE_TABLE_COL_RULE, "");
 				}
 			}
 			// End changes due to Issue #27
@@ -318,11 +315,22 @@ public class EditThematicGridComposite
 				if (activeGrid != null)
 				{
 					Map<String, String> gridBasedRules = activeGrid.getGridBasedRules();
+					Map<ThematicRole, Boolean> checkedThematicRoles = activeGrid
+							.getRoles();
 
 					if (gridBasedRules != null)
 					{
 						String rule = gridBasedRules.get(role.getName());
-						items[i].setText(ROLE_TABLE_COL_RULE, rule);
+
+						if ((rule != null) && checkedThematicRoles.containsKey(role))
+						{
+							items[i].setText(ROLE_TABLE_COL_RULE, rule);
+						}
+						else
+						{
+							items[i].setText(ROLE_TABLE_COL_RULE, "");
+						}
+
 					}
 				}
 
@@ -335,6 +343,9 @@ public class EditThematicGridComposite
 				int selectionIndex = roles.indexOf(activeRole);
 				tabRoles.select(selectionIndex);
 			}
+
+			tablePopUpMenu.setEnabled((activeRole != null)
+					&& (newSelectedRoles.containsKey(activeRole)));
 		}
 	}
 
@@ -351,9 +362,10 @@ public class EditThematicGridComposite
 				Set<String> verbs = StringUtils.convertIntoTokenSet(txtVerbs.getText(),
 						",");
 				grid.setVerbs(verbs);
-				selection.setActiveThematicGrid(grid);
+				selection = selection.setActiveThematicGrid(grid);
 
-				fireChangeEvent();
+				setSelection(selection, txtVerbs);
+				fireChangeEvent(txtVerbs);
 			}
 		};
 
@@ -364,9 +376,10 @@ public class EditThematicGridComposite
 				EditThematicGridCompositeSelection selection = getSelection();
 				ThematicGrid grid = selection.getActiveThematicGrid();
 				grid.setName(txtName.getText());
-				selection.setActiveThematicGrid(grid);
+				selection = selection.setActiveThematicGrid(grid);
 
-				fireChangeEvent();
+				setSelection(selection, txtName);
+				fireChangeEvent(txtName);
 			}
 		};
 
@@ -377,9 +390,10 @@ public class EditThematicGridComposite
 				EditThematicGridCompositeSelection selection = getSelection();
 				ThematicGrid grid = selection.getActiveThematicGrid();
 				grid.setDescription(txtDescription.getText());
-				selection.setActiveThematicGrid(grid);
+				selection = selection.setActiveThematicGrid(grid);
 
-				fireChangeEvent();
+				setSelection(selection, txtDescription);
+				fireChangeEvent(txtDescription);
 			}
 		};
 
@@ -388,7 +402,7 @@ public class EditThematicGridComposite
 			public void handleEvent(Event event)
 			{
 				updateThematicGridInSelection();
-				fireChangeEvent();
+				fireChangeEvent(tabRoles);
 			}
 		};
 
@@ -427,7 +441,7 @@ public class EditThematicGridComposite
 			{
 				changeSelectedItemStatus(STATUS_MANDATORY);
 				updateThematicGridInSelection();
-				fireChangeEvent();
+				fireChangeEvent(tabRoles);
 			}
 
 			@Override
@@ -444,7 +458,7 @@ public class EditThematicGridComposite
 			{
 				changeSelectedItemStatus(STATUS_OPTIONAL);
 				updateThematicGridInSelection();
-				fireChangeEvent();
+				fireChangeEvent(tabRoles);
 			}
 
 			@Override
@@ -486,7 +500,7 @@ public class EditThematicGridComposite
 									+ selectedRole.getName()
 									+ " should be recommended in the thematic grid "
 									+ activeGrid.getName()
-									+ ".\n\nYou can use the following predicates (in JavaScript-Syntax):\ndef()\t\t\t\t\t\tTRUE (Default predicate)\nisSingular(\"ROLENAME\")\t\tTRUE, if the given role has numerus SINGULAR\nisPlural(\"ROLENAME\")\t\t\tTRUE, if the given role has numerus PLURAL\nexists(\"ROLENAME\")\t\t\tTRUE, if the given role exists in the documenation of the current operation\nhasAttributes(\"ROLENAME\")\tTRUE, if the signature element of given role has further internal attributes",
+									+ ".\n\nYou can use the following predicates (in JavaScript-Syntax):\ndef()\nisSingular(\"ROLENAME\")\nisPlural(\"ROLENAME\")\nexists(\"ROLENAME\")\nhasAttributes(\"ROLENAME\")",
 							gridBasedRule, ruleValidator);
 
 					int dialogResult = ruleInputDialog.open();
@@ -498,6 +512,8 @@ public class EditThematicGridComposite
 						selection = selection.setActiveThematicGrid(activeGrid);
 
 						setSelection(selection);
+
+						fireChangeEvent(tabRoles);
 					}
 				}
 			}
@@ -553,6 +569,9 @@ public class EditThematicGridComposite
 		Map<ThematicRole, Boolean> roles = grid.getRoles();
 		roles.clear();
 
+		Map<String, String> gridBasedRules = grid.getGridBasedRules();
+		Map<String, String> newGridBasedRules = new HashMap<String, String>();
+
 		for (TableItem item : selectedItems)
 		{
 			if (item.getChecked())
@@ -560,11 +579,25 @@ public class EditThematicGridComposite
 				ThematicRole role = (ThematicRole) item.getData();
 				roles.put(role,
 						item.getText(ROLE_TABLE_COL_STATUS).equals(STATUS_MANDATORY));
+
+				if (gridBasedRules.containsKey(role.getName()))
+				{
+					newGridBasedRules.put(role.getName(),
+							gridBasedRules.get(role.getName()));
+				}
+				else
+				{
+					newGridBasedRules.put(role.getName(),
+							ThematicGridConstants.DEFAULT_RULE);
+				}
 			}
 		}
 
 		grid.setRoles(roles);
-		selection.setActiveThematicGrid(grid);
+		grid.setGridBasedRules(newGridBasedRules);
+		selection = selection.setActiveThematicGrid(grid);
+
+		setSelection(selection);
 	}
 
 	/**

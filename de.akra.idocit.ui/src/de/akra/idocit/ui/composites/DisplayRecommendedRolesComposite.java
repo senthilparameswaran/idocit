@@ -49,8 +49,8 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.constants.ThematicGridConstants;
 
 /**
- * Composite with the {@link List} of recommended {@link ThematicRole}s. The
- * list is only used for displaying the information.
+ * Composite with the {@link List} of recommended {@link ThematicRole}s. The list is only
+ * used for displaying the information.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
@@ -59,7 +59,8 @@ import de.akra.idocit.core.constants.ThematicGridConstants;
  */
 public class DisplayRecommendedRolesComposite
 		extends
-		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection> {
+		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection>
+{
 	private static final String ASSOCIATED_ROLE = " (Associated)";
 	private static final String REFERENCE_GRID = " (Reference Grid)";
 
@@ -92,14 +93,15 @@ public class DisplayRecommendedRolesComposite
 	 * @throws CompositeInitializationException
 	 */
 	public DisplayRecommendedRolesComposite(Composite pvParent, int pvStyle)
-			throws CompositeInitializationException {
+			throws CompositeInitializationException
+	{
 		super(pvParent, pvStyle, EmptyActionConfiguration.getInstance(),
 				EmptyResourceConfiguration.getInstance());
 	}
 
 	@Override
-	protected void initGUI(Composite parent)
-			throws CompositeInitializationException {
+	protected void initGUI(Composite parent) throws CompositeInitializationException
+	{
 		GridLayoutFactory.fillDefaults().applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
@@ -108,7 +110,8 @@ public class DisplayRecommendedRolesComposite
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(rolesTree);
 
 		FontData[] fontData = rolesTree.getFont().getFontData();
-		for (FontData data : fontData) {
+		for (FontData data : fontData)
+		{
 			data.setStyle(SWT.BOLD);
 		}
 		boldFont = new Font(this.getDisplay(), fontData);
@@ -127,8 +130,10 @@ public class DisplayRecommendedRolesComposite
 	@Override
 	protected void doSetSelection(
 			DisplayRecommendedRolesCompositeSelection oldInSelection,
-			DisplayRecommendedRolesCompositeSelection newInSelection) {
-		if (newInSelection != null && (!newInSelection.equals(oldInSelection))) {
+			DisplayRecommendedRolesCompositeSelection newInSelection, Object sourceControl)
+	{
+		if (newInSelection != null && (!newInSelection.equals(oldInSelection)))
+		{
 			rolesTree.removeAll();
 			Map<String, Map<ThematicRole, Boolean>> recThematicRoles = newInSelection
 					.getRecommendedThematicRoles();
@@ -140,28 +145,37 @@ public class DisplayRecommendedRolesComposite
 					recThematicRoles);
 
 			for (Entry<String, Map<ThematicRole, Boolean>> roleClass : sortedVerbClasses
-					.entrySet()) {
+					.entrySet())
+			{
 				TreeItem verbClassRoot = new TreeItem(rolesTree, SWT.NONE);
 				String thematicGridName = roleClass.getKey();
 
-				if (thematicGridName.equals(newInSelection
-						.getReferenceThematicGridName())) {
+				if (thematicGridName
+						.equals(newInSelection.getReferenceThematicGridName()))
+				{
 					verbClassRoot.setText(thematicGridName + REFERENCE_GRID);
-				} else {
+				}
+				else
+				{
 					verbClassRoot.setText(thematicGridName);
 				}
 
-				if (roleClass.getValue() != null) {
+				if (roleClass.getValue() != null)
+				{
 					Set<ThematicRole> displayNotAssignedRoles = new TreeSet<ThematicRole>();
 					Set<ThematicRole> displayAssignedRoles = new TreeSet<ThematicRole>();
 
 					Iterator<ThematicRole> iter = roleClass.getValue().keySet()
 							.iterator();
-					while (iter.hasNext()) {
+					while (iter.hasNext())
+					{
 						ThematicRole recRole = iter.next();
-						if (allAssignedThematicRoles.contains(recRole)) {
+						if (allAssignedThematicRoles.contains(recRole))
+						{
 							displayAssignedRoles.add(recRole);
-						} else {
+						}
+						else
+						{
 							displayNotAssignedRoles.add(recRole);
 						}
 					}
@@ -169,27 +183,31 @@ public class DisplayRecommendedRolesComposite
 					/*
 					 * insert items into list
 					 */
-					for (ThematicRole role : displayAssignedRoles) {
-						TreeItem roleItem = new TreeItem(verbClassRoot,
-								SWT.BOLD);
+					for (ThematicRole role : displayAssignedRoles)
+					{
+						TreeItem roleItem = new TreeItem(verbClassRoot, SWT.BOLD);
 						roleItem.setText(role.getName() + ASSOCIATED_ROLE);
 						roleItem.setForeground(GREEN);
 
-						if (roleClass.getValue().get(role)) {
+						if (roleClass.getValue().get(role))
+						{
 							// role is mandatory and associated
 							roleItem.setFont(boldFont);
 						}
 					}
-					for (ThematicRole role : displayNotAssignedRoles) {
-						TreeItem roleItem = new TreeItem(verbClassRoot,
-								SWT.NONE);
+					for (ThematicRole role : displayNotAssignedRoles)
+					{
+						TreeItem roleItem = new TreeItem(verbClassRoot, SWT.NONE);
 						roleItem.setText(role.getName());
 
-						if (roleClass.getValue().get(role)) {
+						if (roleClass.getValue().get(role))
+						{
 							// role is mandatory and not associated
 							roleItem.setForeground(RED);
 							roleItem.setFont(boldFont);
-						} else {
+						}
+						else
+						{
 							// role is optional and not associated
 							roleItem.setForeground(ORANGE);
 						}
@@ -197,48 +215,50 @@ public class DisplayRecommendedRolesComposite
 				}
 
 				// expand Tree
-				verbClassRoot.setExpanded(!newInSelection
-						.getCollapsedThematicGridNames().contains(
-								roleClass.getKey()));
+				verbClassRoot.setExpanded(!newInSelection.getCollapsedThematicGridNames()
+						.contains(roleClass.getKey()));
 			}
 		}
 	}
 
 	@Override
-	protected void initListener() throws CompositeInitializationException {
+	protected void initListener() throws CompositeInitializationException
+	{
 		treeCollapseListener = new TreeListener() {
 
 			@Override
-			public void treeExpanded(TreeEvent e) {
-				if (e.item != null) {
+			public void treeExpanded(TreeEvent e)
+			{
+				if (e.item != null)
+				{
 					DisplayRecommendedRolesCompositeSelection selection = getSelection();
 					Set<String> collapsedGrids = selection
 							.getCollapsedThematicGridNames();
 
 					collapsedGrids.remove(((TreeItem) e.item).getText());
 
-					selection = selection
-							.setCollapsedThematicGridNames(collapsedGrids);
+					selection = selection.setCollapsedThematicGridNames(collapsedGrids);
 					setSelection(selection);
 
-					fireChangeEvent();
+					fireChangeEvent(rolesTree);
 				}
 			}
 
 			@Override
-			public void treeCollapsed(TreeEvent e) {
-				if (e.item != null) {
+			public void treeCollapsed(TreeEvent e)
+			{
+				if (e.item != null)
+				{
 					DisplayRecommendedRolesCompositeSelection selection = getSelection();
 					Set<String> collapsedGrids = selection
 							.getCollapsedThematicGridNames();
 
 					collapsedGrids.add(((TreeItem) e.item).getText());
 
-					selection = selection
-							.setCollapsedThematicGridNames(collapsedGrids);
+					selection = selection.setCollapsedThematicGridNames(collapsedGrids);
 					setSelection(selection);
 
-					fireChangeEvent();
+					fireChangeEvent(rolesTree);
 				}
 			}
 		};
@@ -246,23 +266,26 @@ public class DisplayRecommendedRolesComposite
 		menuItemSetReferenceGridSelectionListener = new SelectionListener() {
 
 			@Override
-			public void widgetSelected(SelectionEvent event) {
+			public void widgetSelected(SelectionEvent event)
+			{
 				DisplayRecommendedRolesCompositeSelection selection = getSelection();
 
-				if (selection != null) {
+				if (selection != null)
+				{
 					TreeItem[] selectedItems = rolesTree.getSelection();
-					String referenceGridName = extractThematicGridName(selectedItems[0].getText());
-					selection = selection
-							.setReferenceThematicGridName(referenceGridName);
+					String referenceGridName = extractThematicGridName(selectedItems[0]
+							.getText());
+					selection = selection.setReferenceThematicGridName(referenceGridName);
 
 					setSelection(selection);
 
-					fireChangeEvent();
+					fireChangeEvent(rolesTree);
 				}
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent event) {
+			public void widgetDefaultSelected(SelectionEvent event)
+			{
 				// Nothing to do!
 			}
 		};
@@ -270,15 +293,16 @@ public class DisplayRecommendedRolesComposite
 		menuDetectListener = new MenuDetectListener() {
 
 			@Override
-			public void menuDetected(MenuDetectEvent event) {
+			public void menuDetected(MenuDetectEvent event)
+			{
 				TreeItem[] selectedItem = rolesTree.getSelection();
 				String itemText = extractThematicGridName(selectedItem[0].getText());
 
 				DisplayRecommendedRolesCompositeSelection selection = getSelection();
 
-				if (selection != null) {
-					boolean isThematicGridItem = selection
-							.getRecommendedThematicRoles()
+				if (selection != null)
+				{
+					boolean isThematicGridItem = selection.getRecommendedThematicRoles()
 							.containsKey(itemText);
 					tablePopUpMenu.setVisible(isThematicGridItem);
 				}
@@ -288,37 +312,43 @@ public class DisplayRecommendedRolesComposite
 		menuItemUnsetReferenceGridSelectionListener = new SelectionListener() {
 
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
+			public void widgetSelected(SelectionEvent arg0)
+			{
 				DisplayRecommendedRolesCompositeSelection selection = getSelection();
 
-				if (selection != null) {
+				if (selection != null)
+				{
 					selection = selection
 							.setReferenceThematicGridName(ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME);
 
 					setSelection(selection);
-					fireChangeEvent();
+					fireChangeEvent(rolesTree);
 				}
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
+			public void widgetDefaultSelected(SelectionEvent arg0)
+			{
 				// Do nothing!
 			}
 		};
 	}
 
-	private String extractThematicGridName(String treeNodeText){
+	private String extractThematicGridName(String treeNodeText)
+	{
 		int index = treeNodeText.indexOf(REFERENCE_GRID);
 
-		if (index >= 0) {
+		if (index >= 0)
+		{
 			treeNodeText = treeNodeText.substring(0, index);
 		}
-		
+
 		return treeNodeText;
 	}
-	
+
 	@Override
-	protected void addAllListener() {
+	protected void addAllListener()
+	{
 		menuItemSetReferenceGrid
 				.addSelectionListener(menuItemSetReferenceGridSelectionListener);
 		menuItemUnsetReferenceGrid
@@ -328,17 +358,19 @@ public class DisplayRecommendedRolesComposite
 	}
 
 	@Override
-	protected void removeAllListener() {
+	protected void removeAllListener()
+	{
 		rolesTree.removeMenuDetectListener(menuDetectListener);
 		menuItemSetReferenceGrid
 				.removeSelectionListener(menuItemSetReferenceGridSelectionListener);
-		menuItemUnsetReferenceGrid
+		menuItemSetReferenceGrid
 				.removeSelectionListener(menuItemUnsetReferenceGridSelectionListener);
 		rolesTree.removeTreeListener(treeCollapseListener);
 	}
 
 	@Override
-	protected void doCleanUp() {
+	protected void doCleanUp()
+	{
 		GREEN.dispose();
 		RED.dispose();
 		ORANGE.dispose();

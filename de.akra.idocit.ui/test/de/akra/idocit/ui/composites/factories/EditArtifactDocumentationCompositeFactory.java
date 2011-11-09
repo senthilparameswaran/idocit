@@ -63,7 +63,7 @@ public class EditArtifactDocumentationCompositeFactory
 	 */
 	@Override
 	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection> createComposite(
-			Composite pvParent)
+			Composite pvParent, int style)
 	{
 		ServiceManager.getInstance().setPersistenceService(
 				new CompositeTestPersistenceService());
@@ -104,7 +104,8 @@ public class EditArtifactDocumentationCompositeFactory
 					@Override
 					public void selectionChanged(
 							EditArtifactDocumentationCompositeSelection arg0,
-							PocUIComposite<EditArtifactDocumentationCompositeSelection> arg1)
+							PocUIComposite<EditArtifactDocumentationCompositeSelection> arg1,
+							Object sourceControl)
 					{
 						System.out.println(arg0);
 					}
@@ -168,32 +169,37 @@ public class EditArtifactDocumentationCompositeFactory
 		outputParameters.setIdentifier("getOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new TestParameter(outputParameters, "Part", Numerus.SINGULAR, true);
+		Parameter paramCustOut = new TestParameter(outputParameters, "Part",
+				Numerus.SINGULAR, true);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		paramCust.setQualifiedDataTypeName("ns.Customer");
 		paramCustOut.setSignatureElementPath("getOut.Cust(Customer)");
 		outputParameters.addParameter(paramCustOut);
 
-		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
+		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR,
+				false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setSignatureElementPath("getOut.Cust(Customer).id(int)");
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
+		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR,
+				false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramCust.setQualifiedDataTypeName("java.lang.String");
 		paramNameOut.setSignatureElementPath("getOut.Cust(Customer).name(String)");
 		paramCustOut.addParameter(paramNameOut);
 
-		Parameter test1 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", Numerus.SINGULAR, false);
+		Parameter test1 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "",
+				Numerus.SINGULAR, false);
 		test1.setIdentifier("id");
 		test1.setDataTypeName("int");
 		test1.setSignatureElementPath("getOut.Cust(Customer).id(int)");
 
-		Parameter test2 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", Numerus.SINGULAR, false);
+		Parameter test2 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "",
+				Numerus.SINGULAR, false);
 		test2.setIdentifier("id");
 		test2.setDataTypeName("int");
 		test2.setSignatureElementPath("getOu2.Cust(Customer).id(int)");
