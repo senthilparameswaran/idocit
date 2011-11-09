@@ -18,8 +18,11 @@ package de.akra.idocit.core;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
@@ -32,14 +35,17 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.services.ThematicGridService;
 import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.services.impl.EclipseParsingServiceInitializer;
-import de.akra.idocit.core.services.impl.ParsingService;
 import de.akra.idocit.core.services.impl.EclipsePersistenceService;
+import de.akra.idocit.core.services.impl.ParsingService;
 import de.akra.idocit.core.services.impl.ServiceManager;
 
 /**
@@ -50,9 +56,10 @@ import de.akra.idocit.core.services.impl.ServiceManager;
  * @version 0.0.1
  * 
  */
-public class IDocItActivator extends AbstractUIPlugin implements IStartup {
-	private static final Logger logger = Logger.getLogger(IDocItActivator.class
-			.getName());
+public class IDocItActivator extends AbstractUIPlugin implements IStartup
+{
+	private static final Logger logger = Logger
+			.getLogger(IDocItActivator.class.getName());
 
 	/**
 	 * The plug-in ID
@@ -81,26 +88,26 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void earlyStartup() {
+	public void earlyStartup()
+	{
 		ServiceManager.getInstance().setPersistenceService(
 				new EclipsePersistenceService());
-		ServiceManager.getInstance().setThematicGridService(
-				new ThematicGridService());
+		ServiceManager.getInstance().setThematicGridService(new ThematicGridService());
 		ServiceManager.getInstance().setParsingService(new ParsingService());
 
 		PersistenceService persistenceService = ServiceManager.getInstance()
 				.getPersistenceService();
 
 		// Initialize the Preference Store.
-		if (!persistenceService.areAddresseesInitialized()) {
-			List<Addressee> addressees = persistenceService
-					.readInitialAddressees();
+		if (!persistenceService.areAddresseesInitialized())
+		{
+			List<Addressee> addressees = persistenceService.readInitialAddressees();
 			persistenceService.persistAddressees(addressees);
 		}
 
-		if (!persistenceService.areThematicRolesInitialized()) {
-			List<ThematicRole> roles = persistenceService
-					.readInitialThematicRoles();
+		if (!persistenceService.areThematicRolesInitialized())
+		{
+			List<ThematicRole> roles = persistenceService.readInitialThematicRoles();
 			persistenceService.persistThematicRoles(roles);
 		}
 
@@ -108,23 +115,25 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	}
 
 	/**
-	 * Registers a new {@link IDocItInitializationListener} at this activator.
-	 * The registere service will be informed about changed configurations of
-	 * iDocIt!, e.g. via the preference pages.
+	 * Registers a new {@link IDocItInitializationListener} at this activator. The
+	 * registere service will be informed about changed configurations of iDocIt!, e.g.
+	 * via the preference pages.
 	 * 
-	 * Please note: each listener will be registered and informed exactly one
-	 * time!
+	 * Please note: each listener will be registered and informed exactly one time!
 	 * 
 	 * @param listener
 	 *            The {@link IDocItInitializationListener} to register
 	 */
-	public static void addConfigurationListener(
-			IDocItInitializationListener listener) {
+	public static void addConfigurationListener(IDocItInitializationListener listener)
+	{
 		CONFIGURATION_LISTENERS.add(listener);
 
-		if (!initializedAtStartup) {
+		if (!initializedAtStartup)
+		{
 			listener.initializationStarted();
-		} else {
+		}
+		else
+		{
 			listener.initializationFinished();
 		}
 	}
@@ -137,30 +146,32 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @see {@link this#addConfigurationListener(IDocItInitializationListener)}
 	 */
-	public static void removeConfigurationListener(
-			IDocItInitializationListener listener) {
+	public static void removeConfigurationListener(IDocItInitializationListener listener)
+	{
 		CONFIGURATION_LISTENERS.add(listener);
 	}
 
 	/**
-	 * Informs all registered listeners about changes on the iDocIt!
-	 * configuration.
+	 * Informs all registered listeners about changes on the iDocIt! configuration.
 	 * 
 	 * @param initializationStarted
 	 *            <ul>
-	 *            <li>If <code>true</code> then the method
-	 *            initializationStarted() will be called on each registered
-	 *            listener</li>
-	 *            <li>If <code>false</code> then the method
-	 *            initializationFinished() will be called on each registered
-	 *            listener</li></li>
+	 *            <li>If <code>true</code> then the method initializationStarted() will be
+	 *            called on each registered listener</li>
+	 *            <li>If <code>false</code> then the method initializationFinished() will
+	 *            be called on each registered listener</li></li>
 	 *            </ul>
 	 */
-	private static void fireChangeEvent(boolean initializationStarted) {
-		for (IDocItInitializationListener listener : CONFIGURATION_LISTENERS) {
-			if (initializationStarted) {
+	private static void fireChangeEvent(boolean initializationStarted)
+	{
+		for (IDocItInitializationListener listener : CONFIGURATION_LISTENERS)
+		{
+			if (initializationStarted)
+			{
 				listener.initializationStarted();
-			} else {
+			}
+			else
+			{
 				listener.initializationFinished();
 			}
 		}
@@ -169,10 +180,12 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	/**
 	 * Initialize the used services for deriving the thematic grids.
 	 */
-	public static void initializeIDocIt() {
+	public static void initializeIDocIt()
+	{
 		Thread initializer = new Thread() {
 			@Override
-			public void run() {
+			public void run()
+			{
 
 				fireChangeEvent(true);
 
@@ -180,19 +193,34 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 				ServiceManager.getInstance().getParsingService()
 						.init(new EclipseParsingServiceInitializer());
 
-				try {
+				try
+				{
 					// Thematic Grids
 					InputStream resourceInputStream = FileLocator.openStream(
-							plugin.getBundle(), new Path(
-									THEMATIC_GRIDS_RESOURCE_FILE), false);
+							plugin.getBundle(), new Path(THEMATIC_GRIDS_RESOURCE_FILE),
+							false);
 					ServiceManager.getInstance().getPersistenceService()
 							.init(resourceInputStream);
-				} catch (FileNotFoundException e) {
+
+					// Grid-based rules
+					initGridBasedRules();
+				}
+				catch (FileNotFoundException e)
+				{
 					logger.log(Level.WARNING, e.getMessage(), e);
-				} catch (IOException ioEx) {
+				}
+				catch (IOException ioEx)
+				{
 					// TODO: Route exception to Eclipse Platform
 					throw new RuntimeException(ioEx);
-				} finally {
+				}
+				catch (UnitializedIDocItException e)
+				{
+					// TODO: Route exception to Eclipse Platform
+					throw new RuntimeException(e);
+				}
+				finally
+				{
 					initializedAtStartup = true;
 
 					fireChangeEvent(false);
@@ -203,10 +231,41 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 		initializer.start();
 	}
 
+	private static void initGridBasedRules() throws UnitializedIDocItException
+	{
+		List<ThematicGrid> grids = ServiceManager.getInstance().getPersistenceService()
+				.loadThematicGrids();
+
+		for (ThematicGrid grid : grids)
+		{
+			Map<ThematicRole, Boolean> roles = grid.getRoles();
+			Map<String, String> gridBasedRules = grid.getGridBasedRules();
+
+			if (gridBasedRules == null)
+			{
+				gridBasedRules = new HashMap<String, String>();
+			}
+
+			for (Entry<ThematicRole, Boolean> entry : roles.entrySet())
+			{
+				if (!gridBasedRules.containsKey(entry.getKey().getName()))
+				{
+					gridBasedRules.put(entry.getKey().getName(),
+							ThematicGridConstants.DEFAULT_RULE);
+				}
+			}
+
+			grid.setGridBasedRules(gridBasedRules);
+		}
+
+		ServiceManager.getInstance().getPersistenceService().persistThematicGrids(grids);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public void start(BundleContext context) throws Exception {
+	public void start(BundleContext context) throws Exception
+	{
 		super.start(context);
 		plugin = this;
 	}
@@ -214,7 +273,8 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void stop(BundleContext context) throws Exception {
+	public void stop(BundleContext context) throws Exception
+	{
 		plugin = null;
 		super.stop(context);
 	}
@@ -224,19 +284,20 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return the shared instance
 	 */
-	public static IDocItActivator getDefault() {
+	public static IDocItActivator getDefault()
+	{
 		return plugin;
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path
+	 * Returns an image descriptor for the image file at the given plug-in relative path
 	 * 
 	 * @param path
 	 *            the path
 	 * @return the image descriptor
 	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
+	public static ImageDescriptor getImageDescriptor(String path)
+	{
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
@@ -249,12 +310,16 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	 * @return {@link PropertyResourceBundle} for this plugin and the given
 	 *         resourceBundleFile.
 	 */
-	private PropertyResourceBundle getResourceBundle(String resourceBundleFile) {
-		try {
-			InputStream resourceInputStream = FileLocator.openStream(
-					getBundle(), new Path(resourceBundleFile), false);
+	private PropertyResourceBundle getResourceBundle(String resourceBundleFile)
+	{
+		try
+		{
+			InputStream resourceInputStream = FileLocator.openStream(getBundle(),
+					new Path(resourceBundleFile), false);
 			return new PropertyResourceBundle(resourceInputStream);
-		} catch (IOException ioEx) {
+		}
+		catch (IOException ioEx)
+		{
 			// TODO: Handle exception via Eclipse Workbench
 			throw new RuntimeException(ioEx);
 		}
@@ -264,7 +329,8 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return the {@link PropertyResourceBundle} for the thematic roles.
 	 */
-	public PropertyResourceBundle getThematicRoleResourceBundle() {
+	public PropertyResourceBundle getThematicRoleResourceBundle()
+	{
 		return getResourceBundle(ROLE_RESOURCE_FILE);
 	}
 
@@ -272,11 +338,13 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return the {@link PropertyResourceBundle} for the addresses.
 	 */
-	public PropertyResourceBundle getAddresseeResourceBundle() {
+	public PropertyResourceBundle getAddresseeResourceBundle()
+	{
 		return getResourceBundle(ADDRESSEE_RESOURCE_FILE);
 	}
 
-	public static boolean isInitializedAtStartup() {
+	public static boolean isInitializedAtStartup()
+	{
 		return initializedAtStartup;
 	}
 }
