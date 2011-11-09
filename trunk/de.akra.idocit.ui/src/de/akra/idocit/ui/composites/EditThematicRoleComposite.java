@@ -24,6 +24,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -32,7 +33,7 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.common.structure.DescribedItem;
+import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicRole;
 
 /**
@@ -52,12 +53,18 @@ public class EditThematicRoleComposite
 
 	private Text txtDescription;
 
+	private Combo comboScope;
+
+	private Label lblScope;
+
 	// Listeners
 	private FocusListener textFieldListener;
 
 	private ModifyListener txtNameListener;
 
 	private ModifyListener txtDescriptionListener;
+
+	private ModifyListener comboScopeListener;
 
 	/**
 	 * Constructor.
@@ -90,6 +97,13 @@ public class EditThematicRoleComposite
 				| SWT.V_SCROLL);
 		GridDataFactory.fillDefaults().hint(300, 100).grab(true, true)
 				.applyTo(txtDescription);
+
+		lblScope = new Label(this, SWT.NONE);
+
+		comboScope = new Combo(this, SWT.READ_ONLY);
+		comboScope.add("Interface Level");
+		comboScope.add("Operation Level");
+		comboScope.add("Both");
 	}
 
 	@Override
@@ -133,6 +147,25 @@ public class EditThematicRoleComposite
 
 				selection.setModifiedItem(item);
 				setSelection(selection);
+				
+				fireChangeEvent(txtDescription);
+			}
+		};
+
+		comboScopeListener = new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent arg0)
+			{
+				EditThematicRoleCompositeSelection selection = getSelection();
+				ThematicRole item = selection.getModifiedItem();
+
+				item.setRoleScope(RoleScope.values()[comboScope.getSelectionIndex()]);
+
+				selection.setModifiedItem(item);
+				setSelection(selection);
+				
+				fireChangeEvent(comboScope);
 			}
 		};
 	}
@@ -143,7 +176,7 @@ public class EditThematicRoleComposite
 	{
 		if (!newInSelection.equals(oldInSelection))
 		{
-			DescribedItem item = newInSelection.getModifiedItem();
+			ThematicRole item = (ThematicRole) newInSelection.getModifiedItem();
 
 			if (item != null)
 			{
@@ -158,6 +191,10 @@ public class EditThematicRoleComposite
 					txtDescription.setText("");
 				}
 			}
+
+			lblScope.setText("The thematic role " + item.getName() + " appears on");
+
+			comboScope.select(item.getRoleScope().ordinal());
 		}
 	}
 
@@ -167,6 +204,7 @@ public class EditThematicRoleComposite
 		txtName.addModifyListener(txtNameListener);
 		txtDescription.addModifyListener(txtDescriptionListener);
 		txtDescription.addFocusListener(textFieldListener);
+		comboScope.addModifyListener(comboScopeListener);
 	}
 
 	@Override
@@ -175,6 +213,7 @@ public class EditThematicRoleComposite
 		txtName.removeModifyListener(txtNameListener);
 		txtDescription.removeModifyListener(txtDescriptionListener);
 		txtDescription.removeFocusListener(textFieldListener);
+		comboScope.removeModifyListener(comboScopeListener);
 	}
 
 	@Override

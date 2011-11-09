@@ -27,6 +27,7 @@ import org.pocui.swt.composites.ICompositeFactory;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.DocumentItemComposite;
 import de.akra.idocit.ui.composites.DocumentItemCompositeSelection;
@@ -66,12 +67,21 @@ public class DocumentItemCompositeFactory
 		List<ThematicRole> thematicRoleList = new ArrayList<ThematicRole>();
 		ThematicRole roleAGENT = new ThematicRole("AGENT");
 		ThematicRole roleACTION = new ThematicRole("ACTION");
+		ThematicRole roleCOMPARISON = new ThematicRole("COMPARISON");
 
 		thematicRoleList.add(roleAGENT);
 		thematicRoleList.add(roleACTION);
+		thematicRoleList.add(roleCOMPARISON);
+		
+		ThematicRole roleOBJECT = new ThematicRole("OBJECT");
+		List<ThematicRole> moreRolesList = new ArrayList<ThematicRole>();
+		moreRolesList.add(roleOBJECT);
 
 		selection.setAddresseeList(addresseeList);
-		selection.setThematicRoleList(thematicRoleList);
+		
+		RolesRecommendations recommendations = new RolesRecommendations(thematicRoleList, moreRolesList);
+		
+		selection.setRolesRecommendations(recommendations);
 
 		// create documentation
 		Documentation doc = DocumentationTestFactory.createDocumentation();

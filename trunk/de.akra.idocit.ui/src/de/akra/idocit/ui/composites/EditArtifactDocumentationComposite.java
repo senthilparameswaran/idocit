@@ -47,6 +47,7 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
+import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
@@ -348,10 +349,55 @@ public class EditArtifactDocumentationComposite
 	{
 		if (newInSelection != null && !newInSelection.equals(oldInSelection))
 		{
-			updateDocumentItemListComposite(newInSelection);
+			SignatureElement selectedSigElem = newInSelection
+					.getSelectedSignatureElement();
+			SignatureElement sigElemOperation = SignatureElementUtils
+					.findOperationForParameter(selectedSigElem);
+			Map<String, Map<ThematicRole, Boolean>> roles = new HashMap<String, Map<ThematicRole, Boolean>>();
+
+			// Changes due to Issue #23
+			try
+			{
+				List<ThematicGrid> thematicGrids = ServiceManager.getInstance()
+						.getPersistenceService().loadThematicGrids();
+				roles = ThematicGridService.deriveThematicGrid(
+						sigElemOperation.getIdentifier(), thematicGrids);
+				roles = reduceGrids(roles.keySet(), thematicGrids, selectedSigElem);
+
+				updateDocumentItemListComposite(newInSelection, roles);
+			}
+			catch (UnitializedIDocItException unEx)
+			{
+				logger.log(Level.WARNING, "WSDLTaggingService is not initialized.", unEx);
+
+				MessageBoxUtils
+						.openErrorBox(
+								getShell(),
+								"The thematic grid deriving service is not initialized,\nplease check the configurations under \"Window\" -> \"Preferences\" -> \"iDocIt!\".");
+			}
+			// End changes due to Issue #23
+
 			updateSelectSignatureElementComposite(newInSelection);
-			updateDisplayRecommendedRolesComposite(newInSelection);
+			updateDisplayRecommendedRolesComposite(newInSelection, roles, sigElemOperation,
+					selectedSigElem);
 		}
+	}
+
+	private List<ThematicGrid> convertToList(Set<String> thematicGridNames)
+			throws UnitializedIDocItException
+	{
+		List<ThematicGrid> grids = ServiceManager.getInstance().getPersistenceService()
+				.loadThematicGrids();
+		List<ThematicGrid> foundGrids = new ArrayList<ThematicGrid>();
+
+		for (String gridName : thematicGridNames)
+		{
+			ThematicGrid grid = ThematicGridService.findThematicGridByName(gridName,
+					grids);
+			foundGrids.add(grid);
+		}
+
+		return foundGrids;
 	}
 
 	/**
@@ -359,14 +405,23 @@ public class EditArtifactDocumentationComposite
 	 * 
 	 * @param newInSelection
 	 *            the new {@link EditArtifactDocumentationCompositeSelection}.
+	 * @throws UnitializedIDocItException
 	 */
 	private void updateDocumentItemListComposite(
-			EditArtifactDocumentationCompositeSelection newInSelection)
+			EditArtifactDocumentationCompositeSelection newInSelection,
+			Map<String, Map<ThematicRole, Boolean>> roles)
+			throws UnitializedIDocItException
 	{
 		SignatureElement selectedSigElem = newInSelection.getSelectedSignatureElement();
+		List<ThematicGrid> grids = convertToList(roles.keySet());
+
+		RolesRecommendations rolesRecommendations = RuleService
+				.deriveRolesRecommendation(grids, newInSelection.getThematicRoleList(),
+						selectedSigElem);
+
 		DocumentItemListCompositeSelection docItemListSelection = new DocumentItemListCompositeSelection();
 		docItemListSelection.setAddresseeList(newInSelection.getAddresseeList());
-		docItemListSelection.setThematicRoleList(newInSelection.getThematicRoleList());
+		docItemListSelection.setRolesRecommendations(rolesRecommendations);
 		docItemListSelection.setDocumentationAllowed(selectedSigElem != null
 				&& selectedSigElem != SignatureElement.EMPTY_SIGNATURE_ELEMENT
 				&& selectedSigElem != InterfaceArtifact.NOT_SUPPORTED_ARTIFACT
@@ -440,16 +495,12 @@ public class EditArtifactDocumentationComposite
 	 *            the new {@link EditArtifactDocumentationCompositeSelection}.
 	 */
 	private void updateDisplayRecommendedRolesComposite(
-			EditArtifactDocumentationCompositeSelection newInSelection)
+			EditArtifactDocumentationCompositeSelection newInSelection,
+			Map<String, Map<ThematicRole, Boolean>> roles, SignatureElement operation,
+			SignatureElement selectedSigElem)
 	{
-		SignatureElement selectedSigElem = newInSelection.getSelectedSignatureElement();
 		DisplayRecommendedRolesCompositeSelection recRolesCompSelection = new DisplayRecommendedRolesCompositeSelection();
-
-		Map<String, Map<ThematicRole, Boolean>> roles = new HashMap<String, Map<ThematicRole, Boolean>>();
 		Set<ThematicRole> associatedThematicRoles = Collections.emptySet();
-
-		SignatureElement operation = SignatureElementUtils
-				.findOperationForParameter(selectedSigElem);
 
 		// recommended roles are only provided for operations
 		if (operation != SignatureElement.EMPTY_SIGNATURE_ELEMENT)
@@ -460,26 +511,6 @@ public class EditArtifactDocumentationComposite
 			recRolesCompSelection = recRolesCompSelection
 					.setCollapsedThematicGridNames(newInSelection
 							.getCollapsedThematicGrids(operation.getId()));
-
-			// Changes due to Issue #23
-			try
-			{
-				List<ThematicGrid> thematicGrids = ServiceManager.getInstance()
-						.getPersistenceService().loadThematicGrids();
-				roles = ThematicGridService.deriveThematicGrid(operation.getIdentifier(),
-						thematicGrids);
-				roles = reduceGrids(roles.keySet(), thematicGrids, selectedSigElem);
-			}
-			catch (UnitializedIDocItException unEx)
-			{
-				logger.log(Level.WARNING, "WSDLTaggingService is not initialized.", unEx);
-
-				MessageBoxUtils
-						.openErrorBox(
-								getShell(),
-								"The thematic grid deriving service is not initialized,\nplease check the configurations under \"Window\" -> \"Preferences\" -> \"iDocIt!\".");
-			}
-			// End changes due to Issue #23
 
 			associatedThematicRoles = new TreeSet<ThematicRole>();
 			SignatureElementUtils.collectAssociatedThematicRoles(associatedThematicRoles,
