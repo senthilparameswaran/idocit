@@ -18,8 +18,6 @@ package de.akra.idocit.common.structure;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.akra.idocit.common.services.RuleService;
-
 /**
  * Representation for a thematic role.
  * 
