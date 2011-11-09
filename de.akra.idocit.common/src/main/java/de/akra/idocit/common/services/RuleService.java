@@ -714,15 +714,7 @@ public final class RuleService
 	{
 		// final String predicates =
 		// StringUtils.toString(RuleService.class.getResourceAsStream("basicRules.js"));
-		String predicates = "";
-		try
-		{
-			predicates = StringUtils.toString(new FileInputStream(
-					"src/main/resources/basicRules.js"));
-			// TODO: Load basicRules.js via FileLocator
-		}
-		catch (FileNotFoundException e1)
-		{}
+		String predicates = StringUtils.toString(RuleService.class.getResourceAsStream("basicRules.js"));
 
 		final ScriptEngine engine = new ScriptEngineManager()
 				.getEngineByName("JavaScript");

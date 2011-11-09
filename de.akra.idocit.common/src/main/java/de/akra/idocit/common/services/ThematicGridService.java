@@ -164,4 +164,18 @@ public class ThematicGridService
 
 		return roles;
 	}
+
+	public static ThematicGrid findThematicGridByName(String thematicGridName,
+			List<ThematicGrid> grids)
+	{
+		for (ThematicGrid grid : grids)
+		{
+			if (grid.getName().equals(thematicGridName))
+			{
+				return grid;
+			}
+		}
+
+		return null;
+	}
 }
