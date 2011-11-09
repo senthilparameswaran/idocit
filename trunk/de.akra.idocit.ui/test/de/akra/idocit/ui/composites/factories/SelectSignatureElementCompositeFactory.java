@@ -42,7 +42,7 @@ public class SelectSignatureElementCompositeFactory
 	 */
 	@Override
 	public AbsComposite<EmptyActionConfiguration, SelectSignatureElementCompositeRC, SelectSignatureElementCompositeSelection> createComposite(
-			Composite pvParent)
+			Composite pvParent, int style)
 	{
 		SelectSignatureElementComposite comp = new SelectSignatureElementComposite(
 				pvParent, SWT.NONE, new SelectSignatureElementCompositeRC());

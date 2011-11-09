@@ -45,33 +45,34 @@ public class DocumentItemListCompositeFactory
 
 	@Override
 	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, DocumentItemListCompositeSelection> createComposite(
-			Composite pvParent)
+			Composite pvParent, int style)
 	{
 		DocumentItemListComposite docItemComp = new DocumentItemListComposite(pvParent,
 				SWT.NONE);
 		DocumentItemListCompositeSelection selection = new DocumentItemListCompositeSelection();
 
-		// Here we have to use the same roles as returned by DocumentationTestFactory.createDocumentation().
+		// Here we have to use the same roles as returned by
+		// DocumentationTestFactory.createDocumentation().
 		List<Addressee> addresseeList = new ArrayList<Addressee>();
 		Addressee addresseeDeveloper = new Addressee("Developer");
 		Addressee addresseeArchitect = new Addressee("Tester");
 		Addressee addresseeProjectManager = new Addressee("Manager");
-		
+
 		addresseeList.add(addresseeDeveloper);
 		addresseeList.add(addresseeArchitect);
 		addresseeList.add(addresseeProjectManager);
-		
+
 		List<ThematicRole> thematicRoleList = new ArrayList<ThematicRole>();
 		ThematicRole roleAGENT = new ThematicRole("AGENT");
 		ThematicRole roleACTION = new ThematicRole("ACTION");
-		
+
 		thematicRoleList.add(roleAGENT);
 		thematicRoleList.add(roleACTION);
-		selection
-				.setAddresseeList(addresseeList);
+		selection.setAddresseeList(addresseeList);
 		selection.setThematicRoleList(thematicRoleList);
-		
-		selection.setDisplayedAddresseesOfDocumentations(new ArrayList<List<Addressee>>());
+
+		selection
+				.setDisplayedAddresseesOfDocumentations(new ArrayList<List<Addressee>>());
 
 		List<Documentation> docs = new Vector<Documentation>();
 		docs.add(DocumentationTestFactory.createDocumentation());

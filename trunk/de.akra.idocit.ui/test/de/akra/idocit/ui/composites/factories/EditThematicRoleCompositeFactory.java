@@ -37,7 +37,7 @@ public class EditThematicRoleCompositeFactory
 
 	@Override
 	public EditThematicRoleComposite createComposite(
-			Composite pvParent)
+			Composite pvParent, int style)
 	{
 		EditThematicRoleComposite composite = new EditThematicRoleComposite(pvParent);
 		

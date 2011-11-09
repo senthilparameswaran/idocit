@@ -100,7 +100,7 @@ public class EditThematicRoleComposite
 			@Override
 			public void focusLost(FocusEvent e)
 			{
-				fireChangeEvent();
+				fireChangeEvent(txtDescription);
 			}
 
 			@Override
@@ -118,7 +118,7 @@ public class EditThematicRoleComposite
 				selection.setLastCurserPosition(txtName.getSelection().x);
 				selection.setModifiedItem(item);
 
-				fireChangeEvent();
+				fireChangeEvent(txtDescription);
 			}
 		};
 
@@ -139,7 +139,7 @@ public class EditThematicRoleComposite
 
 	@Override
 	protected void doSetSelection(EditThematicRoleCompositeSelection oldInSelection,
-			EditThematicRoleCompositeSelection newInSelection)
+			EditThematicRoleCompositeSelection newInSelection, Object sourceControl)
 	{
 		if (!newInSelection.equals(oldInSelection))
 		{

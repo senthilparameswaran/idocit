@@ -200,7 +200,8 @@ public class EditArtifactDocumentationComposite
 			@Override
 			public void selectionChanged(
 					SelectSignatureElementCompositeSelection selection,
-					PocUIComposite<SelectSignatureElementCompositeSelection> comp)
+					PocUIComposite<SelectSignatureElementCompositeSelection> comp,
+					Object sourceControl)
 			{
 				// Changes due to Issue #58.
 				logger.log(Level.FINEST,
@@ -222,7 +223,7 @@ public class EditArtifactDocumentationComposite
 				// End changes due to Issue #62
 				setSelection(editArtSelection);
 
-				fireChangeEvent();
+				fireChangeEvent(sourceControl);
 			}
 		};
 
@@ -230,7 +231,8 @@ public class EditArtifactDocumentationComposite
 
 			@Override
 			public void selectionChanged(DocumentItemListCompositeSelection selection,
-					PocUIComposite<DocumentItemListCompositeSelection> comp)
+					PocUIComposite<DocumentItemListCompositeSelection> comp,
+					Object sourceControl)
 			{
 				// Changes due to Issue #58.
 				logger.log(Level.FINEST,
@@ -265,7 +267,7 @@ public class EditArtifactDocumentationComposite
 
 				setSelection(editArtSelection);
 
-				fireChangeEvent();
+				fireChangeEvent(sourceControl);
 			}
 		};
 
@@ -274,7 +276,8 @@ public class EditArtifactDocumentationComposite
 			@Override
 			public void selectionChanged(
 					DisplayRecommendedRolesCompositeSelection selection,
-					PocUIComposite<DisplayRecommendedRolesCompositeSelection> comp)
+					PocUIComposite<DisplayRecommendedRolesCompositeSelection> comp,
+					Object sourceControl)
 			{
 				SignatureElement operation = SignatureElementUtils
 						.findOperationForParameter(getSelection()
@@ -300,7 +303,7 @@ public class EditArtifactDocumentationComposite
 					// no setSelection() needed, because the state does not
 					// affect other composites.
 
-					fireChangeEvent();
+					fireChangeEvent(sourceControl);
 				}
 			}
 		};
@@ -339,7 +342,8 @@ public class EditArtifactDocumentationComposite
 	@Override
 	protected void doSetSelection(
 			EditArtifactDocumentationCompositeSelection oldInSelection,
-			EditArtifactDocumentationCompositeSelection newInSelection)
+			EditArtifactDocumentationCompositeSelection newInSelection,
+			Object sourceControl)
 	{
 		if (newInSelection != null && !newInSelection.equals(oldInSelection))
 		{
@@ -452,8 +456,9 @@ public class EditArtifactDocumentationComposite
 			groupDisplayRecommendedRolesComposite.setText(String.format(
 					GROUP_TITLE_OVERVIEW_RECOMMENDED_ROLES, operation.getDisplayName()));
 
-			recRolesCompSelection = recRolesCompSelection.setCollapsedThematicGridNames(newInSelection
-					.getCollapsedThematicGrids(operation.getId()));
+			recRolesCompSelection = recRolesCompSelection
+					.setCollapsedThematicGridNames(newInSelection
+							.getCollapsedThematicGrids(operation.getId()));
 
 			// Changes due to Issue #23
 			try
@@ -486,7 +491,8 @@ public class EditArtifactDocumentationComposite
 		}
 
 		recRolesCompSelection = recRolesCompSelection.setRecommendedThematicRoles(roles);
-		recRolesCompSelection = recRolesCompSelection.setAssignedThematicRoles(associatedThematicRoles);
+		recRolesCompSelection = recRolesCompSelection
+				.setAssignedThematicRoles(associatedThematicRoles);
 
 		// Set the thematic grid name of the active operation to the recommended
 		// roles composite! If no operation is active, pass the empty String.
@@ -504,7 +510,7 @@ public class EditArtifactDocumentationComposite
 					.setReferenceThematicGridName(ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME);
 
 		}
-		
+
 		displayRecommendedRolesComposite.setSelection(recRolesCompSelection);
 	}
 

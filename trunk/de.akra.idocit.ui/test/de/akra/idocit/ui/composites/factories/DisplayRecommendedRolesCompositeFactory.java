@@ -43,14 +43,15 @@ import de.akra.idocit.ui.composites.DisplayRecommendedRolesCompositeSelection;
  */
 public class DisplayRecommendedRolesCompositeFactory
 		implements
-		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection> {
+		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection>
+{
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection> createComposite(
-			Composite pvParent)
+			Composite pvParent, int style)
 	{
 		DisplayRecommendedRolesComposite recRolesComp = new DisplayRecommendedRolesComposite(
 				pvParent, SWT.NONE);
@@ -66,11 +67,11 @@ public class DisplayRecommendedRolesCompositeFactory
 		assignedThematicRoles.add((ThematicRole) (thematicRoles.toArray()[0]));
 
 		Map<String, Map<ThematicRole, Boolean>> roles = new HashMap<String, Map<ThematicRole, Boolean>>();
-		Map<ThematicRole,Boolean> recRoles = new HashMap<ThematicRole,Boolean>();
-		
+		Map<ThematicRole, Boolean> recRoles = new HashMap<ThematicRole, Boolean>();
+
 		recRoles.put(thematicRoles.get(0), Boolean.TRUE);
 		recRoles.put(thematicRoles.get(1), Boolean.FALSE);
-		
+
 		roles.put("Class 1", recRoles);
 		roles.put("Class 2", recRoles);
 
@@ -78,16 +79,19 @@ public class DisplayRecommendedRolesCompositeFactory
 		selection = selection.setAssignedThematicRoles(assignedThematicRoles);
 
 		recRolesComp.setSelection(selection);
-		
-		recRolesComp.addSelectionListener(new ISelectionListener<DisplayRecommendedRolesCompositeSelection>() {
-			
-			@Override
-			public void selectionChanged(
-					DisplayRecommendedRolesCompositeSelection arg0,
-					PocUIComposite<DisplayRecommendedRolesCompositeSelection> arg1) {
-				System.out.println(arg0);
-			}
-		});
+
+		recRolesComp
+				.addSelectionListener(new ISelectionListener<DisplayRecommendedRolesCompositeSelection>() {
+
+					@Override
+					public void selectionChanged(
+							DisplayRecommendedRolesCompositeSelection arg0,
+							PocUIComposite<DisplayRecommendedRolesCompositeSelection> arg1,
+							Object sourceControl)
+					{
+						System.out.println(arg0);
+					}
+				});
 
 		pvParent.pack();
 		pvParent.layout();
@@ -98,7 +102,8 @@ public class DisplayRecommendedRolesCompositeFactory
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EmptyResourceConfiguration getResourceConfiguration() {
+	public EmptyResourceConfiguration getResourceConfiguration()
+	{
 		return EmptyResourceConfiguration.getInstance();
 	}
 }

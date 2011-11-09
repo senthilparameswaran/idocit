@@ -43,7 +43,7 @@ public class ManageThematicRoleCompositeFactory
 {
 
 	@Override
-	public ManageThematicRoleComposite createComposite(Composite parent)
+	public ManageThematicRoleComposite createComposite(Composite parent, int style)
 	{
 		ServiceManager.getInstance().setPersistenceService(
 				new CompositeTestPersistenceService());

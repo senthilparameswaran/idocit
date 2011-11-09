@@ -93,7 +93,7 @@ public class ManageAddresseeComposite
 
 	@Override
 	protected void doSetSelection(ManageAddresseeCompositeSelection oldSelection,
-			ManageAddresseeCompositeSelection newSelection)
+			ManageAddresseeCompositeSelection newSelection, Object sourceControl)
 	{
 		errorLabel.setVisible(newSelection.isNameExists());
 
@@ -144,7 +144,8 @@ public class ManageAddresseeComposite
 	@Override
 	protected void initGUI(Composite parent) throws CompositeInitializationException
 	{
-		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 5).applyTo(this);
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 5)
+				.applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
 		RED = this.getDisplay().getSystemColor(SWT.COLOR_RED);
@@ -179,7 +180,8 @@ public class ManageAddresseeComposite
 		editAddresseeCompositeSelectionListener = new ISelectionListener<EditAddresseeCompositeSelection>() {
 			@Override
 			public void selectionChanged(EditAddresseeCompositeSelection selection,
-					PocUIComposite<EditAddresseeCompositeSelection> changedComposite)
+					PocUIComposite<EditAddresseeCompositeSelection> changedComposite,
+					Object sourceControl)
 			{
 				// If this composite fires a change event, the active Addressee
 				// has been modified. We have to update this composite.
@@ -228,7 +230,8 @@ public class ManageAddresseeComposite
 		editAddresseeListCompositeSelectionListener = new ISelectionListener<EditAddresseeListCompositeSelection>() {
 			@Override
 			public void selectionChanged(EditAddresseeListCompositeSelection selection,
-					PocUIComposite<EditAddresseeListCompositeSelection> changedComposite)
+					PocUIComposite<EditAddresseeListCompositeSelection> changedComposite,
+					Object sourceControl)
 			{
 				// If this composite fires a change event, a new active addressee has been
 				// chosen.

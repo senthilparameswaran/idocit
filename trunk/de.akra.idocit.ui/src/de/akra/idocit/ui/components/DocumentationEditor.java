@@ -57,8 +57,8 @@ import de.akra.idocit.ui.constants.DialogConstants;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
- * An {@link EditorPart} to document software-interfaces by using thematic grids
- * and concerning different groups of adressees.
+ * An {@link EditorPart} to document software-interfaces by using thematic grids and
+ * concerning different groups of adressees.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
@@ -67,7 +67,8 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  */
 public class DocumentationEditor
 		extends
-		AbsEditorPart<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection> {
+		AbsEditorPart<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection>
+{
 	private static final String ERR_FILE_CAN_NOT_BE_SAVED = "File can not be saved";
 
 	private static final String ERR_FILE_NOT_SUPPORTED = "File is not supported.";
@@ -75,21 +76,25 @@ public class DocumentationEditor
 	/**
 	 * Logger.
 	 */
-	private static final Logger logger = Logger
-			.getLogger(DocumentationEditor.class.getName());
+	private static final Logger logger = Logger.getLogger(DocumentationEditor.class
+			.getName());
 
 	/**
 	 * Configuration Listener
 	 */
 	private final class DocumentationEditorConfigListener implements
-			IDocItInitializationListener {
+			IDocItInitializationListener
+	{
 
 		@Override
-		public void initializationStarted() {
+		public void initializationStarted()
+		{
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
-				public void run() {
-					if ((rootComposite != null) && !rootComposite.isDisposed()) {
+				public void run()
+				{
+					if ((rootComposite != null) && !rootComposite.isDisposed())
+					{
 						editorParentLayout.topControl = intializationMessageComposite;
 						rootComposite.getParent().layout();
 					}
@@ -98,20 +103,25 @@ public class DocumentationEditor
 		}
 
 		@Override
-		public void initializationFinished() {
+		public void initializationFinished()
+		{
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
-				public void run() {
-					try {
-						if ((rootComposite != null)
-								&& !rootComposite.isDisposed()) {
+				public void run()
+				{
+					try
+					{
+						if ((rootComposite != null) && !rootComposite.isDisposed())
+						{
 							editorParentLayout.topControl = rootComposite;
 
 							init(getEditorSite(), getEditorInput());
 
 							rootComposite.getParent().layout();
 						}
-					} catch (PartInitException e) {
+					}
+					catch (PartInitException e)
+					{
 						logger.log(
 								Level.SEVERE,
 								"The iDocIt! editor could not be initialized du to the following exception:",
@@ -144,31 +154,37 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void doSave(IProgressMonitor monitor) {
+	public void doSave(IProgressMonitor monitor)
+	{
 		IFile interfaceFile = getMask().getSelection().getArtifactFile();
-		InterfaceArtifact artifact = getMask().getSelection()
-				.getInterfaceArtifact();
+		InterfaceArtifact artifact = getMask().getSelection().getInterfaceArtifact();
 
 		String type = interfaceFile.getFileExtension();
 
-		if ((type != null)) {
-			try {
+		if ((type != null))
+		{
+			try
+			{
 				ServiceManager.getInstance().getPersistenceService()
 						.writeInterface(artifact, interfaceFile);
 				initialInterfaceArtifact = (InterfaceArtifact) artifact
 						.copy(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
 				getMask().getSelection().resetOriginalDocumentations();
 				firePropertyChange(PROP_DIRTY);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				MessageDialog.openError(getSite().getShell(),
-						DialogConstants.DIALOG_TITLE, ERR_FILE_CAN_NOT_BE_SAVED
-								+ ":\n" + e.getMessage());
+						DialogConstants.DIALOG_TITLE, ERR_FILE_CAN_NOT_BE_SAVED + ":\n"
+								+ e.getMessage());
 			}
-		} else {
+		}
+		else
+		{
 			logger.log(Level.SEVERE, ERR_FILE_NOT_SUPPORTED);
-			MessageDialog.openError(getSite().getShell(),
-					DialogConstants.DIALOG_TITLE, ERR_FILE_NOT_SUPPORTED);
+			MessageDialog.openError(getSite().getShell(), DialogConstants.DIALOG_TITLE,
+					ERR_FILE_NOT_SUPPORTED);
 		}
 	}
 
@@ -176,12 +192,13 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException
+	{
 		setSite(site);
 		setInput(input);
 
-		if (IDocItActivator.isInitializedAtStartup()) {
+		if (IDocItActivator.isInitializedAtStartup())
+		{
 			List<Addressee> addressees = ServiceManager.getInstance()
 					.getPersistenceService().loadConfiguredAddressees();
 			List<ThematicRole> thematicRoles = ServiceManager.getInstance()
@@ -190,21 +207,23 @@ public class DocumentationEditor
 			EditArtifactDocumentationCompositeSelection selection = new EditArtifactDocumentationCompositeSelection();
 			selection
 					.setSelectedSignatureElement(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
-			selection
-					.setInterfaceArtifact(InterfaceArtifact.NOT_SUPPORTED_ARTIFACT);
+			selection.setInterfaceArtifact(InterfaceArtifact.NOT_SUPPORTED_ARTIFACT);
 			selection.setAddresseeList(addressees);
 			selection.setThematicRoleList(thematicRoles);
 
-			if (input instanceof FileEditorInput) {
+			if (input instanceof FileEditorInput)
+			{
 				// Get the interface as file ...
 				IFile interfaceIFile = ((FileEditorInput) input).getFile();
 				File interfaceFile = interfaceIFile.getLocation().toFile();
 
 				setSelection(null);
 
-				if (interfaceFile.exists()) {
+				if (interfaceFile.exists())
+				{
 					// ... and load it.
-					try {
+					try
+					{
 						logger.log(Level.INFO, "Start parsing");
 						InterfaceArtifact interfaceArtifact = ServiceManager
 								.getInstance().getPersistenceService()
@@ -223,25 +242,32 @@ public class DocumentationEditor
 						setPartName(interfaceIFile.getName() + " - "
 								+ DialogConstants.DIALOG_TITLE);
 
-						if (!interfaceFile.canWrite()) {
+						if (!interfaceFile.canWrite())
+						{
 							MessageDialog
 									.openInformation(site.getShell(),
 											DialogConstants.DIALOG_TITLE,
 											"The file is not writable, changes can not be saved.");
 						}
-					} catch (Exception ex) {
+					}
+					catch (Exception ex)
+					{
 						String msg = "Could not parse the interface "
 								+ interfaceIFile.getFullPath();
 						logger.log(Level.SEVERE, msg, ex);
 						throw new PartInitException(msg, ex);
 					}
-				} else {
+				}
+				else
+				{
 					String msg = "File is no longer available: "
 							+ interfaceFile.getAbsolutePath();
 					logger.log(Level.WARNING, msg);
 					MessageBoxUtils.openErrorBox(site.getShell(), msg);
 				}
-			} else {
+			}
+			else
+			{
 				logger.log(Level.SEVERE, "Not an instance of FileEditorInput.");
 			}
 
@@ -255,18 +281,20 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isDirty() {
+	public boolean isDirty()
+	{
 		return (initialInterfaceArtifact != null)
 				&& (getSelection() != null)
-				&& !initialInterfaceArtifact.equals(getSelection()
-						.getInterfaceArtifact());
+				&& !initialInterfaceArtifact
+						.equals(getSelection().getInterfaceArtifact());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isSaveAsAllowed() {
+	public boolean isSaveAsAllowed()
+	{
 		return true;
 	}
 
@@ -274,7 +302,8 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setFocus() {
+	public void setFocus()
+	{
 		// Nothing to do!
 
 	}
@@ -283,7 +312,8 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void addAllListener() {
+	protected void addAllListener()
+	{
 		addSelectionListener(rootCompositeSelectionListener);
 	}
 
@@ -291,12 +321,15 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initListener() throws CompositeInitializationException {
+	protected void initListener() throws CompositeInitializationException
+	{
 		rootCompositeSelectionListener = new ISelectionListener<EditArtifactDocumentationCompositeSelection>() {
 			@Override
 			public void selectionChanged(
 					EditArtifactDocumentationCompositeSelection selection,
-					PocUIComposite<EditArtifactDocumentationCompositeSelection> changedComposite) {
+					PocUIComposite<EditArtifactDocumentationCompositeSelection> changedComposite,
+					Object sourceControl)
+			{
 				firePropertyChange(PROP_DIRTY);
 			}
 		};
@@ -306,8 +339,8 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected EditArtifactDocumentationComposite instanciateMask(
-			Composite parent) {
+	protected EditArtifactDocumentationComposite instanciateMask(Composite parent)
+	{
 		rootComposite = new EditArtifactDocumentationComposite(parent, SWT.NONE);
 		rootComposite.setVisible(false);
 
@@ -318,12 +351,14 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void removeAllListener() {
+	protected void removeAllListener()
+	{
 		removeSelectionListener(rootCompositeSelectionListener);
 	}
 
 	@Override
-	public void doSaveAs() {
+	public void doSaveAs()
+	{
 		// Nothing to do!
 
 	}
@@ -335,17 +370,18 @@ public class DocumentationEditor
 	 *            The parent composite
 	 * @return The message-label
 	 */
-	private Label createInitializingLabel(Composite arg0) {
+	private Label createInitializingLabel(Composite arg0)
+	{
 		Label initializingMessageLabel = new Label(arg0, SWT.NONE);
-		initializationFont = new Font(Display.getDefault(), new FontData(
-				"Arial", 20, SWT.BOLD));
+		initializationFont = new Font(Display.getDefault(), new FontData("Arial", 20,
+				SWT.BOLD));
 		initializingMessageLabel.setFont(initializationFont);
 		initializingMessageLabel
 				.setText("iDocIt! is initializing at the moment. Please wait ...");
-		initializingMessageLabel.setBackground(Display.getDefault()
-				.getSystemColor(SWT.COLOR_WHITE));
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER)
-				.grab(true, true).applyTo(initializingMessageLabel);
+		initializingMessageLabel.setBackground(Display.getDefault().getSystemColor(
+				SWT.COLOR_WHITE));
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true)
+				.applyTo(initializingMessageLabel);
 
 		return initializingMessageLabel;
 	}
@@ -354,7 +390,8 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void createPartControl(Composite arg0) {
+	public void createPartControl(Composite arg0)
+	{
 		editorParentLayout = new StackLayout();
 		arg0.setLayout(editorParentLayout);
 
@@ -363,8 +400,8 @@ public class DocumentationEditor
 		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER)
 				.applyTo(intializationMessageComposite);
 
-		intializationMessageComposite.setBackground(Display.getDefault()
-				.getSystemColor(SWT.COLOR_WHITE));
+		intializationMessageComposite.setBackground(Display.getDefault().getSystemColor(
+				SWT.COLOR_WHITE));
 		createInitializingLabel(intializationMessageComposite);
 
 		super.createPartControl(arg0);
@@ -378,10 +415,12 @@ public class DocumentationEditor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void dispose() {
+	public void dispose()
+	{
 		super.dispose();
 
-		if (initializationFont != null) {
+		if (initializationFont != null)
+		{
 			initializationFont.dispose();
 		}
 

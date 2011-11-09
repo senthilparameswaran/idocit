@@ -39,36 +39,36 @@ public class EditAddresseeListCompositeFactory
 {
 
 	@Override
-	public EditAddresseeListComposite createComposite(
-			Composite pvParent)
+	public EditAddresseeListComposite createComposite(Composite pvParent, int style)
 	{
-		EditAddresseeListComposite editItemListComposite = new EditAddresseeListComposite(pvParent);
-		
+		EditAddresseeListComposite editItemListComposite = new EditAddresseeListComposite(
+				pvParent);
+
 		EditAddresseeListCompositeSelection selection = new EditAddresseeListCompositeSelection();
 		List<Addressee> items = new ArrayList<Addressee>();
-		
+
 		Addressee addressee1 = new Addressee("Manager");
 		addressee1.setDescription("A Manager");
 		items.add(addressee1);
-		
+
 		Addressee addressee2 = new Addressee("Developer");
 		addressee2.setDescription("A developer");
 		items.add(addressee2);
-		
+
 		Addressee addressee3 = new Addressee("Client");
 		addressee3.setDescription("A client");
-		items.add(addressee3);		
-		
+		items.add(addressee3);
+
 		List<Addressee> activeItems = new ArrayList<Addressee>();
 		activeItems.add(addressee2);
 		activeItems.add(addressee3);
-		
+
 		selection.setActiveAddressees(activeItems);
 		selection.setAddressees(items);
 		selection.setMinNumberOfItems(1);
-		
+
 		editItemListComposite.setSelection(selection);
-		
+
 		return editItemListComposite;
 	}
 

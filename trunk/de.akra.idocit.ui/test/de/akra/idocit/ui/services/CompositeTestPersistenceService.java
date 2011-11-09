@@ -86,12 +86,14 @@ public class CompositeTestPersistenceService implements PersistenceService {
 	public List<ThematicRole> loadThematicRoles() {
 		ThematicRole role0 = new ThematicRole("ACTION");
 		ThematicRole role1 = new ThematicRole("AGENT");
-		ThematicRole role2 = new ThematicRole("ACTION");
+		ThematicRole role2 = new ThematicRole("OBJECT");
+		ThematicRole role3 = new ThematicRole("COMPARISON");
 
 		List<ThematicRole> roles = new ArrayList<ThematicRole>();
 		roles.add(role0);
 		roles.add(role1);
 		roles.add(role2);
+		roles.add(role3);
 
 		return roles;
 	}

@@ -215,7 +215,7 @@ public class DocumentItemComposite
 				super.focusLost(e);
 				if (updateDocForActiveAddressee((Text) e.widget))
 				{
-					fireChangeEvent();
+					fireChangeEvent((Text) e.widget);
 				}
 				isInTextField = false;
 			}
@@ -360,7 +360,7 @@ public class DocumentItemComposite
 							addresseeTabFolder.setSelection(newSelIndex);
 							getSelection().setActiveAddressee(newSelIndex);
 
-							fireChangeEvent();
+							fireChangeEvent(e.widget);
 						}
 
 						@Override
@@ -439,7 +439,7 @@ public class DocumentItemComposite
 						// TabItem.
 						selItem.dispose();
 
-						fireChangeEvent();
+						fireChangeEvent(e.widget);
 					}
 				}
 				else
@@ -447,7 +447,7 @@ public class DocumentItemComposite
 					// save new active addressee
 					getSelection().setActiveAddressee(
 							addresseeTabFolder.getSelectionIndex());
-					fireChangeEvent();
+					fireChangeEvent(e.widget);
 				}
 			}
 
@@ -484,7 +484,7 @@ public class DocumentItemComposite
 
 		if (updateDocForActiveAddressee(text, activeAddressee))
 		{
-			fireChangeEvent();
+			fireChangeEvent(addresseeTabFolder);
 		}
 	}
 
@@ -538,7 +538,7 @@ public class DocumentItemComposite
 			ThematicRole thematicRole = selection.getThematicRoleList().get(selIndex);
 			selection.getDocumentation().setThematicRole(thematicRole);
 
-			fireChangeEvent();
+			fireChangeEvent(comboThematicRole);
 		}
 	}
 
@@ -558,13 +558,13 @@ public class DocumentItemComposite
 			Scope scope = Scope.fromString(comboScope.getItem(selIndex));
 			selection.getDocumentation().setScope(scope);
 
-			fireChangeEvent();
+			fireChangeEvent(comboScope);
 		}
 	}
 
 	@Override
 	protected void doSetSelection(DocumentItemCompositeSelection oldInSelection,
-			DocumentItemCompositeSelection newInSelection)
+			DocumentItemCompositeSelection newInSelection, Object sourceControl)
 	{
 		// create tabs if addressee list changed, in general by first use
 		if (oldInSelection == null

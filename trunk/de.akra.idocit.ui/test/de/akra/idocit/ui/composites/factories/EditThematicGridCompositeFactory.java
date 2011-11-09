@@ -29,6 +29,7 @@ import org.pocui.core.composites.PocUIComposite;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.ICompositeFactory;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.EditThematicGridComposite;
@@ -47,7 +48,7 @@ public class EditThematicGridCompositeFactory
 {
 
 	@Override
-	public EditThematicGridComposite createComposite(Composite parent)
+	public EditThematicGridComposite createComposite(Composite parent, int style)
 	{
 		EditThematicGridComposite composite = new EditThematicGridComposite(parent);
 
@@ -61,7 +62,7 @@ public class EditThematicGridCompositeFactory
 		verbs.add("get");
 		verbs.add("write");
 		grid.setVerbs(verbs);
-		
+
 		grid.setRefernceVerb("write");
 
 		List<ThematicRole> roles = new ArrayList<ThematicRole>();
@@ -69,13 +70,20 @@ public class EditThematicGridCompositeFactory
 		ThematicRole roleAction = new ThematicRole("ACTION");
 		roles.add(roleAgent);
 		roles.add(roleAction);
-		selection.setRoles(roles);
+		selection = selection.setRoles(roles);
+		selection = selection.setActiveRole(roleAction);
 
 		Map<ThematicRole, Boolean> selectedRoles = new HashMap<ThematicRole, Boolean>();
 		selectedRoles.put(roleAction, Boolean.FALSE);
 		grid.setRoles(selectedRoles);
 
-		selection.setActiveThematicGrid(grid);
+		Map<String, String> gridBasedRules = new HashMap<String, String>();
+		gridBasedRules.put("AGENT", ThematicGridConstants.DEFAULT_RULE);
+		gridBasedRules.put("ACTION", ThematicGridConstants.DEFAULT_RULE);
+
+		grid.setGridBasedRules(gridBasedRules);
+
+		selection = selection.setActiveThematicGrid(grid);
 
 		composite.setSelection(selection);
 
@@ -84,7 +92,8 @@ public class EditThematicGridCompositeFactory
 
 					@Override
 					public void selectionChanged(EditThematicGridCompositeSelection arg0,
-							PocUIComposite<EditThematicGridCompositeSelection> arg1)
+							PocUIComposite<EditThematicGridCompositeSelection> arg1,
+							Object sourceControl)
 					{
 						System.out.println(arg0);
 

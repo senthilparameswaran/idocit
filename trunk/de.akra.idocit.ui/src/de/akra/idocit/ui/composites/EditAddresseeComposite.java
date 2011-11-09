@@ -107,7 +107,7 @@ public class EditAddresseeComposite
 			@Override
 			public void focusLost(FocusEvent e)
 			{
-				fireChangeEvent();
+				fireChangeEvent(e.widget);
 			}
 
 			@Override
@@ -125,7 +125,7 @@ public class EditAddresseeComposite
 				selection.setLastCurserPosition(txtName.getSelection().x);
 				selection.setModifiedAddressee(item);
 				
-				fireChangeEvent();
+				fireChangeEvent(e.widget);
 			}
 		};
 
@@ -152,7 +152,7 @@ public class EditAddresseeComposite
 				item.setDefault(chkDefault.getSelection());
 				selection.setModifiedAddressee(item);
 				
-				fireChangeEvent();
+				fireChangeEvent(e.widget);
 			}
 
 			@Override
@@ -163,7 +163,7 @@ public class EditAddresseeComposite
 
 	@Override
 	protected void doSetSelection(EditAddresseeCompositeSelection oldInSelection,
-			EditAddresseeCompositeSelection newInSelection)
+			EditAddresseeCompositeSelection newInSelection, Object sourceControl)
 	{
 		if (!newInSelection.equals(oldInSelection))
 		{
