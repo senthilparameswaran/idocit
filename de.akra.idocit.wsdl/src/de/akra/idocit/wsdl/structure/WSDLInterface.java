@@ -19,6 +19,7 @@ import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 
 import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
@@ -45,10 +46,12 @@ public class WSDLInterface extends Interface
 	 * 
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The {@link Numerus}
 	 */
-	public WSDLInterface(SignatureElement parent, String category)
+	public WSDLInterface(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 	}
 
 	/**
@@ -57,7 +60,7 @@ public class WSDLInterface extends Interface
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new WSDLInterface(parent, super.getCategory());
+		return new WSDLInterface(parent, super.getCategory(), super.getNumerus());
 	}
 
 	/**
