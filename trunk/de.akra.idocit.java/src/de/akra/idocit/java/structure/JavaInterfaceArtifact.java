@@ -18,6 +18,7 @@ package de.akra.idocit.java.structure;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
@@ -34,7 +35,7 @@ public class JavaInterfaceArtifact extends InterfaceArtifact
 	 * The {@link CompilationUnit} of the Java source.
 	 */
 	private CompilationUnit compilationUnit;
-	
+
 	private String originalDocument;
 
 	/**
@@ -46,11 +47,13 @@ public class JavaInterfaceArtifact extends InterfaceArtifact
 	 *            The category of this artifact.
 	 * @param compilationUnit
 	 *            The {@link CompilationUnit} of the Java source.
+	 * @param numerus
+	 *            The {@link Numerus}
 	 */
 	public JavaInterfaceArtifact(SignatureElement parent, String category,
-			CompilationUnit compilationUnit)
+			CompilationUnit compilationUnit, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 		this.setDocumentationAllowed(false);
 		this.compilationUnit = compilationUnit;
 	}
@@ -65,7 +68,7 @@ public class JavaInterfaceArtifact extends InterfaceArtifact
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
 		return new JavaInterfaceArtifact(parent, super.getCategory(),
-				this.compilationUnit);
+				this.compilationUnit, super.getNumerus());
 	}
 
 	/**
@@ -97,14 +100,17 @@ public class JavaInterfaceArtifact extends InterfaceArtifact
 	}
 
 	/**
-	 * @param originalDocument the originalDocument to set
+	 * @param originalDocument
+	 *            the originalDocument to set
 	 */
 	public void setOriginalDocument(String originalDocument)
 	{
 		this.originalDocument = originalDocument;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -117,7 +123,9 @@ public class JavaInterfaceArtifact extends InterfaceArtifact
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
