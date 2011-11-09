@@ -36,6 +36,7 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.WildcardType;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.java.structure.JavaParameter;
 
@@ -97,20 +98,52 @@ public class ReflectionHelper
 		return doReflectParameter(parent, typeBinding, identifier, qualifiedIdentifier);
 	}
 
+	public boolean isCollection(ITypeBinding type)
+	{
+		ITypeBinding[] implementedTypes = type.getInterfaces();
+
+		if (implementedTypes != null)
+		{
+			for (ITypeBinding implementedType : implementedTypes)
+			{
+				if ("java.util.Collection".equals(implementedType.getQualifiedName()))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public boolean hasPublicAccessableAttributes(ITypeBinding type)
+	{
+		return !findAttributesWithPublicGetterOrSetter(type.getDeclaredFields(),
+				type.getDeclaredMethods()).isEmpty();
+	}
+
+	public Numerus deriveNumerus(ITypeBinding type)
+	{
+		return isCollection(type) ? Numerus.PLURAL : Numerus.SINGULAR;
+	}
+
 	/**
 	 * @see #reflectParameter(SignatureElement, ITypeBinding, String, String)
 	 */
 	private JavaParameter doReflectParameter(SignatureElement parent,
 			ITypeBinding typeBinding, String identifier, String qualifiedIdentifier)
 	{
-		JavaParameter returnParameter = new JavaParameter(parent);
+		JavaParameter returnParameter = new JavaParameter(parent,
+				deriveNumerus(typeBinding), hasPublicAccessableAttributes(typeBinding));
 		returnParameter.setIdentifier(identifier);
 		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
-		returnParameter.setDataTypeName(JavadocGenerator.quoteGenericsInIdentifier(typeBinding.getName()));
+		returnParameter.setDataTypeName(JavadocGenerator
+				.quoteGenericsInIdentifier(typeBinding.getName()));
 
 		String qTypeName = typeBinding.getQualifiedName();
 		qTypeName = qTypeName != null ? qTypeName : typeBinding.getName();
-		returnParameter.setQualifiedDataTypeName(JavadocGenerator.quoteGenericsInIdentifier(qTypeName));
+		returnParameter.setQualifiedDataTypeName(JavadocGenerator
+				.quoteGenericsInIdentifier(qTypeName));
 
 		if (!reflectedTypes.contains(qTypeName))
 		{
@@ -137,7 +170,7 @@ public class ReflectionHelper
 				returnParameter.addParameter(doReflectParameter(returnParameter,
 						superType, SUPER_CLASS_IDENTIFIER, SUPER_CLASS_IDENTIFIER));
 			}
-			
+
 			// remove type again, because reflecting this type ends
 			reflectedTypes.remove(qTypeName);
 		}
@@ -184,7 +217,8 @@ public class ReflectionHelper
 					qualifiedIdentifier);
 		}
 
-		JavaParameter returnParameter = new JavaParameter(parent);
+		JavaParameter returnParameter = new JavaParameter(parent,
+				deriveNumerus(typeBinding), hasPublicAccessableAttributes(typeBinding));
 		returnParameter.setIdentifier(identifier);
 		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
 		String typeName = getIdentifierFrom(type);

@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
 
 import de.akra.idocit.common.structure.Interface;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
@@ -54,9 +55,9 @@ public class JavaInterface extends Interface
 	 * @param parent
 	 * @param category
 	 */
-	public JavaInterface(SignatureElement parent, String category)
+	public JavaInterface(SignatureElement parent, String category, Numerus numerus)
 	{
-		super(parent, category);
+		super(parent, category, numerus);
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class JavaInterface extends Interface
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new JavaInterface(parent, super.getCategory());
+		return new JavaInterface(parent, super.getCategory(), super.getNumerus());
 	}
 
 	/**

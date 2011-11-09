@@ -15,6 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.java.structure;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -35,10 +36,15 @@ public class JavaParameters extends Parameters
 	 *            The parent for this element.
 	 * @param category
 	 *            The category of this element.
+	 * @param numerus
+	 *            The {@link Numerus}
+	 * @param hasPublicAccessableAttributes
+	 *            <code>true</code>, if this fulfills the Java Bean specification
 	 */
-	public JavaParameters(SignatureElement parent, String category)
+	public JavaParameters(SignatureElement parent, String category, Numerus numerus,
+			boolean hasPublicAccessableAttributes)
 	{
-		super(parent, category);
+		super(parent, category, numerus, hasPublicAccessableAttributes);
 		this.setDocumentationAllowed(false);
 	}
 
@@ -51,7 +57,8 @@ public class JavaParameters extends Parameters
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new JavaParameters(parent, super.getCategory());
+		return new JavaParameters(parent, super.getCategory(), super.getNumerus(),
+				super.hasPublicAccessibleAttributes());
 	}
 
 	/**

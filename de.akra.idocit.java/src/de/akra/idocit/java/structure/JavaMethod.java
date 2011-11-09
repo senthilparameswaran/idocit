@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -38,7 +39,7 @@ public class JavaMethod extends Operation
 	 * Reference to the corresponding {@link MethodDeclaration}.
 	 */
 	private MethodDeclaration refToASTNode;
-	
+
 	/**
 	 * The list of additional Javadoc tags that are not interpreted by iDocIt! (all tags
 	 * except param, return, throws and the general description). These tags are appended
@@ -51,28 +52,30 @@ public class JavaMethod extends Operation
 	 * Constructor
 	 * 
 	 * @param parent
-	 * 	The parent {@link SignatureElement}
+	 *            The parent {@link SignatureElement}
 	 * @param category
-	 * 	The name of the category of this method
+	 *            The name of the category of this method
 	 * @param thematicGridName
-	 * 	The name of the reference thematic grid
+	 *            The name of the reference thematic grid
+	 * @param numerus
+	 *            The {@link Numerus}
 	 */
-	public JavaMethod(SignatureElement parent, String category, String thematicGridName)
+	public JavaMethod(SignatureElement parent, String category, String thematicGridName,
+			Numerus numerus)
 	{
-		super(parent, category, thematicGridName);
+		super(parent, category, thematicGridName, numerus);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see
-	 * de.akra.idocit.structure.SignatureElement#createSignatureElement(de.akra.idocit
-	 * .structure.SignatureElement)
+	 * @see de.akra.idocit.structure.SignatureElement#createSignatureElement(de.akra.idocit
+	 *      .structure.SignatureElement)
 	 */
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new JavaMethod(parent, super.getCategory(), getThematicGridName());
+		return new JavaMethod(parent, super.getCategory(), getThematicGridName(), getNumerus());
 	}
 
 	/**
@@ -81,19 +84,21 @@ public class JavaMethod extends Operation
 	 * <b>Hint:</b> For <code>refToASTNode</code> and <code>additionalTags</code> only the
 	 * references are copied. There will created no deep copy of them!
 	 * </p>
+	 * 
 	 * @see de.akra.idocit.structure.SignatureElement#doCopyTo(de.akra.idocit.structure.
-	 * SignatureElement)
+	 *      SignatureElement)
 	 */
 	@Override
 	protected void doCopyTo(SignatureElement signatureElement)
 	{
-		JavaMethod jm = (JavaMethod)signatureElement;
+		JavaMethod jm = (JavaMethod) signatureElement;
 		jm.setRefToASTNode(refToASTNode);
 		jm.setAdditionalTags(additionalTags);
 	}
 
 	/**
-	 * @param refToASTNode the refToASTNode to set
+	 * @param refToASTNode
+	 *            the refToASTNode to set
 	 */
 	public void setRefToASTNode(MethodDeclaration refToASTNode)
 	{
@@ -118,7 +123,9 @@ public class JavaMethod extends Operation
 		return additionalTags;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -132,7 +139,9 @@ public class JavaMethod extends Operation
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -162,7 +171,9 @@ public class JavaMethod extends Operation
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
