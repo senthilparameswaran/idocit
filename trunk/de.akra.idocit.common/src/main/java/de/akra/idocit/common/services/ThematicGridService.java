@@ -17,7 +17,6 @@ package de.akra.idocit.common.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -164,67 +163,5 @@ public class ThematicGridService
 		}
 
 		return roles;
-	}
-
-	/**
-	 * Make a copy of the ThematicGrid. The containing lists are also new created, but the
-	 * {@link ThematicRole}s are not copied itself, they are only added to the new list.
-	 * 
-	 * @param oldGrid
-	 *            The grid to copy.
-	 * @return the new {@link ThematicGrid}.
-	 */
-	public static ThematicGrid copy(ThematicGrid oldGrid)
-	{
-		ThematicGrid newGrid = new ThematicGrid();
-		newGrid.setName(oldGrid.getName());
-		newGrid.setDescription(oldGrid.getDescription());
-
-		Map<ThematicRole, Boolean> roles = new HashMap<ThematicRole, Boolean>(
-				oldGrid.getRoles());
-		newGrid.setRoles(roles);
-
-		Set<String> verbs = new HashSet<String>(oldGrid.getVerbs());
-		newGrid.setVerbs(verbs);
-
-		return newGrid;
-	}
-	
-	/**
-	 * Finds all verbs from the given thematic grids which occur in more than one grid. The resulting
-	 * map contains the found verbs as keys and the sets of thematic grids in which the verbs occur as 
-	 * values.
-	 * 
-	 * @param thematicGrids
-	 * 	The thematic grids to look in for ambigious verbs (SOURCE)
-	 * 
-	 * @return see above
-	 */
-	public static Map<String, Set<ThematicGrid>> findAmbigiousVerbs(List<ThematicGrid> thematicGrids){
-		Map<String, Set<ThematicGrid>> ambigiousVerbs = new HashMap<String, Set<ThematicGrid>>();
-		
-		for(ThematicGrid thematicGrid : thematicGrids) {
-			Set<String> verbs = thematicGrid.getVerbs();
-			
-			for(String verb : verbs) {
-				List<ThematicGrid> matchingGrids = findMatchingGrids(verb, thematicGrids);
-				
-				if(matchingGrids.size() > 1) {
-					Set<ThematicGrid> gridsWithVerb = ambigiousVerbs.get(verb);
-					
-					if(gridsWithVerb == null) {
-						 gridsWithVerb = new HashSet<ThematicGrid>();
-					}
-					
-					for(ThematicGrid matchingGrid : matchingGrids) {
-						gridsWithVerb.add(matchingGrid);
-					}
-					
-					ambigiousVerbs.put(verb, gridsWithVerb);
-				}
-			}
-		}
-		
-		return ambigiousVerbs;
 	}
 }
