@@ -218,7 +218,7 @@ public class ManageThematicGridsComposite
 
 		Composite btnComposite = new Composite(this, SWT.NONE);
 
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5)
+		GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(true)
 				.applyTo(btnComposite);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(btnComposite);
 
