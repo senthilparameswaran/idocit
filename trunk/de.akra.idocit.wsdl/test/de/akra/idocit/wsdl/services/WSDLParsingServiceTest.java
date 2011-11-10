@@ -100,7 +100,7 @@ public class WSDLParsingServiceTest
 		// Test case #1: extract the composite-role of an input-message
 		// correctly.
 		WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
-		Definition def = reader.readWSDL("test/source/wsdl_46001");
+		Definition def = reader.readWSDL("test/source/wsdl_46001.wsdl");
 
 		Delimiters delimiters = new Delimiters();
 		delimiters.namespaceDelimiter = ":";
