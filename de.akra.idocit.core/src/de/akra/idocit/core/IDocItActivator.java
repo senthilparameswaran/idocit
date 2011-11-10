@@ -38,6 +38,7 @@ import org.osgi.framework.BundleContext;
 import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.services.ThematicGridService;
 import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
@@ -202,7 +203,7 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 					ServiceManager.getInstance().getPersistenceService()
 							.init(resourceInputStream);
 
-					// Grid-based rules
+					initRoleBasedRules();
 					initGridBasedRules();
 				}
 				catch (FileNotFoundException e)
@@ -259,6 +260,22 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 		}
 
 		ServiceManager.getInstance().getPersistenceService().persistThematicGrids(grids);
+	}
+
+	private static void initRoleBasedRules() throws UnitializedIDocItException
+	{
+		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
+				.loadThematicRoles();
+
+		for (ThematicRole role : roles)
+		{
+			if (role.getRoleScope() == null)
+			{
+				role.setRoleScope(RoleScope.BOTH);
+			}
+		}
+
+		ServiceManager.getInstance().getPersistenceService().persistThematicRoles(roles);
 	}
 
 	/**
