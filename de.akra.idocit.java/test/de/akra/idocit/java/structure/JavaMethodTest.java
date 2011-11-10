@@ -22,6 +22,7 @@ import java.util.Vector;
 
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
@@ -94,30 +95,31 @@ public class JavaMethodTest
 
 	private Operation createOperation(SignatureElement parent)
 	{
-		Operation op = new JavaMethod(parent, "Operation", "Searching Operations");
+		Operation op = new JavaMethod(parent, "Operation", "Searching Operations",
+				Numerus.SINGULAR);
 		op.setIdentifier("findSomething");
 
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new JavaParameters(op, "");
+		Parameters inputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
 		inputParameters.setIdentifier("findIn");
 		op.setInputParameters(inputParameters);
 
-		Parameter paramCust = new JavaParameter(inputParameters);
+		Parameter paramCust = new JavaParameter(inputParameters, Numerus.SINGULAR, true);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
 		paramCust.setQualifiedDataTypeName("my.package.Customer");
 		paramCust.setSignatureElementPath("findIn.Cust(Customer)");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new JavaParameter(paramCust);
+		Parameter paramId = new JavaParameter(paramCust, Numerus.SINGULAR, false);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramId.setSignatureElementPath("findIn.Cust(Customer).id(int)");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new JavaParameter(paramCust);
+		Parameter paramNameIn = new JavaParameter(paramCust, Numerus.SINGULAR, false);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
 		paramNameIn.setQualifiedDataTypeName("java.lang.String");
@@ -127,38 +129,41 @@ public class JavaMethodTest
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new JavaParameters(op, "");
+		Parameters outputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new JavaParameter(outputParameters);
+		Parameter paramCustOut = new JavaParameter(outputParameters, Numerus.SINGULAR,
+				true);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		paramCustOut.setQualifiedDataTypeName("my.package.Customer");
 		paramCustOut.setSignatureElementPath("findOut.Cust(Customer)");
 		outputParameters.addParameter(paramCustOut);
 
-		Parameter paramIdOut = new JavaParameter(paramCustOut);
+		Parameter paramIdOut = new JavaParameter(paramCustOut, Numerus.SINGULAR, false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setQualifiedDataTypeName("int");
 		paramIdOut.setSignatureElementPath("findOut.Cust(Customer).id(int)");
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new JavaParameter(paramCustOut);
+		Parameter paramNameOut = new JavaParameter(paramCustOut, Numerus.SINGULAR, false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramNameOut.setQualifiedDataTypeName("java.lang.String");
 		paramNameOut.setSignatureElementPath("findOut.Cust(Customer).name(String)");
 		paramCustOut.addParameter(paramNameOut);
 
-		Parameter test1 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+		Parameter test1 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				Numerus.SINGULAR, false);
 		test1.setIdentifier("id");
 		test1.setDataTypeName("int");
 		test1.setQualifiedDataTypeName("int");
 		test1.setSignatureElementPath("findOut.Cust(Customer).id(int)");
 
-		Parameter test2 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+		Parameter test2 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				Numerus.SINGULAR, false);
 		test2.setIdentifier("id");
 		test2.setDataTypeName("int");
 		test2.setQualifiedDataTypeName("int");
@@ -169,11 +174,12 @@ public class JavaMethodTest
 		 */
 		List<Parameters> exceptions = new Vector<Parameters>();
 
-		Parameters exception = new JavaParameters(op, "FaultMessage");
+		Parameters exception = new JavaParameters(op, "FaultMessage", Numerus.SINGULAR,
+				false);
 		exception.setIdentifier("fault");
 		exceptions.add(exception);
 
-		Parameter exParam = new JavaParameter(exception);
+		Parameter exParam = new JavaParameter(exception, Numerus.SINGULAR, false);
 		exParam.setIdentifier("Exception");
 		exParam.setDataTypeName("ExType");
 		exParam.setSignatureElementPath("fault.Exception(ExType)");

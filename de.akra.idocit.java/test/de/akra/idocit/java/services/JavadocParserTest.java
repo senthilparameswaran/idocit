@@ -47,7 +47,7 @@ import de.akra.idocit.core.utils.DescribedItemUtils;
 /**
  * Tests for {@link JavadocParser}.
  * <p>
- * Run this test as JUnit Plug-in Test or initialize in {@link ObjectStructureUtils} the
+ * Run this test as JUnit Plug-in Test or initialize in {@link DescribedItemUtils} the
  * private attributes <code>supportedAddressees</code> and
  * <code>supportedThematicRoles</code> with {@link Collections#emptyList()}, because the
  * Eclipse Workspace is not available in JUnit Test.
@@ -162,15 +162,15 @@ public class JavadocParserTest
 	{
 		Documentation newDoc = new Documentation();
 		newDoc.setScope(Scope.EXPLICIT);
-		newDoc.setThematicRole(ObjectStructureUtils.findThematicRole("OBJECT"));
+		newDoc.setThematicRole(DescribedItemUtils.findThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("/person:Person/name:java.lang.String");
 
 		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
 		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
 
-		Addressee developer = ObjectStructureUtils.findAddressee("Developer");
-		Addressee manager = ObjectStructureUtils.findAddressee("Manager");
+		Addressee developer = DescribedItemUtils.findAddressee("Developer");
+		Addressee manager = DescribedItemUtils.findAddressee("Manager");
 
 		docMap.put(developer, "Documenation for developers.");
 		addresseeSequence.add(developer);
@@ -193,15 +193,15 @@ public class JavadocParserTest
 	{
 		Documentation newDoc = new Documentation();
 		newDoc.setScope(Scope.EXPLICIT);
-		newDoc.setThematicRole(ObjectStructureUtils.findThematicRole("OBJECT"));
+		newDoc.setThematicRole(DescribedItemUtils.findThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("double:double");
 
 		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
 		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
 
-		Addressee developer = ObjectStructureUtils.findAddressee("Developer");
-		Addressee manager = ObjectStructureUtils.findAddressee("Manager");
+		Addressee developer = DescribedItemUtils.findAddressee("Developer");
+		Addressee manager = DescribedItemUtils.findAddressee("Manager");
 
 		docMap.put(developer, "Developer: Result as floating-point number.");
 		addresseeSequence.add(developer);

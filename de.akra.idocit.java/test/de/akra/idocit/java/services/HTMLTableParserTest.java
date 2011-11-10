@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Scope;
+import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 
 /**
@@ -66,17 +67,17 @@ public class HTMLTableParserTest
 		expectedDoc.add(doc);
 		doc.setScope(Scope.IMPLICIT);
 		doc.setSignatureElementIdentifier("filter.id");
-		doc.setThematicRole(ObjectStructureUtils.findThematicRole("ATTRIBUTE"));
+		doc.setThematicRole(DescribedItemUtils.findThematicRole("ATTRIBUTE"));
 
 		Map<Addressee, String> addresseeDocs = new HashMap<Addressee, String>();
 		doc.setDocumentation(addresseeDocs);
 
-		Addressee developer = ObjectStructureUtils.findAddressee("Developer");
+		Addressee developer = DescribedItemUtils.findAddressee("Developer");
 		addresseeDocs.put(developer,
 				"The existing documentation: this is a really good filter ;)");
 		doc.getAddresseeSequence().add(developer);
 
-		Addressee manager = ObjectStructureUtils.findAddressee("Manager");
+		Addressee manager = DescribedItemUtils.findAddressee("Manager");
 		addresseeDocs.put(manager, "Really good info for manager.");
 		doc.getAddresseeSequence().add(manager);
 

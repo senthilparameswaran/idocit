@@ -100,15 +100,20 @@ public class ReflectionHelper
 
 	public boolean isCollection(ITypeBinding type)
 	{
-		ITypeBinding[] implementedTypes = type.getInterfaces();
-
-		if (implementedTypes != null)
+		if (type != null)
 		{
-			for (ITypeBinding implementedType : implementedTypes)
+			ITypeBinding[] implementedTypes = type.getInterfaces();
+
+			if (implementedTypes != null)
 			{
-				if ("java.util.Collection".equals(implementedType.getQualifiedName()))
+				for (ITypeBinding implementedType : implementedTypes)
 				{
-					return true;
+					String qualifiedName = implementedType.getQualifiedName();
+					
+					if ((qualifiedName != null) && qualifiedName.startsWith("java.util.Collection"))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -118,8 +123,9 @@ public class ReflectionHelper
 
 	public boolean hasPublicAccessableAttributes(ITypeBinding type)
 	{
-		return !findAttributesWithPublicGetterOrSetter(type.getDeclaredFields(),
-				type.getDeclaredMethods()).isEmpty();
+		return (type != null)
+				&& !findAttributesWithPublicGetterOrSetter(type.getDeclaredFields(),
+						type.getDeclaredMethods()).isEmpty();
 	}
 
 	public Numerus deriveNumerus(ITypeBinding type)
