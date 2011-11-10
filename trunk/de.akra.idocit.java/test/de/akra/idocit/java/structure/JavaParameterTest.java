@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.SignatureElement;
 
@@ -95,14 +96,14 @@ public class JavaParameterTest
 	 */
 	public static Parameter createParameter(SignatureElement parent)
 	{
-		Parameter param = new JavaParameter(parent);
+		Parameter param = new JavaParameter(parent, Numerus.SINGULAR, true);
 		param.setDataTypeName("Customer");
 		param.setQualifiedDataTypeName("my.Customer");
 		param.setIdentifier("cust");
 		param.setSignatureElementPath("find.cust(Customer)");
 		param.addDocpart(DocumentationTest.createDocumentation());
 
-		Parameter innerParam = new JavaParameter(param);
+		Parameter innerParam = new JavaParameter(param, Numerus.SINGULAR, false);
 		innerParam.setDataTypeName("int");
 		innerParam.setIdentifier("id");
 		innerParam.setQualifiedDataTypeName("int");

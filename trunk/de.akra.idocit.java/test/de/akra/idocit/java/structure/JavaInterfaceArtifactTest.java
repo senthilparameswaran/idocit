@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
@@ -37,8 +38,8 @@ import de.akra.idocit.common.structure.SignatureElement;
  */
 public class JavaInterfaceArtifactTest
 {
-	private static Logger logger = Logger
-			.getLogger(JavaInterfaceArtifactTest.class.getName());
+	private static Logger logger = Logger.getLogger(JavaInterfaceArtifactTest.class
+			.getName());
 
 	/**
 	 * Tests {@link InterfaceArtifact#copy(SignatureElement)}
@@ -99,11 +100,12 @@ public class JavaInterfaceArtifactTest
 	private InterfaceArtifact createInterfaceArtifact()
 	{
 		InterfaceArtifact artifact = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact", null);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact", null,
+				Numerus.SINGULAR);
 		artifact.setIdentifier("test.java");
 
 		List<Interface> interfaceList = new ArrayList<Interface>();
-		Interface interf = new JavaInterface(artifact, "Class");
+		Interface interf = new JavaInterface(artifact, "Class", Numerus.SINGULAR);
 		interf.setIdentifier("CustomerService");
 		interfaceList.add(interf);
 		interf.setDocumentationChanged(true);
@@ -111,12 +113,13 @@ public class JavaInterfaceArtifactTest
 		AST ast = AST.newAST(AST.JLS3);
 		TagElement tag = ast.newTagElement();
 		tag.setTagName(TagElement.TAG_AUTHOR);
-		
+
 		List<TagElement> additionalTags = new ArrayList<TagElement>();
 		additionalTags.add(tag);
-		
+
 		List<JavaMethod> operations = new ArrayList<JavaMethod>();
-		JavaMethod op = new JavaMethod(interf, "Method", "Searching Operations");
+		JavaMethod op = new JavaMethod(interf, "Method", "Searching Operations",
+				Numerus.SINGULAR);
 		op.setIdentifier("find");
 		op.setAdditionalTags(additionalTags);
 		operations.add(op);
@@ -125,11 +128,11 @@ public class JavaInterfaceArtifactTest
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new JavaParameters(op, "");
+		Parameters inputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
 		inputParameters.setIdentifier("findIn");
 		op.setInputParameters(inputParameters);
 
-		Parameter paramCust = new JavaParameter(inputParameters);
+		Parameter paramCust = new JavaParameter(inputParameters, Numerus.SINGULAR, true);
 		paramCust.setDocumentationChanged(true);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
@@ -137,13 +140,13 @@ public class JavaInterfaceArtifactTest
 		paramCust.setSignatureElementPath("findIn.Cust(Customer)");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new JavaParameter(paramCust);
+		Parameter paramId = new JavaParameter(paramCust, Numerus.SINGULAR, false);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramId.setSignatureElementPath("findIn.Cust(Customer).id(int)");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new JavaParameter(paramCust);
+		Parameter paramNameIn = new JavaParameter(paramCust, Numerus.SINGULAR, false);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
 		paramNameIn.setQualifiedDataTypeName("java.lang.String");
@@ -153,38 +156,41 @@ public class JavaInterfaceArtifactTest
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new JavaParameters(op, "");
+		Parameters outputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new JavaParameter(outputParameters);
+		Parameter paramCustOut = new JavaParameter(outputParameters, Numerus.SINGULAR,
+				true);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		paramCustOut.setQualifiedDataTypeName("my.package.Customer");
 		paramCustOut.setSignatureElementPath("findOut.Cust(Customer)");
 		outputParameters.addParameter(paramCustOut);
 
-		Parameter paramIdOut = new JavaParameter(paramCustOut);
+		Parameter paramIdOut = new JavaParameter(paramCustOut, Numerus.SINGULAR, false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setQualifiedDataTypeName("int");
 		paramIdOut.setSignatureElementPath("findOut.Cust(Customer).id(int)");
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new JavaParameter(paramCustOut);
+		Parameter paramNameOut = new JavaParameter(paramCustOut, Numerus.SINGULAR, false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramNameOut.setQualifiedDataTypeName("java.lang.String");
 		paramNameOut.setSignatureElementPath("findOut.Cust(Customer).name(String)");
 		paramCustOut.addParameter(paramNameOut);
 
-		Parameter test1 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+		Parameter test1 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				Numerus.SINGULAR, false);
 		test1.setIdentifier("id");
 		test1.setDataTypeName("int");
 		test1.setQualifiedDataTypeName("int");
 		test1.setSignatureElementPath("findOut.Cust(Customer).id(int)");
 
-		Parameter test2 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+		Parameter test2 = new JavaParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				Numerus.SINGULAR, false);
 		test2.setIdentifier("id");
 		test2.setDataTypeName("int");
 		test2.setQualifiedDataTypeName("int");
@@ -195,11 +201,12 @@ public class JavaInterfaceArtifactTest
 		 */
 		List<Parameters> exceptions = new ArrayList<Parameters>();
 
-		Parameters exception = new JavaParameters(op, "FaultMessage");
+		Parameters exception = new JavaParameters(op, "FaultMessage", Numerus.SINGULAR,
+				false);
 		exception.setIdentifier("fault");
 		exceptions.add(exception);
 
-		Parameter exParam = new JavaParameter(exception);
+		Parameter exParam = new JavaParameter(exception, Numerus.SINGULAR, false);
 		exParam.setIdentifier("Exception");
 		exParam.setDataTypeName("ExType");
 		exParam.setSignatureElementPath("fault.Exception(ExType)");
