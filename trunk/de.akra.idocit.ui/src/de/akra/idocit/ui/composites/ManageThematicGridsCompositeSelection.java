@@ -66,6 +66,21 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 	private long lastSaveTimeThematicRoles = -1;
 
 	/**
+	 * The selected thematic role in the list of roles.
+	 */
+	private ThematicRole activeRole;
+
+	public ThematicRole getActiveRole()
+	{
+		return activeRole;
+	}
+
+	public void setActiveRole(ThematicRole activeRole)
+	{
+		this.activeRole = activeRole;
+	}
+
+	/**
 	 * 
 	 * @return the available {@link ThematicRole}s.
 	 */
@@ -140,14 +155,12 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		return nameExists;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((activeRole == null) ? 0 : activeRole.hashCode());
 		result = prime * result
 				+ ((activeThematicGrid == null) ? 0 : activeThematicGrid.hashCode());
 		result = prime * result + indexOfActiveThematicGrid;
@@ -160,9 +173,6 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -170,9 +180,16 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof ManageThematicGridsCompositeSelection))
+		if (getClass() != obj.getClass())
 			return false;
 		ManageThematicGridsCompositeSelection other = (ManageThematicGridsCompositeSelection) obj;
+		if (activeRole == null)
+		{
+			if (other.activeRole != null)
+				return false;
+		}
+		else if (!activeRole.equals(other.activeRole))
+			return false;
 		if (activeThematicGrid == null)
 		{
 			if (other.activeThematicGrid != null)
@@ -203,9 +220,6 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -222,6 +236,8 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		builder.append(nameExists);
 		builder.append(", lastSaveTimeThematicRoles=");
 		builder.append(lastSaveTimeThematicRoles);
+		builder.append(", activeRole=");
+		builder.append(activeRole);
 		builder.append("]");
 		return builder.toString();
 	}

@@ -160,6 +160,8 @@ public class ManageThematicGridsComposite
 				.setRoles(newSelection.getRoles());
 		editThematicGridCompositeSelection = editThematicGridCompositeSelection
 				.setActiveThematicGrid(newSelection.getActiveThematicGrid());
+		editThematicGridCompositeSelection = editThematicGridCompositeSelection
+				.setActiveRole(newSelection.getActiveRole());
 
 		editThematicGridComposite.setSelection(editThematicGridCompositeSelection);
 	}
@@ -272,6 +274,8 @@ public class ManageThematicGridsComposite
 					// keep the copy of the selected grid
 					mySelection.setActiveThematicGrid(copiedGrid);
 				}
+				
+				mySelection.setActiveRole(selection.getActiveRole());
 
 				setSelection(mySelection);
 			}
