@@ -72,4 +72,4 @@ http://idocit.googlecode.com/svn/images/draft_ss_thematic_role_pp.png
  * The predicates are implemented as Java Script-functions and stored within its own js-file in the src/main/resources-folders.
 
 = TODOs =
- * Which changes to the data structures in the common-project are required and where are these new attributes assigned to values?
+ NONE
