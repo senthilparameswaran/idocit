@@ -438,6 +438,12 @@ public final class RuleService
 
 		// Create the context for ...
 		// ... the operation itsself.
+		final String verb = ThematicGridService.extractVerb(operation.getIdentifier());
+		final ThematicRoleContext operationContext = new ThematicRoleContext(new ThematicRole("NONE"),
+				operation.getNumerus(), operation.hasPublicAccessibleAttributes(), false,
+				verb);
+
+		thematicRoleContexts.add(operationContext);
 		createThematicRoleContexts(thematicRoleContexts, operation);
 
 		// ... the inputs.
@@ -538,7 +544,8 @@ public final class RuleService
 						final ThematicRole role = documentation.getThematicRole();
 						final ThematicRoleContext context = new ThematicRoleContext(role,
 								signatureElement.getNumerus(),
-								signatureElement.hasPublicAccessibleAttributes(), false);
+								signatureElement.hasPublicAccessibleAttributes(), false,
+								null);
 
 						thematicRoleContexts.add(context);
 					}
