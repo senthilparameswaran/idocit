@@ -3,6 +3,9 @@
 = Introduction =
 
 = Example of new Javadoc =
+
+This is a first draft designed by Dirk and Jan Christian:
+
 {{{
 /**
  * Devloper text for ACTION.
