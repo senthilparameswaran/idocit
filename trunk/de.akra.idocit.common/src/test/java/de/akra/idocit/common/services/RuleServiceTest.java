@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.Numerus;
@@ -60,9 +61,9 @@ public class RuleServiceTest
 		Map<String, String> gridBasedRules = new HashMap<String, String>();
 		gridBasedRules.put("COMPARISON", "!exists(\"PRIMARY_KEY\")");
 		gridBasedRules.put("PRIMARY_KEY", "!exists(\"COMPARISON\")");
-		gridBasedRules.put("SOURCE", "def()");
-		gridBasedRules.put("AGENT", "def()");
-		gridBasedRules.put("ACTION", "def()");
+		gridBasedRules.put("SOURCE", ThematicGridConstants.DEFAULT_RULE);
+		gridBasedRules.put("AGENT", ThematicGridConstants.DEFAULT_RULE);
+		gridBasedRules.put("ACTION", ThematicGridConstants.DEFAULT_RULE);
 
 		ThematicGrid findingOperationsGrid = new ThematicGrid();
 		findingOperationsGrid.setDescription("");
