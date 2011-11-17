@@ -63,28 +63,52 @@ public class ThematicGridService
 	}
 
 	/**
-	 * Finds the thematic grids for the verb out of the <code>identifier</code>.
+	 * Extracts the verb from the given identifier. The identifier is assumed to be in
+	 * camel-syntax.
+	 * 
+	 * @param identifier
+	 *            The operation identifier to extract the verb from
+	 * 
+	 * @return Extracted verb (<code>null</code> if no verb could be identified)
+	 */
+	public static String extractVerb(String identifier)
+	{
+		if ((identifier != null) && (!identifier.trim().isEmpty()))
+		{
+			String sentenceIdentifier = StringUtils.addBlanksToCamelSyntax(identifier);
+
+			// Identify the verb.
+			String[] words = sentenceIdentifier.split(" ");
+			if (words.length > 0)
+			{
+				return words[0].toLowerCase();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Finds the thematic grids for the verb out of the <code>identifier</code>. The
+	 * identifier is assumed to be in camel-syntax. If no verb could be identified, the
+	 * resulting map will be empty.
 	 * 
 	 * @param identifier
 	 *            The identifier from which the verb should be extracted and the thematic
 	 *            grids should be derived.
 	 * @param definedGrids
 	 *            The list of defined {@link ThematicGrid}s (SOURCE)
-	 * @return Map of thematic grid names linking to Set of {@link ThematicRole} s.
+	 * @return Map of thematic grid names linking to Set of {@link ThematicRole}s.
 	 */
 	public static Map<String, Map<ThematicRole, Boolean>> deriveThematicGrid(
 			String identifier, List<ThematicGrid> definedGrids)
 	{
 		Map<String, Map<ThematicRole, Boolean>> matchingRoles = new HashMap<String, Map<ThematicRole, Boolean>>();
 
-		String sentenceIdentifier = StringUtils.addBlanksToCamelSyntax(identifier);
+		String verb = extractVerb(identifier);
 
-		// Identify the verb.
-		String[] words = sentenceIdentifier.split(" ");
-		if (words.length > 0)
+		if (verb != null)
 		{
-			String verb = words[0].toLowerCase();
-
 			// Classify the verb.
 			List<ThematicGrid> matchingVerbClasses = findMatchingGrids(verb, definedGrids);
 
