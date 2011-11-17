@@ -11,12 +11,19 @@ public class ThematicRoleContext
 
 	private boolean interfaceLevel;
 
+	private String predicate;
+
 	public ThematicRoleContext(ThematicRole role, Numerus numerus,
-			boolean publicAccessibleAttributes, boolean interfaceLevel)
+			boolean publicAccessibleAttributes, boolean interfaceLevel, String predicate)
 	{
-		this.role = new ThematicRole();
-		this.role.setDescription(role.getDescription());
-		this.role.setName(role.getName());
+		if (role != null)
+		{
+			this.role = new ThematicRole();
+			this.role.setDescription(role.getDescription());
+			this.role.setName(role.getName());
+		}
+
+		this.predicate = predicate;
 
 		this.numerus = numerus;
 		this.publicAccessibleAttributes = publicAccessibleAttributes;
@@ -32,7 +39,7 @@ public class ThematicRoleContext
 			boolean pulicAccessableAttributes)
 	{
 		return new ThematicRoleContext(role, numerus, pulicAccessableAttributes,
-				interfaceLevel);
+				interfaceLevel, predicate);
 	}
 
 	public boolean isInterfaceLevel()
@@ -43,7 +50,7 @@ public class ThematicRoleContext
 	public ThematicRoleContext setInterfaceLevel(boolean interfaceLevel)
 	{
 		return new ThematicRoleContext(role, numerus, publicAccessibleAttributes,
-				interfaceLevel);
+				interfaceLevel, predicate);
 	}
 
 	public ThematicRole getRole()
@@ -58,7 +65,7 @@ public class ThematicRoleContext
 	public ThematicRoleContext setRole(ThematicRole role)
 	{
 		return new ThematicRoleContext(role, numerus, publicAccessibleAttributes,
-				interfaceLevel);
+				interfaceLevel, predicate);
 	}
 
 	public Numerus getNumerus()
@@ -69,7 +76,18 @@ public class ThematicRoleContext
 	public ThematicRoleContext setNumerus(Numerus numerus)
 	{
 		return new ThematicRoleContext(role, numerus, publicAccessibleAttributes,
-				interfaceLevel);
+				interfaceLevel, predicate);
+	}
+
+	public String getPredicate()
+	{
+		return predicate;
+	}
+
+	public ThematicRoleContext setPredicate(String predicate)
+	{
+		return new ThematicRoleContext(role, numerus, publicAccessibleAttributes,
+				interfaceLevel, predicate);
 	}
 
 	@Override
@@ -81,6 +99,7 @@ public class ThematicRoleContext
 		result = prime * result + ((numerus == null) ? 0 : numerus.hashCode());
 		result = prime * result + (publicAccessibleAttributes ? 1231 : 1237);
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((predicate == null) ? 0 : predicate.hashCode());
 		return result;
 	}
 
@@ -107,6 +126,13 @@ public class ThematicRoleContext
 		}
 		else if (!role.equals(other.role))
 			return false;
+		if (predicate == null)
+		{
+			if (other.predicate != null)
+				return false;
+		}
+		else if (!predicate.equals(other.predicate))
+			return false;
 		return true;
 	}
 
@@ -122,6 +148,8 @@ public class ThematicRoleContext
 		builder.append(publicAccessibleAttributes);
 		builder.append(", interfaceLevel=");
 		builder.append(interfaceLevel);
+		builder.append(", predicate=");
+		builder.append(predicate);
 		builder.append("]");
 		return builder.toString();
 	}

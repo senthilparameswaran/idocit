@@ -136,3 +136,26 @@ function checkNotNull(object) {
 		throw "IllegalArgumentException: each predicate expects a value as parameter and not null!";
 	}
 }
+
+/**
+ * Checks whether the operation has the given predicate or not.
+ * 
+ * @param predicate
+ *            The predicate to check for
+ * @returns {Boolean} TRUE if the operation has the searched predicate
+ */
+function hasPredicate(predicate) {
+	checkNotNull(predicate);
+
+	if (thematicRoleContexts != null) {
+		for ( var i = 0; i < thematicRoleContexts.size(); i++) {
+			var thematicRoleContext = thematicRoleContexts.get(i);
+
+			if (thematicRoleContext.predicate == predicate) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}

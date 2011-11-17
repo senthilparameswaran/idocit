@@ -72,7 +72,8 @@ public class RuleServiceTest
 		findingOperationsGrid.setRefernceVerb("find");
 
 		ThematicRole roleAGENT = new ThematicRole("AGENT", "", RoleScope.INTERFACE_LEVEL);
-		ThematicRole roleACTION = new ThematicRole("ACTION", "", RoleScope.OPERATION_LEVEL);
+		ThematicRole roleACTION = new ThematicRole("ACTION", "",
+				RoleScope.OPERATION_LEVEL);
 		roleAGENT.setRoleScope(RoleScope.INTERFACE_LEVEL);
 		ThematicRole roleSOURCE = new ThematicRole("SOURCE", "", RoleScope.BOTH);
 		ThematicRole roleCOMPARISON = new ThematicRole("COMPARISON", "", RoleScope.BOTH);
@@ -479,6 +480,7 @@ public class RuleServiceTest
 		Operation operationFindCustomersByName = new TestOperation(
 				interfaceCustomerService, "Operation", "Finding Operations",
 				Numerus.SINGULAR);
+		operationFindCustomersByName.setIdentifier("findCustomersByName");
 		operations.add(operationFindCustomersByName);
 		interfaceCustomerService.setOperations(operations);
 
@@ -547,7 +549,7 @@ public class RuleServiceTest
 		Parameter paramLastName = new TestParameter(inputs, "Parameter",
 				Numerus.SINGULAR, false);
 		paramLastName.setDataTypeName("java.lang.String");
-		paramLastName.setIdentifier("lastname");
+		paramLastName.setIdentifier("lastName");
 
 		List<Documentation> documentationsInput = new ArrayList<Documentation>();
 		Documentation documentationCOMPARISON = new Documentation();
@@ -592,6 +594,36 @@ public class RuleServiceTest
 		resultCustomerList.setDocumentations(documentations);
 
 		return operationFindCustomersByName;
+	}
+
+	/**
+	 * Test cases for JavaScript-predicate hasVerb(VERB)
+	 */
+	@Test
+	public void testIsPredicate()
+	{
+		// Positive tests
+		// ******************************************************************************
+		{
+			{
+				// Test case #1: "findCustomersByName" has predicate "find"
+				Operation operationFindCustomer_PLURAL_ByLastname = createFindCustomers_PLURAL_ByNameOperation();
+				assertTrue(RuleService.evaluateRule("hasPredicate(\"find\");",
+						operationFindCustomer_PLURAL_ByLastname));
+
+				assertFalse(RuleService.evaluateRule("hasPredicate(\"get\");",
+						operationFindCustomer_PLURAL_ByLastname));
+			}
+			{
+				Operation operationCreateFindCustomers = createFindCustomers_ATTRIBUTES_ByNameOperation();
+				assertFalse(RuleService.evaluateRule("hasPredicate(\"last\");",
+						operationCreateFindCustomers));
+			}
+		}
+
+		// Negative tests
+		// ******************************************************************************
+		{}
 	}
 
 	/**
