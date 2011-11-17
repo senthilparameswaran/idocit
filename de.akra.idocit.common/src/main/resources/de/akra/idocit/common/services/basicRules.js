@@ -3,7 +3,7 @@
  * 
  * @returns {Boolean}
  */
-function def() {
+function always() {
 	return true;
 }
 
