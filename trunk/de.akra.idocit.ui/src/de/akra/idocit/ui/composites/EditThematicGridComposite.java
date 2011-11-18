@@ -500,7 +500,7 @@ public class EditThematicGridComposite
 									+ selectedRole.getName()
 									+ " should be recommended in the thematic grid "
 									+ activeGrid.getName()
-									+ ".\n\nYou can use the following predicates (in JavaScript-Syntax):\ndef()\nisSingular(\"ROLENAME\")\nisPlural(\"ROLENAME\")\nexists(\"ROLENAME\")\nhasAttributes(\"ROLENAME\")\nisPredicate(\"VERB\")",
+									+ ".\n\nYou can use the following predicates (in JavaScript-Syntax):\nalways()\nisSingular(\"ROLENAME\")\nisPlural(\"ROLENAME\")\nexists(\"ROLENAME\")\nhasAttributes(\"ROLENAME\")\nisPredicate(\"VERB\")",
 							gridBasedRule, ruleValidator);
 
 					int dialogResult = ruleInputDialog.open();
