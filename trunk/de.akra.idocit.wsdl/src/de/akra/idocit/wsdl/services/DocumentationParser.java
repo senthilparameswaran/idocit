@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -350,7 +351,8 @@ public class DocumentationParser {
 			Node node = nodes.item(i);
 			switch (node.getNodeType()) {
 			case Node.TEXT_NODE:
-				text.append(StringUtils.cleanFormatting(node.getNodeValue()));
+				String unescapedText = StringEscapeUtils.unescapeHtml4(node.getNodeValue());
+				text.append(StringUtils.cleanFormatting(unescapedText));
 				break;
 			case Node.ELEMENT_NODE:
 				if (node.getNodeName().equalsIgnoreCase(HTML_TAG_BR)) {

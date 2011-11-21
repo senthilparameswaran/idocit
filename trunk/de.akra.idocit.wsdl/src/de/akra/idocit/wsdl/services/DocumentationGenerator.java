@@ -24,6 +24,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -191,10 +192,12 @@ public class DocumentationGenerator {
 	 * @return The <code>element</code>.
 	 */
 	private static Element addTextAsNodes(Element element, String text) {
+		String escapedText = StringEscapeUtils.escapeHtml4(text);
+		
 		StringBuilder tmpText = new StringBuilder();
 
-		for (int i = 0; i < text.length(); ++i) {
-			switch (text.charAt(i)) {
+		for (int i = 0; i < escapedText.length(); ++i) {
+			switch (escapedText.charAt(i)) {
 			case '\t':
 				if (tmpText.length() > 0) {
 					element.appendChild(domDocument.createTextNode(tmpText
@@ -214,7 +217,7 @@ public class DocumentationGenerator {
 
 				// if CR and LF are together, replace it only once
 				// Changes due to Issue #2
-				if ((text.length() > i + 1) && text.charAt(i + 1) == '\n')
+				if ((escapedText.length() > i + 1) && escapedText.charAt(i + 1) == '\n')
 				// End changes due to Issue #2
 				{
 					i++;
@@ -231,7 +234,7 @@ public class DocumentationGenerator {
 
 				// if CR and LF are together, replace it only once
 				// Changes due to Issue #2
-				if ((text.length() > i + 1) && text.charAt(i + 1) == '\r')
+				if ((escapedText.length() > i + 1) && escapedText.charAt(i + 1) == '\r')
 				// End changes due to Issue #2
 				{
 					i++;
@@ -239,7 +242,7 @@ public class DocumentationGenerator {
 				break;
 
 			default:
-				tmpText.append(text.charAt(i));
+				tmpText.append(escapedText.charAt(i));
 				break;
 			}
 		}
