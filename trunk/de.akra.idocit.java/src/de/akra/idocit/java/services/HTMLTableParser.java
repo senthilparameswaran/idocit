@@ -17,9 +17,13 @@ package de.akra.idocit.java.services;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -52,10 +57,32 @@ public class HTMLTableParser
 	private static final String XML_ROOT_START = "<javadoc>";
 	private static final String XML_ROOT_END = "</javadoc>";
 
+	public static final String XML_TAG_TAB = "tab";
+	public static final String XML_TAG_BR = "br";
+
 	/**
 	 * Logger.
 	 */
 	private static Logger logger = Logger.getLogger(HTMLTableParser.class.getName());
+
+	/**
+	 * Replaces HTML-entities of special characters and <br/>
+	 * - and <tab/>-elements with their corresponding character (e.g. <br/>
+	 * with \n).
+	 * 
+	 * @param escapedText
+	 *            The escaped test
+	 * @return The unescaped text
+	 */
+	private static String unescapeHtml(String escapedText)
+	{
+		String unescapedHtml = StringEscapeUtils.unescapeHtml4(escapedText);
+
+		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_BR, "\n");
+		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_TAB, "\t");
+
+		return unescapedHtml;
+	}
 
 	/**
 	 * Parse the <code>html</code> String and converts each iDocIt! comment table into a
@@ -82,9 +109,49 @@ public class HTMLTableParser
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
-		saxParser.parse(new ByteArrayInputStream(xml.toString().getBytes()), handler);
+		saxParser.parse(
+				new ByteArrayInputStream(xml.toString()
+						.getBytes(Charset.forName("UTF-8"))), handler);
 
-		return handler.getDocumentations();
+		return unescapeDocumentationTexts(handler.getDocumentations());
+	}
+
+	/**
+	 * Unescapes the documentation-texts for each addressee in the given list.
+	 * 
+	 * Please note: the given list is manipulated and returned for convenience.
+	 * 
+	 * @param escapedDocumentations
+	 *            The list of {@link Documentation}s to be escaped (and modified!!!)
+	 * 
+	 * @return The given, escaped list of documentations
+	 */
+	private static List<Documentation> unescapeDocumentationTexts(
+			List<Documentation> escapedDocumentations)
+	{
+
+		if (escapedDocumentations != null)
+		{
+			for (Documentation documentation : escapedDocumentations)
+			{
+				Map<Addressee, String> documentationTexts = documentation
+						.getDocumentation();
+				Map<Addressee, String> documentationUnescapedTexts = new HashMap<Addressee, String>();
+
+				for (Entry<Addressee, String> documentedText : documentationTexts
+						.entrySet())
+				{
+					String unescapedText = unescapeHtml(documentedText.getValue());
+
+					documentationUnescapedTexts.put(documentedText.getKey(),
+							unescapedText);
+				}
+
+				documentation.setDocumentation(documentationUnescapedTexts);
+			}
+		}
+
+		return escapedDocumentations;
 	}
 
 	/**
@@ -134,6 +201,12 @@ public class HTMLTableParser
 		private Addressee currentAddressee;
 
 		/**
+		 * The name of last parsed tag. This is required to determine whether a line break
+		 * or a tab has been parsed at last (see method characters).
+		 */
+		private String lastTag;
+
+		/**
 		 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String,
 		 *      java.lang.String, java.lang.String)
 		 */
@@ -144,6 +217,8 @@ public class HTMLTableParser
 			if (qName.equals(HTML_TAG_TR))
 			{
 				currentColumn = 0;
+				currentAddressee = null;
+				lastValue = LAST_VALUE.NONE;
 			}
 			else if (qName.equals(HTML_TAG_TABLE))
 			{
@@ -187,10 +262,34 @@ public class HTMLTableParser
 			case ADDRESSEE:
 				if (currentColumn == 2)
 				{
-					currentDoc.getAddresseeSequence().add(currentAddressee);
-					currentDoc.getDocumentation().put(currentAddressee, value);
-					currentAddressee = null;
-					lastValue = LAST_VALUE.NONE;
+					String startedDocumentation = currentDoc.getDocumentation().get(
+							currentAddressee);
+
+					if (startedDocumentation != null)
+					{
+						StringBuilder builder = new StringBuilder(startedDocumentation);
+
+						if (XML_TAG_BR.equals(lastTag))
+						{
+							builder.append('\n');
+						}
+						else if (XML_TAG_TAB.equals(lastTag))
+						{
+							builder.append('\t');
+						}
+
+						builder.append(value);
+
+						startedDocumentation = builder.toString();
+					}
+					else
+					{
+						currentDoc.getAddresseeSequence().add(currentAddressee);
+						startedDocumentation = value;
+					}
+
+					currentDoc.getDocumentation().put(currentAddressee,
+							startedDocumentation);
 				}
 				break;
 			case NONE:
@@ -230,6 +329,8 @@ public class HTMLTableParser
 		public void startElement(String uri, String localName, String qName,
 				Attributes attributes) throws SAXException
 		{
+			lastTag = qName;
+
 			if (qName.equals(HTML_TAG_TABLE))
 			{
 				String name = attributes.getValue(HTML_ATTRIBUTE_NAME);

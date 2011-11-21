@@ -78,12 +78,12 @@ public class HTMLTableParserTest
 		doc.getAddresseeSequence().add(developer);
 
 		Addressee manager = DescribedItemUtils.findAddressee("Manager");
-		addresseeDocs.put(manager, "Really good info for manager.");
+		addresseeDocs.put(manager, "Really good info for manager &.");
 		doc.getAddresseeSequence().add(manager);
 
 		// parse html
 		List<Documentation> docs = HTMLTableParser
-				.convertJavadocToDocumentations("<table name=\"idocit\" border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>filter.id</td></tr><tr><td>Role:</td><td>ATTRIBUTE</td></tr><tr><td>Scope:</td><td>implicit</td></tr><tr><td><b>Developer</b>:</td><td>The existing documentation: this is a really good filter ;)</td></tr><tr><td><b>Manager</b>:</td><td>Really good info for manager.</td></tr></table>");
+				.convertJavadocToDocumentations("<table name=\"idocit\" border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>filter.id</td></tr><tr><td>Role:</td><td>ATTRIBUTE</td></tr><tr><td>Scope:</td><td>implicit</td></tr><tr><td><b>Developer</b>:</td><td>The existing documentation: this is a really good filter ;)</td></tr><tr><td><b>Manager</b>:</td><td>Really good info for manager &amp;.</td></tr></table>");
 
 		Assert.assertEquals(expectedDoc, docs);
 	}

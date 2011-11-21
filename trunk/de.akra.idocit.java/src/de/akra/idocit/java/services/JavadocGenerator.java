@@ -18,6 +18,7 @@ package de.akra.idocit.java.services;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -59,6 +60,9 @@ public class JavadocGenerator
 	 * @since 0.0.2
 	 */
 	public static final String GREATER_THAN_CODE = "&gt;";
+
+	public static final String XML_TAG_TAB = '<' + HTMLTableParser.XML_TAG_TAB + "/>";
+	public static final String XML_TAG_BR = '<' + HTMLTableParser.XML_TAG_BR + "/>";
 
 	/**
 	 * Generates from the {@link JavadocTagElement}s one {@link Javadoc} comment.
@@ -104,6 +108,61 @@ public class JavadocGenerator
 		{
 			return identifier;
 		}
+	}
+
+	/**
+	 * Escapes the special characters in the given string with HTML entities. Tabs and
+	 * Linebreaks are replaced with their corresponding HTML entities as well.
+	 * 
+	 * @param unescapedText
+	 *            The text to escape
+	 * @return The escaped text
+	 */
+	private static String escapeHtml(String unescapedText)
+	{
+		String escapedText = StringEscapeUtils.escapeHtml4(unescapedText);
+
+		StringBuilder tmpText = new StringBuilder();
+
+		for (int i = 0; i < escapedText.length(); ++i)
+		{
+			switch (escapedText.charAt(i))
+			{
+			case '\t':
+				tmpText.append(XML_TAG_TAB);
+				break;
+
+			case '\r':
+				tmpText.append(XML_TAG_BR);
+
+				// if CR and LF are together, replace it only once
+				// Changes due to Issue #2
+				if ((escapedText.length() > i + 1) && escapedText.charAt(i + 1) == '\n')
+				// End changes due to Issue #2
+				{
+					i++;
+				}
+				break;
+
+			case '\n':
+				tmpText.append(XML_TAG_BR);
+
+				// if CR and LF are together, replace it only once
+				// Changes due to Issue #2
+				if ((escapedText.length() > i + 1) && escapedText.charAt(i + 1) == '\r')
+				// End changes due to Issue #2
+				{
+					i++;
+				}
+				break;
+
+			default:
+				tmpText.append(escapedText.charAt(i));
+				break;
+			}
+		}
+
+		return tmpText.toString();
 	}
 
 	/**
@@ -199,7 +258,7 @@ public class JavadocGenerator
 						textElem.append("<tr><td><b>");
 						textElem.append(addressee.getName());
 						textElem.append("</b>:</td><td>");
-						textElem.append(docMap.get(addressee));
+						textElem.append(escapeHtml(docMap.get(addressee)));
 						textElem.append("</td></tr>\n");
 					}
 				}
@@ -215,73 +274,4 @@ public class JavadocGenerator
 			tags.add(newTag);
 		}
 	}
-
-	/**
-	 * <table border ="1">
-	 * <tr>
-	 * <td><b>Manager</b>:</td>
-	 * <td>sdfgsgjse gjgijwejj</td>
-	 * </tr>
-	 * </table>
-	 * 
-	 * @param filter
-	 *            <table border="1">
-	 *            <tr>
-	 *            <td>Element:</td>
-	 *            <td>filter.id</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>Role:</td>
-	 *            <td>Criterion</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td><b>Developer</b>:</td>
-	 *            <td>My extisting documentation: this is a really good filter ;)</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td><b>Manager</b>:</td>
-	 *            <td>sdfgsgjse gjgijwejj</td>
-	 *            </tr>
-	 *            </table>
-	 * <br />
-	 *            <table border="1">
-	 *            <tr>
-	 *            <td>Element:</td>
-	 *            <td>filter.name</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td>Role:</td>
-	 *            <td>Criterion</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td><b>Developer</b>:</td>
-	 *            <td>My extisting documentation: this is a really good filter ;)</td>
-	 *            </tr>
-	 *            <tr>
-	 *            <td><b>Manager</b>:</td>
-	 *            <td>sdfgsgjse gjgijwejj</td>
-	 *            </tr>
-	 *            </table>
-	 * 
-	 * @implicitParam <table border="1">
-	 *                <tr>
-	 *                <td>Role:</td>
-	 *                <td>Location</td>
-	 *                </tr>
-	 *                <tr>
-	 *                <td><b>Developer</b>:</td>
-	 *                <td>My extisting documentation: this is a really good filter ;)</td>
-	 *                </tr>
-	 *                <tr>
-	 *                <td><b>Manager</b>:</td>
-	 *                <td>sdfgsgjse gjgijwejj</td>
-	 *                </tr>
-	 *                </table>
-	 * @return
-	 * @throws IllegalArgumentException
-	 */
-	// private void test()
-	// {
-	//
-	// }
 }

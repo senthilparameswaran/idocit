@@ -47,7 +47,7 @@ public class JavaInterfaceParser
 	 * This is the constructor.
 	 * 
 	 * @param compilationUnit
-	 *            The {@link CompilationUnit} that should be parsed.
+	 *            The {@link CompilationUnit} that should be parsed &amp; checked.
 	 * @param artifactName
 	 *            The name for the CompilationUnit (in general the Java source file).
 	 * @param delimiters
