@@ -363,7 +363,7 @@ public class JavaInterfaceParserTest
 		param.setSignatureElementPath("compilationUnit:CompilationUnit");
 		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
 				"compilationUnit:CompilationUnit",
-				"The {@link CompilationUnit} that should be parsed."));
+				"The {@link CompilationUnit} that should be parsed &amp; checked."));
 		inputParams.addParameter(param);
 
 		param = new JavaParameter(inputParams, Numerus.SINGULAR, false);
