@@ -29,6 +29,7 @@ import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.impl.ServiceManager;
@@ -93,6 +94,8 @@ public class ThematicGridPreferencePage
 	{
 		try
 		{
+			IDocItActivator.initGridBasedRules();
+			
 			List<ThematicGrid> grids = ServiceManager.getInstance()
 					.getPersistenceService().loadThematicGrids();
 			List<ThematicRole> roles = ServiceManager.getInstance()
