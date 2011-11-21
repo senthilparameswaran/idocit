@@ -214,15 +214,27 @@ public class EditArtifactDocumentationComposite
 
 				SignatureElement selectedSigElem = selection
 						.getSelectedSignatureElement();
-				editArtSelection.setSelectedSignatureElement(selectedSigElem);
-				// Changes due to Issue #21
-				editArtSelection.setCurrentDocumentations(selectedSigElem
-						.getDocumentations());
-				// End changes due to Issue #21
-				// Changes due to Issue #62
-				editArtSelection.putOriginalDocumentations(selectedSigElem.getId(),
-						selectedSigElem.getDocumentations());
-				// End changes due to Issue #62
+				if (selectedSigElem != null)
+				{
+					editArtSelection.setSelectedSignatureElement(selectedSigElem);
+					// Changes due to Issue #21
+					editArtSelection.setCurrentDocumentations(selectedSigElem
+							.getDocumentations());
+					// End changes due to Issue #21
+					// Changes due to Issue #62
+					editArtSelection.putOriginalDocumentations(selectedSigElem.getId(),
+							selectedSigElem.getDocumentations());
+					// End changes due to Issue #62
+				}
+				else
+				{
+					editArtSelection.setSelectedSignatureElement(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+					// Changes due to Issue #21
+					List<Documentation> emptyDocs = Collections.emptyList();
+					editArtSelection.setCurrentDocumentations(emptyDocs);
+					// End changes due to Issue #21
+				}
+
 				setSelection(editArtSelection);
 
 				fireChangeEvent(sourceControl);
@@ -378,8 +390,8 @@ public class EditArtifactDocumentationComposite
 			// End changes due to Issue #23
 
 			updateSelectSignatureElementComposite(newInSelection);
-			updateDisplayRecommendedRolesComposite(newInSelection, roles, sigElemOperation,
-					selectedSigElem);
+			updateDisplayRecommendedRolesComposite(newInSelection, roles,
+					sigElemOperation, selectedSigElem);
 		}
 	}
 
