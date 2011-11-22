@@ -232,7 +232,7 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 		initializer.start();
 	}
 
-	private static void initGridBasedRules() throws UnitializedIDocItException
+	public static void initGridBasedRules() throws UnitializedIDocItException
 	{
 		List<ThematicGrid> grids = ServiceManager.getInstance().getPersistenceService()
 				.loadThematicGrids();
@@ -262,7 +262,7 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 		ServiceManager.getInstance().getPersistenceService().persistThematicGrids(grids);
 	}
 
-	private static void initRoleBasedRules() throws UnitializedIDocItException
+	public static void initRoleBasedRules() throws UnitializedIDocItException
 	{
 		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
 				.loadThematicRoles();
