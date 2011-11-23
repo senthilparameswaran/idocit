@@ -55,7 +55,7 @@ public class EditThematicGridCompositeFactory
 		EditThematicGridCompositeSelection selection = new EditThematicGridCompositeSelection();
 		ThematicGrid grid = new ThematicGrid();
 
-		grid.setDescription("Description");
+		grid.setDescription("A very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long descriptionA very long description");
 		grid.setName("Name");
 
 		Set<String> verbs = new HashSet<String>();
