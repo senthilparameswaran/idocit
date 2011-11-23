@@ -698,7 +698,8 @@ public class EclipsePersistenceService implements PersistenceService
 				writer.write("\n\t\t<table>");
 				writer.write("\n\t\t\t<tr>\n\t\t\t\t<td colspan=\"2\" valign=\"top\"><h3>"
 						+ grid.getName() + "</h3></td>\n\t\t\t</tr>");
-
+				writer.write("\n\t\t\t<tr>\n\t\t\t\t<td colspan=\"2\" valign=\"top\">"
+						+ grid.getDescription() + "</td>\n\t\t\t</tr>");
 				writer.write("\n\t\t\t<tr>\n\t\t\t\t<td valign=\"top\"><u>Included verbs</u>"
 						+ convertVerbListIntoHtml(grid.getVerbs()) + "\n\t\t\t\t</td>");
 				writer.write("\n\t\t\t\t<td valign=\"top\"><u>Associated Thematic Roles</u>"
