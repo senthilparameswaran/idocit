@@ -145,7 +145,7 @@ public class EditThematicGridComposite
 
 		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(40, 120).grab(true, true).applyTo(txtDescription);
+		GridDataFactory.fillDefaults().hint(100, 50).grab(true, true).applyTo(txtDescription);
 
 		Label lblVerbs = new Label(this, SWT.NONE);
 		lblVerbs.setText("Verbs (seperate verbs with commas):");
