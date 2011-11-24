@@ -40,7 +40,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
-import de.akra.idocit.common.parsers.HtmlEntityResolver;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Scope;
@@ -113,7 +112,6 @@ public class HTMLTableParser
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
-		saxParser.getXMLReader().setEntityResolver(new HtmlEntityResolver());
 
 		saxParser.parse(
 				new ByteArrayInputStream(xml.toString()
