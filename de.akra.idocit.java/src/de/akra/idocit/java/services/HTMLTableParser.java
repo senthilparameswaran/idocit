@@ -17,6 +17,8 @@ package de.akra.idocit.java.services;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,9 +36,11 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
+import de.akra.idocit.common.parsers.HtmlEntityResolver;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Scope;
@@ -53,7 +57,7 @@ import de.akra.idocit.core.utils.DescribedItemUtils;
  */
 public class HTMLTableParser
 {
-	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+	private static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 	private static final String XML_ROOT_START = "<javadoc>";
 	private static final String XML_ROOT_END = "</javadoc>";
 
@@ -64,7 +68,9 @@ public class HTMLTableParser
 	 * Logger.
 	 */
 	private static Logger logger = Logger.getLogger(HTMLTableParser.class.getName());
-
+	
+	private static final HTMLTableHandler handler = new HTMLTableHandler(readDTDs());
+	
 	/**
 	 * Replaces HTML-entities of special characters and <br/>
 	 * - and <tab/>-elements with their corresponding character (e.g. <br/>
@@ -105,15 +111,39 @@ public class HTMLTableParser
 				+ XML_ROOT_START.length() + html.length() + XML_ROOT_END.length());
 		xml.append(XML_HEADER).append(XML_ROOT_START).append(html).append(XML_ROOT_END);
 
-		HTMLTableHandler handler = new HTMLTableHandler();
-
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
+		saxParser.getXMLReader().setEntityResolver(new HtmlEntityResolver());
+
 		saxParser.parse(
 				new ByteArrayInputStream(xml.toString()
 						.getBytes(Charset.forName("UTF-8"))), handler);
 
-		return unescapeDocumentationTexts(handler.getDocumentations());
+		List<Documentation> documentations = unescapeDocumentationTexts(handler.getDocumentations());
+		
+		handler.reset();
+		
+		return documentations;
+	}
+
+	/**
+	 * Reads the XML DTDs and combines them to an InputSource.
+	 * 
+	 * @return The XML DTDs and combines them to an InputSource
+	 */
+	private static InputSource readDTDs()
+	{
+		InputStream xhtmlLat1 = HTMLTableParser.class
+				.getResourceAsStream("xhtml-lat1.ent");
+		InputStream xhtmlSpecial = HTMLTableParser.class
+				.getResourceAsStream("xhtml-special.ent");
+		InputStream xhtmlSymbol = HTMLTableParser.class
+				.getResourceAsStream("xhtml-symbol.ent");
+
+		SequenceInputStream sequence1 = new SequenceInputStream(xhtmlSpecial, xhtmlSymbol);
+		SequenceInputStream sequence = new SequenceInputStream(xhtmlLat1, sequence1);
+
+		return new InputSource(sequence);
 	}
 
 	/**
@@ -205,6 +235,13 @@ public class HTMLTableParser
 		 * or a tab has been parsed at last (see method characters).
 		 */
 		private String lastTag;
+
+		private InputSource dtdInputSources;
+
+		public HTMLTableHandler(InputSource dtdInputSource)
+		{
+			this.dtdInputSources = dtdInputSource;
+		}
 
 		/**
 		 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String,
@@ -384,6 +421,25 @@ public class HTMLTableParser
 		{
 			ELEMENT, ROLE, ADDRESSEE, SCOPE, NONE;
 		}
-	}
 
+		@Override
+		public InputSource resolveEntity(String name, String publicId, String baseURI,
+				String systemId) throws SAXException, IOException
+		{
+			return dtdInputSources;
+		}
+		
+		/**
+		 * Resets this parser.
+		 */
+		public void reset(){
+			this.currentAddressee = null;
+			this.currentDoc = null;
+			this.currentColumn = 0;
+			this.documentations = Collections.emptyList();
+			this.lastTag = null;
+			this.lastValue = LAST_VALUE.NONE;
+			this.startTableParsing = false;
+		}
+	}
 }
