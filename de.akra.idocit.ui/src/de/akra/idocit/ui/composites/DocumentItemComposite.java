@@ -812,21 +812,30 @@ public class DocumentItemComposite
 		roleSecondLevelItems = new MenuItem[rolesRecommendations
 				.getSecondLevelRecommendations().size()];
 
-		createMenuItems(rolesRecommendations.getFirstLevelRecommendations(),
-				roleFirstLevelItems, rolePopUpMenu);
-
+		List<ThematicRole> firstLevelRecommendations = rolesRecommendations
+				.getFirstLevelRecommendations();
 		List<ThematicRole> secondLevelRoles = rolesRecommendations
 				.getSecondLevelRecommendations();
 
-		if ((secondLevelRoles != null) && (!secondLevelRoles.isEmpty()))
+		if ((firstLevelRecommendations != null) && !firstLevelRecommendations.isEmpty())
 		{
-			final MenuItem openItem = new MenuItem(rolePopUpMenu, SWT.CASCADE);
-			openItem.setText("More");
-			final Menu submenu = new Menu(this.getShell(), SWT.DROP_DOWN);
-			openItem.setMenu(submenu);
+			createMenuItems(firstLevelRecommendations, roleFirstLevelItems, rolePopUpMenu);
 
-			createMenuItems(rolesRecommendations.getSecondLevelRecommendations(),
-					roleSecondLevelItems, submenu);
+			if ((secondLevelRoles != null) && (!secondLevelRoles.isEmpty()))
+			{
+				final MenuItem openItem = new MenuItem(rolePopUpMenu, SWT.CASCADE);
+				openItem.setText("More");
+				final Menu submenu = new Menu(this.getShell(), SWT.DROP_DOWN);
+				openItem.setMenu(submenu);
+
+				createMenuItems(rolesRecommendations.getSecondLevelRecommendations(),
+						roleSecondLevelItems, submenu);
+			}
+		}
+		else
+		{
+			// In this case we must have second level roles.
+			createMenuItems(secondLevelRoles, roleSecondLevelItems, rolePopUpMenu);
 		}
 	}
 
