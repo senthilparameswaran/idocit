@@ -34,3 +34,4 @@ This is a first draft designed by Dirk and Jan Christian:
 = Details =
 
 = TODO =
+ * Thomas just suggested to format the documentation-tables with ASCII-art. The ASCII-art is included into an inline-tag. Then we could replace the ASCII-art with HTML-elements for the Javadoc-export.
