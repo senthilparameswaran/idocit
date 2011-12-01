@@ -21,7 +21,7 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 /**
- * iDocIt! specific taglet "@thematicgrid.".
+ * iDocIt! specific taglet "@thematicgrid".
  * 
  * @author Jan Christian Krause
  *
