@@ -32,7 +32,7 @@ public class ThematicGridTaglet implements Taglet
 	@Override
 	public String getName()
 	{
-		return "thematicgrid.";
+		return "thematicgrid";
 	}
 
 	@Override
