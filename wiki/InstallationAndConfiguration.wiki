@@ -3,6 +3,16 @@
 
 = Installation =
 
+== Javadoc Taglets ==
+
+Download the idocittaglets.jar from our download-site and save it on your build-server. You have to extend command generating your Javadoc as follows:
+
+{{{
+javadoc [...] -taglet de.akra.idocit.java.javadocext.ThematicGridTaglet -tagletpath <YOUR_TAGLET_DIR>\idocittaglets.jar
+}}} 
+
+== Eclipse Installation ==
+
 *Prerequisites:*
  * Eclipse 3.6 (Helios) [http://www.eclipse.org/downloads/packages/eclipse-classic-362/heliossr2 Download]
 
