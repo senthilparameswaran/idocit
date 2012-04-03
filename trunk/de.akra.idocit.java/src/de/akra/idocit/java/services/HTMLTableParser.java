@@ -230,12 +230,6 @@ public class HTMLTableParser
 		 */
 		private Addressee currentAddressee;
 
-		/**
-		 * The name of last parsed tag. This is required to determine whether a line break
-		 * or a tab has been parsed at last (see method characters).
-		 */
-		private String lastTag;
-
 		private InputSource dtdInputSources;
 
 		public HTMLTableHandler(InputSource dtdInputSource)
@@ -364,8 +358,6 @@ public class HTMLTableParser
 		public void startElement(String uri, String localName, String qName,
 				Attributes attributes) throws SAXException
 		{
-			lastTag = qName;
-
 			if (HTML_TAG_TABLE.equals(qName))
 			{
 				String name = attributes.getValue(HTML_ATTRIBUTE_NAME);
@@ -380,15 +372,13 @@ public class HTMLTableParser
 			{
 				currentColumn++;
 			}
-			else if (XML_TAG_BR.equals(lastTag))
+			else if (XML_TAG_BR.equals(qName))
 			{
 				appendValueToLastDocumentation(NEW_LINE);
-				lastTag = null;
 			}
-			else if (XML_TAG_TAB.equals(lastTag))
+			else if (XML_TAG_TAB.equals(qName))
 			{
 				appendValueToLastDocumentation(CHAR_TAB);
-				lastTag = null;
 			}
 		}
 
@@ -445,7 +435,6 @@ public class HTMLTableParser
 			this.currentDoc = null;
 			this.currentColumn = 0;
 			this.documentations = Collections.emptyList();
-			this.lastTag = null;
 			this.lastValue = LAST_VALUE.NONE;
 			this.startTableParsing = false;
 		}
