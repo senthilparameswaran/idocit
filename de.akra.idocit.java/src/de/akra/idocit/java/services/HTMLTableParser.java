@@ -62,13 +62,15 @@ public class HTMLTableParser
 
 	public static final String XML_TAG_TAB = "tab";
 	public static final String XML_TAG_BR = "br";
+	private static final String NEW_LINE = System.getProperty("line.separator");
+	private static final String CHAR_TAB = "\t";
 
 	/**
 	 * Logger.
 	 */
 	private static Logger logger = Logger.getLogger(HTMLTableParser.class.getName());
 	
-	private static final HTMLTableHandler handler = new HTMLTableHandler(readDTDs());
+	private static final HTMLTableHandler handler = new HTMLTableHandler();
 	
 	/**
 	 * Replaces HTML-entities of special characters and <br/>
@@ -82,10 +84,8 @@ public class HTMLTableParser
 	private static String unescapeHtml(String escapedText)
 	{
 		String unescapedHtml = StringEscapeUtils.unescapeHtml4(escapedText);
-
-		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_BR, "\n");
-		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_TAB, "\t");
-
+		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_BR, NEW_LINE);
+		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_TAB, CHAR_TAB);
 		return unescapedHtml;
 	}
 
@@ -113,6 +113,7 @@ public class HTMLTableParser
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
 
+		handler.setDtdInputSources(readDTDs());
 		saxParser.parse(
 				new ByteArrayInputStream(xml.toString()
 						.getBytes(Charset.forName("UTF-8"))), handler);
@@ -125,7 +126,8 @@ public class HTMLTableParser
 	}
 
 	/**
-	 * Reads the XML DTDs and combines them to an InputSource.
+	 * Reads the XML DTDs and combines them to an InputSource. The DTDs must be read
+	 * always before they are used, as the file handler closes after each parsing process.
 	 * 
 	 * @return The XML DTDs and combines them to an InputSource
 	 */
@@ -140,7 +142,6 @@ public class HTMLTableParser
 
 		SequenceInputStream sequence1 = new SequenceInputStream(xhtmlSpecial, xhtmlSymbol);
 		SequenceInputStream sequence = new SequenceInputStream(xhtmlLat1, sequence1);
-
 		return new InputSource(sequence);
 	}
 
@@ -157,7 +158,6 @@ public class HTMLTableParser
 	private static List<Documentation> unescapeDocumentationTexts(
 			List<Documentation> escapedDocumentations)
 	{
-
 		if (escapedDocumentations != null)
 		{
 			for (Documentation documentation : escapedDocumentations)
@@ -178,7 +178,6 @@ public class HTMLTableParser
 				documentation.setDocumentation(documentationUnescapedTexts);
 			}
 		}
-
 		return escapedDocumentations;
 	}
 
@@ -199,8 +198,6 @@ public class HTMLTableParser
 		private static final String ELEMENT = "Element:";
 		private static final String ROLE = "Role:";
 		private static final String SCOPE = "Scope:";
-		private static final String NEW_LINE = System.getProperty("line.separator");
-		private static final String CHAR_TAB = "\t";
 
 		/**
 		 * The list of converted {@link Documentation}s.
@@ -232,9 +229,9 @@ public class HTMLTableParser
 
 		private InputSource dtdInputSources;
 
-		public HTMLTableHandler(InputSource dtdInputSource)
+		public void setDtdInputSources(InputSource dtdInputSources)
 		{
-			this.dtdInputSources = dtdInputSource;
+			this.dtdInputSources = dtdInputSources;
 		}
 
 		/**
@@ -407,19 +404,6 @@ public class HTMLTableParser
 			return documentations;
 		}
 
-		/**
-		 * The last found value determines what will come next and what should be done.
-		 * 
-		 * @author Dirk Meier-Eickhoff
-		 * @since 0.0.1
-		 * @version 0.0.1
-		 * 
-		 */
-		private enum LAST_VALUE
-		{
-			ELEMENT, ROLE, ADDRESSEE, SCOPE, NONE;
-		}
-
 		@Override
 		public InputSource resolveEntity(String name, String publicId, String baseURI,
 				String systemId) throws SAXException, IOException
@@ -437,6 +421,19 @@ public class HTMLTableParser
 			this.documentations = Collections.emptyList();
 			this.lastValue = LAST_VALUE.NONE;
 			this.startTableParsing = false;
+		}
+		
+		/**
+		 * The last found value determines what will come next and what should be done.
+		 * 
+		 * @author Dirk Meier-Eickhoff
+		 * @since 0.0.1
+		 * @version 0.0.1
+		 * 
+		 */
+		private enum LAST_VALUE
+		{
+			ELEMENT, ROLE, ADDRESSEE, SCOPE, NONE;
 		}
 	}
 }
