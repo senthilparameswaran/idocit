@@ -363,7 +363,7 @@ public class DisplayRecommendedRolesComposite
 		rolesTree.removeMenuDetectListener(menuDetectListener);
 		menuItemSetReferenceGrid
 				.removeSelectionListener(menuItemSetReferenceGridSelectionListener);
-		menuItemSetReferenceGrid
+		menuItemUnsetReferenceGrid
 				.removeSelectionListener(menuItemUnsetReferenceGridSelectionListener);
 		rolesTree.removeTreeListener(treeCollapseListener);
 	}
