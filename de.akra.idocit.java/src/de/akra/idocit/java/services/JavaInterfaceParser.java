@@ -293,8 +293,8 @@ public class JavaInterfaceParser
 
 		for (BodyDeclaration bodyDec : bodyDeclarations)
 		{
-			// only public elements are processed
-			if (ReflectionHelper.isPublic(bodyDec.getModifiers()))
+			// only public elements are processed. In Java interfaces everything is public.
+			if (ReflectionHelper.isPublic(bodyDec.getModifiers()) || CATEGORY_INTERFACE.equals(category))
 			{
 				switch (bodyDec.getNodeType())
 				{
@@ -322,18 +322,14 @@ public class JavaInterfaceParser
 				}
 				case ASTNode.METHOD_DECLARATION:
 				{
-					MethodDeclaration methodDec = (MethodDeclaration) bodyDec;
-					if (ReflectionHelper.isPublic(methodDec.getModifiers()))
+					if (operations == Collections.EMPTY_LIST)
 					{
-						if (operations == Collections.EMPTY_LIST)
-						{
-							// init with number of all field, method, enum,
-							// class etc.
-							// declarations to avoid resizing of the array
-							operations = new ArrayList<Operation>(bodyDeclarations.size());
-						}
-						operations.add(processMethodDeclaration(jInterface, methodDec));
+						// init with number of all declarations for fields, methods,
+						// enumerations, classes etc. to avoid resizing of the array
+						operations = new ArrayList<Operation>(bodyDeclarations.size());
 					}
+					MethodDeclaration methodDec = (MethodDeclaration) bodyDec;
+					operations.add(processMethodDeclaration(jInterface, methodDec));
 					break;
 				}
 				}
