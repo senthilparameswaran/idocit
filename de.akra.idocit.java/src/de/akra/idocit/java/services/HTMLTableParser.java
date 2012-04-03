@@ -187,7 +187,7 @@ public class HTMLTableParser
 	 * 
 	 * @author Dirk Meier-Eickhoff
 	 * @since 0.0.1
-	 * @version 0.0.1
+	 * @version 0.0.2
 	 * 
 	 */
 	private static class HTMLTableHandler extends DefaultHandler2
@@ -199,6 +199,8 @@ public class HTMLTableParser
 		private static final String ELEMENT = "Element:";
 		private static final String ROLE = "Role:";
 		private static final String SCOPE = "Scope:";
+		private static final String NEW_LINE = System.getProperty("line.separator");
+		private static final String CHAR_TAB = "\t";
 
 		/**
 		 * The list of converted {@link Documentation}s.
@@ -249,13 +251,13 @@ public class HTMLTableParser
 		public void endElement(String uri, String localName, String qName)
 				throws SAXException
 		{
-			if (qName.equals(HTML_TAG_TR))
+			if (HTML_TAG_TR.equals(qName))
 			{
 				currentColumn = 0;
 				currentAddressee = null;
 				lastValue = LAST_VALUE.NONE;
 			}
-			else if (qName.equals(HTML_TAG_TABLE))
+			else if (HTML_TAG_TABLE.equals(qName ))
 			{
 				finishCurrentDocumentation();
 				startTableParsing = false;
@@ -295,37 +297,7 @@ public class HTMLTableParser
 				lastValue = LAST_VALUE.NONE;
 				break;
 			case ADDRESSEE:
-				if (currentColumn == 2)
-				{
-					String startedDocumentation = currentDoc.getDocumentation().get(
-							currentAddressee);
-
-					if (startedDocumentation != null)
-					{
-						StringBuilder builder = new StringBuilder(startedDocumentation);
-
-						if (XML_TAG_BR.equals(lastTag))
-						{
-							builder.append('\n');
-						}
-						else if (XML_TAG_TAB.equals(lastTag))
-						{
-							builder.append('\t');
-						}
-
-						builder.append(value);
-
-						startedDocumentation = builder.toString();
-					}
-					else
-					{
-						currentDoc.getAddresseeSequence().add(currentAddressee);
-						startedDocumentation = value;
-					}
-
-					currentDoc.getDocumentation().put(currentAddressee,
-							startedDocumentation);
-				}
+				appendValueToLastDocumentation(value);
 				break;
 			case NONE:
 				// ignore new lines etc.
@@ -357,6 +329,34 @@ public class HTMLTableParser
 		}
 
 		/**
+		 * Append the <code>value</code> to the documentation of the last found
+		 * {@link Addressee}.
+		 * 
+		 * @param value
+		 *            The documentation value to appen.
+		 */
+		private void appendValueToLastDocumentation(String value)
+		{
+			// append only if we are in the second column of the iDocIt! documentation
+			// table.
+			if (currentColumn == 2)
+			{
+				String startedDocumentation = currentDoc.getDocumentation().get(
+						currentAddressee);
+				if (startedDocumentation != null)
+				{
+					startedDocumentation += value;
+				}
+				else
+				{
+					currentDoc.getAddresseeSequence().add(currentAddressee);
+					startedDocumentation = value;
+				}
+				currentDoc.getDocumentation().put(currentAddressee, startedDocumentation);
+			}
+		}
+		
+		/**
 		 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String,
 		 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
 		 */
@@ -366,7 +366,7 @@ public class HTMLTableParser
 		{
 			lastTag = qName;
 
-			if (qName.equals(HTML_TAG_TABLE))
+			if (HTML_TAG_TABLE.equals(qName))
 			{
 				String name = attributes.getValue(HTML_ATTRIBUTE_NAME);
 				if (name != null && JavadocGenerator.IDOCIT_HTML_TABLE_NAME.equals(name))
@@ -376,9 +376,19 @@ public class HTMLTableParser
 					currentDoc.setScope(Scope.EXPLICIT);
 				}
 			}
-			else if (qName.equals(HTML_TAG_TD))
+			else if (HTML_TAG_TD.equals(qName))
 			{
 				currentColumn++;
+			}
+			else if (XML_TAG_BR.equals(lastTag))
+			{
+				appendValueToLastDocumentation(NEW_LINE);
+				lastTag = null;
+			}
+			else if (XML_TAG_TAB.equals(lastTag))
+			{
+				appendValueToLastDocumentation(CHAR_TAB);
+				lastTag = null;
 			}
 		}
 
