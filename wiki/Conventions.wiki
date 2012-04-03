@@ -3,6 +3,11 @@
 === IDE ===
 Our reference IDE is an English Eclipse 3.6 Helios.
 
+Additional recommended Eclipse Plug-ins are:
+* Subclipse 1.6.x
+* m2e (Maven Integration for Eclipse)
+** Tycho Project Configurators
+
 === Source Code Format ===
 We work with the source code format defined in the idocit_formatter.xml (available in the Downloads-section).
 
