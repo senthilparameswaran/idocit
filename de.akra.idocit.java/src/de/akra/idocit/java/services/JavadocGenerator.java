@@ -27,7 +27,6 @@ import org.eclipse.jdt.core.dom.TextElement;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.java.structure.JavadocTagElement;
 
 /**
@@ -35,7 +34,7 @@ import de.akra.idocit.java.structure.JavadocTagElement;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.2
+ * @version 0.0.3
  * 
  */
 public class JavadocGenerator
@@ -218,8 +217,7 @@ public class JavadocGenerator
 		for (Documentation doc : documentations)
 		{
 			// write only if there is something to write
-			if (doc.getScope() != null || doc.getThematicRole() != null
-					|| !doc.getDocumentation().isEmpty())
+			if (doc.getThematicRole() != null || !doc.getDocumentation().isEmpty())
 			{
 				tagChanged = true;
 				StringBuffer textElem = new StringBuffer();
@@ -242,11 +240,6 @@ public class JavadocGenerator
 					textElem.append("<tr><td>Role:</td><td>");
 					textElem.append(doc.getThematicRole().getName());
 					textElem.append("</td></tr>\n");
-				}
-
-				if (doc.getScope() == Scope.IMPLICIT)
-				{
-					textElem.append("<tr><td>Scope:</td><td>implicit</td></tr>\n");
 				}
 
 				Map<Addressee, String> docMap = doc.getDocumentation();

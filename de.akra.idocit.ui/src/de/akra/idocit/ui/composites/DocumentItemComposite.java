@@ -39,7 +39,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -56,7 +55,6 @@ import org.pocui.swt.composites.AbsComposite;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.RolesRecommendations;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.DescribedItemNameComparator;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
@@ -66,7 +64,7 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class DocumentItemComposite
@@ -88,8 +86,6 @@ public class DocumentItemComposite
 	private TabFolder addresseeTabFolder;
 
 	private Button btnThematicRole;
-
-	private Combo comboScope;
 
 	private Menu addresseesMenu;
 
@@ -119,11 +115,6 @@ public class DocumentItemComposite
 	 * {@link SelectionListener} for <code>comboThematicRole</code>.
 	 */
 	private SelectionListener btnThematicRoleSelectionListener;
-
-	/**
-	 * {@link SelectionListener} for <code>comboScope</code>.
-	 */
-	private SelectionListener comboScopeSelectionListener;
 
 	/**
 	 * {@link MenuListener} for the menu to add addressee-tabs.
@@ -195,18 +186,6 @@ public class DocumentItemComposite
 		Label labelThematicRole = new Label(themRoleContainer, SWT.NONE);
 		labelThematicRole.setText("Thematic Role:");
 		btnThematicRole = new Button(themRoleContainer, SWT.PUSH);
-
-		// create container for scope information
-		Composite scopeContainer = new Composite(container, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(20, 0, 0, 0)
-				.applyTo(scopeContainer);
-
-		Label labelScope = new Label(scopeContainer, SWT.NONE);
-		labelScope.setText("Scope:");
-
-		comboScope = new Combo(scopeContainer, SWT.READ_ONLY);
-		comboScope.setItems(new String[] { Scope.EXPLICIT.toString(),
-				Scope.IMPLICIT.toString() });
 
 		// create tab folder
 		addresseeTabFolder = new TabFolder(pvParent, SWT.NONE | SWT.RESIZE);
@@ -303,22 +282,6 @@ public class DocumentItemComposite
 			public void widgetDefaultSelected(SelectionEvent e)
 			{
 				widgetSelected(e);
-			}
-
-		};
-
-		comboScopeSelectionListener = new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				comboScopeSelectionChanged();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-				comboScopeSelectionChanged();
 			}
 
 		};
@@ -564,26 +527,6 @@ public class DocumentItemComposite
 		return changed;
 	}
 
-	/**
-	 * Updates the selection with the new selected item and invokes
-	 * {@link DocumentItemComposite#fireChangeEvent()}.
-	 */
-	private void comboScopeSelectionChanged()
-	{
-		// if nothing is selected in the combobox and ENTER is pressed, the
-		// index is -1
-		// and not usable for the application and so ignored
-		int selIndex = comboScope.getSelectionIndex();
-		if (selIndex >= 0)
-		{
-			DocumentItemCompositeSelection selection = getSelection();
-			Scope scope = Scope.fromString(comboScope.getItem(selIndex));
-			selection.getDocumentation().setScope(scope);
-
-			fireChangeEvent(comboScope);
-		}
-	}
-
 	@Override
 	protected void doSetSelection(DocumentItemCompositeSelection oldInSelection,
 			DocumentItemCompositeSelection newInSelection, Object sourceControl)
@@ -620,18 +563,6 @@ public class DocumentItemComposite
 
 		if (doc != null)
 		{
-			if (doc.getScope() != null)
-			{
-				comboScope.select(doc.getScope().ordinal());
-			}
-			else
-			{
-				// TODO make default selection dependent on if it is a
-				// Operation, Parameter or something else
-				// if not set, use EXPLICIT as default
-				comboScope.select(Scope.EXPLICIT.ordinal());
-			}
-
 			if (doc.getThematicRole() != null)
 			{
 				btnThematicRole.setText(doc.getThematicRole().getName());
@@ -871,7 +802,6 @@ public class DocumentItemComposite
 			text.addFocusListener(textFocusListener);
 			text.addModifyListener(textModifyListener);
 		}
-		comboScope.addSelectionListener(comboScopeSelectionListener);
 		btnThematicRole.addSelectionListener(btnThematicRoleSelectionListener);
 		addresseesMenu.addMenuListener(addresseesMenuListener);
 		addresseeTabFolder.addSelectionListener(addresseeTabFolderSelectionListener);
@@ -890,7 +820,6 @@ public class DocumentItemComposite
 			text.removeFocusListener(textFocusListener);
 			text.removeModifyListener(textModifyListener);
 		}
-		comboScope.removeSelectionListener(comboScopeSelectionListener);
 		btnThematicRole.removeSelectionListener(btnThematicRoleSelectionListener);
 		addresseesMenu.removeMenuListener(addresseesMenuListener);
 		addresseeTabFolder.removeSelectionListener(addresseeTabFolderSelectionListener);

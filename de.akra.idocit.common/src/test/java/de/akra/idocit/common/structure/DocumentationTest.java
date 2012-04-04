@@ -66,7 +66,6 @@ public class DocumentationTest
 			Documentation copiedDoc = sourceDoc.copy();
 			assertEquals(true, sourceDoc.equals(copiedDoc));
 
-			copiedDoc.setScope(Scope.IMPLICIT);
 			copiedDoc.getDocumentation().put(new Addressee("DEVELOPER"),
 					"other description");
 			assertEquals(false, sourceDoc.equals(copiedDoc));
@@ -81,7 +80,6 @@ public class DocumentationTest
 	public static Documentation createDocumentation()
 	{
 		Documentation newDoc = new Documentation();
-		newDoc.setScope(Scope.EXPLICIT);
 		newDoc.setThematicRole(new ThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("test.wsdl.CustomerService.find.input(Customer).Customer");

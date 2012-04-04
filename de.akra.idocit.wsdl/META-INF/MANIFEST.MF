@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: iDocIt! WSDL Support
 Bundle-SymbolicName: de.akra.idocit.wsdl;singleton:=true
-Bundle-Version: 0.0.3.qualifier
+Bundle-Version: 0.0.4.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.6.0",
  org.junit4;bundle-version="4.8.1",

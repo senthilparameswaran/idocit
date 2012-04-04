@@ -17,7 +17,6 @@ import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.structure.impl.TestInterface;
@@ -145,7 +144,6 @@ public class HTMLDocGeneratorTest
 	public static Documentation createDocumentation()
 	{
 		Documentation newDoc = new Documentation();
-		newDoc.setScope(Scope.EXPLICIT);
 		newDoc.setThematicRole(new ThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("test.wsdl.CustomerService.find.input(Customer).Customer");

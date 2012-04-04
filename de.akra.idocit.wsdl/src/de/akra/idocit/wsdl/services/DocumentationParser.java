@@ -31,7 +31,6 @@ import org.w3c.dom.NodeList;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.utils.DescribedItemUtils;
@@ -41,7 +40,7 @@ import de.akra.idocit.core.utils.DescribedItemUtils;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class DocumentationParser {
@@ -69,7 +68,6 @@ public class DocumentationParser {
 
 	private static final String ADDRESSEE_GROUP_ATTRIBUTE_NAME = "group";
 	private static final String ADDRESSEE_ELEMENT_NAME = "addressee";
-	private static final String THEMATIC_SCOPE_ATTRIBUTE_NAME = "scope";
 	private static final String THEMATIC_ROLE_ATTRIBUTE_NAME = "role";
 
 	/**
@@ -256,19 +254,6 @@ public class DocumentationParser {
 			ThematicRole role = DescribedItemUtils.findThematicRole(attr
 					.getNodeValue());
 			doc.setThematicRole(role);
-		}
-
-		if ((attr = attributes.getNamedItem(THEMATIC_SCOPE_ATTRIBUTE_NAME)) != null) {
-			logger.log(Level.FINE,
-					THEMATIC_SCOPE_ATTRIBUTE_NAME + "=\"" + attr.getNodeValue()
-							+ "\"");
-			try {
-				doc.setScope(Scope.fromString(attr.getNodeValue()));
-			} catch (IllegalArgumentException e) {
-				logger.log(Level.WARNING,
-						"Found unknown Scope \"" + attr.getNodeName()
-								+ "\". Scope will be not set.");
-			}
 		}
 
 		if ((attr = attributes

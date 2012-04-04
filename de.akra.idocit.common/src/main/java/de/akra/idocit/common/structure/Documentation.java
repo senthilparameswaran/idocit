@@ -28,7 +28,7 @@ import java.util.Set;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class Documentation
@@ -52,11 +52,6 @@ public class Documentation
 	 * The assigned thematic role.
 	 */
 	private ThematicRole thematicRole;
-
-	/**
-	 * The selected scope.
-	 */
-	private Scope scope;
 
 	/**
 	 * This represents the unique identifier (complete path) of a signature element.
@@ -86,7 +81,6 @@ public class Documentation
 	public final Documentation copy()
 	{
 		Documentation newDoc = new Documentation();
-		newDoc.setScope(scope);
 		newDoc.setThematicRole(thematicRole);
 		newDoc.setSignatureElementIdentifier(signatureElementIdentifier);
 
@@ -160,23 +154,6 @@ public class Documentation
 	}
 
 	/**
-	 * @return the scope
-	 */
-	public Scope getScope()
-	{
-		return scope;
-	}
-
-	/**
-	 * @param scope
-	 *            the scope to set
-	 */
-	public void setScope(Scope scope)
-	{
-		this.scope = scope;
-	}
-
-	/**
 	 * @param signatureElementIdentifier
 	 *            the signatureElementIdentifier to set
 	 */
@@ -207,7 +184,6 @@ public class Documentation
 				+ ((addresseeSequence == null) ? 0 : addresseeSequence.hashCode());
 		result = prime * result
 				+ ((documentation == null) ? 0 : documentation.hashCode());
-		result = prime * result + ((scope == null) ? 0 : scope.hashCode());
 		result = prime
 				* result
 				+ ((signatureElementIdentifier == null) ? 0 : signatureElementIdentifier
@@ -259,10 +235,6 @@ public class Documentation
 		{
 			return false;
 		}
-		if (scope != other.scope)
-		{
-			return false;
-		}
 		if (signatureElementIdentifier == null)
 		{
 			if (other.signatureElementIdentifier != null)
@@ -303,8 +275,6 @@ public class Documentation
 		builder.append(addresseeSequence);
 		builder.append(", thematicRole=");
 		builder.append(thematicRole);
-		builder.append(", scope=");
-		builder.append(scope);
 		builder.append(", signatureElementName=");
 		builder.append(signatureElementIdentifier);
 		builder.append("]");

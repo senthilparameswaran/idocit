@@ -38,7 +38,7 @@ import de.akra.idocit.common.structure.Documentation;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class DocumentationGenerator {
@@ -50,7 +50,6 @@ public class DocumentationGenerator {
 	private static final String SIGNATURE_ELEMENT_ATTRIBUTE_NAME = "signatureElement";
 	private static final String ADDRESSEE_GROUP_ATTRIBUTE_NAME = "group";
 	private static final String ADDRESSEE_ELEMENT_NAME = "addressee";
-	private static final String THEMATIC_SCOPE_ATTRIBUTE_NAME = "scope";
 	private static final String THEMATIC_ROLE_ATTRIBUTE_NAME = "role";
 
 	private static final String XML_TAG_TAB = "tab";
@@ -144,11 +143,6 @@ public class DocumentationGenerator {
 					.createElement(DocumentationParser.DOCPART_TAG_NAME);
 
 			// set attributes
-			if (documentation.getScope() != null) {
-				docpart.setAttribute(THEMATIC_SCOPE_ATTRIBUTE_NAME,
-						documentation.getScope().toString());
-			}
-
 			if (documentation.getThematicRole() != null) {
 				docpart.setAttribute(THEMATIC_ROLE_ATTRIBUTE_NAME,
 						documentation.getThematicRole().getName());
