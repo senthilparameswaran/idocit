@@ -37,7 +37,6 @@ import org.xml.sax.SAXException;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 
@@ -46,7 +45,7 @@ import de.akra.idocit.core.utils.DescribedItemUtils;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.2
+ * @version 0.0.3
  * 
  */
 public class JavadocParser
@@ -178,7 +177,6 @@ public class JavadocParser
 			for (TagElement tag : (List<TagElement>) javadoc.tags())
 			{
 				Documentation doc = new Documentation();
-				doc.setScope(Scope.EXPLICIT);
 				String comment = null;
 				if (tag.getTagName() == null)
 				{

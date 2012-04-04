@@ -42,7 +42,6 @@ import org.xml.sax.ext.DefaultHandler2;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 
@@ -51,7 +50,7 @@ import de.akra.idocit.core.utils.DescribedItemUtils;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class HTMLTableParser
@@ -197,7 +196,6 @@ public class HTMLTableParser
 		private static final String HTML_ATTRIBUTE_NAME = "name";
 		private static final String ELEMENT = "Element:";
 		private static final String ROLE = "Role:";
-		private static final String SCOPE = "Scope:";
 
 		/**
 		 * The list of converted {@link Documentation}s.
@@ -274,19 +272,6 @@ public class HTMLTableParser
 				currentDoc.setThematicRole(thematicRole);
 				lastValue = LAST_VALUE.NONE;
 				break;
-			case SCOPE:
-				try
-				{
-					Scope scope = Scope.fromString(value);
-					currentDoc.setScope(scope);
-				}
-				catch (IllegalArgumentException e)
-				{
-					logger.log(Level.WARNING, "Unknown scope \"" + value
-							+ "\" use Scope.EXPLICIT as default.");
-				}
-				lastValue = LAST_VALUE.NONE;
-				break;
 			case ADDRESSEE:
 				appendValueToLastDocumentation(value);
 				break;
@@ -301,10 +286,6 @@ public class HTMLTableParser
 					else if (value.equals(ROLE))
 					{
 						lastValue = LAST_VALUE.ROLE;
-					}
-					else if (value.equals(SCOPE))
-					{
-						lastValue = LAST_VALUE.SCOPE;
 					}
 					else
 					{
@@ -362,7 +343,6 @@ public class HTMLTableParser
 				{
 					startTableParsing = true;
 					currentDoc = new Documentation();
-					currentDoc.setScope(Scope.EXPLICIT);
 				}
 			}
 			else if (HTML_TAG_TD.equals(qName))

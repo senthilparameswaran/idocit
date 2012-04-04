@@ -11,13 +11,14 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * Converts the {@link Documentation}s from the signature elements to HTML.
  * 
  * @author Dirk Meier-Eickhoff
+ * @since 0.0.1
+ * @version 0.0.2
  * 
  */
 public class HTMLDocGenerator
@@ -192,10 +193,8 @@ public class HTMLDocGenerator
 		for (Documentation doc : documentations)
 		{
 			// write only if there is something to write
-			if (doc.getScope() != null || doc.getThematicRole() != null
-					|| !doc.getDocumentation().isEmpty())
+			if (doc.getThematicRole() != null || !doc.getDocumentation().isEmpty())
 			{
-
 				StringBuffer textElem = new StringBuffer();
 				textElem.append("<table border=\"1\" cellspacing=\"0\" width=\"100%\">");
 
@@ -211,11 +210,6 @@ public class HTMLDocGenerator
 					textElem.append("<tr><td width=\"20%\">Role:</td><td>");
 					textElem.append(doc.getThematicRole().getName());
 					textElem.append("</td></tr>\n");
-				}
-
-				if (doc.getScope() == Scope.IMPLICIT)
-				{
-					textElem.append("<tr><td width=\"20%\">Scope:</td><td>implicit</td></tr>\n");
 				}
 
 				Map<Addressee, String> docMap = doc.getDocumentation();
