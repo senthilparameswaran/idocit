@@ -46,20 +46,6 @@ public class JavadocGenerator
 	 */
 	public static final String IDOCIT_HTML_TABLE_NAME = "idocit";
 
-/**
-	 * HTML Quote for "<"
-	 * 
-	 * @since 0.0.2
-	 */
-	public static final String LESS_THAN_CODE = "&lt;";
-
-	/**
-	 * HTML Quote for ">"
-	 * 
-	 * @since 0.0.2
-	 */
-	public static final String GREATER_THAN_CODE = "&gt;";
-
 	public static final String XML_TAG_TAB = '<' + HTMLTableParser.XML_TAG_TAB + "/>";
 	public static final String XML_TAG_BR = '<' + HTMLTableParser.XML_TAG_BR + "/>";
 
@@ -94,19 +80,7 @@ public class JavadocGenerator
 
 	public static String quoteGenericsInIdentifier(String identifier)
 	{
-		int startIndex = identifier.indexOf('<');
-
-		// return identifier.replaceAll("<", LESS_THAN_CODE).replaceAll(">",
-		// GREATER_THAN_CODE);
-
-		if (startIndex >= 0)
-		{
-			return identifier.substring(0, startIndex);
-		}
-		else
-		{
-			return identifier;
-		}
+		return StringEscapeUtils.escapeHtml4(identifier);
 	}
 
 	/**

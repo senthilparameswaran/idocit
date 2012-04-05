@@ -118,9 +118,7 @@ public class HTMLTableParser
 						.getBytes(Charset.forName("UTF-8"))), handler);
 
 		List<Documentation> documentations = unescapeDocumentationTexts(handler.getDocumentations());
-		
 		handler.reset();
-		
 		return documentations;
 	}
 
@@ -246,7 +244,7 @@ public class HTMLTableParser
 				currentAddressee = null;
 				lastValue = LAST_VALUE.NONE;
 			}
-			else if (HTML_TAG_TABLE.equals(qName ))
+			else if (HTML_TAG_TABLE.equals(qName))
 			{
 				finishCurrentDocumentation();
 				startTableParsing = false;
@@ -264,8 +262,9 @@ public class HTMLTableParser
 			switch (lastValue)
 			{
 			case ELEMENT:
-				currentDoc.setSignatureElementIdentifier(value);
-				lastValue = LAST_VALUE.NONE;
+				String identifier = currentDoc.getSignatureElementIdentifier();
+				identifier = identifier == null ? value : identifier + value;
+				currentDoc.setSignatureElementIdentifier(identifier);
 				break;
 			case ROLE:
 				ThematicRole thematicRole = DescribedItemUtils.findThematicRole(value);
