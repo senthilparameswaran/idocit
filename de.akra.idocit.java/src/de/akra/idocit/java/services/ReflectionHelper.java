@@ -143,13 +143,11 @@ public class ReflectionHelper
 				deriveNumerus(typeBinding), hasPublicAccessableAttributes(typeBinding));
 		returnParameter.setIdentifier(identifier);
 		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
-		returnParameter.setDataTypeName(JavadocGenerator
-				.quoteGenericsInIdentifier(typeBinding.getName()));
+		returnParameter.setDataTypeName(typeBinding.getName());
 
 		String qTypeName = typeBinding.getQualifiedName();
 		qTypeName = qTypeName != null ? qTypeName : typeBinding.getName();
-		returnParameter.setQualifiedDataTypeName(JavadocGenerator
-				.quoteGenericsInIdentifier(qTypeName));
+		returnParameter.setQualifiedDataTypeName(qTypeName);
 
 		if (!reflectedTypes.contains(qTypeName))
 		{
