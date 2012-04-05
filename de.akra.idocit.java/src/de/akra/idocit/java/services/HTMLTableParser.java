@@ -22,10 +22,7 @@ import java.io.SequenceInputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +30,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -70,23 +66,6 @@ public class HTMLTableParser
 	private static Logger logger = Logger.getLogger(HTMLTableParser.class.getName());
 	
 	private static final HTMLTableHandler handler = new HTMLTableHandler();
-	
-	/**
-	 * Replaces HTML-entities of special characters and <br/>
-	 * - and <tab/>-elements with their corresponding character (e.g. <br/>
-	 * with \n).
-	 * 
-	 * @param escapedText
-	 *            The escaped test
-	 * @return The unescaped text
-	 */
-	private static String unescapeHtml(String escapedText)
-	{
-		String unescapedHtml = StringEscapeUtils.unescapeHtml4(escapedText);
-		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_BR, NEW_LINE);
-		unescapedHtml = unescapedHtml.replaceAll(JavadocGenerator.XML_TAG_TAB, CHAR_TAB);
-		return unescapedHtml;
-	}
 
 	/**
 	 * Parse the <code>html</code> String and converts each iDocIt! comment table into a
@@ -117,7 +96,7 @@ public class HTMLTableParser
 				new ByteArrayInputStream(xml.toString()
 						.getBytes(Charset.forName("UTF-8"))), handler);
 
-		List<Documentation> documentations = unescapeDocumentationTexts(handler.getDocumentations());
+		List<Documentation> documentations = handler.getDocumentations();
 		handler.reset();
 		return documentations;
 	}
@@ -140,42 +119,6 @@ public class HTMLTableParser
 		SequenceInputStream sequence1 = new SequenceInputStream(xhtmlSpecial, xhtmlSymbol);
 		SequenceInputStream sequence = new SequenceInputStream(xhtmlLat1, sequence1);
 		return new InputSource(sequence);
-	}
-
-	/**
-	 * Unescapes the documentation-texts for each addressee in the given list.
-	 * 
-	 * Please note: the given list is manipulated and returned for convenience.
-	 * 
-	 * @param escapedDocumentations
-	 *            The list of {@link Documentation}s to be escaped (and modified!!!)
-	 * 
-	 * @return The given, escaped list of documentations
-	 */
-	private static List<Documentation> unescapeDocumentationTexts(
-			List<Documentation> escapedDocumentations)
-	{
-		if (escapedDocumentations != null)
-		{
-			for (Documentation documentation : escapedDocumentations)
-			{
-				Map<Addressee, String> documentationTexts = documentation
-						.getDocumentation();
-				Map<Addressee, String> documentationUnescapedTexts = new HashMap<Addressee, String>();
-
-				for (Entry<Addressee, String> documentedText : documentationTexts
-						.entrySet())
-				{
-					String unescapedText = unescapeHtml(documentedText.getValue());
-
-					documentationUnescapedTexts.put(documentedText.getKey(),
-							unescapedText);
-				}
-
-				documentation.setDocumentation(documentationUnescapedTexts);
-			}
-		}
-		return escapedDocumentations;
 	}
 
 	/**
