@@ -10,23 +10,29 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.osgi.services;bundle-version="3.2.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: de.akra.idocit.common.constants,
- de.akra.idocit.common.factories,
- de.akra.idocit.common.services,
+ de.akra.idocit.common.factories;uses:="com.thoughtworks.xstream",
+ de.akra.idocit.common.services;uses:="de.akra.idocit.common.structure",
  de.akra.idocit.common.structure,
- de.akra.idocit.common.structure.impl,
- de.akra.idocit.common.utils,
+ de.akra.idocit.common.structure.impl;uses:="de.akra.idocit.common.structure",
+ de.akra.idocit.common.utils;uses:="de.akra.idocit.common.structure",
  de.akra.idocit.core;
   uses:="org.eclipse.jface.resource,
    org.eclipse.ui,
    org.eclipse.ui.plugin,
-   org.osgi.framework",
+   org.osgi.framework,
+   de.akra.idocit.core.listeners",
  de.akra.idocit.core.constants,
  de.akra.idocit.core.exceptions,
- de.akra.idocit.core.extensions;uses:="de.akra.idocit.core.structure,org.eclipse.core.resources",
+ de.akra.idocit.core.extensions;uses:="org.eclipse.core.resources,de.akra.idocit.common.structure",
  de.akra.idocit.core.listeners,
- de.akra.idocit.core.services,
- de.akra.idocit.core.services.impl,
- de.akra.idocit.core.utils
+ de.akra.idocit.core.services;uses:="org.eclipse.core.resources,de.akra.idocit.common.structure",
+ de.akra.idocit.core.services.impl;
+  uses:="de.akra.idocit.core.extensions,
+   org.eclipse.core.resources,
+   de.akra.idocit.core.services,
+   de.akra.idocit.common.services,
+   de.akra.idocit.common.structure",
+ de.akra.idocit.core.utils;uses:="de.akra.idocit.common.structure"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.akra.idocit.core.IDocItActivator
 Bundle-Vendor: AKRA GmbH
