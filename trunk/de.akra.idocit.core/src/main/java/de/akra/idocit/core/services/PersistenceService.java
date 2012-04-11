@@ -1,8 +1,22 @@
+/*******************************************************************************
+ * Copyright 2011 AKRA GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package de.akra.idocit.core.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -14,9 +28,17 @@ import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 
+/**
+ * Provides services to load and to write an {@link InterfaceArtifact}.
+ * 
+ * @author Dirk Meier-Eickhoff
+ * @since 0.0.1
+ * @version 0.0.2
+ * 
+ */
 public interface PersistenceService {
 
-	public abstract void init(InputStream defaultGrids);
+	public abstract void init();
 
 	/**
 	 * Loads the interface from the {@link IFile} <code>iFile</code> and returns

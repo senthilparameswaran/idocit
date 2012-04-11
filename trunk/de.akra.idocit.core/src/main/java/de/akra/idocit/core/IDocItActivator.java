@@ -15,7 +15,6 @@
  *******************************************************************************/
 package de.akra.idocit.core;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -28,8 +27,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -48,6 +45,7 @@ import de.akra.idocit.core.services.impl.EclipseParsingServiceInitializer;
 import de.akra.idocit.core.services.impl.EclipsePersistenceService;
 import de.akra.idocit.core.services.impl.ParsingService;
 import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.core.utils.ResourceUtils;
 
 /**
  * The {@link IStartup} of iDocIt!.
@@ -66,18 +64,6 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 * The plug-in ID
 	 */
 	public static final String PLUGIN_ID = "de.akra.idocit.ui"; //$NON-NLS-1$
-
-	/**
-	 * Path in the resource file for the stored thematic roles.
-	 */
-	private static final String ROLE_RESOURCE_FILE = "resources/roles.properties";
-
-	private static final String THEMATIC_GRIDS_RESOURCE_FILE = "resources/thematicgrids.xml";
-
-	/**
-	 * Path in the resource file for the stored addresses.
-	 */
-	private static final String ADDRESSEE_RESOURCE_FILE = "resources/addressees.properties";
 
 	private static final Set<IDocItInitializationListener> CONFIGURATION_LISTENERS = new HashSet<IDocItInitializationListener>();
 
@@ -196,24 +182,9 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 
 				try
 				{
-					// Thematic Grids
-					InputStream resourceInputStream = FileLocator.openStream(
-							plugin.getBundle(), new Path(THEMATIC_GRIDS_RESOURCE_FILE),
-							false);
-					ServiceManager.getInstance().getPersistenceService()
-							.init(resourceInputStream);
-
+					ServiceManager.getInstance().getPersistenceService().init();
 					initRoleBasedRules();
 					initGridBasedRules();
-				}
-				catch (FileNotFoundException e)
-				{
-					logger.log(Level.WARNING, e.getMessage(), e);
-				}
-				catch (IOException ioEx)
-				{
-					// TODO: Route exception to Eclipse Platform
-					throw new RuntimeException(ioEx);
 				}
 				catch (UnitializedIDocItException e)
 				{
@@ -223,7 +194,6 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 				finally
 				{
 					initializedAtStartup = true;
-
 					fireChangeEvent(false);
 				}
 			}
@@ -283,6 +253,7 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 */
 	public void start(BundleContext context) throws Exception
 	{
+		logger.log(Level.INFO, "Start plugin " + PLUGIN_ID);
 		super.start(context);
 		plugin = this;
 	}
@@ -292,6 +263,7 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 */
 	public void stop(BundleContext context) throws Exception
 	{
+		logger.log(Level.INFO, "Stop plugin " + PLUGIN_ID);
 		plugin = null;
 		super.stop(context);
 	}
@@ -329,10 +301,9 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 */
 	private PropertyResourceBundle getResourceBundle(String resourceBundleFile)
 	{
+		InputStream resourceInputStream = ResourceUtils.getResourceInputStream(resourceBundleFile);
 		try
 		{
-			InputStream resourceInputStream = FileLocator.openStream(getBundle(),
-					new Path(resourceBundleFile), false);
 			return new PropertyResourceBundle(resourceInputStream);
 		}
 		catch (IOException ioEx)
@@ -348,7 +319,7 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 */
 	public PropertyResourceBundle getThematicRoleResourceBundle()
 	{
-		return getResourceBundle(ROLE_RESOURCE_FILE);
+		return getResourceBundle(ResourceUtils.ROLE_RESOURCE_FILE);
 	}
 
 	/**
@@ -357,7 +328,7 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 */
 	public PropertyResourceBundle getAddresseeResourceBundle()
 	{
-		return getResourceBundle(ADDRESSEE_RESOURCE_FILE);
+		return getResourceBundle(ResourceUtils.ADDRESSEE_RESOURCE_FILE);
 	}
 
 	public static boolean isInitializedAtStartup()

@@ -57,13 +57,14 @@ import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
 import de.akra.idocit.core.services.PersistenceService;
+import de.akra.idocit.core.utils.ResourceUtils;
 
 /**
  * Provides services to load and to write an {@link InterfaceArtifact}.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class EclipsePersistenceService implements PersistenceService
@@ -83,7 +84,7 @@ public class EclipsePersistenceService implements PersistenceService
 	private static Logger logger = Logger.getLogger(EclipsePersistenceService.class
 			.getName());
 
-	private InputStream defaultThematicGrids = null;
+	private boolean isInitialized = false;
 
 	/*
 	 * (non-Javadoc)
@@ -91,10 +92,10 @@ public class EclipsePersistenceService implements PersistenceService
 	 * @see de.akra.idocit.core.services.impl.PersistenceService#init(java.io.InputStream)
 	 */
 	@Override
-	public void init(InputStream defaultGrids)
+	public void init()
 	{
-		defaultThematicGrids = defaultGrids;
-		logger.info("The PersistenceService is now initialized with an input-stream to the default thematic grids.");
+		isInitialized = true;
+		logger.info("The PersistenceService is now initialized.");
 	}
 
 	/*
@@ -253,6 +254,7 @@ public class EclipsePersistenceService implements PersistenceService
 	@Override
 	public void persistAddressees(List<Addressee> addressees)
 	{
+		logger.fine("persist Addresses");
 		// TODO delete old entries from preference store
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 		XStream stream = configureXStreamForAddressee();
@@ -277,6 +279,7 @@ public class EclipsePersistenceService implements PersistenceService
 	@Override
 	public void persistThematicRoles(List<ThematicRole> roles)
 	{
+		logger.fine("persist ThematicRoles");
 		// TODO delete old entries from preference store
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 		XStream stream = XStreamFactory.configureXStreamForThematicRoles();
@@ -502,21 +505,21 @@ public class EclipsePersistenceService implements PersistenceService
 				List<ThematicGrid> grids = (List<ThematicGrid>) XStreamFactory
 						.configureXStreamForThematicGrid()
 						.fromXML(verbClassRoleAssocsXML);
-
 				return removeFormattingCharsThematicGrids(grids);
 			}
 			catch (XStreamException e)
 			{
 				logger.log(Level.SEVERE, e.getMessage());
-
 				throw new RuntimeException(
 						"The preference store of this workspace contains no configured thematic grids, but it is expected to do so! It is recommended to setup a new, consistent workspace.");
 			}
 		}
 		else
 		{
-			if (defaultThematicGrids != null)
+			if (isInitialized)
 			{
+				InputStream defaultThematicGrids = ResourceUtils
+						.getResourceInputStream(ResourceUtils.THEMATIC_GRIDS_RESOURCE_FILE);
 				List<ThematicGrid> defaultGrids = (List<ThematicGrid>) XStreamFactory
 						.configureXStreamForThematicGrid().fromXML(defaultThematicGrids);
 
@@ -528,7 +531,7 @@ public class EclipsePersistenceService implements PersistenceService
 			else
 			{
 				throw new UnitializedIDocItException(
-						"The PersistenceService has not been initialized yet. The required input-stream to the default thematic roles is still null.");
+						"The PersistenceService has not been initialized yet.");
 			}
 		}
 	}
@@ -543,6 +546,7 @@ public class EclipsePersistenceService implements PersistenceService
 	@Override
 	public void persistThematicGrids(List<ThematicGrid> verbClassRoleAssociations)
 	{
+		logger.fine("persist ThematicGrids");
 		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 
 		XStream xs = XStreamFactory.configureXStreamForThematicGrid();
