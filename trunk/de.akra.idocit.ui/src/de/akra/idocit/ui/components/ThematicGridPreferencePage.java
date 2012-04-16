@@ -70,7 +70,7 @@ public class ThematicGridPreferencePage
 	@Override
 	public boolean isValid()
 	{
-		return !getSelection().isNameExists();
+		return getSelection() != null && !getSelection().isNameExists();
 	}
 
 	/**
