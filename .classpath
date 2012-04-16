@@ -2,9 +2,16 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src/"/>
-	<classpathentry exported="true" kind="lib" path="libs/idocit.wsdl.wsdl4j.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/xercesImpl3263291.jar"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="libs/activation-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="libs/easywsdl-schema-2.1.jar" sourcepath="libs/easywsdl-schema-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="libs/easywsdl-wsdl-2.1.jar" sourcepath="libs/easywsdl-wsdl-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="libs/jaxb-api-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/jaxb-impl-2.1.10.jar"/>
+	<classpathentry kind="lib" path="libs/runtime-0.4.1.5.jar"/>
+	<classpathentry kind="lib" path="libs/stax-api-1.0-2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
+	<referencedentry exported="true" kind="lib" path="libs/easywsdl-schema-2.1.jar" sourcepath="X:/Projekte/iDocIt!/workspaces/trunk_clean/easywsdl-schema-2.1"/>
 </classpath>

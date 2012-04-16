@@ -15,10 +15,12 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.structure;
 
-import javax.wsdl.Fault;
-import javax.wsdl.Input;
-import javax.wsdl.Output;
-import javax.wsdl.WSDLElement;
+
+
+import org.ow2.easywsdl.wsdl.api.Fault;
+import org.ow2.easywsdl.wsdl.api.Input;
+import org.ow2.easywsdl.wsdl.api.Output;
+import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfParam;
 
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameters;
@@ -26,20 +28,20 @@ import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * This is a representation of an {@link Input}, {@link Output} or {@link Fault} element
- * embedded in an {@link javax.wsdl.Operation}.
+ * embedded in an {@link org.ow2.easywsdl.wsdl.api.Operation}.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLMessage extends Parameters
 {
 	/**
-	 * Reference to an embedded element for a message ({@link Input}, {@link Output} or
-	 * {@link Fault}) of an {@link javax.wsdl.Operation}.
+	 * Reference to the ({@link Input}, {@link Output} or {@link Fault}) of an
+	 * {@link org.ow2.easywsdl.wsdl.api.Operation}.
 	 */
-	private WSDLElement messageRef;
+	private AbsItfParam messageRef;
 
 	/**
 	 * Constructor.
@@ -86,19 +88,19 @@ public class WSDLMessage extends Parameters
 
 	/**
 	 * @param messageRef
-	 *            set the reference to an embedded element for a message ({@link Input},
-	 *            {@link Output} or {@link Fault}) of an {@link javax.wsdl.Operation}.
+	 *            set the reference to the ({@link Input}, {@link Output} or {@link Fault}
+	 *            ) of an {@link org.ow2.easywsdl.wsdl.api.Operation}.
 	 */
-	public void setMessageRef(WSDLElement messageRef)
+	public void setMessageRef(AbsItfParam messageRef)
 	{
 		this.messageRef = messageRef;
 	}
 
 	/**
-	 * @return the reference to an embedded message ({@link Input}, {@link Output} or
-	 *         {@link Fault}) of an {@link javax.wsdl.Operation}.
+	 * @return the reference to the ({@link Input}, {@link Output} or {@link Fault}) of an
+	 *         {@link org.ow2.easywsdl.wsdl.api.Operation}.
 	 */
-	public WSDLElement getMessageRef()
+	public AbsItfParam getMessageRef()
 	{
 		return messageRef;
 	}

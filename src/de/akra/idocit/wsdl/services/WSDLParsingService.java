@@ -17,20 +17,32 @@ package de.akra.idocit.wsdl.services;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.wsdl.Message;
-import javax.wsdl.Part;
-import javax.wsdl.Types;
-import javax.wsdl.extensions.schema.Schema;
 import javax.xml.namespace.QName;
 
+import org.ow2.easywsdl.schema.api.Choice;
+import org.ow2.easywsdl.schema.api.ComplexContent;
+import org.ow2.easywsdl.schema.api.ComplexType;
+import org.ow2.easywsdl.schema.api.Element;
+import org.ow2.easywsdl.schema.api.Extension;
+import org.ow2.easywsdl.schema.api.Schema;
+import org.ow2.easywsdl.schema.api.SchemaElement;
+import org.ow2.easywsdl.schema.api.Sequence;
+import org.ow2.easywsdl.schema.api.SimpleType;
+import org.ow2.easywsdl.schema.api.Type;
+import org.ow2.easywsdl.schema.api.XmlException;
+import org.ow2.easywsdl.wsdl.api.Part;
+import org.ow2.easywsdl.wsdl.api.Types;
+import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfParam;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * Provides operations for the extraction of information from WSDL-files.
@@ -40,6 +52,8 @@ import de.akra.idocit.common.structure.Delimiters;
  */
 public final class WSDLParsingService
 {
+	private static Logger logger = Logger.getLogger(WSDLParsingService.class.getName());
+	
 	// Constants
 	private static final String TYPE_NAME_NO_DEFINITION = "no_definition";
 	private static final String TYPE_NAME_RECURSION = "[recursion]";
@@ -112,13 +126,14 @@ public final class WSDLParsingService
 	 * </p>
 	 * 
 	 * @param wsdlMessage
-	 *            The {@link Message} to extract the type structure from
+	 *            The {@link AbsItfParam} (input, output or fault element) to extract the 
+	 *            type structure from.
 	 * @param types
 	 *            The {@link Types} in the WSDL file.
 	 * 
 	 * @return The {@link List} of type paths
 	 */
-	public static List<String> extractRoles(Message wsdlMessage, Types types,
+	public static List<String> extractRoles(AbsItfParam wsdlMessage, Types types,
 			Delimiters delimiters)
 	{
 		List<String> result = new ArrayList<String>();
@@ -127,60 +142,58 @@ public final class WSDLParsingService
 		if ((wsdlMessage != null) && (wsdlMessage.getParts() != null)
 				&& !wsdlMessage.getParts().isEmpty())
 		{
-			for (Object partObject : wsdlMessage.getParts().entrySet())
+			for (Part part : wsdlMessage.getParts())
 			{
-				@SuppressWarnings("unchecked")
-				Entry<QName, Part> partEntry = (Entry<QName, Part>) partObject;
-				Part part = partEntry.getValue();
 
 				// 1. Generate the path to the Part ...
-				String localPartName = (part.getElementName() != null) ? part
-						.getElementName().getLocalPart()
-						: part.getTypeName() != null ? part.getTypeName().getLocalPart()
-								: part.getName();
-				String path = wsdlMessage.getQName().getLocalPart()
-						+ delimiters.pathDelimiter + part.getName()
-						+ delimiters.typeDelimiter + localPartName;
+				String localPartName = (part.getPartQName() != null) ? part
+						.getPartQName().getLocalPart() : part.getType() != null
+						&& part.getType().getQName() != null ? part.getType().getQName()
+						.getLocalPart() : part.getElement() != null
+						&& part.getElement().getQName() != null ? part.getElement()
+						.getQName().getLocalPart()
+						: SignatureElement.ANONYMOUS_IDENTIFIER;
+				logger.fine("localPartName: " + localPartName);
+								
+				String path = wsdlMessage.getMessageName().getLocalPart()
+						+ delimiters.pathDelimiter + localPartName
+						+ delimiters.typeDelimiter + (part.getType() != null
+								&& part.getType().getQName() != null ? part.getType().getQName()
+										.getLocalPart() : part.getElement() != null
+										&& part.getElement().getQName() != null ? part.getElement()
+										.getQName().getLocalPart() : SignatureElement.ANONYMOUS_IDENTIFIER);
+				logger.fine("path: " + path);
 
-				// ... and append a dot, if the Part has a simple type as type.
-				if (!isSimpleType(localPartName) && (types != null))
-				{
-					path += delimiters.pathDelimiter;
-					List<Node> schemata = new ArrayList<Node>();
+				Type typeNode = null;
+				if (part.getElement() != null) {
+					Element elem = part.getElement();
+					path = path + delimiters.pathDelimiter
+							+ elem.getQName().getLocalPart() + delimiters.typeDelimiter;
+					
+					typeNode = elem.getType();
 
-					// 2. Collect all schema-nodes in one list, ...
-					for (Object schemaObj : types.getExtensibilityElements())
-					{
-						if (schemaObj instanceof Schema)
-						{
-							Schema schema = (Schema) schemaObj;
-
-							schemata.add(schema.getElement());
-						}
-					}
-
-					int i = 0;
-					Node typeNode = null;
-
-					// ... get the node which declares the type of the current
-					// Part
-					// ...
-					while ((i < schemata.size()) && (typeNode == null))
-					{
-						typeNode = findTypeDeclarationNode(schemata.get(i), localPartName);
-						i++;
-					}
-
-					// ... and extract its flat structure.
 					if (typeNode != null)
 					{
-						List<String> childPaths = extractFlatMessageStructure(typeNode,
-								schemata, new HashSet<String>(), delimiters);
+						path += elem.getType().getQName().getLocalPart();
+					}
+					else
+					{
+						path += TYPE_NAME_ANONYMOUS;
+					}
+				}
+				
+				// ... and append a dot, if the Part has not a simple type as type.
+				if (typeNode != null && ComplexType.class.isAssignableFrom(typeNode.getClass()))
+				{
+					path += delimiters.pathDelimiter;
 
-						for (String childPpath : childPaths)
-						{
-							result.add(path + childPpath);
-						}
+					// ... and extract its flat structure.
+					List<String> childPaths = extractFlatMessageStructure(typeNode,
+							new HashSet<String>(), delimiters);
+
+					for (String childPpath : childPaths)
+					{
+						result.add(path + childPpath);
 					}
 				}
 				else
@@ -191,7 +204,7 @@ public final class WSDLParsingService
 		}
 		else
 		{
-			String path = wsdlMessage.getQName().getLocalPart();
+			String path = wsdlMessage.getName();
 			result.add(path);
 		}
 
@@ -209,63 +222,135 @@ public final class WSDLParsingService
 	 *            The type-name of the {@link Node} to look for
 	 * @return The {@link Node} with name <code>localTypeName</code>
 	 */
-	private static Node findTypeDeclarationNode(Node tree, String localTypeName)
+	private static Element findTypeDeclarationNode(Element tree, String localTypeName)
 	{
-		// 1. Case: we have an element and have to look for the name.
-		if ((isElementOrComplexType(tree) || isSimpleType(tree.getLocalName()))
-				&& getNameAttribute(tree).equals(localTypeName))
-		{
+		
+		Type type = tree.getType();
+		
+//		 1. Case: we have an element and have to look for the name.
+		if(tree.getQName().getLocalPart().equals(localTypeName)) {
 			return tree;
+		} else if (SimpleType.class.isAssignableFrom(type.getClass())) {
+			SimpleType sType = (SimpleType)type;
+			
+			sType.getQName();
+			
 			// 2. Case: we have a one-node-tree
-		}
-		else if (!tree.hasChildNodes())
-		{
 			return null;
+		}
+		else if (ComplexType.class.isAssignableFrom(type.getClass())) {
 			// 3. Case: the current node is not the right one, but maybe one of
-			// its
-			// children.
-		}
-		else
-		{
-			NodeList children = tree.getChildNodes();
-
-			Node typeNode = null;
-			int i = 0;
-
-			while ((i < children.getLength()) && (typeNode == null))
-			{
-				typeNode = findTypeDeclarationNode(children.item(i), localTypeName);
-				i++;
+			// its children.
+			
+			ComplexType cType = (ComplexType)type;
+			logger.info(""+cType.hasChoice());
+			logger.info(""+cType.hasComplexContent());
+			logger.info(""+cType.hasSequence());
+			logger.info(""+cType.hasSimpleContent());
+			Element typeNode = null;
+			
+			if(cType.hasChoice()) {
+				Choice choice = cType.getChoice();
+				
+				Iterator<Element> elemIter = choice.getElements().iterator(); 
+				while(elemIter.hasNext() && typeNode == null) {
+					Element elem = elemIter.next();
+					typeNode = findTypeDeclarationNode(elem, localTypeName);
+				}
+				return typeNode;
+				
+			} else if(cType.hasSequence()) {
+				Sequence sequence = cType.getSequence();
+				
+				Iterator<Element> elemIter = sequence.getElements().iterator(); 
+				while(elemIter.hasNext() && typeNode == null) {
+					Element elem = elemIter.next();
+					typeNode = findTypeDeclarationNode(elem, localTypeName);
+				}
+				return typeNode;
+				
+			}else if(cType.hasComplexContent()) {
+				ComplexContent complexContent = cType.getComplexContent();
+				Extension ex = complexContent.getExtension();
+				logger.info(ex.getBase().getQName().toString());
+				ex.getSequence();
+				
+			}else if(cType.hasSimpleContent()) {
+				Extension ex = cType.getSimpleContent().getExtension();
+				logger.info(ex.getBase().getQName().toString());
 			}
+		}
+		
+//		 1. Case: we have an element and have to look for the name.
+//		if ((isElementOrComplexType(tree) || isSimpleType(tree.getQName().getLocalPart()))
+//				&& getNameAttribute(tree).equals(localTypeName))
+//		{
+//			return tree;
+//		}
+//		else if (!tree.hasChildNodes())
+//		{
+//			// 2. Case: we have a one-node-tree
+//			return null;
+//		}
+//		else
+//		{
+//			// 3. Case: the current node is not the right one, but maybe one of
+//			// its children.
+//			NodeList children = tree.getChildNodes();
+//
+//			Node typeNode = null;
+//			int i = 0;
+//
+//			while ((i < children.getLength()) && (typeNode == null))
+//			{
+//				typeNode = findTypeDeclarationNode(children.item(i), localTypeName);
+//				i++;
+//			}
+//
+//			return typeNode;
+//		}
+		
+		return null;
+	}
 
-			return typeNode;
+	private static String getNameAttribute(SchemaElement tree)
+	{
+		String name = TYPE_NAME_ANONYMOUS;
+		try
+		{
+			// TODO check if we get here the correct name
+			String tmpName;
+			if ((tmpName = tree.getOtherAttributes().get(new QName(XML_ATTRIBUTE_NAME))) != null)
+			{
+				name = tmpName;
+			}
+			return name;
+		}
+		catch (XmlException e)
+		{
+			logger.log(Level.WARNING, "Failed to retrieve element's atttributes.", e);
+			return null;
 		}
 	}
 
-	private static String getNameAttribute(Node tree)
+	private static boolean isElementOrComplexType(Element tree)
 	{
-		if (tree.getAttributes() != null)
-		{
-			Node name = tree.getAttributes().getNamedItem(XML_ATTRIBUTE_NAME);
-
-			return (name != null) ? name.getNodeValue() : TYPE_NAME_ANONYMOUS;
-		}
-		else
-		{
-			return TYPE_NAME_ANONYMOUS;
-		}
-	}
-
-	private static boolean isElementOrComplexType(Node tree)
-	{
-		return XML_ELEMENT.equalsIgnoreCase(String.valueOf(tree.getLocalName()))
+		return XML_ELEMENT.equalsIgnoreCase(String.valueOf(tree.getQName().getLocalPart()))
 				|| isNamedComplexType(tree);
 	}
 
-	private static boolean isNamedComplexType(Node tree)
+	private static boolean isNamedComplexType(Element tree)
 	{
-		return XML_COMPLEXTYPE.equalsIgnoreCase(String.valueOf(tree.getLocalName()))
-				&& (tree.getAttributes() != null) && (getNameAttribute(tree) != null);
+		try
+		{
+			return XML_COMPLEXTYPE.equalsIgnoreCase(String.valueOf(tree.getQName().getLocalPart()))
+					&& (tree.getOtherAttributes() != null) && (getNameAttribute(tree) != null);
+		}
+		catch (XmlException e)
+		{
+			logger.log(Level.WARNING, "Failed to retrieve element's atttributes.", e);
+			return false;
+		}
 	}
 
 	/**
@@ -300,124 +385,270 @@ public final class WSDLParsingService
 		}
 	}
 
-	private static boolean isSimpleType(Node node)
+	private static boolean isSimpleType(Type node)
 	{
-		return (node != null) && isSimpleType(node.getLocalName());
+		return (node != null) && isSimpleType(node.getQName().getLocalPart());
 	}
 
 	/**
 	 * Extracts the flat-message structure as specified in the documentation of {@link
-	 * this#extractRoles(Message, Types)}.
+	 * this#extractRoles(AbsItfParam, Types, Delimiters)}.
 	 * 
 	 * @param node
 	 *            The tree to look in
 	 * 
 	 * @return The flat-message structure
 	 */
-	private static List<String> extractFlatMessageStructure(Node node,
-			List<Node> schemata, Set<String> visitedTypes, Delimiters delimiters)
+	private static List<String> extractFlatMessageStructure(Type type,
+			Set<String> visitedTypes, Delimiters delimiters)
 	{
+		// TODO extract flat structure dependent on the instantiated class...
 		List<String> result = new ArrayList<String>();
-		// At first derive the type name ...
-		String typeName = deriveTypeName(node, delimiters);
-		boolean isSimpleType = isSimpleType(typeName);
-		boolean isVisitedType = visitedTypes.contains(typeName);
-
-		visitedTypes.add(typeName);
-
-		// ... and check if we have a simple type. (1st case)
-		if (isSimpleType)
-		{
-			// Ok, we have to add this element to our result.
-			String elementName = getNameAttribute(node);
-
-			result.add(elementName + delimiters.typeDelimiter + typeName);
-			// 2nd case: do we have a recursive type definition?
+		
+		if (SimpleType.class.isAssignableFrom(type.getClass())) {
+			
+			result.add(elementName + delimiters.typeDelimiter
+//					+ getNameAttribute(typeDeclarationNode));
+			
+			SimpleType sType = (SimpleType)type;
+			
+			sType.getQName();
+			
+			// 2. Case: we have a one-node-tree
+			return null;
 		}
-		else if (isVisitedType && !TYPE_NAME_ANONYMOUS.equals(typeName))
-		{
-			// Ok, we have to add this element to our result and stop recursion.
-			String elementName = getNameAttribute(node);
-
-			result.add(elementName + delimiters.typeDelimiter + typeName
-					+ TYPE_NAME_RECURSION);
-		}
-		else
-		{
-			// No? Well, then we have to analyse all child-nodes.
-			List<String> allChildPaths = new ArrayList<String>();
-			Node typeDeclarationNode = null;
-
-			if (TYPE_NAME_ANONYMOUS.equals(typeName))
-			{
-				NodeList childNodes = node.getChildNodes();
-
-				// Get the paths of the child-nodes ...
-				for (int i = 0; i < childNodes.getLength(); i++)
-				{
-					Node childNode = childNodes.item(i);
-
-					allChildPaths.addAll(extractFlatMessageStructure(childNode, schemata,
-							visitedTypes, delimiters));
+		else if (ComplexType.class.isAssignableFrom(type.getClass())) {
+			// 3. Case: the current node is not the right one, but maybe one of
+			// its children.
+			
+			ComplexType cType = (ComplexType)type;
+			logger.info(""+cType.hasChoice());
+			logger.info(""+cType.hasComplexContent());
+			logger.info(""+cType.hasSequence());
+			logger.info(""+cType.hasSimpleContent());
+			Element typeNode = null;
+			
+			if(cType.hasChoice()) {
+				Choice choice = cType.getChoice();
+				
+				Iterator<Element> elemIter = choice.getElements().iterator(); 
+				while(elemIter.hasNext() && typeNode == null) {
+					Element elem = elemIter.next();
+					typeNode = findTypeDeclarationNode(elem, localTypeName);
 				}
+				return typeNode;
+				
+			} else if(cType.hasSequence()) {
+				Sequence sequence = cType.getSequence();
+				
+				Iterator<Element> elemIter = sequence.getElements().iterator(); 
+				while(elemIter.hasNext() && typeNode == null) {
+					Element elem = elemIter.next();
+					typeNode = findTypeDeclarationNode(elem, localTypeName);
+				}
+				return typeNode;
+				
+			}else if(cType.hasComplexContent()) {
+				ComplexContent complexContent = cType.getComplexContent();
+				Extension ex = complexContent.getExtension();
+				logger.info(ex.getBase().getQName().toString());
+				ex.getSequence();
+				
+			}else if(cType.hasSimpleContent()) {
+				Extension ex = cType.getSimpleContent().getExtension();
+				logger.info(ex.getBase().getQName().toString());
 			}
-			else
-			{
-				int i = 0;
-
-				while ((i < schemata.size()) && (typeDeclarationNode == null))
-				{
-					typeDeclarationNode = findTypeDeclarationNode(schemata.get(i),
-							typeName);
-					i++;
-				}
-
-				if (typeDeclarationNode != null)
-				{
-					allChildPaths.addAll(extractFlatMessageStructure(typeDeclarationNode,
-							schemata, visitedTypes, delimiters));
-				}
-			}
-
-			// This node has to be added to the result only if it is an element.
-			if (isElementOrComplexType(node))
-			{
-				// Parse only valid elements with a name.
-				String elementName = getNameAttribute(node);
-
-				// ... and concat them with the current element- and
-				// typename.
-				if (!allChildPaths.isEmpty())
-				{
-					for (String childPath : allChildPaths)
-					{
-						if (isNamedComplexType(node))
-						{
-							result.add(childPath);
-						}
-						else
-						{
-							result.add(elementName + delimiters.typeDelimiter + typeName
-									+ delimiters.pathDelimiter + childPath);
-						}
-					}
-				}
-				else if (isSimpleType(typeDeclarationNode))
-				{
-					result.add(elementName + delimiters.typeDelimiter
-							+ getNameAttribute(typeDeclarationNode));
-				}
-				else
-				{
-					result.add(elementName + delimiters.typeDelimiter
-							+ TYPE_NAME_NO_DEFINITION);
-				}
-			}
-			else
-			{
-				return allChildPaths;
-			}
-		}
+		
+		
+//		List<String> result = new ArrayList<String>();
+//		// At first derive the type name ...
+//		String typeName = node.getQName().getLocalPart();
+//		boolean isVisitedType = visitedTypes.contains(typeName);
+//		visitedTypes.add(typeName);
+//
+//		// ... and check if we have a simple type. (1st case)
+//		if(SimpleType.class.isAssignableFrom(node.getClass())) {
+//			// Ok, we have to add this element to our result.
+//			String elementName = node.getQName().getLocalPart();
+//
+//			result.add(elementName + delimiters.typeDelimiter + typeName);
+//		} 
+//		else if (isVisitedType && !TYPE_NAME_ANONYMOUS.equals(typeName))
+//		{
+//			// 2nd case: do we have a recursive type definition?
+//			// Ok, we have to add this element to our result and stop recursion.
+//			String elementName = getNameAttribute(node);
+//			result.add(elementName + delimiters.typeDelimiter + typeName
+//					+ TYPE_NAME_RECURSION);
+//		}
+//		else
+//		{
+//			// No? Well, then we have to analyse all child-nodes.
+//			List<String> allChildPaths = new ArrayList<String>();
+//			Type typeDeclarationNode = node;
+//
+//			if (TYPE_NAME_ANONYMOUS.equals(typeName))
+//			{
+//				
+//				logger.info(node.getQName().toString());
+////				NodeList childNodes = node.getChildNodes();
+////
+////				// Get the paths of the child-nodes ...
+////				for (int i = 0; i < childNodes.getLength(); i++)
+////				{
+////					Node childNode = childNodes.item(i);
+////
+////					allChildPaths.addAll(extractFlatMessageStructure(childNode, schemata,
+////							visitedTypes, delimiters));
+////				}
+//			}
+//			else
+//			{
+//				int i = 0;
+//
+////				while ((i < schemata.size()) && (typeDeclarationNode == null))
+////				{
+////					typeDeclarationNode = findTypeDeclarationNode(schemata.get(i),
+////							typeName);
+////					i++;
+////				}
+//
+//				if (typeDeclarationNode != null)
+//				{
+//					allChildPaths.addAll(extractFlatMessageStructure(typeDeclarationNode,
+//							visitedTypes, delimiters));
+//				}
+//			}
+//
+//			// This node has to be added to the result only if it is an element.
+//			if (ComplexType.class.isAssignableFrom(node.getClass())) {
+//				ComplexType cType = (ComplexType)node;
+//				
+//				
+//				
+//
+//				// Parse only valid elements with a name.
+//				String elementName = cType.getQName().getLocalPart();
+//
+//				// ... and concat them with the current element- and
+//				// typename.
+//				if (!allChildPaths.isEmpty())
+//				{
+//					for (String childPath : allChildPaths)
+//					{
+////						if (isNamedComplexType(node))
+////						{
+////							result.add(childPath);
+////						}
+////						else
+////						{
+////							result.add(elementName + delimiters.typeDelimiter + typeName
+////									+ delimiters.pathDelimiter + childPath);
+////						}
+//					}
+//				}
+//				else if (SimpleType.class.isAssignableFrom(typeDeclarationNode.getClass()))
+//				{
+//					result.add(elementName + delimiters.typeDelimiter
+//							+ getNameAttribute(typeDeclarationNode));
+//				}
+//				else
+//				{
+//					result.add(elementName + delimiters.typeDelimiter
+//							+ TYPE_NAME_NO_DEFINITION);
+//				}
+//			}
+//			else
+//			{
+//				return allChildPaths;
+//			}
+//		}
+		
+		
+//		if (isSimpleType)
+//		{
+//		}
+//		else if (isVisitedType && !TYPE_NAME_ANONYMOUS.equals(typeName))
+//		{
+//		}
+//		else
+//		{
+//			// No? Well, then we have to analyse all child-nodes.
+//			List<String> allChildPaths = new ArrayList<String>();
+//			Type typeDeclarationNode = null;
+//
+//			if (TYPE_NAME_ANONYMOUS.equals(typeName))
+//			{
+//				
+//				logger.info(node.getQName().toString());
+////				NodeList childNodes = node.getChildNodes();
+////
+////				// Get the paths of the child-nodes ...
+////				for (int i = 0; i < childNodes.getLength(); i++)
+////				{
+////					Node childNode = childNodes.item(i);
+////
+////					allChildPaths.addAll(extractFlatMessageStructure(childNode, schemata,
+////							visitedTypes, delimiters));
+////				}
+//			}
+//			else
+//			{
+//				int i = 0;
+//
+//				while ((i < schemata.size()) && (typeDeclarationNode == null))
+//				{
+//					typeDeclarationNode = findTypeDeclarationNode(schemata.get(i),
+//							typeName);
+//					i++;
+//				}
+//
+//				if (typeDeclarationNode != null)
+//				{
+//					allChildPaths.addAll(extractFlatMessageStructure(typeDeclarationNode,
+//							schemata, visitedTypes, delimiters));
+//				}
+//			}
+//
+//			// This node has to be added to the result only if it is an element.
+//			if (isElementOrComplexType(node))
+//			{
+//				// Parse only valid elements with a name.
+//				String elementName = getNameAttribute(node);
+//
+//				// ... and concat them with the current element- and
+//				// typename.
+//				if (!allChildPaths.isEmpty())
+//				{
+//					for (String childPath : allChildPaths)
+//					{
+//						if (isNamedComplexType(node))
+//						{
+//							result.add(childPath);
+//						}
+//						else
+//						{
+//							result.add(elementName + delimiters.typeDelimiter + typeName
+//									+ delimiters.pathDelimiter + childPath);
+//						}
+//					}
+//				}
+//				else if (isSimpleType(typeDeclarationNode))
+//				{
+//					result.add(elementName + delimiters.typeDelimiter
+//							+ getNameAttribute(typeDeclarationNode));
+//				}
+//				else
+//				{
+//					result.add(elementName + delimiters.typeDelimiter
+//							+ TYPE_NAME_NO_DEFINITION);
+//				}
+//			}
+//			else
+//			{
+//				return allChildPaths;
+//			}
+//		}
 
 		return result;
 	}
@@ -432,13 +663,12 @@ public final class WSDLParsingService
 	 * 
 	 * @return The type of the given node.
 	 */
-	private static String deriveTypeName(Node node, Delimiters delimiters)
+	private static String deriveTypeName(Element node, Delimiters delimiters)
 	{
 		String typeName = null;
-		String nodeName = String.valueOf(node.getLocalName());
-
-		if ((node.getAttributes() == null)
-				|| (node.getAttributes().getNamedItem(XML_ATTRIBUTE_TYPE) == null))
+		String nodeName = String.valueOf(node.getQName().getLocalPart());
+		
+		if (node.getType() == null)
 		{
 			typeName = TYPE_NAME_ANONYMOUS;
 		}
@@ -448,8 +678,8 @@ public final class WSDLParsingService
 		}
 		else
 		{
-			typeName = node.getAttributes().getNamedItem(XML_ATTRIBUTE_TYPE)
-					.getNodeValue();
+			// TODO get maybe whole QName
+			typeName = node.getType().getQName().getLocalPart();
 		}
 
 		if (typeName.indexOf(XML_NS_DELIMITER) > -1)
