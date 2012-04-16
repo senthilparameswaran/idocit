@@ -22,15 +22,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.wsdl.Definition;
-import javax.wsdl.Fault;
-import javax.wsdl.Input;
-import javax.wsdl.Message;
-import javax.wsdl.Output;
-import javax.wsdl.PortType;
-import javax.wsdl.WSDLElement;
-import javax.xml.namespace.QName;
 
+import org.ow2.easywsdl.wsdl.api.Description;
+import org.ow2.easywsdl.wsdl.api.Fault;
+import org.ow2.easywsdl.wsdl.api.Input;
+import org.ow2.easywsdl.wsdl.api.InterfaceType;
+import org.ow2.easywsdl.wsdl.api.Output;
+import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfParam;
 import org.w3c.dom.Element;
 
 import de.akra.idocit.common.structure.Delimiters;
@@ -51,13 +49,14 @@ import de.akra.idocit.wsdl.structure.WSDLOperation;
 import de.akra.idocit.wsdl.structure.WSDLParameter;
 
 /**
- * The WSDL interface parser. It extracts the {@link PortType}s with its
- * {@link javax.wsdl.Operation}s and {@link Message}s and creates a
- * {@link WSDLInterfaceArtifact} which holds the structure.
+ * The WSDL interface parser. It extracts the {@link InterfaceType}s with its
+ * {@link org.ow2.easywsdl.wsdl.api.Operation}s and {@link Input}, {@link Output} and 
+ * {@link Fault} elements and creates a {@link WSDLInterfaceArtifact} which holds the
+ * structure.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLInterfaceParser
@@ -66,7 +65,7 @@ public class WSDLInterfaceParser
 
 	private static final String CATEGORY_PART = "Part";
 
-	private static final String CATEGORY_PORT_TYPE = "PortType";
+	private static final String CATEGORY_PORT_TYPE = "InterfaceType";
 
 	private static final String CATEGORY_ARTIFACT = "Artifact";
 
@@ -86,7 +85,7 @@ public class WSDLInterfaceParser
 	/**
 	 * The WSDL structure.
 	 */
-	private Definition wsdlDefinition;
+	private Description wsdlDescription;
 
 	/**
 	 * The name of this artifact
@@ -101,17 +100,17 @@ public class WSDLInterfaceParser
 	/**
 	 * Constructor.
 	 * 
-	 * @param wsdlDefinition
+	 * @param wsdlDescription
 	 *            The WSDL structure.
 	 * @param artifactName
 	 *            The name of the artifact (e.g. the file name).
 	 * @param delimiters
 	 *            The delimiters to use.
 	 */
-	public WSDLInterfaceParser(Definition wsdlDefinition, String artifactName,
+	public WSDLInterfaceParser(Description wsdlDescription, String artifactName,
 			Delimiters delimiters)
 	{
-		this.wsdlDefinition = wsdlDefinition;
+		this.wsdlDescription = wsdlDescription;
 		this.artifactName = artifactName;
 		this.delimiters = delimiters;
 	}
@@ -125,46 +124,47 @@ public class WSDLInterfaceParser
 	{
 		WSDLInterfaceArtifact ifaceArtifact = new WSDLInterfaceArtifact(
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, CATEGORY_ARTIFACT,
-				wsdlDefinition, artifactName, Numerus.SINGULAR);
-		ifaceArtifact.setInterfaces(readPortTypes(ifaceArtifact));
+				wsdlDescription, artifactName, Numerus.SINGULAR);
+		ifaceArtifact.setInterfaces(readInterfaceTypes(ifaceArtifact));
 
 		return ifaceArtifact;
 	}
 
 	/**
-	 * Extracts the {@link PortType}s from the WSDL {@link Definition}
-	 * <code>wsdlDefinition</code>.
+	 * Extracts the {@link InterfaceType}s from the WSDL {@link Description}
+	 * <code>wsdlDescription</code>.
 	 * 
 	 * @param parent
 	 *            The parent for the new {@link Interface}s.
 	 * 
-	 * @return The {@link List} of {@link Interface}s with the parsed {@link PortType}s.
+	 * @return The {@link List} of {@link Interface}s with the parsed {@link InterfaceType}s.
 	 */
 	@SuppressWarnings("unchecked")
-	private List<Interface> readPortTypes(SignatureElement parent)
+	private List<Interface> readInterfaceTypes(SignatureElement parent)
 	{
 
-		// Get only the PortTypes defined in this WSDL definition. With
-		// getAllPortTypes() we would get more PortTypes.
-		Map<QName, PortType> portTypes = (Map<QName, PortType>) wsdlDefinition
-				.getPortTypes();
-		Iterator<PortType> i = portTypes.values().iterator();
+		
+		
+		// Get only the InterfaceTypes defined in this WSDL Description. With
+		// getAllInterfaceTypes() we would get more InterfaceTypes.
+		List<InterfaceType> InterfaceTypes = wsdlDescription.getInterfaces();
+		Iterator<InterfaceType> i = InterfaceTypes.iterator();
 
-		List<Interface> iList = new ArrayList<Interface>(portTypes.size());
+		List<Interface> iList = new ArrayList<Interface>(InterfaceTypes.size());
 
 		while (i.hasNext())
 		{
-			PortType p = i.next();
+			InterfaceType iType = i.next();
 
 			WSDLInterface wsdlInterface = new WSDLInterface(parent, CATEGORY_PORT_TYPE,
 					Numerus.SINGULAR);
-			wsdlInterface.setIdentifier(p.getQName() != null ? p.getQName()
+			wsdlInterface.setIdentifier(iType.getQName() != null ? iType.getQName()
 					.getLocalPart() : SignatureElement.ANONYMOUS_IDENTIFIER);
-			wsdlInterface.setPortType(p);
-			wsdlInterface.setDocumentations(DocumentationParser.parseDocElements(p
-					.getDocumentationElements()));
+			wsdlInterface.setInterfaceType(iType);
+			wsdlInterface.setDocumentations(DocumentationParser.parseDocElements(iType
+					.getDocumentation()));
 
-			wsdlInterface.setOperations(readOperations(wsdlInterface, p.getOperations()));
+			wsdlInterface.setOperations(readOperations(wsdlInterface, iType.getOperations()));
 
 			iList.add(wsdlInterface);
 		}
@@ -172,7 +172,7 @@ public class WSDLInterfaceParser
 	}
 
 	/**
-	 * Parses the {@link javax.wsdl.Operation}s of a {@link PortType}.
+	 * Parses the {@link org.ow2.easywsdl.wsdl.api.Operation}s of a {@link InterfaceType}.
 	 * 
 	 * @param parent
 	 *            The parent for the new {@link WSDLOperation}s.
@@ -183,14 +183,14 @@ public class WSDLInterfaceParser
 	 */
 	@SuppressWarnings("unchecked")
 	private List<WSDLOperation> readOperations(SignatureElement parent,
-			List<javax.wsdl.Operation> operations)
+			List<org.ow2.easywsdl.wsdl.api.Operation> operations)
 	{
 		List<WSDLOperation> opList = new ArrayList<WSDLOperation>(operations.size());
 
-		for (javax.wsdl.Operation o : operations)
+		for (org.ow2.easywsdl.wsdl.api.Operation o : operations)
 		{
 			Element thematicGridElement = DocumentationParser
-					.findDocElemWithThematicGrid(o.getDocumentationElements());
+					.findDocElemWithThematicGrid(o.getDocumentation());
 			String thematicGridName = null;
 
 			if (thematicGridElement != null)
@@ -200,15 +200,16 @@ public class WSDLInterfaceParser
 			}
 
 			WSDLOperation newOp = createWsdlOperation(parent, thematicGridName);
-			newOp.setIdentifier(o.getName());
+			newOp.setIdentifier(o.getQName().getLocalPart());
+			// TODO set qualified identifier?
 			newOp.setOperation(o);
 			newOp.setDocumentations(DocumentationParser.parseDocElements(o
-					.getDocumentationElements()));
+					.getDocumentation()));
 
 			WSDLMessage wsdlMessage;
 
 			// create object structure for the input message
-			wsdlMessage = buildWSDLMessageStructure(newOp, o.getInput().getMessage(),
+			wsdlMessage = buildWSDLMessageStructure(newOp, o.getInput(), 
 					CATEGORY_INPUT_MESSAGE);
 			if (wsdlMessage != null)
 			{
@@ -221,7 +222,7 @@ public class WSDLInterfaceParser
 			}
 
 			// create object structure for the output message
-			wsdlMessage = buildWSDLMessageStructure(newOp, o.getOutput().getMessage(),
+			wsdlMessage = buildWSDLMessageStructure(newOp, o.getOutput(),
 					CATEGORY_OUTPUT_MESSAGE);
 			if (wsdlMessage != null)
 			{
@@ -236,9 +237,9 @@ public class WSDLInterfaceParser
 			// create object structure for the fault messages
 			List<Parameters> faultMessages = new ArrayList<Parameters>(o.getFaults()
 					.size());
-			for (Fault fault : ((Map<String, Fault>) o.getFaults()).values())
+			for (Fault fault : o.getFaults())
 			{
-				wsdlMessage = buildWSDLMessageStructure(newOp, fault.getMessage(),
+				wsdlMessage = buildWSDLMessageStructure(newOp, fault,
 						CATEGORY_FAULT_MESSAGE);
 
 				if (wsdlMessage != null)
@@ -302,16 +303,16 @@ public class WSDLInterfaceParser
 	 * @param parent
 	 *            The parent for the new {@link WSDLMessage}.
 	 * @param message
-	 *            The {@link Message} of an {@link javax.wsdl.Operation} which should be
+	 *            The {@link Message} of an {@link org.ow2.easywsdl.wsdl.api.Operation} which should be
 	 *            divided into its {@link Parameter}.
 	 * @param category
 	 *            The category for the new {@link WSDLMessage}.
 	 * @return The {@link WSDLMessage} that represents the whole structure of an WSDL
 	 *         message element. <code>null</code> if there exists no {@link Message}.
-	 * @see WSDLParsingService#extractRoles(Message, javax.wsdl.Types)
+	 * @see WSDLParsingService#extractRoles(Message, org.ow2.easywsdl.wsdl.api.Types)
 	 */
 	private WSDLMessage buildWSDLMessageStructure(SignatureElement parent,
-			Message message, String category)
+			AbsItfParam message, String category)
 	{
 		// path =
 		// <MESSAGE_NAME>"."<PART_NAME>"("<ELEMENT_TYPE>")"["."<ELEMENT_NAME>"("<ELEMENT_TYPE>")"]*
@@ -319,7 +320,7 @@ public class WSDLInterfaceParser
 		WSDLMessage wsdlMessage = null;
 
 		List<String> rolePaths = WSDLParsingService.extractRoles(message,
-				wsdlDefinition.getTypes(), delimiters);
+				wsdlDescription.getTypes(), delimiters);
 
 		if (!rolePaths.isEmpty())
 		{
@@ -342,7 +343,9 @@ public class WSDLInterfaceParser
 				if (pathArray.length > 1)
 				{
 					// search for existing Parameter
+					
 					// TODO test qualified name things
+					
 					ParameterPathElement paramPathElem = SignatureElementUtils
 							.parsePathElement(delimiters, pathArray[1]);
 					Parameter partElem = findExistingParameter(
@@ -462,7 +465,7 @@ public class WSDLInterfaceParser
 
 	/**
 	 * Attaches the {@link Documentation}s of the {@link Input}, {@link Output} and
-	 * {@link Fault} of a {@link javax.wsdl.Operation} hold in <code>wsdlOperation</code>
+	 * {@link Fault} of a {@link org.ow2.easywsdl.wsdl.api.Operation} hold in <code>wsdlOperation</code>
 	 * to the {@link WSDLOperation#getInputParameters()},
 	 * {@link WSDLOperation#getOutputParameters()} and
 	 * {@link WSDLOperation#getExceptions()}.
@@ -475,8 +478,7 @@ public class WSDLInterfaceParser
 	private void attachDocumentation(WSDLOperation wsdlOperation)
 	{
 		// match documentations out of wsdlDocElems (docpart elements) to the
-		// Parameters
-		// in WSDLMessage
+		// Parameters in WSDLMessage
 		attachDocumentation((WSDLMessage) wsdlOperation.getInputParameters());
 		attachDocumentation((WSDLMessage) wsdlOperation.getOutputParameters());
 
@@ -497,8 +499,8 @@ public class WSDLInterfaceParser
 	 */
 	private void attachDocumentation(WSDLMessage wsdlMessage)
 	{
-		List<Element> wsdlDocElems = wsdlMessage.getMessageRef()
-				.getDocumentationElements();
+		org.ow2.easywsdl.schema.api.Documentation wsdlDocElems = wsdlMessage.getMessageRef()
+				.getDocumentation();
 
 		List<Documentation> documentations = DocumentationParser
 				.parseDocElements(wsdlDocElems);
@@ -539,12 +541,14 @@ public class WSDLInterfaceParser
 
 	/**
 	 * Extract the &lt;MESSAGE_NAME&gt; out of the pattern described for
-	 * {@link WSDLParsingService#extractRoles(Message, javax.wsdl.Types)}.
+	 * {@link WSDLParsingService#extractRoles(AbsItfParam, org.ow2.easywsdl.wsdl.api.Types, Delimiters)}
+	 * .
 	 * 
 	 * @param path
 	 *            The message path.
 	 * @return The &lt;MESSAGE_NAME&gt;.
-	 * @see WSDLParsingService#extractRoles(Message, javax.wsdl.Types)
+	 * @see WSDLParsingService#extractRoles(AbsItfParam, org.ow2.easywsdl.wsdl.api.Types,
+	 *      Delimiters)
 	 */
 	private String extractMessageName(String path)
 	{

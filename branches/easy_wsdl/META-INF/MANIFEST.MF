@@ -3,15 +3,20 @@ Bundle-ManifestVersion: 2
 Bundle-Name: iDocIt! WSDL Support
 Bundle-SymbolicName: de.akra.idocit.wsdl;singleton:=true
 Bundle-Version: 0.0.4.qualifier
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources;bundle-version="3.6.0",
- org.junit4;bundle-version="4.8.1",
- de.akra.idocit.core
+Require-Bundle: org.eclipse.core.resources;bundle-version="3.6.0",
+ de.akra.idocit.core,
+ org.eclipse.core.runtime;bundle-version="3.6.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
- libs/idocit.wsdl.wsdl4j.jar,
- libs/xercesImpl3263291.jar,
- libs/commons-lang3-3.1.jar
-Export-Package: de.akra.idocit.wsdl.structure
+ libs/commons-lang3-3.1.jar,
+ libs/easywsdl-wsdl-2.1.jar,
+ libs/activation-1.1.jar,
+ libs/jaxb-api-2.1.jar,
+ libs/jaxb-impl-2.1.10.jar,
+ libs/runtime-0.4.1.5.jar,
+ libs/stax-api-1.0-2.jar,
+ libs/easywsdl-schema-2.1.jar,
+ libs/commons-lang-2.4.jar
+Export-Package: de.akra.idocit.wsdl.structure;uses:="javax.wsdl,de.akra.idocit.common.structure"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: AKRA GmbH

@@ -15,18 +15,21 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.structure;
 
-import javax.wsdl.Message;
+import org.ow2.easywsdl.wsdl.api.Fault;
+import org.ow2.easywsdl.wsdl.api.Input;
+import org.ow2.easywsdl.wsdl.api.Output;
 
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
- * Representation for a parameter in a {@link Message}.
+ * Representation for a parameter within the type / message of an {@link Input},
+ * {@link Output} or {@link Fault} element.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLParameter extends Parameter

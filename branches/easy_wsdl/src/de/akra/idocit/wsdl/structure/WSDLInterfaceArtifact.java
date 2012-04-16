@@ -15,7 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.structure;
 
-import javax.wsdl.Definition;
+
+import org.ow2.easywsdl.wsdl.api.Description;
 
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Numerus;
@@ -26,7 +27,7 @@ import de.akra.idocit.common.structure.SignatureElement;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLInterfaceArtifact extends InterfaceArtifact
@@ -34,7 +35,9 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 	/**
 	 * The definition of the WSDL file.
 	 */
-	private Definition wsdlDefinition;
+	private Description wsdlDescription;
+
+	
 
 	/**
 	 * Constructor.
@@ -44,18 +47,18 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 	 * @param category
 	 *            The category of this element.
 	 * 
-	 * @param wsdlDefinition
-	 *            The WSDL {@link Definition} structure of the WSDL file.
+	 * @param wsdlDescription
+	 *            The WSDL {@link Description} structure of the WSDL file.
 	 * @param name
 	 *            The artifact name.
 	 * @param numerus
 	 *            The {@link Numerus}
 	 */
 	public WSDLInterfaceArtifact(SignatureElement parent, String category,
-			Definition wsdlDefinition, String name, Numerus numerus)
+			Description wsdlDescription, String name, Numerus numerus)
 	{
 		super(parent, category, numerus);
-		this.wsdlDefinition = wsdlDefinition;
+		this.wsdlDescription = wsdlDescription;
 		super.setIdentifier(name);
 	}
 
@@ -68,14 +71,14 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 	@Override
 	protected SignatureElement createSignatureElement(SignatureElement parent)
 	{
-		return new WSDLInterfaceArtifact(parent, super.getCategory(), wsdlDefinition,
+		return new WSDLInterfaceArtifact(parent, super.getCategory(), wsdlDescription,
 				parent.getIdentifier(), super.getNumerus());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * HINT: Does not make a deep copy of <code>wsdlDefinition</code>.
+	 * HINT: Does not make a deep copy of {@link #wsdlDescription}.
 	 * </p>
 	 */
 	@Override
@@ -85,11 +88,12 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 	}
 
 	/**
-	 * @return the wsdlDefinition
+	 * 
+	 * @return wsdlDescription
 	 */
-	public Definition getWsdlDefinition()
+	public Description getWsdlDescription()
 	{
-		return wsdlDefinition;
+		return wsdlDescription;
 	}
 
 	/*
@@ -103,7 +107,7 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result
-				+ ((wsdlDefinition == null) ? 0 : wsdlDefinition.hashCode());
+				+ ((wsdlDescription == null) ? 0 : wsdlDescription.hashCode());
 		return result;
 	}
 
@@ -128,14 +132,14 @@ public class WSDLInterfaceArtifact extends InterfaceArtifact
 			return false;
 		}
 		WSDLInterfaceArtifact other = (WSDLInterfaceArtifact) obj;
-		if (wsdlDefinition == null)
+		if (wsdlDescription == null)
 		{
-			if (other.wsdlDefinition != null)
+			if (other.wsdlDescription != null)
 			{
 				return false;
 			}
 		}
-		else if (!wsdlDefinition.equals(other.wsdlDefinition))
+		else if (!wsdlDescription.equals(other.wsdlDescription))
 		{
 			return false;
 		}

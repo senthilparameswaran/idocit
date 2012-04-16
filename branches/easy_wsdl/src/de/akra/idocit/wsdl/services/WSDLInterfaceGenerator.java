@@ -18,29 +18,22 @@ package de.akra.idocit.wsdl.services;
 import static de.akra.idocit.wsdl.services.DocumentationGenerator.generateDocumentationElement;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.wsdl.Definition;
-import javax.wsdl.Fault;
-import javax.wsdl.Input;
-import javax.wsdl.Output;
-import javax.wsdl.PortType;
-import javax.wsdl.WSDLElement;
-import javax.wsdl.WSDLException;
-import javax.xml.namespace.QName;
-
+import org.ow2.easywsdl.wsdl.api.Description;
+import org.ow2.easywsdl.wsdl.api.Fault;
+import org.ow2.easywsdl.wsdl.api.Input;
+import org.ow2.easywsdl.wsdl.api.InterfaceType;
+import org.ow2.easywsdl.wsdl.api.Output;
+import org.ow2.easywsdl.wsdl.api.WSDLElement;
+import org.ow2.easywsdl.wsdl.api.WSDLException;
+import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfParam;
 import org.w3c.dom.Element;
-
-import com.ibm.wsdl.Constants;
-import com.ibm.wsdl.util.xml.DOMUtils;
 
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
-import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLMessage;
 import de.akra.idocit.wsdl.structure.WSDLOperation;
@@ -52,7 +45,7 @@ import de.akra.idocit.wsdl.structure.WSDLOperation;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLInterfaceGenerator {
@@ -88,48 +81,49 @@ public class WSDLInterfaceGenerator {
 	 * @throws WSDLException
 	 */
 	@SuppressWarnings("unchecked")
-	public Definition updateDocumentationInDefinition() throws WSDLException {
+	public Description updateDocumentationInDefinition() throws WSDLException {
 		// get tag name for documentation element
-		this.documentationTagName = DOMUtils.getQualifiedValue(
-				Constants.NS_URI_WSDL, Constants.ELEM_DOCUMENTATION,
-				wsdlIStructure.getWsdlDefinition());
-
-		// clean up WSDL definition
-		removeAllDocumentationElementsWithDocparts(wsdlIStructure
-				.getWsdlDefinition());
-
-		// set for all Interfaces (PortTypes) the documentation into the
-		// wsdlDefinition
-		List<WSDLInterface> interfaces = (List<WSDLInterface>) wsdlIStructure
-				.getInterfaces();
-		Iterator<WSDLInterface> it = interfaces.iterator();
-		while (it.hasNext()) {
-			// get corresponding PortType in wsdlDefinition
-			WSDLInterface wsdlInterface = it.next();
-			PortType portType = wsdlInterface.getPortType();
-
-			Element newDocElem = generateDocumentationElement(
-					documentationTagName, wsdlInterface.getDocumentations(),
-					DocumentationParser.THEMATIC_GRID_ATTRIBUTE_NAME_GLOBAL);
-
-			// ... add the new documentation element.
-			portType.addDocumentationElement(newDocElem);
-
-			updateOperationsDocumentations((List<WSDLOperation>) wsdlInterface
-					.getOperations());
-		}
-		return wsdlIStructure.getWsdlDefinition();
+//		this.documentationTagName = DOMUtils.getQualifiedValue(
+//				Constants.NS_URI_WSDL, Constants.ELEM_DOCUMENTATION,
+//				wsdlIStructure.getWsdlDefinition());
+//
+//		// clean up WSDL definition
+//		removeAllDocumentationElementsWithDocparts(wsdlIStructure
+//				.getWsdlDefinition());
+//
+//		// set for all Interfaces (PortTypes) the documentation into the
+//		// wsdlDefinition
+//		List<WSDLInterface> interfaces = (List<WSDLInterface>) wsdlIStructure
+//				.getInterfaces();
+//		Iterator<WSDLInterface> it = interfaces.iterator();
+//		while (it.hasNext()) {
+//			// get corresponding PortType in wsdlDefinition
+//			WSDLInterface wsdlInterface = it.next();
+//			PortType portType = wsdlInterface.getPortType();
+//
+//			Element newDocElem = generateDocumentationElement(
+//					documentationTagName, wsdlInterface.getDocumentations(),
+//					DocumentationParser.THEMATIC_GRID_ATTRIBUTE_NAME_GLOBAL);
+//
+//			// ... add the new documentation element.
+//			portType.addDocumentationElement(newDocElem);
+//
+//			updateOperationsDocumentations((List<WSDLOperation>) wsdlInterface
+//					.getOperations());
+//		}
+//		return wsdlIStructure.getWsdlDefinition();
+		return null;
 	}
 
 	/**
-	 * Update the documentations in the {@link javax.wsdl.Operation}s hold in
+	 * Update the documentations in the {@link org.ow2.easywsdl.wsdl.api.Operation}s hold in
 	 * the {@link WSDLOperation}s <code>operations</code> with the current
 	 * {@link Documentation}s.
 	 * 
 	 * @param wsdlOperations
 	 *            The {@link List} of {@link WSDLOperation}s with the new
 	 *            documentations and containing reference to the corresponding
-	 *            {@link javax.wsdl.Operation}.
+	 *            {@link org.ow2.easywsdl.wsdl.api.Operation}.
 	 */
 	@SuppressWarnings("unchecked")
 	private void updateOperationsDocumentations(
@@ -137,30 +131,30 @@ public class WSDLInterfaceGenerator {
 		if (wsdlOperations == null)
 			return;
 
-		for (WSDLOperation wsdlOperation : wsdlOperations) {
-			// get the corresponding operation in the WSDL definition
-			javax.wsdl.Operation operation = wsdlOperation.getOperation();
-			Element newDocElem = generateDocumentationElement(
-					documentationTagName, wsdlOperation.getDocumentations(),
-					wsdlOperation.getThematicGridName());
-			operation.addDocumentationElement(newDocElem);
-
-			// updateMessagesDocumentations(wsdlOperation);
-
-			// Update input message
-			updateMessageDocumentation((WSDLMessage) wsdlOperation
-					.getInputParameters());
-
-			// Update output message
-			updateMessageDocumentation((WSDLMessage) wsdlOperation
-					.getOutputParameters());
-
-			// Update fault messages
-			for (WSDLMessage faultMsg : (List<WSDLMessage>) wsdlOperation
-					.getExceptions()) {
-				updateMessageDocumentation(faultMsg);
-			}
-		}
+//		for (WSDLOperation wsdlOperation : wsdlOperations) {
+//			// get the corresponding operation in the WSDL definition
+//			org.ow2.easywsdl.wsdl.api.Operation operation = wsdlOperation.getOperation();
+//			Element newDocElem = generateDocumentationElement(
+//					documentationTagName, wsdlOperation.getDocumentations(),
+//					wsdlOperation.getThematicGridName());
+//			operation.addDocumentationElement(newDocElem);
+//
+//			// updateMessagesDocumentations(wsdlOperation);
+//
+//			// Update input message
+//			updateMessageDocumentation((WSDLMessage) wsdlOperation
+//					.getInputParameters());
+//
+//			// Update output message
+//			updateMessageDocumentation((WSDLMessage) wsdlOperation
+//					.getOutputParameters());
+//
+//			// Update fault messages
+//			for (WSDLMessage faultMsg : (List<WSDLMessage>) wsdlOperation
+//					.getExceptions()) {
+//				updateMessageDocumentation(faultMsg);
+//			}
+//		}
 	}
 
 	/**
@@ -178,11 +172,11 @@ public class WSDLInterfaceGenerator {
 				SignatureElement.DEFAULT_ARRAY_SIZE);
 
 		collectParametersDocparts(docparts, wsdlMessage);
-		WSDLElement element = wsdlMessage.getMessageRef();
+		AbsItfParam element = wsdlMessage.getMessageRef();
 
-		Element newDocElem = generateDocumentationElement(documentationTagName,
-				docparts, null);
-		element.addDocumentationElement(newDocElem);
+//		Element newDocElem = generateDocumentationElement(documentationTagName,
+//				docparts, null);
+//		element.setDocumentation(newDocElem);
 	}
 
 	/**
@@ -237,13 +231,11 @@ public class WSDLInterfaceGenerator {
 	 *            The {@link Definition} to clean up.
 	 */
 	private void removeAllDocumentationElementsWithDocparts(
-			Definition definition) {
-		@SuppressWarnings("unchecked")
-		Map<QName, PortType> portTypes = (Map<QName, PortType>) definition
-				.getPortTypes();
+			Description definition) {
+		List<InterfaceType> portTypes = definition.getInterfaces();
 
 		if (portTypes != null) {
-			for (PortType portType : portTypes.values()) {
+			for (InterfaceType portType : portTypes) {
 				removeAllDocElemsWithDocparts(portType);
 			}
 		}
@@ -256,15 +248,15 @@ public class WSDLInterfaceGenerator {
 	 * @param portType
 	 *            The {@link PortType} to clean up.
 	 */
-	private void removeAllDocElemsWithDocparts(PortType portType) {
+	private void removeAllDocElemsWithDocparts(InterfaceType portType) {
 		removeAllDocumentationsWithDocpartsFromElement(portType);
 
 		@SuppressWarnings("unchecked")
-		List<javax.wsdl.Operation> operations = (List<javax.wsdl.Operation>) portType
+		List<org.ow2.easywsdl.wsdl.api.Operation> operations = (List<org.ow2.easywsdl.wsdl.api.Operation>) portType
 				.getOperations();
 
 		if (operations != null) {
-			for (javax.wsdl.Operation op : operations) {
+			for (org.ow2.easywsdl.wsdl.api.Operation op : operations) {
 				removeAllDocElemsWithDocparts(op);
 			}
 		}
@@ -272,13 +264,13 @@ public class WSDLInterfaceGenerator {
 
 	/**
 	 * Removes all documentation {@link Element}s with docparts from the
-	 * {@link javax.wsdl.Operation} <code>operation</code> and its {@link Input}
+	 * {@link org.ow2.easywsdl.wsdl.api.Operation} <code>operation</code> and its {@link Input}
 	 * , {@link Output} and {@link Fault} messages.
 	 * 
 	 * @param operation
-	 *            The {@link javax.wsdl.Operation} to clean up.
+	 *            The {@link org.ow2.easywsdl.wsdl.api.Operation} to clean up.
 	 */
-	private void removeAllDocElemsWithDocparts(javax.wsdl.Operation operation) {
+	private void removeAllDocElemsWithDocparts(org.ow2.easywsdl.wsdl.api.Operation operation) {
 		removeAllDocumentationsWithDocpartsFromElement(operation);
 
 		Input input = operation.getInput();
@@ -291,9 +283,7 @@ public class WSDLInterfaceGenerator {
 			removeAllDocumentationsWithDocpartsFromElement(output);
 		}
 
-		@SuppressWarnings("unchecked")
-		Map<String, Fault> faults = operation.getFaults();
-		for (Fault fault : faults.values()) {
+		for (Fault fault : operation.getFaults()) {
 			removeAllDocumentationsWithDocpartsFromElement(fault);
 		}
 	}
@@ -310,9 +300,9 @@ public class WSDLInterfaceGenerator {
 		Element docElem = null;
 
 		// find all documentation elements with docparts and remove them
-		while ((docElem = DocumentationParser
-				.findDocElemWithDocpart(wsdlElement.getDocumentationElements())) != null) {
-			wsdlElement.removeDocumentationElement(docElem);
-		}
+//		while ((docElem = DocumentationParser
+//				.findDocElemWithDocpart(wsdlElement.getDocumentationElements())) != null) {
+//			wsdlElement.removeDocumentationElement(docElem);
+//		}
 	}
 }

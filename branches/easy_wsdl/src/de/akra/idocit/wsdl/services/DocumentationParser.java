@@ -24,6 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.ow2.easywsdl.wsdl.org.w3.ns.wsdl.DocumentationType;
+import org.ow2.easywsdl.wsdl.org.xmlsoap.schemas.wsdl.TDocumentation;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -97,22 +99,49 @@ public class DocumentationParser {
 	 *         returned.
 	 */
 	public static List<Documentation> parseDocElements(
-			List<Element> documentationElements) {
+			org.ow2.easywsdl.schema.api.Documentation documentationElements)
+	{
 		List<Documentation> documentations = Collections.emptyList();
-		if (documentationElements != null) {
-			Element docElem = findDocElemWithDocpart(documentationElements);
+		if (documentationElements != null)
+		{
+			List<Node> docParts = Collections.emptyList();
+			if (documentationElements instanceof org.ow2.easywsdl.wsdl.impl.wsdl11.DocumentationImpl)
+			{
+				// process Documentation for WSDL 1.1
+				org.ow2.easywsdl.wsdl.impl.wsdl11.DocumentationImpl docImpl = (org.ow2.easywsdl.wsdl.impl.wsdl11.DocumentationImpl) documentationElements;
+				TDocumentation tDoc = docImpl.getModel();
 
-			if (docElem != null) {
-				NodeList docParts = docElem
-						.getElementsByTagName(DocumentationParser.DOCPART_TAG_NAME);
+				if (tDoc != null)
+				{
+					docParts = filterDocParts(tDoc.getContent());
+				}
+			}
+			else if (documentationElements instanceof org.ow2.easywsdl.wsdl.impl.wsdl20.DocumentationImpl)
+			{
+				// process Documentation for WSDL 2.0
+				// TODO must be tested
+				org.ow2.easywsdl.wsdl.impl.wsdl20.DocumentationImpl docImpl = (org.ow2.easywsdl.wsdl.impl.wsdl20.DocumentationImpl) documentationElements;
+				List<DocumentationType> documentationTypes = docImpl.getModel();
 
-				documentations = new ArrayList<Documentation>(
-						docParts.getLength());
+				if (documentationTypes != null)
+				{
+					Iterator<DocumentationType> docTypeIter = documentationTypes
+							.iterator();
+					while (docTypeIter.hasNext() && docParts.isEmpty())
+					{
+						// find the first Documentation element with docParts ...
+						DocumentationType docType = docTypeIter.next();
+						docParts = filterDocParts(docType.getContent());
+					}
+				}
+			}
 
-				for (int i = 0; i < docParts.getLength(); i++) {
-					Node dPart = docParts.item(i);
-					Documentation doc = DocumentationParser
-							.parseDocPartElement(dPart);
+			if (!docParts.isEmpty())
+			{
+				documentations = new ArrayList<Documentation>(docParts.size());
+				for (Node docPart : docParts)
+				{
+					Documentation doc = DocumentationParser.parseDocPartElement(docPart);
 					documentations.add(doc);
 				}
 			}
@@ -121,31 +150,54 @@ public class DocumentationParser {
 		return documentations;
 	}
 
+	private static List<Node> filterDocParts(List<Object> content)
+	{
+		if (content == null)
+		{
+			return Collections.emptyList();
+		}
+		List<Node> docParts = new ArrayList<Node>(content.size());
+		for (Object o : content)
+		{
+			// filter the simple strings and return only the ElementNSImpl objects that
+			// are 'docpart'-elements.
+			if (Node.class.isAssignableFrom(o.getClass()))
+			{
+				Node node = (Node) o;
+				if (DOCPART_TAG_NAME.equalsIgnoreCase(node.getNodeName()))
+				{
+					docParts.add(node);
+				}
+			}
+		}
+		return docParts;
+	}
+
 	/**
 	 * Searches for the first documentation element in <code>docElems</code>
 	 * with docpart elements as children.
 	 * 
-	 * @param docElems
-	 *            List of documentation {@link Element}s.
+	 * @param docElem
+	 *            a {@link org.ow2.easywsdl.schema.api.Documentation} object.
 	 * @return The first documentation {@link Element} with docpart elements as
 	 *         children. If no element was found, <code>null</code> is returned.
 	 */
-	public static Element findDocElemWithDocpart(List<Element> docElems) {
-		return findElementWithName(docElems, DOCPART_TAG_NAME);
+	public static Element findDocElemWithDocpart(org.ow2.easywsdl.schema.api.Documentation docElem) {
+		return findElementWithName(docElem, DOCPART_TAG_NAME);
 	}
 
 	/**
 	 * Searches for the first documentation element in <code>docElems</code>
 	 * with thematic elements as children.
 	 * 
-	 * @param docElems
-	 *            List of documentation {@link Element}s.
+	 * @param docElem
+	 *            a {@link org.ow2.easywsdl.schema.api.Documentation} object.
 	 * @return The first documentation {@link Element} with thematicgrid
 	 *         elements as children. If no element was found, <code>null</code>
 	 *         is returned.
 	 */
-	public static Element findDocElemWithThematicGrid(List<Element> docElems) {
-		return findElementWithName(docElems, THEMATIC_GRID_TAG_NAME);
+	public static Element findDocElemWithThematicGrid(org.ow2.easywsdl.schema.api.Documentation docElem) {
+		return findElementWithName(docElem, THEMATIC_GRID_TAG_NAME);
 	}
 
 	/**
@@ -199,29 +251,32 @@ public class DocumentationParser {
 	 * Searches for the first documentation element in <code>docElems</code>
 	 * with docpart elements as children.
 	 * 
-	 * @param docElems
-	 *            List of documentation {@link Element}s.
+	 * @param docElem
+	 *            a {@link org.ow2.easywsdl.schema.api.Documentation} object.
 	 * @return The first documentation {@link Element} with docpart elements as
 	 *         children. If no element was found, <code>null</code> is returned.
 	 */
-	public static Element findElementWithName(List<Element> docElems,
+	public static Element findElementWithName(org.ow2.easywsdl.schema.api.Documentation docElem,
 			String elementName) {
-		if (docElems != null && !docElems.isEmpty()) {
+		if (docElem != null) {
 			// search for the first <documentation> element with <docpart>
 			// elements
 			boolean bFoundDocParts = false;
-			Iterator<Element> it = docElems.iterator();
-			while (it.hasNext() && !bFoundDocParts) {
-				Element docElem = it.next();
-				NodeList docParts = docElem.getElementsByTagName(elementName);
+//			Iterator<org.ow2.easywsdl.schema.api.Documentation> it = docElems.iterator();
+//			while (it.hasNext() && !bFoundDocParts) {
+//				org.ow2.easywsdl.schema.api.Documentation docElem = it.next();
+//				
+//				String docParts = docElem.getContent();
+//				logger.fine(docParts);
+//				NodeList docParts = docElem.getElementsByTagName(elementName);
 
-				if (docParts.getLength() > 0) {
-					logger.log(Level.FINE, "Number of <docpart> elements = "
-							+ docParts.getLength());
-
-					return docElem;
-				}
-			}
+//				if (docParts.getLength() > 0) {
+//					logger.log(Level.FINE, "Number of <docpart> elements = "
+//							+ docParts.getLength());
+//
+//					return docElem;
+//				}
+//			}
 		}
 		return null;
 	}

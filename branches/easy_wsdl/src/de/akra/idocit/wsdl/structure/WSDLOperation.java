@@ -15,28 +15,28 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.structure;
 
-import javax.wsdl.Definition;
-import javax.wsdl.PortType;
+import org.ow2.easywsdl.wsdl.api.Description;
+import org.ow2.easywsdl.wsdl.api.InterfaceType;
 
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
- * A representation of a WSDL {@link javax.wsdl.Operation}.
+ * A representation of a WSDL {@link org.ow2.easywsdl.wsdl.api.Operation}.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLOperation extends Operation
 {
 	/**
-	 * Reference to the corresponding {@link javax.wsdl.Operation} of a {@link PortType}
-	 * in the {@link Definition}.
+	 * Reference to the corresponding {@link org.ow2.easywsdl.wsdl.api.Operation} of a {@link InterfaceType}
+	 * in the {@link Description}.
 	 */
-	private javax.wsdl.Operation operation;
+	private org.ow2.easywsdl.wsdl.api.Operation operation;
 
 	/**
 	 * Constructor.
@@ -82,15 +82,15 @@ public class WSDLOperation extends Operation
 	 * @param operation
 	 *            the operation to set
 	 */
-	public void setOperation(javax.wsdl.Operation operation)
+	public void setOperation(org.ow2.easywsdl.wsdl.api.Operation operation)
 	{
 		this.operation = operation;
 	}
 
 	/**
-	 * @return the {@link javax.wsdl.Operation} <code>operation</code>.
+	 * @return the {@link org.ow2.easywsdl.wsdl.api.Operation} <code>operation</code>.
 	 */
-	public javax.wsdl.Operation getOperation()
+	public org.ow2.easywsdl.wsdl.api.Operation getOperation()
 	{
 		return operation;
 	}

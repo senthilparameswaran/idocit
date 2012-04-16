@@ -15,28 +15,28 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.structure;
 
-import javax.wsdl.Definition;
-import javax.wsdl.PortType;
+import org.ow2.easywsdl.wsdl.api.Description;
+import org.ow2.easywsdl.wsdl.api.InterfaceType;
 
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 
 /**
- * A representation of a WSDL {@link PortType}. A {@link PortType} has no inner
- * {@link PortType}s, so <code>{@link Interface#getInnerInterfaces()} == null</code>.
+ * A representation of a WSDL {@link InterfaceType}. A {@link InterfaceType} has no inner
+ * {@link InterfaceType}s, so <code>{@link Interface#getInnerInterfaces()} == null</code>.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLInterface extends Interface
 {
 	/**
-	 * Reference to the corresponding {@link PortType} in the {@link Definition}.
+	 * Reference to the corresponding {@link InterfaceType} in the {@link Description}.
 	 */
-	private PortType portType;
+	private InterfaceType interfaceType;
 
 	/**
 	 * Constructor.
@@ -66,14 +66,14 @@ public class WSDLInterface extends Interface
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * HINT: Does not make a deep copy of <code>portType</code>.
+	 * HINT: Does not make a deep copy of {@link #interfaceType}.
 	 * </p>
 	 */
 	@Override
 	protected void doCopyTo(SignatureElement signatureElement)
 	{
 		WSDLInterface wsdlInterface = (WSDLInterface) signatureElement;
-		wsdlInterface.setPortType(portType);
+		wsdlInterface.setInterfaceType(interfaceType);
 	}
 
 	/*
@@ -85,8 +85,8 @@ public class WSDLInterface extends Interface
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("WSDLInterface [portType=");
-		builder.append(portType);
+		builder.append("WSDLInterface [interfaceType=");
+		builder.append(interfaceType);
 		builder.append(", toString()=");
 		builder.append(super.toString());
 		builder.append("]");
@@ -94,20 +94,20 @@ public class WSDLInterface extends Interface
 	}
 
 	/**
-	 * @param portType
-	 *            the portType to set
+	 * 
+	 * @return interfaceType
 	 */
-	public void setPortType(PortType portType)
+	public InterfaceType getInterfaceType()
 	{
-		this.portType = portType;
+		return interfaceType;
 	}
 
 	/**
-	 * @return the portType
+	 * 
+	 * @param interfaceType
 	 */
-	public PortType getPortType()
+	public void setInterfaceType(InterfaceType interfaceType)
 	{
-		return portType;
+		this.interfaceType = interfaceType;
 	}
-
 }

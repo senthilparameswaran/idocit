@@ -15,19 +15,22 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.services;
 
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.wsdl.Definition;
-import javax.wsdl.WSDLException;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
-import javax.wsdl.xml.WSDLWriter;
-
 import org.eclipse.core.resources.IFile;
+import org.ow2.easywsdl.wsdl.WSDLFactory;
+import org.ow2.easywsdl.wsdl.api.Description;
+import org.ow2.easywsdl.wsdl.api.WSDLException;
+import org.ow2.easywsdl.wsdl.api.WSDLReader;
+import org.ow2.easywsdl.wsdl.api.WSDLWriter;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.InterfaceArtifact;
@@ -39,7 +42,7 @@ import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class WSDLParser implements Parser
@@ -81,26 +84,35 @@ public class WSDLParser implements Parser
 	 * 
 	 * @return WSDL interface structure (services).
 	 * @throws WSDLException
-	 *             If the instance creation fails.
+	 *             If the instance creation of the WSDLFactory fails.
 	 * @see de.akra.idocit.extensions.Parser#parse(IFile)
 	 */
 	@Override
-	public InterfaceArtifact parse(IFile iFile) throws WSDLException
+	public InterfaceArtifact parse(IFile iFile) throws Exception
 	{
 		if (wsdlFactory == null)
 		{
 			wsdlFactory = WSDLFactory.newInstance();
 		}
 		WSDLReader reader = wsdlFactory.newWSDLReader();
-
 		logger.log(Level.FINE, "reader implementation = " + reader.toString());
 
-		Definition wsdlDefinition = reader.readWSDL(iFile.getLocation().toFile()
-				.getAbsolutePath());
-		WSDLInterfaceParser iParser = new WSDLInterfaceParser(wsdlDefinition,
+		InputStream byteStream = new FileInputStream(iFile.getLocation().toFile());
+		InputSource is = new InputSource(byteStream);
+		Description wsdlDescription = reader.read(is);
+		
+		WSDLInterfaceParser iParser = new WSDLInterfaceParser(wsdlDescription,
 				iFile.getName(), delimiters);
 		InterfaceArtifact artifact = iParser.parse();
 		return artifact;
+				
+//		WSDLReader reader = wsdlFactory.newWSDLReader();
+//		Definition wsdlDefinition = reader.readWSDL(iFile.getLocation().toFile()
+//				.getAbsolutePath());
+//		WSDLInterfaceParser iParser = new WSDLInterfaceParser(wsdlDefinition,
+//				iFile.getName(), delimiters);
+//		InterfaceArtifact artifact = iParser.parse();
+//		return artifact;
 	}
 
 	/**
@@ -122,15 +134,20 @@ public class WSDLParser implements Parser
 		// update WSDL Definition with new documentations
 		WSDLInterfaceGenerator wsdlInterfaceGenerator = new WSDLInterfaceGenerator(
 				(WSDLInterfaceArtifact) interfaceStructure);
-		Definition updatedDefinition = wsdlInterfaceGenerator
+		Description updatedDescription = wsdlInterfaceGenerator
 				.updateDocumentationInDefinition();
 
 		// write to file
+		// TODO test how to write the file
 		WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
-		// Changes due to Issue #28
+		
+		Document doc = wsdlWriter.getDocument(updatedDescription);
+		logger.fine("Document:\n" + doc.toString());
+		
 		Writer writer = new FileWriter(iFile.getLocation().toFile());
-		wsdlWriter.writeWSDL(updatedDefinition, writer);
-		// End changes due to Issue #28
+		
+		String res = wsdlWriter.writeWSDL(updatedDescription);
+		logger.fine("Description:\n" + res);
 		
 		writer.close();
 	}
