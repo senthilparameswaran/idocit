@@ -2,7 +2,6 @@ package de.akra.idocit.ui.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ import de.akra.idocit.core.services.PersistenceService;
 public class CompositeTestPersistenceService implements PersistenceService {
 
 	@Override
-	public void init(InputStream defaultGrids) {
+	public void init() {
 		throw new RuntimeException("Not implemented!");
 	}
 
