@@ -21,7 +21,6 @@ import java.util.Vector;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
 
 /**
@@ -76,7 +75,6 @@ public class DocumentationTestFactory
 	{
 		Documentation doc = new Documentation();
 
-		doc.setScope(Scope.EXPLICIT);
 		ThematicRole d = new ThematicRole("CRITERION");
 		doc.setThematicRole(d);
 
