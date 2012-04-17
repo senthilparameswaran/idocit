@@ -51,7 +51,6 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.utils.DescribedItemUtils;
@@ -303,7 +302,6 @@ public class JavaInterfaceParserTest
 		jInterface
 				.addDocpart(makeDocumentation(
 						developer,
-						Scope.EXPLICIT,
 						null,
 						"<p><b>This is a test class used in JUnit test!!</b></p>The parser parses Java Interfaces, Classes and Enumerations and maps the structure tothe iDocIt structure."));
 		artifact.addInterface(jInterface);
@@ -342,7 +340,7 @@ public class JavaInterfaceParserTest
 				ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME, Numerus.SINGULAR);
 		method.setIdentifier("JavaInterfaceParser");
 		method.setQualifiedIdentifier("JavaInterfaceParser");
-		method.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, null,
+		method.addDocpart(makeDocumentation(developer, null,
 				"This is the constructor."));
 		methods.add(method);
 
@@ -361,7 +359,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("CompilationUnit");
 		param.setQualifiedDataTypeName("CompilationUnit");
 		param.setSignatureElementPath("compilationUnit:CompilationUnit");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"compilationUnit:CompilationUnit",
 				"The {@link CompilationUnit} that should be parsed &amp; checked."));
 		inputParams.addParameter(param);
@@ -372,7 +370,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("String");
 		param.setQualifiedDataTypeName("String");
 		param.setSignatureElementPath("artifactName:String");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"artifactName:String",
 				"The name for the CompilationUnit (in general the Java source file)."));
 		inputParams.addParameter(param);
@@ -383,7 +381,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("Delimiters");
 		param.setQualifiedDataTypeName("Delimiters");
 		param.setSignatureElementPath("delimiters:Delimiters");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"delimiters:Delimiters", "The {@link Delimiters} for creating paths."));
 		inputParams.addParameter(param);
 
@@ -396,7 +394,6 @@ public class JavaInterfaceParserTest
 		method.setQualifiedIdentifier("parse");
 		method.addDocpart(makeDocumentation(
 				developer,
-				Scope.EXPLICIT,
 				null,
 				"Parses the {@link CompilationUnit} <code>compilationUnit</code> (Java source file)and converts it to a {@link JavaInterfaceArtifact}. (Read{@link JavaInterfaceArtifact#copy(de.akra.idocit.common.structure.SignatureElement)})"));
 
@@ -462,7 +459,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("int");
 		param.setQualifiedDataTypeName("int");
 		param.setSignatureElementPath("anyNumber:int");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, "anyNumber:int",
+		param.addDocpart(makeDocumentation(developer, "anyNumber:int",
 				"This is only any number."));
 		inputParams.addParameter(param);
 
@@ -472,7 +469,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("String");
 		param.setQualifiedDataTypeName("String");
 		param.setSignatureElementPath("anyString:String");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT, "anyString:String",
+		param.addDocpart(makeDocumentation(developer, "anyString:String",
 				"This is only any simple String. {@literal  This Is A Literal}."));
 		inputParams.addParameter(param);
 
@@ -482,7 +479,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("List<String>");
 		param.setQualifiedDataTypeName("List<String>");
 		param.setSignatureElementPath("names:List<String>");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"names:List<String>", "The list of names"));
 		inputParams.addParameter(param);
 
@@ -501,7 +498,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("InterfaceArtifact");
 		param.setQualifiedDataTypeName("InterfaceArtifact");
 		param.setSignatureElementPath("InterfaceArtifact:InterfaceArtifact");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"InterfaceArtifact:InterfaceArtifact",
 				"a new {@link JavaInterfaceArtifact}."));
 		outputParam.addParameter(param);
@@ -524,7 +521,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("JavaModelException");
 		param.setQualifiedDataTypeName("JavaModelException");
 		param.setSignatureElementPath("JavaModelException:JavaModelException");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"JavaModelException:JavaModelException",
 				"if an error occurs by getting the source code from ICompilationUnit."));
 		exceptions.addParameter(param);
@@ -535,7 +532,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("SAXException");
 		param.setQualifiedDataTypeName("SAXException");
 		param.setSignatureElementPath("SAXException:SAXException");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"SAXException:SAXException", ""));
 		exceptions.addParameter(param);
 
@@ -545,7 +542,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("IOException");
 		param.setQualifiedDataTypeName("IOException");
 		param.setSignatureElementPath("IOException:IOException");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer, 
 				"IOException:IOException", ""));
 		exceptions.addParameter(param);
 
@@ -555,7 +552,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("ParserConfigurationException");
 		param.setQualifiedDataTypeName("ParserConfigurationException");
 		param.setSignatureElementPath("ParserConfigurationException:ParserConfigurationException");
-		param.addDocpart(makeDocumentation(developer, Scope.EXPLICIT,
+		param.addDocpart(makeDocumentation(developer,
 				"ParserConfigurationException:ParserConfigurationException", ""));
 		exceptions.addParameter(param);
 
@@ -566,16 +563,14 @@ public class JavaInterfaceParserTest
 	 * Create a new {@link Documentation} with the given information.
 	 * 
 	 * @param addressee
-	 * @param scope
 	 * @param signatureElementIdentifier
 	 * @param text
 	 * @return A new {@link Documentation} initialized with the given information.
 	 */
-	private Documentation makeDocumentation(Addressee addressee, Scope scope,
+	private Documentation makeDocumentation(Addressee addressee,
 			String signatureElementIdentifier, String text)
 	{
 		Documentation doc = new Documentation();
-		doc.setScope(scope);
 		doc.setSignatureElementIdentifier(signatureElementIdentifier);
 		doc.getAddresseeSequence().add(addressee);
 		doc.getDocumentation().put(addressee, text);
