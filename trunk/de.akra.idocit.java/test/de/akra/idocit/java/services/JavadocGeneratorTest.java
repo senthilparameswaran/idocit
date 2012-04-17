@@ -56,7 +56,6 @@ import org.junit.Test;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.structure.JavadocTagElement;
@@ -394,7 +393,6 @@ public class JavadocGeneratorTest
 	private static Documentation createParamDocumentation()
 	{
 		Documentation newDoc = new Documentation();
-		newDoc.setScope(Scope.EXPLICIT);
 		newDoc.setThematicRole(new ThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("person:Person/name:java.lang.String");
@@ -425,7 +423,6 @@ public class JavadocGeneratorTest
 	private static Documentation createReturnDocumentation()
 	{
 		Documentation newDoc = new Documentation();
-		newDoc.setScope(Scope.EXPLICIT);
 		newDoc.setThematicRole(new ThematicRole("RESULT"));
 
 		newDoc.setSignatureElementIdentifier("double:double");

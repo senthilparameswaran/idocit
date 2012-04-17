@@ -41,7 +41,6 @@ import org.xml.sax.SAXException;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 
 /**
@@ -161,7 +160,6 @@ public class JavadocParserTest
 	private static Documentation createParamDocumentation()
 	{
 		Documentation newDoc = new Documentation();
-		newDoc.setScope(Scope.EXPLICIT);
 		newDoc.setThematicRole(DescribedItemUtils.findThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("/person:Person/name:java.lang.String");
@@ -192,7 +190,6 @@ public class JavadocParserTest
 	private static Documentation createReturnDocumentation()
 	{
 		Documentation newDoc = new Documentation();
-		newDoc.setScope(Scope.EXPLICIT);
 		newDoc.setThematicRole(DescribedItemUtils.findThematicRole("OBJECT"));
 
 		newDoc.setSignatureElementIdentifier("double:double");

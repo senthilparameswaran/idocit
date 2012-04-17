@@ -31,8 +31,6 @@ import org.xml.sax.SAXException;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.Scope;
-import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 
 /**
@@ -65,7 +63,6 @@ public class HTMLTableParserTest
 		List<Documentation> expectedDoc = new ArrayList<Documentation>();
 		Documentation doc = new Documentation();
 		expectedDoc.add(doc);
-		doc.setScope(Scope.IMPLICIT);
 		doc.setSignatureElementIdentifier("filter.id");
 		doc.setThematicRole(DescribedItemUtils.findThematicRole("ATTRIBUTE"));
 
@@ -83,7 +80,7 @@ public class HTMLTableParserTest
 
 		// parse html
 		List<Documentation> docs = HTMLTableParser
-				.convertJavadocToDocumentations("<table name=\"idocit\" border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>filter.id</td></tr><tr><td>Role:</td><td>ATTRIBUTE</td></tr><tr><td>Scope:</td><td>implicit</td></tr><tr><td><b>Developer</b>:</td><td>The existing documentation: this is a really good filter ;)</td></tr><tr><td><b>Manager</b>:</td><td>Really good info for manager &amp;.</td></tr></table>");
+				.convertJavadocToDocumentations("<table name=\"idocit\" border=\"1\" cellspacing=\"0\"><tr><td>Element:</td><td>filter.id</td></tr><tr><td>Role:</td><td>ATTRIBUTE</td></tr><tr><td><b>Developer</b>:</td><td>The existing documentation: this is a really good filter ;)</td></tr><tr><td><b>Manager</b>:</td><td>Really good info for manager &amp;.</td></tr></table>");
 
 		Assert.assertEquals(expectedDoc, docs);
 	}
