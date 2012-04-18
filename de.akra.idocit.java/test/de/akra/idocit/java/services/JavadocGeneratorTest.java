@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -57,8 +56,9 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicRole;
-import de.akra.idocit.core.utils.TestUtils;
+import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.structure.JavadocTagElement;
+import de.akra.idocit.java.structure.ParserOutput;
 
 /**
  * Tests for {@link JavadocGenerator}.
@@ -153,8 +153,6 @@ public class JavadocGeneratorTest
 	 */
 	private static Delimiters delimiters = new Delimiters();
 
-	private Document document;
-
 	/**
 	 * Initialization method.
 	 */
@@ -177,7 +175,9 @@ public class JavadocGeneratorTest
 	@Test
 	public void testGeneradeJavadoc() throws FileNotFoundException, IOException
 	{
-		CompilationUnit cu = createCompilationUnit("test/source/ParsingService.java");
+		ParserOutput output = JavadocTestUtils
+				.createCompilationUnit("test/source/ParsingService.java");
+		CompilationUnit cu = output.getCompilationUnit();
 
 		AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu.types().get(0);
 		AST ast = absTypeDecl.getAST();
@@ -200,7 +200,7 @@ public class JavadocGeneratorTest
 
 		List<TagElement> tags = javadoc.tags();
 		tags.add(tagElement);
-		
+
 		// logger.info(javadoc.toString());
 
 		Assert.assertEquals(EXPECTED_JAVADOC, javadoc.toString());
@@ -217,7 +217,11 @@ public class JavadocGeneratorTest
 	@Test
 	public void testJavaInterfaceGenerator() throws FileNotFoundException, IOException
 	{
-		CompilationUnit cu = createCompilationUnit("test/source/ParsingService.java");
+		ParserOutput output = JavadocTestUtils
+				.createCompilationUnit("test/source/ParsingService.java");
+		CompilationUnit cu = output.getCompilationUnit();
+		Document document = output.getDocument();
+
 		cu.recordModifications();
 
 		TypeDeclaration typeDecl = (TypeDeclaration) cu.types().get(0);
@@ -268,8 +272,9 @@ public class JavadocGeneratorTest
 			MalformedTreeException, BadLocationException, CoreException
 	{
 
-		CompilationUnit unit = createCompilationUnit("test/source/ParsingService2.java");
-
+		ParserOutput output = JavadocTestUtils
+				.createCompilationUnit("test/source/ParsingService2.java");
+		CompilationUnit unit = output.getCompilationUnit();
 		String originalCU = unit.toString();
 
 		TypeDeclaration typeDecl = (TypeDeclaration) unit.types().get(0);
@@ -334,30 +339,6 @@ public class JavadocGeneratorTest
 
 		logger.log(Level.INFO, originalCU);
 		logger.log(Level.INFO, changedCU);
-	}
-
-	/**
-	 * Parses a file and returns it as {@link CompilationUnit}.
-	 * 
-	 * @return The {@link CompilationUnit}.
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	private CompilationUnit createCompilationUnit(String fileName)
-			throws FileNotFoundException, IOException
-	{
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-
-		String fileContent = TestUtils.readFile(fileName);
-
-		document = new Document(fileContent);
-		parser.setSource(document.get().toCharArray());
-		// parser.setSource(fileContent.toCharArray());
-		parser.setResolveBindings(true); // we need bindings later on
-		CompilationUnit cu = (CompilationUnit) parser
-				.createAST(null /* IProgressMonitor */);
-		return cu;
 	}
 
 	/**
