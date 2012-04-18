@@ -23,6 +23,7 @@ import de.akra.idocit.java.services.JavaInterfaceParserTest;
 import de.akra.idocit.java.services.JavaParserTest;
 import de.akra.idocit.java.services.JavadocGeneratorTest;
 import de.akra.idocit.java.services.JavadocParserTest;
+import de.akra.idocit.java.services.SimpleJavadocGeneratorTest;
 import de.akra.idocit.java.structure.DocumentationTest;
 import de.akra.idocit.java.structure.JavaInterfaceArtifactTest;
 import de.akra.idocit.java.structure.JavaInterfaceTest;
@@ -37,10 +38,11 @@ import de.akra.idocit.java.structure.JavaParameterTest;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ HTMLTableParserTest.class, JavadocGeneratorTest.class,
-		JavadocParserTest.class, JavaInterfaceParserTest.class,
-		JavaParserTest.class, DocumentationTest.class,
-		JavaInterfaceArtifactTest.class, JavaInterfaceTest.class,
-		JavaMethodTest.class, JavaParameterTest.class })
-public class AllIDocItJavaTests {
+		JavadocParserTest.class, JavaInterfaceParserTest.class, JavaParserTest.class,
+		DocumentationTest.class, JavaInterfaceArtifactTest.class,
+		JavaInterfaceTest.class, JavaMethodTest.class, JavaParameterTest.class,
+		SimpleJavadocGeneratorTest.class })
+public class AllIDocItJavaTests
+{
 
 }
