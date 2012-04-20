@@ -12,6 +12,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>de.akra.idocit.java.feature</artifactId>
 	<version>0.0.4.qualifier</version>
+	<packaging>eclipse-feature</packaging>
 	<name>iDocIt! Java Feature</name>
 	
 	<parent>
