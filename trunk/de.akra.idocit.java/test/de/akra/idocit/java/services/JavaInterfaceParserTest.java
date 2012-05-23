@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -258,7 +258,7 @@ public class JavaInterfaceParserTest
 
 		JavaInterfaceParser iParser = new JavaInterfaceParser(cu, testFileName,
 				delimiters);
-		InterfaceArtifact actualArtifact = iParser.parse();
+		InterfaceArtifact actualArtifact = iParser.parse(JavadocParser.INSTANCE);
 
 		JavaInterfaceArtifact expectedArtifact = createExpectedArtifact(testFileName, cu);
 		Assert.assertEquals(TestUtils.toStringWithoutId(expectedArtifact),
@@ -340,8 +340,7 @@ public class JavaInterfaceParserTest
 				ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME, Numerus.SINGULAR);
 		method.setIdentifier("JavaInterfaceParser");
 		method.setQualifiedIdentifier("JavaInterfaceParser");
-		method.addDocpart(makeDocumentation(developer, null,
-				"This is the constructor."));
+		method.addDocpart(makeDocumentation(developer, null, "This is the constructor."));
 		methods.add(method);
 
 		/*
@@ -359,8 +358,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("CompilationUnit");
 		param.setQualifiedDataTypeName("CompilationUnit");
 		param.setSignatureElementPath("compilationUnit:CompilationUnit");
-		param.addDocpart(makeDocumentation(developer, 
-				"compilationUnit:CompilationUnit",
+		param.addDocpart(makeDocumentation(developer, "compilationUnit:CompilationUnit",
 				"The {@link CompilationUnit} that should be parsed &amp; checked."));
 		inputParams.addParameter(param);
 
@@ -370,8 +368,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("String");
 		param.setQualifiedDataTypeName("String");
 		param.setSignatureElementPath("artifactName:String");
-		param.addDocpart(makeDocumentation(developer, 
-				"artifactName:String",
+		param.addDocpart(makeDocumentation(developer, "artifactName:String",
 				"The name for the CompilationUnit (in general the Java source file)."));
 		inputParams.addParameter(param);
 
@@ -381,8 +378,8 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("Delimiters");
 		param.setQualifiedDataTypeName("Delimiters");
 		param.setSignatureElementPath("delimiters:Delimiters");
-		param.addDocpart(makeDocumentation(developer, 
-				"delimiters:Delimiters", "The {@link Delimiters} for creating paths."));
+		param.addDocpart(makeDocumentation(developer, "delimiters:Delimiters",
+				"The {@link Delimiters} for creating paths."));
 		inputParams.addParameter(param);
 
 		/*
@@ -479,8 +476,8 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("List<String>");
 		param.setQualifiedDataTypeName("List<String>");
 		param.setSignatureElementPath("names:List<String>");
-		param.addDocpart(makeDocumentation(developer, 
-				"names:List<String>", "The list of names"));
+		param.addDocpart(makeDocumentation(developer, "names:List<String>",
+				"The list of names"));
 		inputParams.addParameter(param);
 
 		/*
@@ -498,7 +495,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("InterfaceArtifact");
 		param.setQualifiedDataTypeName("InterfaceArtifact");
 		param.setSignatureElementPath("InterfaceArtifact:InterfaceArtifact");
-		param.addDocpart(makeDocumentation(developer, 
+		param.addDocpart(makeDocumentation(developer,
 				"InterfaceArtifact:InterfaceArtifact",
 				"a new {@link JavaInterfaceArtifact}."));
 		outputParam.addParameter(param);
@@ -521,7 +518,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("JavaModelException");
 		param.setQualifiedDataTypeName("JavaModelException");
 		param.setSignatureElementPath("JavaModelException:JavaModelException");
-		param.addDocpart(makeDocumentation(developer, 
+		param.addDocpart(makeDocumentation(developer,
 				"JavaModelException:JavaModelException",
 				"if an error occurs by getting the source code from ICompilationUnit."));
 		exceptions.addParameter(param);
@@ -532,8 +529,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("SAXException");
 		param.setQualifiedDataTypeName("SAXException");
 		param.setSignatureElementPath("SAXException:SAXException");
-		param.addDocpart(makeDocumentation(developer, 
-				"SAXException:SAXException", ""));
+		param.addDocpart(makeDocumentation(developer, "SAXException:SAXException", ""));
 		exceptions.addParameter(param);
 
 		param = new JavaParameter(exceptions, Numerus.SINGULAR, false);
@@ -542,8 +538,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("IOException");
 		param.setQualifiedDataTypeName("IOException");
 		param.setSignatureElementPath("IOException:IOException");
-		param.addDocpart(makeDocumentation(developer, 
-				"IOException:IOException", ""));
+		param.addDocpart(makeDocumentation(developer, "IOException:IOException", ""));
 		exceptions.addParameter(param);
 
 		param = new JavaParameter(exceptions, Numerus.SINGULAR, false);
@@ -601,7 +596,7 @@ public class JavaInterfaceParserTest
 		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
 		JavaInterfaceParser iParser = new JavaInterfaceParser(cu, fileName, delimiters);
-		InterfaceArtifact artifact = iParser.parse();
+		InterfaceArtifact artifact = iParser.parse(JavadocParser.INSTANCE);
 
 		StringBuffer hierarchy = new StringBuffer();
 		TestUtils.buildHierarchy(hierarchy, artifact, 0);

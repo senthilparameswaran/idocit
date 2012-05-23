@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,20 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
+import org.eclipse.ui.PlatformUI;
 
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.extensions.Parser;
+import de.akra.idocit.core.extensions.ValidationReport;
+import de.akra.idocit.core.extensions.ValidationReport.ValidationCode;
+import de.akra.idocit.java.constants.PreferenceStoreConstants;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 
 /**
@@ -82,7 +87,7 @@ public class JavaParser implements Parser
 	public InterfaceArtifact parse(IFile iFile) throws Exception
 	{
 		logger.log(Level.INFO, "parse file: "
-				+ iFile.getLocation().toFile().getAbsolutePath());
+				+ iFile.getFullPath().toFile().getAbsolutePath());
 
 		ICompilationUnit iCompilationUnit = JavaCore.createCompilationUnitFrom(iFile);
 
@@ -104,7 +109,10 @@ public class JavaParser implements Parser
 
 		JavaInterfaceParser jInterfaceParser = new JavaInterfaceParser(compilationUnit,
 				compilationUnit.getJavaElement().getElementName(), delimiters);
-		InterfaceArtifact artifact = jInterfaceParser.parse();
+
+		AbsJavadocParser javadocParser = isSimpleModeConfigured() ? SimpleJavadocParser.INSTANCE
+				: JavadocParser.INSTANCE;
+		InterfaceArtifact artifact = jInterfaceParser.parse(javadocParser);
 
 		return artifact;
 	}
@@ -118,10 +126,20 @@ public class JavaParser implements Parser
 	public void write(InterfaceArtifact interfaceStructure, IFile iFile) throws Exception
 	{
 		logger.log(Level.INFO, "write file: "
-				+ iFile.getLocation().toFile().getAbsolutePath());
+				+ iFile.getFullPath().toFile().getAbsolutePath());
 
 		JavaInterfaceArtifact artifact = (JavaInterfaceArtifact) interfaceStructure;
-		JavaInterfaceGenerator.updateJavadocInAST(artifact);
+
+		if (isSimpleModeConfigured())
+		{
+			JavaInterfaceGenerator.updateJavadocInAST(artifact,
+					SimpleJavadocGenerator.INSTANCE);
+		}
+		else
+		{
+			JavaInterfaceGenerator
+					.updateJavadocInAST(artifact, JavadocGenerator.INSTANCE);
+		}
 		writeToFile(artifact);
 	}
 
@@ -184,6 +202,51 @@ public class JavaParser implements Parser
 	public Delimiters getDelimiters()
 	{
 		return delimiters;
+	}
+
+	private boolean isSimpleModeConfigured()
+	{
+		IPreferenceStore store = PlatformUI.getPreferenceStore();
+		String mode = store.getString(PreferenceStoreConstants.JAVADOC_GENERATION_MODE);
+
+		return PreferenceStoreConstants.JAVADOC_GENERATION_MODE_SIMPLE.equals(mode);
+	}
+
+	@Override
+	public ValidationReport validateArtifact(InterfaceArtifact artifact)
+	{
+		if (artifact instanceof JavaInterfaceArtifact)
+		{
+			ValidationReport report = new ValidationReport();
+
+			if (isSimpleModeConfigured())
+			{
+				JavaInterfaceArtifact javaArtifact = (JavaInterfaceArtifact) artifact;
+
+				if (AddresseeUtils.containsOnlyOneAddressee(javaArtifact, "Developer"))
+				{
+					report.setReturnCode(ValidationCode.OK);
+					report.setMessage("");
+				}
+				else
+				{
+					report.setReturnCode(ValidationCode.ERROR);
+					report.setMessage("The generation of simplified Javadoc works only for addressee \"Developer\"");
+				}
+			}
+			else
+			{
+				report.setReturnCode(ValidationCode.OK);
+				report.setMessage("");
+			}
+
+			return report;
+		}
+		else
+		{
+			throw new RuntimeException("This Java Parser only accepts "
+					+ JavaInterfaceArtifact.class.getName() + "s for validation.");
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
+import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.utils.ResourceUtils;
 
@@ -349,7 +350,7 @@ public class EclipsePersistenceService implements PersistenceService
 	 * Removes the formatting characters from the given addressees.
 	 * 
 	 * @param grids
-	 * 	The addressees to cleanup
+	 *            The addressees to cleanup
 	 * @return The cleaned addressees
 	 */
 	private static List<Addressee> removeFormattingCharsAddressee(
@@ -760,5 +761,37 @@ public class EclipsePersistenceService implements PersistenceService
 	public long getLastSaveTimeOfAddressees()
 	{
 		return LAST_SAVE_TIME_OF_ADDRESSEES;
+	}
+
+	@Override
+	public ValidationReport validateInterfaceArtifact(InterfaceArtifact artifact,
+			IFile iFile) throws Exception
+	{
+		if (artifact != null && iFile != null)
+		{
+			// get Parser depending on the file extension
+			Parser parser = ServiceManager.getInstance().getParsingService()
+					.getParser(iFile.getFileExtension());
+			if (parser != null)
+			{
+				return parser.validateArtifact(artifact);
+			}
+			else
+			{
+				String message = "No parser for file extension "
+						+ String.valueOf(iFile.getFileExtension()) + " found.";
+				logger.log(Level.SEVERE, message);
+				throw new IllegalStateException(message);
+			}
+		}
+		else
+		{
+			logger.log(
+					Level.SEVERE,
+					"The input parameters must be initalized. interfaceStructure="
+							+ String.valueOf(artifact) + "; iFile="
+							+ String.valueOf(iFile));
+			throw new IllegalArgumentException("The input parameters must be initalized.");
+		}
 	}
 }

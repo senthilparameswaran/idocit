@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -32,12 +34,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
+import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Some useful methods for tests.
@@ -47,6 +51,7 @@ import de.akra.idocit.common.structure.SignatureElement;
  */
 public class TestUtils
 {
+	
 	/**
 	 * Creates an Eclipse project "External Files" and links the file
 	 * <code>fileName</code> to the project. Then the file can be used as {@link IFile}.
@@ -320,5 +325,132 @@ public class TestUtils
 			builder.append("]");
 		}
 		return builder;
+	}
+
+	public static Addressee createDeveloper()
+	{
+		Addressee addresseeDeveloper = new Addressee("Developer");
+		addresseeDeveloper.setDefault(true);
+		// The developer implements software-systems.
+		addresseeDeveloper.setDescription("");
+
+		return addresseeDeveloper;
+	}
+
+	public static Addressee createTester()
+	{
+		Addressee addresseeTester = new Addressee("Tester");
+		addresseeTester.setDefault(false);
+		// "The tester tests the implemented systems and gives feedback on their functional- and not-functional quality."
+		addresseeTester
+				.setDescription("");
+
+		return addresseeTester;
+	}
+
+	public static Addressee createArchitect()
+	{
+		Addressee addresseeArchitect = new Addressee("Architect");
+		addresseeArchitect.setDefault(false);
+		// "The architect designs software-systems"
+		addresseeArchitect.setDescription("");
+
+		return addresseeArchitect;
+	}
+
+	public static ThematicRole createObject()
+	{
+		ThematicRole action = new ThematicRole("OBJECT");
+		// "What the operation does."
+		action.setDescription("");
+
+		return action;
+	}
+	
+	public static ThematicRole createAction()
+	{
+		ThematicRole action = new ThematicRole("ACTION");
+		// "What the operation does."
+		action.setDescription("");
+
+		return action;
+	}
+
+	public static ThematicRole createComparison()
+	{
+		ThematicRole comparison = new ThematicRole("COMPARISON");
+		// "What identifies the OBJECT(s)."
+		comparison.setDescription("");
+
+		return comparison;
+	}
+
+	public static ThematicRole createSource()
+	{
+		ThematicRole source = new ThematicRole("SOURCE");
+		// "Where the OBJECT(s) come from"
+		source.setDescription("");
+
+		return source;
+	}
+
+	public static ThematicRole createOrdering()
+	{
+		ThematicRole ordering = new ThematicRole("ORDERING");
+		// "Defines the sequence of OBJECTs"
+		ordering.setDescription("");
+
+		return ordering;
+	}
+
+	/**
+	 * Creates a list of three addressees: Developer, Tester and Architect.
+	 * 
+	 * @return [OBJECT]
+	 * 
+	 * @source The three addressees and their attributes are hard coded in this method.
+	 * 
+	 * @thematicgrid Creating Operations
+	 */
+	public static List<Addressee> createReferenceAddressees()
+	{
+		List<Addressee> addressees = new ArrayList<Addressee>();
+
+		addressees.add(createDeveloper());
+		addressees.add(createTester());
+		addressees.add(createArchitect());
+
+		return addressees;
+	}
+
+	/**
+	 * Creates a list of thematic roles with action, comparison, source and ordering.
+	 * 
+	 * @return [OBJECT]
+	 * 
+	 * @source The thematic roles are hard coded in this method.
+	 * 
+	 * @thematicgrid Creating Operations
+	 */
+	public static List<ThematicRole> createReferenceThematicRoles()
+	{
+		List<ThematicRole> result = new ArrayList<ThematicRole>();
+
+		result.add(createAction());
+		result.add(createComparison());
+		result.add(createSource());
+		result.add(createOrdering());
+		result.add(createObject());
+
+		return result;
+	}
+
+	public static List<Addressee> createDeveloperSequence()
+	{
+		List<Addressee> result = new ArrayList<Addressee>();
+
+		result.add(createDeveloper());
+
+		return result;
 	}
 }

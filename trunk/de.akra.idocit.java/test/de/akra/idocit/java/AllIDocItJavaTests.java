@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,14 @@ package de.akra.idocit.java;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import de.akra.idocit.java.services.AddresseeUtilsTest;
 import de.akra.idocit.java.services.HTMLTableParserTest;
 import de.akra.idocit.java.services.JavaInterfaceParserTest;
 import de.akra.idocit.java.services.JavaParserTest;
 import de.akra.idocit.java.services.JavadocGeneratorTest;
 import de.akra.idocit.java.services.JavadocParserTest;
 import de.akra.idocit.java.services.SimpleJavadocGeneratorTest;
+import de.akra.idocit.java.services.SimpleJavadocParserTest;
 import de.akra.idocit.java.structure.DocumentationTest;
 import de.akra.idocit.java.structure.JavaInterfaceArtifactTest;
 import de.akra.idocit.java.structure.JavaInterfaceTest;
@@ -41,7 +43,8 @@ import de.akra.idocit.java.structure.JavaParameterTest;
 		JavadocParserTest.class, JavaInterfaceParserTest.class, JavaParserTest.class,
 		DocumentationTest.class, JavaInterfaceArtifactTest.class,
 		JavaInterfaceTest.class, JavaMethodTest.class, JavaParameterTest.class,
-		SimpleJavadocGeneratorTest.class })
+		SimpleJavadocGeneratorTest.class, SimpleJavadocParserTest.class , AddresseeUtilsTest.class })
+
 public class AllIDocItJavaTests
 {
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
+import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.services.impl.ParsingService;
 import de.akra.idocit.core.services.impl.ParsingServiceInitializer;
 import de.akra.idocit.core.services.impl.ServiceManager;
@@ -74,6 +75,12 @@ public class ParsingServiceTest {
 
 		@Override
 		public Delimiters getDelimiters() {
+			return null;
+		}
+
+		@Override
+		public ValidationReport validateArtifact(InterfaceArtifact artifact)
+		{
 			return null;
 		}
 

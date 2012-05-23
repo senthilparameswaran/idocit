@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
+import de.akra.idocit.core.extensions.ValidationReport;
 
 /**
  * Provides services to load and to write an {@link InterfaceArtifact}.
@@ -36,53 +37,49 @@ import de.akra.idocit.core.exceptions.UnitializedIDocItException;
  * @version 0.0.2
  * 
  */
-public interface PersistenceService {
+public interface PersistenceService
+{
 
 	public abstract void init();
 
 	/**
-	 * Loads the interface from the {@link IFile} <code>iFile</code> and returns
-	 * its structure.
+	 * Loads the interface from the {@link IFile} <code>iFile</code> and returns its
+	 * structure.
 	 * 
 	 * @param iFile
 	 *            The file to load.
-	 * @return The interface structure represented in a
-	 *         {@link InterfaceArtifact}. If <code>iFile == null</code> or the
-	 *         file type is not supported
+	 * @return The interface structure represented in a {@link InterfaceArtifact}. If
+	 *         <code>iFile == null</code> or the file type is not supported
 	 *         {@link InterfaceArtifact#NOT_SUPPORTED_ARTIFACT} is returned.
 	 * @throws Exception
 	 */
-	public abstract InterfaceArtifact loadInterface(IFile iFile)
+	public abstract InterfaceArtifact loadInterface(IFile iFile) throws Exception;
+
+	/**
+	 * Writes the {@link InterfaceArtifact} <code>interfaceStructure</code> to the
+	 * {@link File} <code>file</code>.
+	 * 
+	 * @param interfaceArtifact
+	 *            The {@link InterfaceArtifact} that should be written into the iFile.
+	 * @param iFile
+	 *            The {@link IFile} into which the <code>interfaceArtifact</code> should
+	 *            be written.
+	 * @throws Exception
+	 */
+	public abstract void writeInterface(InterfaceArtifact interfaceArtifact, IFile iFile)
 			throws Exception;
 
 	/**
-	 * Writes the {@link InterfaceArtifact} <code>interfaceStructure</code> to
-	 * the {@link File} <code>file</code>.
-	 * 
-	 * @param interfaceArtifact
-	 *            The {@link InterfaceArtifact} that should be written into the
-	 *            iFile.
-	 * @param iFile
-	 *            The {@link IFile} into which the
-	 *            <code>interfaceArtifact</code> should be written.
-	 * @throws Exception
-	 */
-	public abstract void writeInterface(InterfaceArtifact interfaceArtifact,
-			IFile iFile) throws Exception;
-
-	/**
-	 * Returns <code>true</code> if adressees are available in the storage of
-	 * this service. The storage (SOURCE) depends on the implementation of this
-	 * interface.
+	 * Returns <code>true</code> if adressees are available in the storage of this
+	 * service. The storage (SOURCE) depends on the implementation of this interface.
 	 * 
 	 * @return See above
 	 */
 	public abstract boolean areAddresseesInitialized();
 
 	/**
-	 * Returns <code>true</code> if thematic roles are available in the storage of
-	 * this service. The storage (SOURCE) depends on the implementation of this
-	 * interface.
+	 * Returns <code>true</code> if thematic roles are available in the storage of this
+	 * service. The storage (SOURCE) depends on the implementation of this interface.
 	 * 
 	 * @return See above
 	 */
@@ -138,7 +135,7 @@ public interface PersistenceService {
 	 * @return See above
 	 * 
 	 * @throws UnitializedIDocItException
-	 * 	If the configured grids are not available
+	 *             If the configured grids are not available
 	 */
 	public abstract List<ThematicGrid> loadThematicGrids()
 			throws UnitializedIDocItException;
@@ -149,8 +146,7 @@ public interface PersistenceService {
 	 * @param verbClassRoleAssociations
 	 *            {@link ThematicGrid}s to store.
 	 */
-	public abstract void persistThematicGrids(
-			List<ThematicGrid> verbClassRoleAssociations);
+	public abstract void persistThematicGrids(List<ThematicGrid> verbClassRoleAssociations);
 
 	/**
 	 * Exports the given list of {@link ThematicGrid}s into the file
@@ -167,8 +163,8 @@ public interface PersistenceService {
 			List<ThematicGrid> grids) throws IOException;
 
 	/**
-	 * Imports the list of {@link ThematicGrid}s from the given file
-	 * <code>source</code> in XML-format.
+	 * Imports the list of {@link ThematicGrid}s from the given file <code>source</code>
+	 * in XML-format.
 	 * 
 	 * @param source
 	 *            The file to import the XML from
@@ -204,12 +200,15 @@ public interface PersistenceService {
 	 * @Deprecated
 	 */
 	public abstract long getLastSaveTimeOfThematicRoles();
-	
+
 	/**
 	 * @return the lAST_SAVE_TIME_OF_ADDRESSEES
 	 * 
 	 * @Deprecated
 	 */
 	public abstract long getLastSaveTimeOfAddressees();
+
+	public ValidationReport validateInterfaceArtifact(InterfaceArtifact artifact,
+			IFile ifile) throws Exception;
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
 
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.SignatureElement;
 
 /**
  * A container for information that should be added to a {@link Javadoc} comment.
@@ -35,6 +36,7 @@ public class JavadocTagElement
 	private String tagName;
 	private String parameterName;
 	private List<Documentation> documentations;
+	private SignatureElement signatureElement;
 
 	/**
 	 * Constructor.
@@ -42,9 +44,10 @@ public class JavadocTagElement
 	 * @param documentations
 	 *            The {@link Documentation}s that should be added to the {@link Javadoc}.
 	 */
-	public JavadocTagElement(List<Documentation> documentations)
+	public JavadocTagElement(List<Documentation> documentations,
+			SignatureElement signatureElement)
 	{
-		this(null, null, documentations);
+		this(null, null, documentations, signatureElement);
 	}
 
 	/**
@@ -57,9 +60,10 @@ public class JavadocTagElement
 	 * @param documentations
 	 *            The {@link Documentation}s that should be added to the {@link Javadoc}.
 	 */
-	public JavadocTagElement(String tagName, List<Documentation> documentations)
+	public JavadocTagElement(String tagName, List<Documentation> documentations,
+			SignatureElement signatureElement)
 	{
-		this(tagName, null, documentations);
+		this(tagName, null, documentations, signatureElement);
 	}
 
 	/**
@@ -76,11 +80,12 @@ public class JavadocTagElement
 	 *            The {@link Documentation}s that should be added to the {@link Javadoc}.
 	 */
 	public JavadocTagElement(String tagName, String parameterName,
-			List<Documentation> documentations)
+			List<Documentation> documentations, SignatureElement signatureElement)
 	{
 		this.tagName = tagName;
 		this.parameterName = parameterName;
 		this.documentations = documentations;
+		this.signatureElement = signatureElement;
 	}
 
 	/**
@@ -118,5 +123,15 @@ public class JavadocTagElement
 	public List<Documentation> getDocumentations()
 	{
 		return documentations;
+	}
+
+	public SignatureElement getSignatureElement()
+	{
+		return signatureElement;
+	}
+
+	public void setSignatureElement(SignatureElement signatureElement)
+	{
+		this.signatureElement = signatureElement;
 	}
 }

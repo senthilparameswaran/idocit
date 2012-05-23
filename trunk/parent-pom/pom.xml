@@ -27,7 +27,7 @@
 	<properties>
 		<tycho-version>0.13.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<platform-version-name>helios</platform-version-name>
+		<platform-version-name>indigo</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
 	</properties>
 
@@ -38,6 +38,7 @@
 		<module>../de.akra.idocit.java</module>
 		<module>../de.akra.idocit.java.feature</module>
 		<module>../de.akra.idocit.java.taglets</module>
+		<module>../de.akra.idocit.java.ui</module>
 		<module>../de.akra.idocit.ui</module>
 		<module>../de.akra.idocit.ui.feature</module>
 		<module>../de.akra.idocit.wsdl</module>

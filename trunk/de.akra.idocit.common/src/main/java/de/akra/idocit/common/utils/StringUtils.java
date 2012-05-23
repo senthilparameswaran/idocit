@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -319,4 +319,36 @@ public class StringUtils
 
 		return sw.toString();
 	}
+	
+	public static String capitalizeFirstChar(String string){
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append(String.valueOf(string.charAt(0)).toUpperCase());
+		buffer.append(string.substring(1).toLowerCase());
+		
+		return buffer.toString();
+	}
+	
+	public static String toString(String string)
+	{
+		if (string == null)
+		{
+			return "";
+		}
+
+		return string;
+	}
+
+	public static String inBrackets(String string)
+	{
+		if (string == null)
+		{
+			return "";
+		}
+		else
+		{
+			return '[' + string + ']';
+		}
+	}
+
 }
