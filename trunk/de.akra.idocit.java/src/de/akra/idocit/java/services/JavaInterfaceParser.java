@@ -489,9 +489,17 @@ public class JavaInterfaceParser
 						.getExceptions().get(0));
 			}
 
-			attachDocsToParameters(documentations,
-					(JavaParameters) method.getInputParameters());
-			attachDocsToParameters(documentations, outputParameters);
+			if (method.getInputParameters() != null)
+			{
+				attachDocsToParameters(documentations,
+						(JavaParameters) method.getInputParameters());
+			}
+
+			if (outputParameters != null)
+			{
+				attachDocsToParameters(documentations, outputParameters);
+			}
+
 			Iterator<Documentation> iterDocs = documentations.iterator();
 			while (iterDocs.hasNext())
 			{
