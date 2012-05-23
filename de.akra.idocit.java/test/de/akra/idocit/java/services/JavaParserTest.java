@@ -156,6 +156,12 @@ public class JavaParserTest
 		specialExceptionWorkspaceFile.create(new FileInputStream(specialExceptionFile),
 				true, progressMonitor);
 
+		// Copy source code of JavaParser.java to test workspace.
+		File srcJavaParserFile = new File("test/source/JavaParser.java");
+		IFile srcJavaParserWorkspaceFile = srcFolder.getFile("JavaParser.java");
+		srcJavaParserWorkspaceFile.create(new FileInputStream(srcJavaParserFile), true,
+				progressMonitor);
+
 		project.refreshLocal(IProject.DEPTH_INFINITE, progressMonitor);
 
 		// Activate Simple Parser
@@ -190,58 +196,99 @@ public class JavaParserTest
 	@Test
 	public void testJavaParserWithSimpleParser() throws Exception
 	{
-		ParserOutput output = JavadocTestUtils
-				.createCompilationUnit("test/source/CustomerService.java");
-		CompilationUnit cu = output.getCompilationUnit();
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject project = root.getProject(PROJECT_NAME);
-		IFile testSourceFolder = project.getFile("src/source/CustomerService.java");
+		/*
+		 * Positive tests
+		 */
+		{
+			// #########################################################################
+			// # Test case #1: parser the customer service correctly. Then store it and
+			// # parse it again. Both objects must be equal.
+			// #########################################################################
+			{
+				ParserOutput output = JavadocTestUtils
+						.createCompilationUnit("test/source/CustomerService.java");
+				CompilationUnit cu = output.getCompilationUnit();
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IProject project = root.getProject(PROJECT_NAME);
+				IFile testSourceFolder = project
+						.getFile("src/source/CustomerService.java");
 
-		JavaInterfaceArtifact refInterfaceArtifact = TestDataFactory
-				.createCustomerService("Developer", false, cu);
+				JavaInterfaceArtifact refInterfaceArtifact = TestDataFactory
+						.createCustomerService("Developer", false, cu);
 
-		JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
-				.getInstance().getPersistenceService().loadInterface(testSourceFolder);
+				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+						.getInstance().getPersistenceService()
+						.loadInterface(testSourceFolder);
 
-		JavaInterface refInterface = (JavaInterface) refInterfaceArtifact.getInterfaces()
-				.get(0);
-		JavaInterface actInterface = (JavaInterface) actInterfaceArtifact.getInterfaces()
-				.get(0);
+				JavaInterface refInterface = (JavaInterface) refInterfaceArtifact
+						.getInterfaces().get(0);
+				JavaInterface actInterface = (JavaInterface) actInterfaceArtifact
+						.getInterfaces().get(0);
 
-		JavaMethod refMethod = (JavaMethod) refInterface.getOperations().get(0);
-		JavaMethod actMethod = (JavaMethod) actInterface.getOperations().get(0);
+				JavaMethod refMethod = (JavaMethod) refInterface.getOperations().get(0);
+				JavaMethod actMethod = (JavaMethod) actInterface.getOperations().get(0);
 
-		List<? extends Parameter> refInputParameters = refMethod.getInputParameters()
-				.getParameters();
-		List<? extends Parameter> actInputParameters = actMethod.getInputParameters()
-				.getParameters();
+				List<? extends Parameter> refInputParameters = refMethod
+						.getInputParameters().getParameters();
+				List<? extends Parameter> actInputParameters = actMethod
+						.getInputParameters().getParameters();
 
-		List<? extends Parameter> refOutputParameters = refMethod.getOutputParameters()
-				.getParameters();
-		List<? extends Parameter> actOutputParameters = actMethod.getOutputParameters()
-				.getParameters();
+				List<? extends Parameter> refOutputParameters = refMethod
+						.getOutputParameters().getParameters();
+				List<? extends Parameter> actOutputParameters = actMethod
+						.getOutputParameters().getParameters();
 
-		Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsParameters(
-				refInputParameters, actInputParameters));
-		Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsParameters(
-				refOutputParameters, actOutputParameters));
-		Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsExceptions(
-				refMethod.getExceptions(), actMethod.getExceptions()));
-		Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsMethods(refMethod,
-				actMethod));
-		Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsInterfaces(
-				refInterface, actInterface));
-		Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsInterfaceArtifacts(
-				refInterfaceArtifact, actInterfaceArtifact));
+				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsParameters(
+						refInputParameters, actInputParameters));
+				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsParameters(
+						refOutputParameters, actOutputParameters));
+				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsExceptions(
+						refMethod.getExceptions(), actMethod.getExceptions()));
+				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsMethods(
+						refMethod, actMethod));
+				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsInterfaces(
+						refInterface, actInterface));
+				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils
+						.equalsInterfaceArtifacts(refInterfaceArtifact,
+								actInterfaceArtifact));
 
-		ServiceManager.getInstance().getPersistenceService()
-				.writeInterface(actInterfaceArtifact, testSourceFolder);
+				ServiceManager.getInstance().getPersistenceService()
+						.writeInterface(actInterfaceArtifact, testSourceFolder);
 
-		actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager.getInstance()
-				.getPersistenceService().loadInterface(testSourceFolder);
+				actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+						.getInstance().getPersistenceService()
+						.loadInterface(testSourceFolder);
 
-		Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsInterfaceArtifacts(
-				refInterfaceArtifact, actInterfaceArtifact));
+				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils
+						.equalsInterfaceArtifacts(refInterfaceArtifact,
+								actInterfaceArtifact));
+			}
+
+			// #########################################################################
+			// # Test case #2: parse the source code of JavaParser.java without any error.
+			// # In a former implementation this test causes a NullPointerException because
+			// # of void-methods (input or output-parameters == null).
+			// #########################################################################
+			{
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IProject project = root.getProject(PROJECT_NAME);
+				IFile testSourceFolder = project
+						.getFile("src/de/akra/idocit/java/services/JavaParser.java");
+
+				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+						.getInstance().getPersistenceService()
+						.loadInterface(testSourceFolder);
+
+				Assert.assertNotNull(actInterfaceArtifact);
+			}
+		}
+		/*
+		 * Negative tests
+		 */
+		{
+
+		}
+
 	}
 
 	/**

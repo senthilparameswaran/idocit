@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package de.akra.idocit.java.services;
+package source;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +40,13 @@ import de.akra.idocit.core.extensions.Parser;
 import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.extensions.ValidationReport.ValidationCode;
 import de.akra.idocit.java.constants.PreferenceStoreConstants;
+import de.akra.idocit.java.services.AbsJavadocParser;
+import de.akra.idocit.java.services.AddresseeUtils;
+import de.akra.idocit.java.services.JavaInterfaceGenerator;
+import de.akra.idocit.java.services.JavadocGenerator;
+import de.akra.idocit.java.services.JavadocParser;
+import de.akra.idocit.java.services.SimpleJavadocGenerator;
+import de.akra.idocit.java.services.SimpleJavadocParser;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 
 /**
@@ -107,7 +114,7 @@ public class JavaParser implements Parser
 				.getJobManager().createProgressGroup());
 		compilationUnit.recordModifications();
 
-		de.akra.idocit.java.services.JavaInterfaceParser jInterfaceParser = new JavaInterfaceParser(
+		de.akra.idocit.java.services.JavaInterfaceParser jInterfaceParser = new de.akra.idocit.java.services.JavaInterfaceParser(
 				compilationUnit, compilationUnit.getJavaElement().getElementName(),
 				delimiters);
 
