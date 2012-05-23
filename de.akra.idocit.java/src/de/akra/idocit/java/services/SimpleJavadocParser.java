@@ -354,20 +354,14 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			TagElement tagElement, List<ThematicRole> thematicRoles,
 			String referenceGridName)
 	{
-		String origTagText = readFragments(tagElement.fragments(), 0);
+		String origTagText = JavadocUtils.readFragments(tagElement.fragments(), 0);
 		StructuredJavaDoc structuredJavaDoc = readRoleName(tagElement, referenceGridName,
 				origTagText);
 		String roleName = structuredJavaDoc.getRoleName();
 		String tagText = structuredJavaDoc.getDocText();
 		ThematicRole role = ThematicRoleUtils.findRoleByName(roleName, thematicRoles);
 
-		if ((role == null) && (roleName != null))
-		{
-			// The mentioned thematic role seems not to be declared in the local Eclipse.
-			// Create a new one with the given name.
-			role = new ThematicRole(roleName.toUpperCase());
-		}
-		else if (roleName == null)
+		if (role == null)
 		{
 			log.info("No thematic role found for tag element: "
 					+ String.valueOf(tagElement));
@@ -402,7 +396,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 					if (TagElement.TAG_PARAM.equals(parentParamTag.getTagName())
 							|| TagElement.TAG_THROWS.equals(parentParamTag.getTagName()))
 					{
-						return readFragments(parentParamTag.fragments(), 0);
+						return JavadocUtils.readFragments(parentParamTag.fragments(), 0);
 					}
 					else if (TagElement.TAG_RETURN.equals(parentParamTag.getTagName()))
 					{
@@ -577,7 +571,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 		Map<Addressee, String> documentations = new HashMap<Addressee, String>();
 
-		String identifier = readIdentifier(tagElement);
+		String identifier = JavadocUtils.readIdentifier(tagElement);
 		String docText = extractDocumenationText(identifier, annotatedDoc.getDocText());
 		documentations.put(developer, docText);
 		documentation.setDocumentation(documentations);
@@ -661,9 +655,9 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 							developer);
 					ThematicRole role = documentation.getThematicRole();
 
-					if ((role != null)
-							|| ((documentationText != null) && !documentationText.trim()
-									.isEmpty()))
+					if (role != null)
+					// || ((documentationText != null) && !documentationText.trim()
+					// .isEmpty()))
 					{
 						documentations.add(documentation);
 					}

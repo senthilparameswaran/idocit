@@ -26,13 +26,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Javadoc;
-import org.eclipse.jdt.core.dom.MemberRef;
-import org.eclipse.jdt.core.dom.MethodRef;
-import org.eclipse.jdt.core.dom.MethodRefParameter;
-import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.TagElement;
-import org.eclipse.jdt.core.dom.TextElement;
 import org.xml.sax.SAXException;
 
 import de.akra.idocit.common.structure.Addressee;
@@ -84,113 +79,6 @@ public abstract class AbsJavadocParser
 			ParserConfigurationException;
 
 	/**
-	 * Extracts the plain text from the <code>fragments</code>.
-	 * 
-	 * @param fragments
-	 *            The fragments to read.
-	 * @param offset
-	 *            The index at which should be started to read. If the fragments are e.g.
-	 *            from a "@param" tag, then it is followed by the the variable name which
-	 *            should be skipped. Therefore the <code>offset</code> should be 1.
-	 * @return The text from the <code>fragments</code>.
-	 */
-	@SuppressWarnings("unchecked")
-	protected String readFragments(List<ASTNode> fragments, int offset)
-	{
-		StringBuffer html = new StringBuffer();
-
-		for (ASTNode fragment : fragments.subList(offset, fragments.size()))
-		{
-			switch (fragment.getNodeType())
-			{
-			case ASTNode.TEXT_ELEMENT:
-			{
-				TextElement textElem = (TextElement) fragment;
-				html.append(textElem.getText());
-				break;
-			}
-			case ASTNode.SIMPLE_NAME:
-			case ASTNode.QUALIFIED_NAME:
-			{
-				Name name = (Name) fragment;
-				html.append(name.getFullyQualifiedName());
-				break;
-			}
-			case ASTNode.METHOD_REF:
-			{
-				MethodRef mRef = (MethodRef) fragment;
-				if (mRef.getQualifier() != null)
-				{
-					Name qualifier = mRef.getQualifier();
-					html.append(qualifier.getFullyQualifiedName());
-				}
-
-				html.append('#');
-				html.append(mRef.getName().getIdentifier());
-				html.append('(');
-
-				// write parameter list
-				List<MethodRefParameter> mRefParameters = (List<MethodRefParameter>) mRef
-						.parameters();
-				for (MethodRefParameter mRefParam : mRefParameters)
-				{
-					html.append(ReflectionHelper.getIdentifierFrom(mRefParam.getType()));
-					if (mRefParam.isVarargs())
-					{
-						html.append("...");
-					}
-					if (mRefParam.getName() != null)
-					{
-						html.append(' ');
-						html.append(mRefParam.getName().getFullyQualifiedName());
-					}
-					html.append(',');
-				}
-				if (!mRefParameters.isEmpty())
-				{
-					// remove last comma
-					html.deleteCharAt(html.length() - 1);
-				}
-
-				html.append(')');
-				break;
-			}
-			case ASTNode.MEMBER_REF:
-			{
-				MemberRef mRef = (MemberRef) fragment;
-				if (mRef.getQualifier() != null)
-				{
-					Name qualifier = mRef.getQualifier();
-					html.append(qualifier.getFullyQualifiedName());
-				}
-				html.append('#');
-				html.append(mRef.getName().getIdentifier());
-				break;
-			}
-			case ASTNode.TAG_ELEMENT:
-			{
-				TagElement tagElem = (TagElement) fragment;
-				if (tagElem.isNested())
-				{
-					html.append('{');
-				}
-
-				html.append(tagElem.getTagName());
-				html.append(' ');
-				html.append(readFragments((List<ASTNode>) tagElem.fragments(), 0));
-
-				if (tagElem.isNested())
-				{
-					html.append('}');
-				}
-				break;
-			}
-			}
-		}
-		return html.toString();
-	}
-
-	/**
 	 * Extracts the name of the reference thematic grid from the given JavaDoc and returns
 	 * it.
 	 * 
@@ -230,7 +118,8 @@ public abstract class AbsJavadocParser
 							&& docElement.getTagName().matches(
 									JAVADOC_TAG_THEMATICGRID_PATTERN))
 					{
-						return readFragments(docElement.fragments(), 0).trim();
+						return JavadocUtils.readFragments(docElement.fragments(), 0)
+								.trim();
 					}
 				}
 			}
@@ -279,17 +168,20 @@ public abstract class AbsJavadocParser
 				String comment = null;
 				if (tag.getTagName() == null)
 				{
-					comment = readFragments((List<ASTNode>) tag.fragments(), 0);
+					comment = JavadocUtils.readFragments((List<ASTNode>) tag.fragments(),
+							0);
 				}
 				else if (tag.getTagName().matches(JAVADOC_TAG_RETURN))
 				{
-					comment = readFragments((List<ASTNode>) tag.fragments(), 0).trim();
+					comment = JavadocUtils.readFragments((List<ASTNode>) tag.fragments(),
+							0).trim();
 					doc.setSignatureElementIdentifier(CONVERTED_JAVADOC_TAG_RETURN);
 				}
 				else if (tag.getTagName().matches(JAVADOC_TAG_PARAM)
 						|| tag.getTagName().matches(JAVADOC_TAG_THROWS))
 				{
-					comment = readFragments((List<ASTNode>) tag.fragments(), 1);
+					comment = JavadocUtils.readFragments((List<ASTNode>) tag.fragments(),
+							1);
 					ASTNode paramName = (ASTNode) tag.fragments().get(0);
 					if (ASTNode.SIMPLE_NAME == paramName.getNodeType())
 					{
@@ -328,25 +220,6 @@ public abstract class AbsJavadocParser
 			}
 		}
 		return foundDocs;
-	}
-
-	protected String readIdentifier(TagElement tag)
-	{
-		String identifier = null;
-		ASTNode paramName = (ASTNode) tag.fragments().get(0);
-
-		if (JavadocUtils.isParam(tag.getTagName())
-				|| JavadocUtils.isThrows(tag.getTagName())
-				|| JavadocUtils.isReturn(tag.getTagName()))
-		{
-			if (ASTNode.SIMPLE_NAME == paramName.getNodeType())
-			{
-				SimpleName name = (SimpleName) paramName;
-				identifier = name.getIdentifier();
-			}
-		}
-
-		return identifier;
 	}
 
 	/**
@@ -401,12 +274,12 @@ public abstract class AbsJavadocParser
 		{
 			if (tag.getTagName() == null || tag.getTagName().matches(JAVADOC_TAG_RETURN))
 			{
-				html.append(readFragments((List<ASTNode>) tag.fragments(), 0));
+				html.append(JavadocUtils.readFragments((List<ASTNode>) tag.fragments(), 0));
 			}
 			else if (tag.getTagName().matches(JAVADOC_TAG_PARAM)
 					|| tag.getTagName().matches(JAVADOC_TAG_THROWS))
 			{
-				html.append(readFragments((List<ASTNode>) tag.fragments(), 1));
+				html.append(JavadocUtils.readFragments((List<ASTNode>) tag.fragments(), 1));
 			}
 			else
 			{

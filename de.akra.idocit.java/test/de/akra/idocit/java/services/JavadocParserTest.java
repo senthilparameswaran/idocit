@@ -103,16 +103,17 @@ public class JavadocParserTest
 
 			JavadocGenerator.INSTANCE.appendDocsToJavadoc(
 					methodWithParams.getDocumentations(), null, null,
-					"Searching Operations", javadoc);
+					"Searching Operations", javadoc, new ArrayList<TagElement>());
 			JavadocGenerator.INSTANCE.appendDocsToJavadoc(
 					methodWithParams.getDocumentations(), TagElement.TAG_PARAM, "person",
-					"Searching Operations", javadoc);
+					"Searching Operations", javadoc, new ArrayList<TagElement>());
 			JavadocGenerator.INSTANCE.appendDocsToJavadoc(
 					methodWithReturn.getDocumentations(), TagElement.TAG_RETURN, null,
-					"Searching Operations", javadoc);
+					"Searching Operations", javadoc, new ArrayList<TagElement>());
 			JavadocGenerator.INSTANCE.appendDocsToJavadoc(
 					methodWithParams.getDocumentations(), TagElement.TAG_THROWS,
-					"IllegalArgException", "Searching Operations", javadoc);
+					"IllegalArgException", "Searching Operations", javadoc,
+					new ArrayList<TagElement>());
 
 			// add the number of used documentations to this list, to make an assertion
 			List<Documentation> allUsedDocs = new ArrayList<Documentation>(

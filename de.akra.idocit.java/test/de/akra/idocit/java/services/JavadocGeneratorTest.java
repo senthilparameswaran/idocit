@@ -196,10 +196,11 @@ public class JavadocGeneratorTest
 			methodParam.addDocpart(documentation);
 		}
 
-		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(), null, null,
-				"Searching Operations", javadoc);
-		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(), TagElement.TAG_PARAM,
-				"person", "Searching Operations", javadoc);
+		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(),
+				null, null, "Searching Operations", javadoc, new ArrayList<TagElement>());
+		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(),
+				TagElement.TAG_PARAM, "person", "Searching Operations", javadoc,
+				new ArrayList<TagElement>());
 
 		JavaMethod methodReturn = new JavaMethod(
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Method",
@@ -211,7 +212,8 @@ public class JavadocGeneratorTest
 		}
 
 		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodReturn.getDocumentations(),
-				TagElement.TAG_RETURN, null, "Searching Operations", javadoc);
+				TagElement.TAG_RETURN, null, "Searching Operations", javadoc,
+				new ArrayList<TagElement>());
 
 		TagElement tagElement = ast.newTagElement();
 		tagElement.setTagName(JavadocParser.JAVADOC_TAG_THEMATICGRID);
