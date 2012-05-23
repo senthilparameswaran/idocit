@@ -160,22 +160,22 @@ public class SimpleJavadocParserTest
 				}
 
 				// IOException
-				{
-					Documentation ioExceptionDoc = new Documentation();
-					ioExceptionDoc.setAddresseeSequence(TestUtils
-							.createDeveloperSequence());
-
-					Map<Addressee, String> docException = new HashMap<Addressee, String>();
-					docException.put(TestUtils.createDeveloper(), "In case of an error");
-					ioExceptionDoc.setDocumentation(docException);
-
-					ioExceptionDoc.setSignatureElementIdentifier(null);
-					ioExceptionDoc.setThematicRole(null);
-					ioExceptionDoc
-							.setSignatureElementIdentifier("source.IOException:source.IOException");
-
-					referenceDocs.add(ioExceptionDoc);
-				}
+// TODO:
+//				{
+//					Documentation ioExceptionDoc = new Documentation();
+//					ioExceptionDoc.setAddresseeSequence(TestUtils
+//							.createDeveloperSequence());
+//
+//					Map<Addressee, String> docException = new HashMap<Addressee, String>();
+//					ioExceptionDoc.setDocumentation(docException);
+//
+//					ioExceptionDoc.setSignatureElementIdentifier(null);
+//					ioExceptionDoc.setThematicRole(null);
+//					ioExceptionDoc
+//							.setSignatureElementIdentifier("source.IOException:source.IOException");
+//
+//					referenceDocs.add(ioExceptionDoc);
+//				}
 
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/CustomerService.java");

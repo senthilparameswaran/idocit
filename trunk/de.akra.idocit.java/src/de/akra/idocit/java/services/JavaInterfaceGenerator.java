@@ -323,7 +323,7 @@ public class JavaInterfaceGenerator
 		{
 			javadocGenerator.appendDocsToJavadoc(tagElement.getDocumentations(),
 					tagElement.getTagName(), tagElement.getParameterName(),
-					thematicGridName, newJavadoc);
+					thematicGridName, newJavadoc, additionalTags);
 		}
 
 		newJavadoc.tags().addAll(additionalTags);

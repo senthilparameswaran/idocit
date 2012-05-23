@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import source.CustomerService;
@@ -255,8 +257,19 @@ public class TestDataFactory
 		ioException.setQualifiedDataTypeName("source.IOException");
 		ioException.setSignatureElementPath("source.IOException:source.IOException");
 		ioException.setIdentifier("IOException");
-		addDocumentation(ioException, addresseeName, null, "In case of an error",
-				ioException.getSignatureElementPath());
+		// TODO
+//		addDocumentation(ioException, addresseeName, null, "In case of an error",
+//				ioException.getSignatureElementPath());
+		TagElement exception = customerServiceIntf.getAST().newTagElement();
+		exception.setTagName(TagElement.TAG_THROWS);
+		List fragments = exception.fragments();
+		TextElement exceptionTextElem = customerServiceIntf.getAST().newTextElement();
+		exceptionTextElem.setText(" IOException  In case of an error");
+		fragments.add(exceptionTextElem);
+		
+		List<TagElement> additionalElements = new ArrayList<TagElement>();
+		additionalElements.add(exception);
+		methodFindCustomerById.setAdditionalTags(additionalElements);
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -411,8 +424,9 @@ public class TestDataFactory
 		specialException.setQualifiedDataTypeName("source.SpecialException");
 		specialException
 				.setSignatureElementPath("source.SpecialException:source.SpecialException");
-		addDocumentation(specialException, addresseeName, null, "In case of an error",
-				specialException.getSignatureElementPath());
+		// TODO
+//		addDocumentation(specialException, addresseeName, null, "In case of an error",
+//				specialException.getSignatureElementPath());
 
 		ioExceptions.addParameter(specialException);
 		exceptions.add(ioExceptions);
@@ -493,7 +507,8 @@ public class TestDataFactory
 				false);
 		ioException.setDocumentationChanged(documentationChanged);
 		ioException.setIdentifier("IOException");
-		ioException.addDocpart(createEmptyDocumentation("IOException"));
+		// TODO
+		//ioException.addDocpart(createEmptyDocumentation("IOException"));
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -662,7 +677,8 @@ public class TestDataFactory
 				false);
 		ioException.setDocumentationChanged(documentationChanged);
 		ioException.setIdentifier("IOException");
-		ioException.addDocpart(createNullDocumentation("IOException"));
+		// TODO:
+		//ioException.addDocpart(createNullDocumentation("IOException"));
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);

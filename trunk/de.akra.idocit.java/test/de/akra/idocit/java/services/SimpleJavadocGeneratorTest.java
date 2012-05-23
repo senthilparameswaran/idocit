@@ -54,7 +54,7 @@ public class SimpleJavadocGeneratorTest
 						+ "* @source CRM System\n " + "* \n " + "* @param parameters\n "
 						+ "* @subparam firstName [COMPARISON]\n "
 						+ "* @subparam lastName [COMPARISON]\n " + "* \n "
-						+ "* @return [OBJECT]\n " + "* \n "
+						+ "* @return [OBJECT]\n "
 						+ "* @throws IOException  In case of an error\n "
 						+ "* @thematicgrid Searching Operations\n " + "*/\n";
 				ParserOutput output = JavadocTestUtils

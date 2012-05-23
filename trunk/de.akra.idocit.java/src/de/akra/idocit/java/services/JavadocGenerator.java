@@ -144,7 +144,8 @@ public class JavadocGenerator implements IJavadocGenerator
 	 */
 	@Override
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
-			String paramName, String thematicGridName, Javadoc javadoc)
+			String paramName, String thematicGridName, Javadoc javadoc,
+			List<TagElement> additionalTagElements)
 	{
 		@SuppressWarnings("unchecked")
 		List<TagElement> tags = javadoc.tags();

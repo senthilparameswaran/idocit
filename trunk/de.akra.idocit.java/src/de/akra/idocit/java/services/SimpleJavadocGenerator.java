@@ -32,10 +32,8 @@ import org.eclipse.jdt.core.dom.TextElement;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.common.structure.ParameterPathElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.Preconditions;
-import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
 import de.akra.idocit.java.utils.JavadocUtils;
@@ -472,6 +470,38 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		tags.add(newTag);
 	}
 
+	private boolean containsTagElementWithIdentifier(String tagName, String identifier,
+			List<TagElement> additionalTagElements)
+	{
+		if (additionalTagElements != null)
+		{
+			for (TagElement element : additionalTagElements)
+			{
+				String currentTagName = element.getTagName();
+				String currentIdentifier = JavadocUtils.readIdentifier(element);
+
+				if ((currentTagName != null) && (currentTagName.equals(tagName)))
+				{
+					if (currentIdentifier == null)
+					{
+						String[] splittedDocText = JavadocUtils.readFragments(
+								element.fragments(), 0).trim().split(" ");
+						
+						currentIdentifier = splittedDocText[0];
+					}
+					
+					if ((currentIdentifier != null)
+							&& (currentIdentifier.equals(identifier)))
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Creates a Javadoc taglet for the given SignatureElement.
 	 * 
@@ -487,11 +517,14 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * @thematicgrid Putting Operations
 	 */
 	private void appendJavadoc(List<Documentation> documentations, String tagName,
-			Javadoc javadoc, String identifier)
+			Javadoc javadoc, String identifier, List<TagElement> additionalTagElements)
 	{
-		checkInvariant(documentations);
+		if (!containsTagElementWithIdentifier(tagName, identifier, additionalTagElements))
+		{
+			checkInvariant(documentations);
 
-		createParamJavadoc(documentations, javadoc, tagName, identifier);
+			createParamJavadoc(documentations, javadoc, tagName, identifier);
+		}
 	}
 
 	private boolean isEmptyRow(TagElement current)
@@ -606,7 +639,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 */
 	@Override
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
-			String paramName, String thematicGridName, Javadoc javadoc)
+			String paramName, String thematicGridName, Javadoc javadoc,
+			List<TagElement> additionalTagElements)
 	{
 		if (tagName == null)
 		{ // ACTION or new tags for specific thematic roles.
@@ -614,7 +648,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		}
 		else
 		{
-			appendJavadoc(documentations, tagName, javadoc, paramName);
+			appendJavadoc(documentations, tagName, javadoc, paramName,
+					additionalTagElements);
 		}
 
 		insertEmptyRows(javadoc);

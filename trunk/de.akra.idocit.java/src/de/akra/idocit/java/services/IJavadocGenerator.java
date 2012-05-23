@@ -18,6 +18,7 @@ package de.akra.idocit.java.services;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.Javadoc;
+import org.eclipse.jdt.core.dom.TagElement;
 
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.SignatureElement;
@@ -46,5 +47,5 @@ public interface IJavadocGenerator
 	 * @thematicgrid Putting Operations
 	 */
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
-			String paramName, String thematicGridName, Javadoc javadoc);
+			String paramName, String thematicGridName, Javadoc javadoc, List<TagElement> additionalTagElements);
 }
