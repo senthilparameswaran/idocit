@@ -1,7 +1,7 @@
 #summary This page describes our working and coding conventions.
 
 === IDE ===
-Our reference IDE is an English Eclipse 3.6 Helios.
+Our reference IDE is an English Eclipse 3.7 Indigo.
 
 Additional recommended Eclipse Plug-ins are:
   * Subclipse 1.6.x
