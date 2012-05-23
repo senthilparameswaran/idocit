@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='1'>
+  <artifact classifier='osgi.bundle' id='de.akra.idocit.java.ui' version='0.0.1.201205231103'>
+    <properties size='6'>
+      <property name='artifact.size' value='4932'/>
+      <property name='download.size' value='4932'/>
+      <property name='download.md5' value='ba5980558e8e5cf4ad77c63c028945eb'/>
+      <property name='maven-groupId' value='de.akra.idocit.java.ui'/>
+      <property name='maven-artifactId' value='de.akra.idocit.java.ui'/>
+      <property name='maven-version' value='0.0.1.qualifier'/>
+    </properties>
+  </artifact>
+</artifacts>
