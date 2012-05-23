@@ -38,6 +38,7 @@ For projects:
  * de.akra.idocit
  * de.akra.idocit.ui
  * de.akra.idocit.java
+ * de.akra.idocit.java.ui
  * de.akra.idocit.wsdl
  * de.akra.idocit.common
 
