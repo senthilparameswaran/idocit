@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,10 +155,10 @@ public class Addressee implements DescribedItem
 		StringBuilder builder = new StringBuilder();
 		builder.append("Addressee [name=");
 		builder.append(name);
-		builder.append(", description=");
-		builder.append(description);
-		builder.append(", isDefault=");
-		builder.append(isDefault);
+		//builder.append(", description=");
+		///builder.append(description);
+		//builder.append(", isDefault=");
+		//builder.append(isDefault);
 		builder.append("]");
 		return builder.toString();
 	}

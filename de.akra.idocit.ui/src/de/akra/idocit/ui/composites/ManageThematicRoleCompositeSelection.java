@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

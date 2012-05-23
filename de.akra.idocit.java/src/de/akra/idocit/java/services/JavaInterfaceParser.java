@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.xml.sax.SAXException;
 
+import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
@@ -54,8 +55,10 @@ import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.core.constants.ThematicGridConstants;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -139,11 +142,11 @@ public class JavaInterfaceParser
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public InterfaceArtifact parse() throws JavaModelException, SAXException,
-			IOException, ParserConfigurationException
+	public InterfaceArtifact parse(AbsJavadocParser parser) throws JavaModelException,
+			SAXException, IOException, ParserConfigurationException
 	{
 		JavaInterfaceArtifact artifact = (JavaInterfaceArtifact) processCompilationUnit(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, compilationUnit);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, compilationUnit, parser);
 
 		ICompilationUnit cu = (ICompilationUnit) compilationUnit.getJavaElement();
 		artifact.setOriginalDocument(cu.getSource());
@@ -165,8 +168,8 @@ public class JavaInterfaceParser
 	 * @throws SAXException
 	 */
 	private JavaInterfaceArtifact processCompilationUnit(SignatureElement parent,
-			CompilationUnit compilationUnit) throws SAXException, IOException,
-			ParserConfigurationException
+			CompilationUnit compilationUnit, AbsJavadocParser parser)
+			throws SAXException, IOException, ParserConfigurationException
 	{
 		JavaInterfaceArtifact artifact = new JavaInterfaceArtifact(parent,
 				CATEGORY_ARTIFACT, compilationUnit, Numerus.SINGULAR);
@@ -190,14 +193,14 @@ public class JavaInterfaceParser
 					{
 						TypeDeclaration typeDec = (TypeDeclaration) type;
 						interfaces.add((Interface) processTypeDeclaration(artifact,
-								typeDec));
+								typeDec, parser));
 						break;
 					}
 					case ASTNode.ENUM_DECLARATION:
 					{
 						EnumDeclaration enumDec = (EnumDeclaration) type;
 						interfaces.add((Interface) processEnumDeclaration(artifact,
-								enumDec));
+								enumDec, parser));
 						break;
 					}
 					}
@@ -222,11 +225,12 @@ public class JavaInterfaceParser
 	 * @throws SAXException
 	 */
 	private JavaInterface processTypeDeclaration(SignatureElement parent,
-			TypeDeclaration typeDeclaration) throws SAXException, IOException,
-			ParserConfigurationException
+			TypeDeclaration typeDeclaration, AbsJavadocParser parser)
+			throws SAXException, IOException, ParserConfigurationException
 	{
 		return processAbstractTypeDeclaration(parent, typeDeclaration,
-				typeDeclaration.isInterface() ? CATEGORY_INTERFACE : CATEGORY_CLASS);
+				typeDeclaration.isInterface() ? CATEGORY_INTERFACE : CATEGORY_CLASS,
+				parser);
 	}
 
 	/**
@@ -242,10 +246,11 @@ public class JavaInterfaceParser
 	 * @throws SAXException
 	 */
 	private JavaInterface processEnumDeclaration(SignatureElement parent,
-			EnumDeclaration enumDeclaration) throws SAXException, IOException,
-			ParserConfigurationException
+			EnumDeclaration enumDeclaration, AbsJavadocParser parser)
+			throws SAXException, IOException, ParserConfigurationException
 	{
-		return processAbstractTypeDeclaration(parent, enumDeclaration, CATEGORY_ENUM);
+		return processAbstractTypeDeclaration(parent, enumDeclaration, CATEGORY_ENUM,
+				parser);
 	}
 
 	/**
@@ -264,8 +269,9 @@ public class JavaInterfaceParser
 	 * @see AbstractTypeDeclaration
 	 */
 	private JavaInterface processAbstractTypeDeclaration(SignatureElement parent,
-			AbstractTypeDeclaration absTypeDeclaration, String category)
-			throws SAXException, IOException, ParserConfigurationException
+			AbstractTypeDeclaration absTypeDeclaration, String category,
+			AbsJavadocParser parser) throws SAXException, IOException,
+			ParserConfigurationException
 	{
 		JavaInterface jInterface = new JavaInterface(parent, category, Numerus.SINGULAR);
 		jInterface.setIdentifier(absTypeDeclaration.getName().getIdentifier());
@@ -274,14 +280,22 @@ public class JavaInterfaceParser
 		jInterface.setRefToASTNode(absTypeDeclaration);
 
 		Javadoc javadoc = absTypeDeclaration.getJavadoc();
-		List<Documentation> docs = JavadocParser.parseIDocItJavadoc(javadoc);
+		List<Addressee> addressees = ServiceManager.getInstance().getPersistenceService()
+				.loadConfiguredAddressees();
+		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
+				.loadThematicRoles();
+		List<Documentation> docs = parser.parseIDocItJavadoc(javadoc, addressees, roles,
+				null);
 		if (docs.isEmpty())
 		{
-			docs = JavadocParser.convertExistingJavadoc(javadoc);
+			docs = parser.convertExistingJavadoc(javadoc);
 		}
 		jInterface.setDocumentations(docs);
 
-		List<TagElement> additionalTags = JavadocParser.findAdditionalTags(javadoc);
+		List<ThematicRole> knownRoles = ServiceManager.getInstance()
+				.getPersistenceService().loadThematicRoles();
+
+		List<TagElement> additionalTags = parser.findAdditionalTags(javadoc, knownRoles);
 		jInterface.setAdditionalTags(additionalTags);
 
 		@SuppressWarnings("unchecked")
@@ -293,8 +307,10 @@ public class JavaInterfaceParser
 
 		for (BodyDeclaration bodyDec : bodyDeclarations)
 		{
-			// only public elements are processed. In Java interfaces everything is public.
-			if (ReflectionHelper.isPublic(bodyDec.getModifiers()) || CATEGORY_INTERFACE.equals(category))
+			// only public elements are processed. In Java interfaces everything is
+			// public.
+			if (ReflectionHelper.isPublic(bodyDec.getModifiers())
+					|| CATEGORY_INTERFACE.equals(category))
 			{
 				switch (bodyDec.getNodeType())
 				{
@@ -306,7 +322,8 @@ public class JavaInterfaceParser
 								SignatureElement.DEFAULT_ARRAY_SIZE);
 					}
 					TypeDeclaration typeDec = (TypeDeclaration) bodyDec;
-					innerInterface.add(processTypeDeclaration(jInterface, typeDec));
+					innerInterface
+							.add(processTypeDeclaration(jInterface, typeDec, parser));
 					break;
 				}
 				case ASTNode.ENUM_DECLARATION:
@@ -317,7 +334,8 @@ public class JavaInterfaceParser
 								SignatureElement.DEFAULT_ARRAY_SIZE);
 					}
 					EnumDeclaration enumDec = (EnumDeclaration) bodyDec;
-					innerInterface.add(processEnumDeclaration(jInterface, enumDec));
+					innerInterface
+							.add(processEnumDeclaration(jInterface, enumDec, parser));
 					break;
 				}
 				case ASTNode.METHOD_DECLARATION:
@@ -329,7 +347,8 @@ public class JavaInterfaceParser
 						operations = new ArrayList<Operation>(bodyDeclarations.size());
 					}
 					MethodDeclaration methodDec = (MethodDeclaration) bodyDec;
-					operations.add(processMethodDeclaration(jInterface, methodDec));
+					operations.add(processMethodDeclaration(jInterface, methodDec,
+							parser, knownRoles));
 					break;
 				}
 				}
@@ -355,7 +374,8 @@ public class JavaInterfaceParser
 	 * @throws SAXException
 	 */
 	private JavaMethod processMethodDeclaration(SignatureElement parent,
-			MethodDeclaration methodDeclaration) throws SAXException, IOException,
+			MethodDeclaration methodDeclaration, AbsJavadocParser parser,
+			List<ThematicRole> knownRoles) throws SAXException, IOException,
 			ParserConfigurationException
 	{
 		String category = CATEGORY_METHOD;
@@ -365,7 +385,7 @@ public class JavaInterfaceParser
 		}
 
 		Javadoc javadoc = methodDeclaration.getJavadoc();
-		String thematicGridName = JavadocParser.parseIDocItReferenceGrid(javadoc);
+		String thematicGridName = parser.parseIDocItReferenceGrid(javadoc);
 
 		if (thematicGridName == null)
 		{
@@ -378,14 +398,7 @@ public class JavaInterfaceParser
 		method.setQualifiedIdentifier(methodDeclaration.getName().getFullyQualifiedName());
 		method.setRefToASTNode(methodDeclaration);
 
-		List<Documentation> convertedJavadoc = null;
-		List<Documentation> documentations = JavadocParser.parseIDocItJavadoc(javadoc);
-		if (documentations.isEmpty() && javadoc != null)
-		{
-			convertedJavadoc = JavadocParser.convertExistingJavadoc(javadoc);
-		}
-
-		List<TagElement> additionalTags = JavadocParser.findAdditionalTags(javadoc);
+		List<TagElement> additionalTags = parser.findAdditionalTags(javadoc, knownRoles);
 		method.setAdditionalTags(additionalTags);
 
 		/*
@@ -410,10 +423,6 @@ public class JavaInterfaceParser
 				inputParameters.addParameter(param);
 			}
 
-			if (convertedJavadoc == null)
-			{
-				attachDocsToParameters(documentations, inputParameters);
-			}
 			method.setInputParameters(inputParameters);
 		}
 
@@ -436,10 +445,6 @@ public class JavaInterfaceParser
 			SignatureElementUtils.setParametersPaths(delimiters,
 					outputParameters.getQualifiedIdentifier(), returnType);
 
-			if (convertedJavadoc == null)
-			{
-				attachDocsToParameters(documentations, outputParameters);
-			}
 			method.setOutputParameters(outputParameters);
 		}
 
@@ -457,12 +462,20 @@ public class JavaInterfaceParser
 			// exceptions. (We need the second list for WSDL fault messages.)
 			List<JavaParameters> exceptionList = new ArrayList<JavaParameters>(1);
 			JavaParameters exception = processThrownExceptions(method, thrownExceptions);
-			if (convertedJavadoc == null)
-			{
-				attachDocsToParameters(documentations, exception);
-			}
 			exceptionList.add(exception);
 			method.setExceptions(exceptionList);
+		}
+
+		List<Addressee> addressees = ServiceManager.getInstance().getPersistenceService()
+				.loadConfiguredAddressees();
+		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
+				.loadThematicRoles();
+		List<Documentation> convertedJavadoc = null;
+		List<Documentation> documentations = parser.parseIDocItJavadoc(javadoc,
+				addressees, roles, method);
+		if (documentations.isEmpty() && javadoc != null)
+		{
+			convertedJavadoc = parser.convertExistingJavadoc(javadoc);
 		}
 
 		/*
@@ -470,6 +483,15 @@ public class JavaInterfaceParser
 		 */
 		if (convertedJavadoc == null)
 		{
+			if ((method.getExceptions() != null) && !method.getExceptions().isEmpty())
+			{
+				attachDocsToParameters(documentations, (JavaParameters) method
+						.getExceptions().get(0));
+			}
+
+			attachDocsToParameters(documentations,
+					(JavaParameters) method.getInputParameters());
+			attachDocsToParameters(documentations, outputParameters);
 			Iterator<Documentation> iterDocs = documentations.iterator();
 			while (iterDocs.hasNext())
 			{
@@ -576,12 +598,13 @@ public class JavaInterfaceParser
 						identifier.indexOf(JavaParser.delimiters.pathDelimiter) + 1,
 						identifier.length());
 
-				if (!((identifier.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_PARAM) && attachConvertedDocToParameters(
+				if (!((identifier
+						.startsWith(AbsJavadocParser.CONVERTED_JAVADOC_TAG_PARAM) && attachConvertedDocToParameters(
 						name, doc, method.getInputParameters()))
 						|| (identifier
-								.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_RETURN) && attachConvertedDocToParameters(
+								.startsWith(AbsJavadocParser.CONVERTED_JAVADOC_TAG_RETURN) && attachConvertedDocToParameters(
 								name, doc, method.getOutputParameters())) || (identifier
-						.startsWith(JavadocParser.CONVERTED_JAVADOC_TAG_THROWS) && attachConvertedDocToParameters(
+						.startsWith(AbsJavadocParser.CONVERTED_JAVADOC_TAG_THROWS) && attachConvertedDocToParameters(
 						name, doc, method.getExceptions()))))
 				{
 					logger.info("Converted and not assignable Documentation is attached to the JavaMethod's documentations: "

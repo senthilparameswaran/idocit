@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.eclipse.jdt.core.dom.TextElement;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
-import de.akra.idocit.java.structure.JavadocTagElement;
 
 /**
  * Generator for {@link Javadoc} comments.
@@ -37,7 +36,7 @@ import de.akra.idocit.java.structure.JavadocTagElement;
  * @version 0.0.3
  * 
  */
-public class JavadocGenerator
+public class JavadocGenerator implements IJavadocGenerator
 {
 	/**
 	 * The value for attribute "name" for the iDocIt! HTML tables in Javadoc.
@@ -49,33 +48,19 @@ public class JavadocGenerator
 	public static final String XML_TAG_TAB = '<' + HTMLTableParser.XML_TAG_TAB + "/>";
 	public static final String XML_TAG_BR = '<' + HTMLTableParser.XML_TAG_BR + "/>";
 
-	/**
-	 * Generates from the {@link JavadocTagElement}s one {@link Javadoc} comment.
-	 * 
-	 * @param javadocTagElements
-	 *            The {@link JavadocTagElement}s from which the Javadoc should be created.
-	 * @param javadoc
-	 *            A {@link Javadoc} comment to which the information from the
-	 *            <code>javadocTagElements</code> should be added. The
-	 *            <code>javadoc</code> is either a new one created from a {@link AST} or
-	 *            an existing one. If it is an existing one, it should be cleared before
-	 *            adding information.
-	 */
-	public void generateJavadoc(List<JavadocTagElement> javadocTagElements,
-			Javadoc javadoc)
+	public static final JavadocGenerator INSTANCE;
+
+	static
 	{
-		if (javadocTagElements != null && !javadocTagElements.isEmpty())
-		{
-			for (JavadocTagElement tagElement : javadocTagElements)
-			{
-				if (!tagElement.isEmpty())
-				{
-					appendDocsToJavadoc(tagElement.getDocumentations(),
-							tagElement.getTagName(), tagElement.getParameterName(),
-							javadoc);
-				}
-			}
-		}
+		INSTANCE = new JavadocGenerator();
+	}
+
+	/**
+	 * Declare default constructor as private due to Singleton-Pattern.
+	 */
+	private JavadocGenerator()
+	{
+
 	}
 
 	public static String quoteGenericsInIdentifier(String identifier)
@@ -91,7 +76,7 @@ public class JavadocGenerator
 	 *            The text to escape
 	 * @return The escaped text
 	 */
-	private static String escapeHtml(String unescapedText)
+	private String escapeHtml(String unescapedText)
 	{
 		String escapedText = StringEscapeUtils.escapeHtml4(unescapedText);
 
@@ -157,8 +142,9 @@ public class JavadocGenerator
 	 *            The {@link Javadoc} reference to which the {@link TagElement}s should be
 	 *            added.
 	 */
-	public static void appendDocsToJavadoc(List<Documentation> documentations,
-			String tagName, String paramName, Javadoc javadoc)
+	@Override
+	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
+			String paramName, String thematicGridName, Javadoc javadoc)
 	{
 		@SuppressWarnings("unchecked")
 		List<TagElement> tags = javadoc.tags();

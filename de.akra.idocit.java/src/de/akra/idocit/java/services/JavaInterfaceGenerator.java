@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,12 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.utils.SignatureElementUtils;
+import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavadocTagElement;
+import de.akra.idocit.java.utils.JavadocUtils;
 
 /**
  * Updates the {@link Javadoc} comments in the {@link AST} of the source file.
@@ -56,9 +58,10 @@ public class JavaInterfaceGenerator
 	 *            that should be updated.
 	 */
 	@SuppressWarnings("unchecked")
-	public static void updateJavadocInAST(JavaInterfaceArtifact artifact)
+	public static void updateJavadocInAST(JavaInterfaceArtifact artifact,
+			IJavadocGenerator javadocGenerator)
 	{
-		updateInterfaces((List<JavaInterface>) artifact.getInterfaces());
+		updateInterfaces((List<JavaInterface>) artifact.getInterfaces(), javadocGenerator);
 	}
 
 	/**
@@ -68,7 +71,8 @@ public class JavaInterfaceGenerator
 	 *            The {@link JavaInterface}s that should be processed. @
 	 */
 	@SuppressWarnings("unchecked")
-	private static void updateInterfaces(List<JavaInterface> interfaces)
+	private static void updateInterfaces(List<JavaInterface> interfaces,
+			IJavadocGenerator javadocGenerator)
 	{
 		for (JavaInterface jInterface : interfaces)
 		{
@@ -76,13 +80,13 @@ public class JavaInterfaceGenerator
 			{
 				List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
 				JavadocTagElement tagElem = new JavadocTagElement(
-						jInterface.getDocumentations());
+						jInterface.getDocumentations(), jInterface);
 				jDocTags.add(tagElem);
 
 				AbstractTypeDeclaration absTypeDeclaration = jInterface.getRefToASTNode();
 				Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
 						jInterface.getAdditionalTags(), absTypeDeclaration.getJavadoc(),
-						absTypeDeclaration.getAST(), null);
+						absTypeDeclaration.getAST(), null, javadocGenerator);
 
 				// if an existing javadoc was updated it must not be set again!
 				if ((absTypeDeclaration.getJavadoc() == null && javadoc != null)
@@ -92,8 +96,9 @@ public class JavaInterfaceGenerator
 				}
 			}
 
-			updateMethods((List<JavaMethod>) jInterface.getOperations());
-			updateInterfaces((List<JavaInterface>) jInterface.getInnerInterfaces());
+			updateMethods((List<JavaMethod>) jInterface.getOperations(), javadocGenerator);
+			updateInterfaces((List<JavaInterface>) jInterface.getInnerInterfaces(),
+					javadocGenerator);
 		}
 	}
 
@@ -103,7 +108,8 @@ public class JavaInterfaceGenerator
 	 * @param methods
 	 *            The {@link JavaMethod} that should be processed.
 	 */
-	private static void updateMethods(List<JavaMethod> methods)
+	private static void updateMethods(List<JavaMethod> methods,
+			IJavadocGenerator javadocGenerator)
 	{
 		for (JavaMethod method : methods)
 		{
@@ -114,7 +120,8 @@ public class JavaInterfaceGenerator
 				MethodDeclaration methodDeclaration = method.getRefToASTNode();
 				Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
 						method.getAdditionalTags(), methodDeclaration.getJavadoc(),
-						methodDeclaration.getAST(), method.getThematicGridName());
+						methodDeclaration.getAST(), method.getThematicGridName(),
+						javadocGenerator);
 
 				// if an existing Javadoc was updated it must not be set again!
 				if ((methodDeclaration.getJavadoc() == null && javadoc != null)
@@ -139,18 +146,22 @@ public class JavaInterfaceGenerator
 			JavaMethod method)
 	{
 		List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
-		JavadocTagElement tagElem = new JavadocTagElement(method.getDocumentations());
+		JavadocTagElement tagElem = new JavadocTagElement(method.getDocumentations(),
+				method);
 		jDocTags.add(tagElem);
 
 		Parameters inputParams = method.getInputParameters();
-		collectParametersDocumentations(inputParams, TagElement.TAG_PARAM, jDocTags);
+		collectParametersDocumentations(inputParams.getParameters(),
+				TagElement.TAG_PARAM, jDocTags, CustomTaglets.SUB_PARAM);
 
 		Parameters returnType = method.getOutputParameters();
-		collectParametersDocumentations(returnType, TagElement.TAG_RETURN, jDocTags);
+		collectParametersDocumentations(returnType.getParameters(),
+				TagElement.TAG_RETURN, jDocTags, CustomTaglets.SUB_RETURN);
 
 		for (Parameters exception : method.getExceptions())
 		{
-			collectParametersDocumentations(exception, TagElement.TAG_THROWS, jDocTags);
+			collectParametersDocumentations(exception.getParameters(),
+					TagElement.TAG_THROWS, jDocTags, null);
 		}
 
 		return jDocTags;
@@ -173,30 +184,48 @@ public class JavaInterfaceGenerator
 	 *            The created {@link JavadocTagElement}s.
 	 * @see TagElement
 	 */
-	private static void collectParametersDocumentations(Parameters parameters,
-			String tagName, List<JavadocTagElement> javadocTagElements)
+	private static void collectParametersDocumentations(List<Parameter> parameters,
+			String tagName, List<JavadocTagElement> javadocTagElements, String subTagName)
 	{
 		if (parameters != null)
 		{
-			for (Parameter param : parameters.getParameters())
+			for (Parameter param : parameters)
 			{
-				List<Documentation> documentations = new ArrayList<Documentation>();
-				collectParameterDocumentations(param, documentations);
+				List<Documentation> paramDocumentations = param.getDocumentations();
+				addJavadocTagElement(tagName, javadocTagElements, param,
+						paramDocumentations);
 
-				if (!documentations.isEmpty())
-				{
-					String identifier = param.getIdentifier();
-					if (tagName.equals(TagElement.TAG_RETURN))
-					{
-						// there is only a type, no identifier, for the return
-						// value
-						identifier = null;
-					}
-					JavadocTagElement jDocTagElem = new JavadocTagElement(tagName,
-							identifier, documentations);
-					javadocTagElements.add(jDocTagElem);
-				}
+				collectParameterDocumentations(subTagName, param.getComplexType(),
+						javadocTagElements);
 			}
+		}
+	}
+
+	private static void addJavadocTagElement(String tagName,
+			List<JavadocTagElement> javadocTagElements, Parameter param,
+			List<Documentation> paramDocumentations)
+	{
+		if ((paramDocumentations != null) && !paramDocumentations.isEmpty())
+		{
+			String identifier = param.getIdentifier();
+			if (TagElement.TAG_RETURN.equals(tagName)
+					|| CustomTaglets.SUB_RETURN.equals(tagName))
+			{
+				// there is only a type, no identifier, for the return
+				// value
+				identifier = null;
+			}
+			JavadocTagElement jDocTagElem = new JavadocTagElement(tagName, identifier,
+					paramDocumentations, param);
+			javadocTagElements.add(jDocTagElem);
+		}
+		else if (JavadocUtils.isStandardJavadocTaglet(tagName))
+		{
+			// @param, @return and @throws should mentioned even if no documentation has
+			// been created for the parameter, return-type or exception!
+			JavadocTagElement jDocTagElem = new JavadocTagElement(tagName,
+					param.getIdentifier(), new ArrayList<Documentation>(), param);
+			javadocTagElements.add(jDocTagElem);
 		}
 	}
 
@@ -209,13 +238,16 @@ public class JavaInterfaceGenerator
 	 * @param documentations
 	 *            the result list of found {@link Documentation}s.
 	 */
-	private static void collectParameterDocumentations(Parameter parameter,
-			List<Documentation> documentations)
+	private static void collectParameterDocumentations(String tagName,
+			List<Parameter> parameters, List<JavadocTagElement> javadocTagElements)
 	{
-		documentations.addAll(parameter.getDocumentations());
-		for (Parameter param : parameter.getComplexType())
+		for (Parameter param : parameters)
 		{
-			collectParameterDocumentations(param, documentations);
+			addJavadocTagElement(tagName, javadocTagElements, param,
+					param.getDocumentations());
+
+			collectParameterDocumentations(tagName, param.getComplexType(),
+					javadocTagElements);
 		}
 	}
 
@@ -275,7 +307,7 @@ public class JavaInterfaceGenerator
 	@SuppressWarnings("unchecked")
 	static Javadoc createOrUpdateJavadoc(List<JavadocTagElement> javadocTagElements,
 			List<TagElement> additionalTags, Javadoc javadoc, AST ast,
-			String thematicGridName)
+			String thematicGridName, IJavadocGenerator javadocGenerator)
 	{
 		Javadoc newJavadoc = javadoc;
 		if (newJavadoc == null)
@@ -287,10 +319,11 @@ public class JavaInterfaceGenerator
 			newJavadoc.tags().clear();
 		}
 
-		for (JavadocTagElement jTagElem : javadocTagElements)
+		for (JavadocTagElement tagElement : javadocTagElements)
 		{
-			JavadocGenerator.appendDocsToJavadoc(jTagElem.getDocumentations(),
-					jTagElem.getTagName(), jTagElem.getParameterName(), newJavadoc);
+			javadocGenerator.appendDocsToJavadoc(tagElement.getDocumentations(),
+					tagElement.getTagName(), tagElement.getParameterName(),
+					thematicGridName, newJavadoc);
 		}
 
 		newJavadoc.tags().addAll(additionalTags);

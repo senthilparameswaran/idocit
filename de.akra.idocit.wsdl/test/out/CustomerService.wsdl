@@ -52,14 +52,14 @@
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:portType name="CustomerService">
-		<wsdl:documentation><thematicgrid name="global"><docpart role="AGENT" scope="EXPLICIT"><addressee group="Developer">This service provides operations offered by the customer-care department.This service provides operations offered by the customer-care department.</addressee></docpart><docpart role="LOCATION" scope="IMPLICIT"><addressee group="Developer">This service provides operations offered by the customer-care department.This service provides operations offered by the customer-care department.</addressee></docpart></thematicgrid></wsdl:documentation>
+		<wsdl:documentation><thematicgrid name="global"><docpart role="AGENT"><addressee group="Developer">This service provides operations offered by the customer-care department.</addressee></docpart><docpart role="LOCATION"><addressee group="Developer">This service provides operations offered by the customer-care department.</addressee></docpart></thematicgrid></wsdl:documentation>
 		<wsdl:operation name="find">
-			<wsdl:documentation><thematicgrid name="None"><docpart role="ACTION" scope="EXPLICIT"><addressee group="System Builder">Returns the customer for the given id. If the id is unknown, the result will be null.Returns the customer for the given id. If the id is unknown, the result will be null.</addressee></docpart><docpart role="LOCATION" scope="EXPLICIT"><addressee group="Builder">The configured SAP CRM is used as database where to search the customer.The configured SAP CRM is used as database where to search the customer.</addressee></docpart></thematicgrid></wsdl:documentation>
+			<wsdl:documentation><thematicgrid name="None"><docpart role="ACTION"><addressee group="System Builder">Returns the customer for the given id. If the id is unknown, the result will be null.</addressee></docpart><docpart role="LOCATION"><addressee group="Builder">The configured SAP CRM is used as database where to search the customer.</addressee></docpart></thematicgrid></wsdl:documentation>
 			<wsdl:input message="comp:findCustomerByIdRequest">
-				<wsdl:documentation><docpart role="ACTION" scope="IMPLICIT" signatureElement="findCustomerByIdRequest"><addressee group="Manager">ManagerManager</addressee></docpart></wsdl:documentation>
+				<wsdl:documentation><docpart role="ACTION" signatureElement="findCustomerByIdRequest"><addressee group="Manager">Manager</addressee></docpart></wsdl:documentation>
 			</wsdl:input>
 			<wsdl:output message="comp:findCustomerByIdResponse">
-				<wsdl:documentation><docpart role="OBJECT" scope="EXPLICIT" signatureElement="findCustomerByIdResponse"><addressee group="Developer">The webservice response message with the found customer.The webservice response message with the found customer.</addressee><addressee group="Architect"></addressee></docpart></wsdl:documentation>
+				<wsdl:documentation><docpart role="OBJECT" signatureElement="findCustomerByIdResponse"><addressee group="Developer">The webservice response message with the found customer.</addressee><addressee group="Architect"/></docpart></wsdl:documentation>
 			</wsdl:output>
 			<wsdl:fault name="fault1" message="comp:faultResponse">
 			</wsdl:fault>

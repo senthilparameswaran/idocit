@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.IDocItActivator;
+import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
@@ -165,12 +166,40 @@ public class DocumentationEditor
 		{
 			try
 			{
-				ServiceManager.getInstance().getPersistenceService()
-						.writeInterface(artifact, interfaceFile);
-				initialInterfaceArtifact = (InterfaceArtifact) artifact
-						.copy(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
-				getMask().getSelection().resetOriginalDocumentations();
-				firePropertyChange(PROP_DIRTY);
+				ValidationReport report = ServiceManager.getInstance()
+						.getPersistenceService()
+						.validateInterfaceArtifact(artifact, interfaceFile);
+
+				switch (report.getReturnCode())
+				{
+				case OK:
+				{
+					ServiceManager.getInstance().getPersistenceService()
+							.writeInterface(artifact, interfaceFile);
+
+					initialInterfaceArtifact = (InterfaceArtifact) artifact
+							.copy(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+
+					getMask().getSelection().resetOriginalDocumentations();
+					firePropertyChange(PROP_DIRTY);
+					break;
+				}
+				case ERROR:
+				{
+					MessageDialog.openError(getSite().getShell(),
+							DialogConstants.DIALOG_TITLE, report.getMessage());
+					break;
+				}
+				case WARNING:
+				{
+					MessageDialog.openWarning(getSite().getShell(),
+							DialogConstants.DIALOG_TITLE, report.getMessage());
+					break;
+				}
+				default:
+					throw new RuntimeException("The validation code "
+							+ report.getReturnCode() + " is unknown.");
+				}
 			}
 			catch (Exception e)
 			{

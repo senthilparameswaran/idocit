@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,8 +55,11 @@ import org.junit.Test;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Numerus;
+import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.java.JavadocTestUtils;
+import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavadocTagElement;
 import de.akra.idocit.java.structure.ParserOutput;
 
@@ -173,7 +176,7 @@ public class JavadocGeneratorTest
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testGeneradeJavadoc() throws FileNotFoundException, IOException
+	public void testGenerateJavadoc() throws FileNotFoundException, IOException
 	{
 		ParserOutput output = JavadocTestUtils
 				.createCompilationUnit("test/source/ParsingService.java");
@@ -184,11 +187,31 @@ public class JavadocGeneratorTest
 		Javadoc javadoc = ast.newJavadoc();
 
 		List<Documentation> documentations = createParamDocumentations();
-		JavadocGenerator.appendDocsToJavadoc(documentations, null, null, javadoc);
-		JavadocGenerator.appendDocsToJavadoc(documentations, TagElement.TAG_PARAM,
-				"person", javadoc);
-		JavadocGenerator.appendDocsToJavadoc(createReturnDocumentations(),
-				TagElement.TAG_RETURN, null, javadoc);
+
+		JavaMethod methodParam = new JavaMethod(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				"Method", "Searching Operations", Numerus.SINGULAR);
+
+		for (Documentation documentation : documentations)
+		{
+			methodParam.addDocpart(documentation);
+		}
+
+		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(), null, null,
+				"Searching Operations", javadoc);
+		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(), TagElement.TAG_PARAM,
+				"person", "Searching Operations", javadoc);
+
+		JavaMethod methodReturn = new JavaMethod(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Method",
+				"Searching Operations", Numerus.SINGULAR);
+
+		for (Documentation documentation : createReturnDocumentations())
+		{
+			methodReturn.addDocpart(documentation);
+		}
+
+		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodReturn.getDocumentations(),
+				TagElement.TAG_RETURN, null, "Searching Operations", javadoc);
 
 		TagElement tagElement = ast.newTagElement();
 		tagElement.setTagName(JavadocParser.JAVADOC_TAG_THEMATICGRID);
@@ -229,16 +252,18 @@ public class JavadocGeneratorTest
 
 		List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
 		JavadocTagElement tagElem = new JavadocTagElement(TagElement.TAG_PARAM,
-				"paramName", createParamDocumentations());
+				"paramName", createParamDocumentations(),
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT);
 		jDocTags.add(tagElem);
 
 		tagElem = new JavadocTagElement(TagElement.TAG_RETURN, null,
-				createReturnDocumentations());
+				createReturnDocumentations(), SignatureElement.EMPTY_SIGNATURE_ELEMENT);
 		jDocTags.add(tagElem);
 
 		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
-				additionalTags, typeDecl.getJavadoc(), ast, null);
+				additionalTags, typeDecl.getJavadoc(), ast, null,
+				JavadocGenerator.INSTANCE);
 		typeDecl.setJavadoc(javadoc);
 
 		cu.rewrite(document, null);
@@ -283,12 +308,13 @@ public class JavadocGeneratorTest
 
 		List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
 		JavadocTagElement tagElem = new JavadocTagElement(TagElement.TAG_PARAM,
-				"paramName", createParamDocumentations());
+				"paramName", createParamDocumentations(),
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT);
 		jDocTags.add(tagElem);
 
 		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
-				additionalTags, ast.newJavadoc(), ast, null);
+				additionalTags, ast.newJavadoc(), ast, null, JavadocGenerator.INSTANCE);
 
 		rewriter.set(typeDecl, TypeDeclaration.JAVADOC_PROPERTY, javadoc, null);
 

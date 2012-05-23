@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 AKRA GmbH
+ * Copyright 2011, 2012 AKRA GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import org.eclipse.core.resources.IFile;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.extensions.Parser;
+import de.akra.idocit.core.extensions.ValidationReport;
+import de.akra.idocit.core.extensions.ValidationReport.ValidationCode;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 
 /**
@@ -131,7 +133,7 @@ public class WSDLParser implements Parser
 		Writer writer = new FileWriter(iFile.getLocation().toFile());
 		wsdlWriter.writeWSDL(updatedDefinition, writer);
 		// End changes due to Issue #28
-		
+
 		writer.close();
 	}
 
@@ -160,5 +162,18 @@ public class WSDLParser implements Parser
 	public Delimiters getDelimiters()
 	{
 		return delimiters;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ValidationReport validateArtifact(InterfaceArtifact artifact)
+	{
+		ValidationReport report = new ValidationReport();
+		report.setMessage("");
+		report.setReturnCode(ValidationCode.OK);
+
+		return report;
 	}
 }

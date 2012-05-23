@@ -7,7 +7,7 @@ All rights reserved.
 This product includes software developed at
 the XStream Project (http://xstream.codehaus.org/license.html).
 
-Its licence could be found under licences/xstream.txt
+Its licence could be found under licenses/xstream.txt
 
 
 MXP1: Xml Pull Parser 3rd Edition (XPP3)
@@ -58,3 +58,13 @@ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+FindBugs 2.0.1 Annotations
+
+Copyright (c) The University of Maryland
+
+This product includes software developed at
+the Findbugs Project (http://findbugs.sourceforge.net/).
+
+It is licensed under Lesser GNU Public License which can be found at 
+http://www.gnu.org/licenses/lgpl.html or at licenses/lgpl.txt. 
