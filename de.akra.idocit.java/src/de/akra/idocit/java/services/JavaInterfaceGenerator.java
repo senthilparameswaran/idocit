@@ -86,7 +86,7 @@ public class JavaInterfaceGenerator
 				AbstractTypeDeclaration absTypeDeclaration = jInterface.getRefToASTNode();
 				Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
 						jInterface.getAdditionalTags(), absTypeDeclaration.getJavadoc(),
-						absTypeDeclaration.getAST(), null, javadocGenerator);
+						absTypeDeclaration.getAST(), null, javadocGenerator, null);
 
 				// if an existing javadoc was updated it must not be set again!
 				if ((absTypeDeclaration.getJavadoc() == null && javadoc != null)
@@ -121,7 +121,7 @@ public class JavaInterfaceGenerator
 				Javadoc javadoc = createOrUpdateJavadoc(jDocTags,
 						method.getAdditionalTags(), methodDeclaration.getJavadoc(),
 						methodDeclaration.getAST(), method.getThematicGridName(),
-						javadocGenerator);
+						javadocGenerator, method);
 
 				// if an existing Javadoc was updated it must not be set again!
 				if ((methodDeclaration.getJavadoc() == null && javadoc != null)
@@ -307,7 +307,7 @@ public class JavaInterfaceGenerator
 	@SuppressWarnings("unchecked")
 	static Javadoc createOrUpdateJavadoc(List<JavadocTagElement> javadocTagElements,
 			List<TagElement> additionalTags, Javadoc javadoc, AST ast,
-			String thematicGridName, IJavadocGenerator javadocGenerator)
+			String thematicGridName, IJavadocGenerator javadocGenerator, JavaMethod method)
 	{
 		Javadoc newJavadoc = javadoc;
 		if (newJavadoc == null)
@@ -323,7 +323,7 @@ public class JavaInterfaceGenerator
 		{
 			javadocGenerator.appendDocsToJavadoc(tagElement.getDocumentations(),
 					tagElement.getTagName(), tagElement.getParameterName(),
-					thematicGridName, newJavadoc, additionalTags);
+					thematicGridName, newJavadoc, additionalTags, method);
 		}
 
 		newJavadoc.tags().addAll(additionalTags);

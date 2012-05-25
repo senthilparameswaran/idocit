@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.dom.TextElement;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.java.structure.JavaMethod;
 
 /**
  * Generator for {@link Javadoc} comments.
@@ -145,7 +146,7 @@ public class JavadocGenerator implements IJavadocGenerator
 	@Override
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
 			String paramName, String thematicGridName, Javadoc javadoc,
-			List<TagElement> additionalTagElements)
+			List<TagElement> additionalTagElements, JavaMethod method)
 	{
 		@SuppressWarnings("unchecked")
 		List<TagElement> tags = javadoc.tags();

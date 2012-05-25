@@ -15,8 +15,10 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -296,6 +298,65 @@ public class JavaParserTest
 
 				Assert.assertNotNull(actInterfaceArtifact);
 				Assert.assertNotNull(report);
+			}
+
+			clearWorkspace();
+			setupWorkspace();
+
+			// #########################################################################
+			// # Test case #3: the description of a class or interface should have
+			// # thematic role "NONE" in the idocit-structure and no thematic role in the
+			// # Javadoc-structure (see reference Javadoc).
+			// #########################################################################
+			{
+				String refJavadoc = "/**\n" + " * Parser implementation for Java.\n"
+						+ " * \n" + " * @author Dirk Meier-Eickhoff\n" + " * @since 0.0.1\n"
+						+ " * @version 0.0.1\n" + " * \n" + " */\n";
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IProject project = root.getProject(PROJECT_NAME);
+				IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
+
+				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+						.getInstance().getPersistenceService()
+						.loadInterface(testSourceFolder);
+
+				Documentation documentation = actInterfaceArtifact.getInterfaces().get(0)
+						.getDocumentations().get(0);
+
+				List<ThematicRole> roles = ServiceManager.getInstance()
+						.getPersistenceService().loadThematicRoles();
+				ThematicRole roleNone = ThematicRoleUtils.findRoleByName("NONE", roles);
+
+				Assert.assertEquals(roleNone, documentation.getThematicRole());
+
+				actInterfaceArtifact.getInterfaces().get(0).setDocumentationChanged(true);
+				ServiceManager
+						.getInstance()
+						.getPersistenceService()
+						.validateInterfaceArtifact(actInterfaceArtifact, testSourceFolder);
+
+				ServiceManager.getInstance().getPersistenceService()
+						.writeInterface(actInterfaceArtifact, testSourceFolder);
+
+				File javaFile = testSourceFolder.getRawLocation().makeAbsolute().toFile();
+				BufferedReader reader = new BufferedReader(new FileReader(javaFile));
+
+				StringBuffer actJavadoc = new StringBuffer();
+				// The java-file contain the javadoc in lines 51 - 58.
+				for (int i = 0; i < 59; i++)
+				{
+					if (i >= 51)
+					{
+						actJavadoc.append(reader.readLine());
+						actJavadoc.append('\n');
+					}
+					else
+					{
+						reader.readLine();
+					}
+				}
+
+				Assert.assertEquals(refJavadoc, actJavadoc.toString());
 			}
 		}
 

@@ -197,10 +197,11 @@ public class JavadocGeneratorTest
 		}
 
 		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(),
-				null, null, "Searching Operations", javadoc, new ArrayList<TagElement>());
+				null, null, "Searching Operations", javadoc, new ArrayList<TagElement>(),
+				null);
 		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodParam.getDocumentations(),
 				TagElement.TAG_PARAM, "person", "Searching Operations", javadoc,
-				new ArrayList<TagElement>());
+				new ArrayList<TagElement>(), null);
 
 		JavaMethod methodReturn = new JavaMethod(
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Method",
@@ -213,7 +214,7 @@ public class JavadocGeneratorTest
 
 		JavadocGenerator.INSTANCE.appendDocsToJavadoc(methodReturn.getDocumentations(),
 				TagElement.TAG_RETURN, null, "Searching Operations", javadoc,
-				new ArrayList<TagElement>());
+				new ArrayList<TagElement>(), null);
 
 		TagElement tagElement = ast.newTagElement();
 		tagElement.setTagName(JavadocParser.JAVADOC_TAG_THEMATICGRID);
@@ -265,7 +266,7 @@ public class JavadocGeneratorTest
 		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
 				additionalTags, typeDecl.getJavadoc(), ast, null,
-				JavadocGenerator.INSTANCE);
+				JavadocGenerator.INSTANCE, null);
 		typeDecl.setJavadoc(javadoc);
 
 		cu.rewrite(document, null);
@@ -316,7 +317,8 @@ public class JavadocGeneratorTest
 
 		List<TagElement> additionalTags = Collections.emptyList();
 		Javadoc javadoc = JavaInterfaceGenerator.createOrUpdateJavadoc(jDocTags,
-				additionalTags, ast.newJavadoc(), ast, null, JavadocGenerator.INSTANCE);
+				additionalTags, ast.newJavadoc(), ast, null, JavadocGenerator.INSTANCE,
+				null);
 
 		rewriter.set(typeDecl, TypeDeclaration.JAVADOC_PROPERTY, javadoc, null);
 

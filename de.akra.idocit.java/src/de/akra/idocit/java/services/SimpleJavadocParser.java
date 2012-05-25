@@ -38,6 +38,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
+import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavaParameter;
@@ -309,7 +310,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	}
 
 	private StructuredJavaDoc readRoleName(TagElement tagElement,
-			String referenceGridName, String tagText)
+			String referenceGridName, String tagText, JavaMethod method)
 	{
 		String tagName = tagElement.getTagName();
 		StructuredJavaDoc structuredJavaDoc = splitJavadocText(tagName, tagText);
@@ -326,11 +327,16 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			if (SimpleJavadocGenerator.THEMATIC_GRID_CHECKING_OPERATIONS
 					.equals(referenceGridName))
 			{
-				structuredJavaDoc.setRoleName("RULE");
+				structuredJavaDoc.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_RULE);
+			}
+			else if (method != null)
+			{
+				structuredJavaDoc
+						.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_ACTION);
 			}
 			else
 			{
-				structuredJavaDoc.setRoleName("ACTION");
+				structuredJavaDoc.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_NONE);
 			}
 		}
 
@@ -352,11 +358,11 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	 */
 	private AnnotatedDocumentation readDocumentationAndThematicRole(
 			TagElement tagElement, List<ThematicRole> thematicRoles,
-			String referenceGridName)
+			String referenceGridName, JavaMethod method)
 	{
 		String origTagText = JavadocUtils.readFragments(tagElement.fragments(), 0);
 		StructuredJavaDoc structuredJavaDoc = readRoleName(tagElement, referenceGridName,
-				origTagText);
+				origTagText, method);
 		String roleName = structuredJavaDoc.getRoleName();
 		String tagText = structuredJavaDoc.getDocText();
 		ThematicRole role = ThematicRoleUtils.findRoleByName(roleName, thematicRoles);
@@ -559,7 +565,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			String referenceGridName, JavaMethod method)
 	{
 		AnnotatedDocumentation annotatedDoc = readDocumentationAndThematicRole(
-				tagElement, thematicRoles, referenceGridName);
+				tagElement, thematicRoles, referenceGridName, method);
 		Documentation documentation = new Documentation();
 
 		Addressee developer = AddresseeUtils.findByName(
@@ -647,17 +653,9 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 				{
 					Documentation documentation = createDocumentation(tag, addressees,
 							thematicRoles, referenceGridName, method);
-
-					Addressee developer = AddresseeUtils.findByName(
-							AddresseeConstants.MOST_IMPORTANT_ADDRESSEE, addressees);
-
-					String documentationText = documentation.getDocumentation().get(
-							developer);
 					ThematicRole role = documentation.getThematicRole();
 
 					if (role != null)
-					// || ((documentationText != null) && !documentationText.trim()
-					// .isEmpty()))
 					{
 						documentations.add(documentation);
 					}
