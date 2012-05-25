@@ -33,17 +33,18 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.ObjectUtils;
 import de.akra.idocit.common.utils.Preconditions;
 import de.akra.idocit.common.utils.StringUtils;
+import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
+import de.akra.idocit.core.constants.ThematicRoleConstants;
+import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.utils.JavadocUtils;
 
 public class SimpleJavadocGenerator implements IJavadocGenerator
 {
-	private static final String THEMATIC_ROLE_ACTION = "ACTION";
-
-	private static final String THEMATIC_ROLE_RULE = "RULE";
-
 	// TODO: Move this constant to a special constant-class.
 	public static final String THEMATIC_GRID_CHECKING_OPERATIONS = "Checking Operations";
 
@@ -202,7 +203,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private boolean isRuleOfCheckingOperation(Documentation documentation,
 			String referenceGridName)
 	{
-		return (isRole(documentation, THEMATIC_ROLE_RULE) && THEMATIC_GRID_CHECKING_OPERATIONS
+		return (isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_RULE) && THEMATIC_GRID_CHECKING_OPERATIONS
 				.equalsIgnoreCase(referenceGridName));
 	}
 
@@ -220,16 +221,18 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * @thematicgrid Creating Operations
 	 */
 	private TagElement createTagElement(Documentation documentation,
-			String referenceGridName, AST jdocAST)
+			String referenceGridName, AST jdocAST, JavaMethod method)
 	{
 		TagElement newTag = jdocAST.newTagElement();
 
-		if (!isRole(documentation, THEMATIC_ROLE_ACTION)
+		if (!isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_ACTION)
 				&& !isRuleOfCheckingOperation(documentation, referenceGridName))
 		{
 			String roleName = getThematicRoleName(documentation);
+			boolean isClassIntroduction = ThematicRoleConstants.MANDATORY_ROLE_NONE
+					.equals(roleName) && (method == null);
 
-			if ((roleName != null) && !"".equals(roleName.trim()))
+			if ((roleName != null) && !"".equals(roleName.trim()) && !isClassIntroduction)
 			{
 				newTag.setTagName('@' + getThematicRoleName(documentation).toLowerCase());
 			}
@@ -257,11 +260,31 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		{
 			for (Documentation documentation : documentations)
 			{
-				if (isRole(documentation, THEMATIC_ROLE_ACTION))
+				if (isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_ACTION))
 				{
 					return true;
 				}
 			}
+		}
+
+		return false;
+	}
+
+	private boolean containsClassDescription(List<Documentation> documentations,
+			JavaMethod method)
+	{
+		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
+				.loadThematicRoles();
+		ThematicRole noneRole = ThematicRoleUtils.findRoleByName(
+				ThematicRoleConstants.MANDATORY_ROLE_NONE, roles);
+		boolean hasDocumentations = notNull(documentations) && !documentations.isEmpty();
+
+		if (hasDocumentations)
+		{
+			ThematicRole currentRole = documentations.get(0).getThematicRole();
+			boolean withoutThematicRole = (currentRole == null)
+					|| noneRole.equals(currentRole);
+			return (method == null) && withoutThematicRole;
 		}
 
 		return false;
@@ -281,10 +304,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * @thematicgrid Putting Operations
 	 */
 	private void addTaglessJavadocs(List<Documentation> documentations,
-			String referenceGridName, Javadoc javadoc)
+			String referenceGridName, Javadoc javadoc, JavaMethod method)
 	{
 		checkInvariant(documentations);
-		boolean hasIntroductionSentence = containsAction(documentations);
+		boolean hasIntroductionSentence = containsAction(documentations)
+				|| containsClassDescription(documentations, method);
 
 		@SuppressWarnings("unchecked")
 		List<TagElement> tags = javadoc.tags();
@@ -295,7 +319,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 			AST jdocAST = javadoc.getAST();
 			TagElement newTag = createTagElement(documentation, referenceGridName,
-					jdocAST);
+					jdocAST, method);
 
 			@SuppressWarnings("unchecked")
 			List<ASTNode> fragments = newTag.fragments();
@@ -484,12 +508,12 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				{
 					if (currentIdentifier == null)
 					{
-						String[] splittedDocText = JavadocUtils.readFragments(
-								element.fragments(), 0).trim().split(" ");
-						
+						String[] splittedDocText = JavadocUtils
+								.readFragments(element.fragments(), 0).trim().split(" ");
+
 						currentIdentifier = splittedDocText[0];
 					}
-					
+
 					if ((currentIdentifier != null)
 							&& (currentIdentifier.equals(identifier)))
 					{
@@ -596,6 +620,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 					resultTags.add(tags.get(lastIndex));
 				}
+				else if (!isEmptyRow(tags.get(0)))
+				{
+					resultTags.add(tags.get(0));
+					resultTags.add(createaEmptyJavadocRow(javadoc));
+				}
 				else
 				{
 					resultTags.add(tags.get(0));
@@ -640,11 +669,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	@Override
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
 			String paramName, String thematicGridName, Javadoc javadoc,
-			List<TagElement> additionalTagElements)
+			List<TagElement> additionalTagElements, JavaMethod method)
 	{
 		if (tagName == null)
 		{ // ACTION or new tags for specific thematic roles.
-			addTaglessJavadocs(documentations, thematicGridName, javadoc);
+			addTaglessJavadocs(documentations, thematicGridName, javadoc, method);
 		}
 		else
 		{
