@@ -15,11 +15,19 @@
  *******************************************************************************/
 package de.akra.idocit.java.ui;
 
+import java.util.logging.Logger;
+
+import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-public class Activator extends AbstractUIPlugin
+public class Activator extends AbstractUIPlugin implements IStartup
 {
+
+	/**
+	 * Logger.
+	 */
+	static Logger log = Logger.getLogger(Activator.class.getName());
 
 	/**
 	 * The plug-in ID
@@ -59,5 +67,11 @@ public class Activator extends AbstractUIPlugin
 	public static Activator getDefault()
 	{
 		return plugin;
+	}
+
+	@Override
+	public void earlyStartup()
+	{
+		log.info("Java Support UI plugin has been loaded.");
 	}
 }
