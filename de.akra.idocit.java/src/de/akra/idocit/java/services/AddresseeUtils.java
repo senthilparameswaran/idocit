@@ -114,9 +114,16 @@ public class AddresseeUtils
 	private static boolean checkOpsIfOnlyForDeveloper(Parameters parameters,
 			String addresseeName)
 	{
-		return checkSignatureElement(parameters, addresseeName)
-				&& checkParamsIfOnlyForDeveloper(parameters.getParameters(),
-						addresseeName);
+		if (parameters != null)
+		{
+			return checkSignatureElement(parameters, addresseeName)
+					&& checkParamsIfOnlyForDeveloper(parameters.getParameters(),
+							addresseeName);
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	private static boolean checkOpsIfOnlyForDeveloper(
