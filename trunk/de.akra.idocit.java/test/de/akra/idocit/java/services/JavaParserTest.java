@@ -52,7 +52,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.ThematicRoleUtils;
+import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.JavadocTestUtils;
@@ -158,7 +162,7 @@ public class JavaParserTest
 
 		// Copy source code of JavaParser.java to test workspace.
 		File srcJavaParserFile = new File("test/source/JavaParser.java");
-		IFile srcJavaParserWorkspaceFile = srcFolder.getFile("JavaParser.java");
+		IFile srcJavaParserWorkspaceFile = packageFolder.getFile("JavaParser.java");
 		srcJavaParserWorkspaceFile.create(new FileInputStream(srcJavaParserFile), true,
 				progressMonitor);
 
@@ -182,10 +186,6 @@ public class JavaParserTest
 		// Deactivate Simple Parser
 		IPreferenceStore store = PlatformUI.getPreferenceStore();
 		store.setValue(PreferenceStoreConstants.JAVADOC_GENERATION_MODE, "");
-
-		// Delete classpath file
-		File classPathFile = new File("test/source/.classpath");
-		classPathFile.delete();
 	}
 
 	/**
@@ -264,31 +264,47 @@ public class JavaParserTest
 								actInterfaceArtifact));
 			}
 
+			clearWorkspace();
+			setupWorkspace();
+
 			// #########################################################################
 			// # Test case #2: parse the source code of JavaParser.java without any error.
-			// # In a former implementation this test causes a NullPointerException because
-			// # of void-methods (input or output-parameters == null).
+			// # In a former implementation this test causes a NullPointerException
+			// # because of void-methods (input or output-parameters == null).
 			// #########################################################################
 			{
 				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 				IProject project = root.getProject(PROJECT_NAME);
-				IFile testSourceFolder = project
-						.getFile("src/de/akra/idocit/java/services/JavaParser.java");
+				IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
 
 				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
 						.getInstance().getPersistenceService()
 						.loadInterface(testSourceFolder);
 
+				Documentation documentation = actInterfaceArtifact.getInterfaces().get(0)
+						.getOperations().get(0).getDocumentations().get(0);
+
+				List<ThematicRole> roles = ServiceManager.getInstance()
+						.getPersistenceService().loadThematicRoles();
+				ThematicRole roleNone = ThematicRoleUtils.findRoleByName("NONE", roles);
+				documentation.setThematicRole(roleNone);
+
+				ValidationReport report = ServiceManager
+						.getInstance()
+						.getPersistenceService()
+						.validateInterfaceArtifact(actInterfaceArtifact, testSourceFolder);
+
 				Assert.assertNotNull(actInterfaceArtifact);
+				Assert.assertNotNull(report);
 			}
 		}
+
 		/*
 		 * Negative tests
 		 */
 		{
 
 		}
-
 	}
 
 	/**
