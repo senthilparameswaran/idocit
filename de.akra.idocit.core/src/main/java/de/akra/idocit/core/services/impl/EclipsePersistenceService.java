@@ -109,6 +109,8 @@ public class EclipsePersistenceService implements PersistenceService
 	@Override
 	public InterfaceArtifact loadInterface(IFile iFile) throws Exception
 	{
+		logger.entering(EclipsePersistenceService.class.getName(), "loadInterface");
+
 		// there must be a file extension to determine the type
 		if (iFile == null || iFile.getFileExtension().isEmpty())
 		{
@@ -127,7 +129,10 @@ public class EclipsePersistenceService implements PersistenceService
 			return InterfaceArtifact.NOT_SUPPORTED_ARTIFACT;
 		}
 
-		return parser.parse(iFile);
+		InterfaceArtifact result = parser.parse(iFile);
+
+		logger.exiting(EclipsePersistenceService.class.getName(), "loadInterface", result);
+		return result;
 	}
 
 	/*
@@ -465,13 +470,21 @@ public class EclipsePersistenceService implements PersistenceService
 
 			for (Entry<ThematicRole, Boolean> roleEntry : grid.getRoles().entrySet())
 			{
-				ThematicRole cleanedRole = new ThematicRole();
-				cleanedRole.setName(StringUtils.cleanFormatting(roleEntry.getKey()
-						.getName()));
-				cleanedRole.setDescription(StringUtils.cleanFormatting(roleEntry.getKey()
-						.getDescription()));
+				if (roleEntry.getKey() != null)
+				{
+					ThematicRole cleanedRole = new ThematicRole();
+					cleanedRole.setName(StringUtils.cleanFormatting(roleEntry.getKey()
+							.getName()));
+					cleanedRole.setDescription(StringUtils.cleanFormatting(roleEntry
+							.getKey().getDescription()));
 
-				cleanedRoles.put(cleanedRole, roleEntry.getValue());
+					cleanedRoles.put(cleanedRole, roleEntry.getValue());
+				}
+				else
+				{
+					logger.warning("No name for thematic role "
+							+ String.valueOf(roleEntry));
+				}
 			}
 
 			grid.setRoles(cleanedRoles);
