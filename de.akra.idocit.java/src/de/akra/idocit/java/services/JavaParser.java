@@ -79,9 +79,34 @@ public class JavaParser implements Parser
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Reads the java- and javadoc code from the given file and creates the
+	 * returned {@link JavaInterfaceArtifact} from it.
 	 * 
+	 * @source_format Java and Javadoc according to their current specifications
+	 *                <a href="http://docs.oracle.com/javase/specs/">Java</a> <a
+	 *                href=
+	 *                "http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html"
+	 *                >Javadoc</a>
+	 * @instrument To parse the Java and Javadoc code, the parser provided by
+	 *             the <a href="http://www.eclipse.org/jdt/">Eclipse Java
+	 *             Development Tools</a> is used.
+	 * @instrument iDocIt! supports two different representations of thematic
+	 *             grids in Javadoc: 
+	 *             
+	 *             The simplified version is very compact, but
+	 *             supports only the addressee "Developer".
+	 *             
+	 *             The complex version
+	 *             supports all addressees, but uses a lot of HTML-code.
+	 * 
+	 * @param iFile
+	 *            [SOURCE]
+	 * 
+	 * @return [OBJECT]
+	 * 
+	 * @throws Exception
 	 * @see de.akra.idocit.core.extensions.Parser#parse(IFile)
+	 * @thematicgrid Parsing Operations
 	 */
 	@Override
 	public InterfaceArtifact parse(IFile iFile) throws Exception

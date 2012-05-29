@@ -33,7 +33,12 @@ import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.ThematicRoleUtils;
+import de.akra.idocit.core.constants.ThematicRoleConstants;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.DescribedItemUtils;
+import de.akra.idocit.java.services.AddresseeUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -258,15 +263,15 @@ public class TestDataFactory
 		ioException.setSignatureElementPath("source.IOException:source.IOException");
 		ioException.setIdentifier("IOException");
 		// TODO
-//		addDocumentation(ioException, addresseeName, null, "In case of an error",
-//				ioException.getSignatureElementPath());
+		// addDocumentation(ioException, addresseeName, null, "In case of an error",
+		// ioException.getSignatureElementPath());
 		TagElement exception = customerServiceIntf.getAST().newTagElement();
 		exception.setTagName(TagElement.TAG_THROWS);
 		List fragments = exception.fragments();
 		TextElement exceptionTextElem = customerServiceIntf.getAST().newTextElement();
 		exceptionTextElem.setText(" IOException  In case of an error");
 		fragments.add(exceptionTextElem);
-		
+
 		List<TagElement> additionalElements = new ArrayList<TagElement>();
 		additionalElements.add(exception);
 		methodFindCustomerById.setAdditionalTags(additionalElements);
@@ -425,8 +430,8 @@ public class TestDataFactory
 		specialException
 				.setSignatureElementPath("source.SpecialException:source.SpecialException");
 		// TODO
-//		addDocumentation(specialException, addresseeName, null, "In case of an error",
-//				specialException.getSignatureElementPath());
+		// addDocumentation(specialException, addresseeName, null, "In case of an error",
+		// specialException.getSignatureElementPath());
 
 		ioExceptions.addParameter(specialException);
 		exceptions.add(ioExceptions);
@@ -508,7 +513,7 @@ public class TestDataFactory
 		ioException.setDocumentationChanged(documentationChanged);
 		ioException.setIdentifier("IOException");
 		// TODO
-		//ioException.addDocpart(createEmptyDocumentation("IOException"));
+		// ioException.addDocpart(createEmptyDocumentation("IOException"));
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -678,7 +683,7 @@ public class TestDataFactory
 		ioException.setDocumentationChanged(documentationChanged);
 		ioException.setIdentifier("IOException");
 		// TODO:
-		//ioException.addDocpart(createNullDocumentation("IOException"));
+		// ioException.addDocpart(createNullDocumentation("IOException"));
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -893,7 +898,8 @@ public class TestDataFactory
 
 		TypeDeclaration innerInterface = (TypeDeclaration) customerServiceIntf
 				.bodyDeclarations().get(0);
-		MethodDeclaration outerFindCustById = (MethodDeclaration) innerInterface.bodyDeclarations().get(0);
+		MethodDeclaration outerFindCustById = (MethodDeclaration) innerInterface
+				.bodyDeclarations().get(0);
 
 		List<JavaMethod> innerMethods = new ArrayList<JavaMethod>();
 		innerMethods.add(createEmptyFindCustomerByName(outerFindCustById, false));
@@ -1075,6 +1081,67 @@ public class TestDataFactory
 			innerInterfaces.add(innerCustomerService);
 			customerService.setInnerInterfaces(innerInterfaces);
 		}
+
+		return result;
+	}
+
+	public static List<Documentation> createDocsForParseMethod(String addresseeName,
+			String signatureElementIdentifier)
+	{
+		List<Addressee> addressees = ServiceManager.getInstance().getPersistenceService()
+				.loadConfiguredAddressees();
+		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
+				.loadThematicRoles();
+		Addressee addressee = AddresseeUtils.findByName(addresseeName, addressees);
+
+		List<Addressee> addresseeSequence = new ArrayList<Addressee>();
+		addresseeSequence.add(addressee);
+
+		List<Documentation> result = new ArrayList<Documentation>();
+
+		Map<Addressee, String> docTextAction = new HashMap<Addressee, String>();
+		docTextAction
+				.put(addressee,
+						"Reads the java- and javadoc code from the given file and\ncreates the returned {@link JavaInterfaceArtifact} from it.\nEscape Test: <");
+		Documentation docAction = new Documentation();
+		docAction.setAddresseeSequence(addresseeSequence);
+		docAction.setDocumentation(docTextAction);
+		docAction.setThematicRole(ThematicRoleUtils.findRoleByName(
+				ThematicRoleConstants.MANDATORY_ROLE_ACTION, roles));
+		result.add(docAction);
+
+		Map<Addressee, String> docTextSourceFormat = new HashMap<Addressee, String>();
+		docTextSourceFormat
+				.put(addressee,
+						"Java and Javadoc according to their current specifications:\n\nJava\nJavadoc");
+		Documentation docSourceFormat = new Documentation();
+		docSourceFormat.setAddresseeSequence(addresseeSequence);
+		docSourceFormat.setDocumentation(docTextSourceFormat);
+		docSourceFormat.setThematicRole(ThematicRoleUtils.findRoleByName("SOURCE_FORMAT",
+				roles));
+		result.add(docSourceFormat);
+
+		Map<Addressee, String> docTextInstrument1 = new HashMap<Addressee, String>();
+		docTextInstrument1
+				.put(addressee,
+						"To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used.");
+		Documentation docSourceInstrument1 = new Documentation();
+		docSourceInstrument1.setAddresseeSequence(addresseeSequence);
+		docSourceInstrument1.setDocumentation(docTextInstrument1);
+		docSourceInstrument1.setThematicRole(ThematicRoleUtils.findRoleByName(
+				"INSTRUMENT", roles));
+		result.add(docSourceInstrument1);
+
+		Map<Addressee, String> docTextInstrument2 = new HashMap<Addressee, String>();
+		docTextInstrument2
+				.put(addressee,
+						"iDocIt! supports two different representations of thematicgrids in Javadoc:\n\nThe simplified version is very compact, but supports only the addressee \"Developer\".\nThe complex version supports all addressees, but uses a lot of HTML-code.");
+		Documentation docSourceInstrument2 = new Documentation();
+		docSourceInstrument2.setAddresseeSequence(addresseeSequence);
+		docSourceInstrument2.setDocumentation(docTextInstrument2);
+		docSourceInstrument2.setThematicRole(ThematicRoleUtils.findRoleByName(
+				"INSTRUMENT", roles));
+		result.add(docSourceInstrument2);
 
 		return result;
 	}
