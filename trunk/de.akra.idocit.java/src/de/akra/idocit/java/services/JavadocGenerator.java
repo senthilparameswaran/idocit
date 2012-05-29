@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.dom.TextElement;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.java.structure.JavaMethod;
+import de.akra.idocit.java.utils.StringUtils;
 
 /**
  * Generator for {@link Javadoc} comments.
@@ -45,9 +46,6 @@ public class JavadocGenerator implements IJavadocGenerator
 	 * @since 0.0.2
 	 */
 	public static final String IDOCIT_HTML_TABLE_NAME = "idocit";
-
-	public static final String XML_TAG_TAB = '<' + HTMLTableParser.XML_TAG_TAB + "/>";
-	public static final String XML_TAG_BR = '<' + HTMLTableParser.XML_TAG_BR + "/>";
 
 	public static final JavadocGenerator INSTANCE;
 
@@ -77,52 +75,6 @@ public class JavadocGenerator implements IJavadocGenerator
 	 *            The text to escape
 	 * @return The escaped text
 	 */
-	private String escapeHtml(String unescapedText)
-	{
-		String escapedText = StringEscapeUtils.escapeHtml4(unescapedText);
-
-		StringBuilder tmpText = new StringBuilder();
-
-		for (int i = 0; i < escapedText.length(); ++i)
-		{
-			switch (escapedText.charAt(i))
-			{
-			case '\t':
-				tmpText.append(XML_TAG_TAB);
-				break;
-
-			case '\r':
-				tmpText.append(XML_TAG_BR);
-
-				// if CR and LF are together, replace it only once
-				// Changes due to Issue #2
-				if ((escapedText.length() > i + 1) && escapedText.charAt(i + 1) == '\n')
-				// End changes due to Issue #2
-				{
-					i++;
-				}
-				break;
-
-			case '\n':
-				tmpText.append(XML_TAG_BR);
-
-				// if CR and LF are together, replace it only once
-				// Changes due to Issue #2
-				if ((escapedText.length() > i + 1) && escapedText.charAt(i + 1) == '\r')
-				// End changes due to Issue #2
-				{
-					i++;
-				}
-				break;
-
-			default:
-				tmpText.append(escapedText.charAt(i));
-				break;
-			}
-		}
-
-		return tmpText.toString();
-	}
 
 	/**
 	 * Append the information out of <code>documentations</code> to the {@link Javadoc}
@@ -213,7 +165,7 @@ public class JavadocGenerator implements IJavadocGenerator
 						textElem.append("<tr><td><b>");
 						textElem.append(addressee.getName());
 						textElem.append("</b>:</td><td>");
-						textElem.append(escapeHtml(docMap.get(addressee)));
+						textElem.append(StringUtils.escapeHtml(docMap.get(addressee)));
 						textElem.append("</td></tr>\n");
 					}
 				}

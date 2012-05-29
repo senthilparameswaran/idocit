@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -33,7 +34,6 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicRole;
-import de.akra.idocit.common.utils.ObjectUtils;
 import de.akra.idocit.common.utils.Preconditions;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
@@ -159,7 +159,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			String docText = findDocTextByAddresseeName(
 					AddresseeConstants.MOST_IMPORTANT_ADDRESSEE,
 					documentation.getDocumentation());
-			return StringUtils.toString(docText);
+			return StringUtils.toString(docText).trim();
 		}
 
 		return "";
@@ -462,9 +462,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					if (role != null)
 					{
 						docText.append(StringUtils.inBrackets(role.getName()));
+						docText.append(' ');
 					}
-
-					docText.append(' ');
 
 					docText.append(getDocText(documentation));
 
@@ -573,19 +572,21 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return false;
 	}
 
-	private boolean shouldInsertEmptyRow(TagElement first, TagElement second)
+	private boolean shouldInsertEmptyRow(TagElement first, TagElement second,
+			boolean firstHasIndex0)
 	{
-		boolean introductionSentence = first.getTagName() == null;
-		boolean betweenIntroductionSentenceAndAnyTag = introductionSentence
-				&& (!"".equals(second.getTagName()) || (second.getTagName() == null));
+		boolean introductionSentence = (first.getTagName() == null)
+				&& (second.getTagName() != null);
+		// TODO Remove
+		// boolean betweenIntroductionSentenceAndAnyTag = introductionSentence
+		// && ("".equals(second.getTagName()) || (second.getTagName() == null));
 		boolean beforeParam = TagElement.TAG_PARAM.equals(second.getTagName());
 		boolean beforeReturn = TagElement.TAG_RETURN.equals(second.getTagName());
 		boolean beforeThrows = TagElement.TAG_THROWS.equals(second.getTagName());
 
-		return !isEmptyRow(first)
-				&& !isEmptyRow(second)
-				&& (introductionSentence || betweenIntroductionSentenceAndAnyTag
-						|| beforeParam || beforeReturn || beforeThrows);
+		return !isEmptyRow(first) && !isEmptyRow(second) && (introductionSentence || // betweenIntroductionSentenceAndAnyTag
+																						// ||
+				beforeParam || beforeReturn || beforeThrows);
 	}
 
 	private List<TagElement> insertEmptyRows(List<TagElement> tags, Javadoc javadoc)
@@ -612,7 +613,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 						resultTags.add(current);
 
-						if (shouldInsertEmptyRow(current, next))
+						if (shouldInsertEmptyRow(current, next, i == 0))
 						{
 							resultTags.add(emptyRow);
 						}
@@ -682,5 +683,86 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		}
 
 		insertEmptyRows(javadoc);
+
+		List<TagElement> tags = javadoc.tags();
+		List<TagElement> copiedTags = new ArrayList<TagElement>();
+		copiedTags.addAll(tags);
+		tags.clear();
+		tags.addAll(splitTextInToFragments(copiedTags, javadoc.getAST()));
+	}
+
+	private String[] appendBRTag(String[] lines)
+	{		
+		for(int i = 0; i < lines.length; i++){
+			lines[i] = de.akra.idocit.java.utils.StringUtils.escapeHtml(lines[i]);
+		}
+
+		// A <br/>-tag at the end of a single line is not necessary, because there
+		// couldn't be any formatting with linebreaks, which should be kept.
+		if (lines.length >= 2)
+		{
+			// Don't look at the last element, because we want no <br>-tag there! The
+			// reason is the same as above ;).
+			for (int i = 0; i < lines.length - 1; i++)
+			{
+				lines[i] += "<br/>";
+			}
+		}
+
+		return lines;
+	}
+
+	private List<TagElement> splitTextInToFragments(List<TagElement> tagElements, AST ast)
+	{
+		List<TagElement> result = new ArrayList<TagElement>();
+
+		for (TagElement tagElement : tagElements)
+		{
+			String docText = JavadocUtils.readFragments(tagElement.fragments(), 0);
+			String tagIdentifier = tagElement.getTagName();
+
+			if ((docText != null) && !docText.isEmpty())
+			{
+				TagElement newTagElement = ast.newTagElement();
+				newTagElement.setTagName(tagIdentifier);
+				List<ASTNode> fragments = newTagElement.fragments();
+
+				TextElement identifierElement = ast.newTextElement();
+
+				if (docText.lastIndexOf('\n') > -1)
+				{
+					String[] splittedText = docText.split("\\r?\\n");
+					splittedText = appendBRTag(splittedText);
+
+					identifierElement.setText(splittedText[0]);
+					fragments.add(identifierElement);
+					result.add(newTagElement);
+
+					if (splittedText.length > 1)
+					{
+						for (int i = 1; i < splittedText.length; i++)
+						{
+							newTagElement = ast.newTagElement();
+							fragments = newTagElement.fragments();
+							identifierElement = ast.newTextElement();
+							identifierElement.setText(splittedText[i]);
+							fragments.add(identifierElement);
+
+							result.add(newTagElement);
+						}
+					}
+				}
+				else
+				{
+					result.add(tagElement);
+				}
+			}
+			else
+			{
+				result.add(tagElement);
+			}
+		}
+
+		return result;
 	}
 }

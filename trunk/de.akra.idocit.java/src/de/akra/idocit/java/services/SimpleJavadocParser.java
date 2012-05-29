@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.xml.sax.SAXException;
@@ -546,6 +547,13 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		return allTexts;
 	}
 
+	private String formatText(String text)
+	{
+		String newLine = System.getProperty("line.separator");
+		return StringEscapeUtils.unescapeHtml4(text.replaceAll("<br/>", newLine)
+				.replaceAll("<tab/>", "\t"));
+	}
+
 	/**
 	 * Creates a {@link Documentation} for the given tagElement.
 	 * 
@@ -578,7 +586,9 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		Map<Addressee, String> documentations = new HashMap<Addressee, String>();
 
 		String identifier = JavadocUtils.readIdentifier(tagElement);
-		String docText = extractDocumenationText(identifier, annotatedDoc.getDocText());
+		String unformattedDocText = extractDocumenationText(identifier,
+				annotatedDoc.getDocText());
+		String docText = formatText(unformattedDocText);
 		documentations.put(developer, docText);
 		documentation.setDocumentation(documentations);
 
@@ -625,7 +635,6 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 					tagElement.getTagName());
 			documentation.setSignatureElementIdentifier(parentParam
 					.getSignatureElementPath());
-
 		}
 
 		documentation.setThematicRole(annotatedDoc.getThematicRole());

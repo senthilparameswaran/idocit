@@ -18,6 +18,7 @@ package de.akra.idocit.java.services;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -310,8 +311,8 @@ public class JavaParserTest
 			// #########################################################################
 			{
 				String refJavadoc = "/**\n" + " * Parser implementation for Java.\n"
-						+ " * \n" + " * @author Dirk Meier-Eickhoff\n" + " * @since 0.0.1\n"
-						+ " * @version 0.0.1\n" + " * \n" + " */\n";
+						+ " * \n" + " * @author Dirk Meier-Eickhoff\n"
+						+ " * @since 0.0.1\n" + " * @version 0.0.1\n" + " * \n" + " */\n";
 				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 				IProject project = root.getProject(PROJECT_NAME);
 				IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
@@ -339,24 +340,88 @@ public class JavaParserTest
 						.writeInterface(actInterfaceArtifact, testSourceFolder);
 
 				File javaFile = testSourceFolder.getRawLocation().makeAbsolute().toFile();
-				BufferedReader reader = new BufferedReader(new FileReader(javaFile));
+				String actJavadoc = readLinesFromFile(javaFile, 51, 59);
 
-				StringBuffer actJavadoc = new StringBuffer();
-				// The java-file contain the javadoc in lines 51 - 58.
-				for (int i = 0; i < 59; i++)
+				Assert.assertEquals(refJavadoc, actJavadoc);
+			}
+
+			clearWorkspace();
+			setupWorkspace();
+
+			// #########################################################################
+			// # Test case #4: javadoc with line-wrapped texts is correctly parsed. Line
+			// # breaks or empty lines in iDocIt!'s GUI are correctly mapped to empty rows
+			// # in the generated javadoc (starting with a '*').
+			// #########################################################################
+			{
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IProject project = root.getProject(PROJECT_NAME);
+				IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
+
+				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+						.getInstance().getPersistenceService()
+						.loadInterface(testSourceFolder);
+				JavaMethod parseMethod = (JavaMethod) actInterfaceArtifact
+						.getInterfaces().get(0).getOperations().get(0);
+
+				List<Documentation> refDocumentations = TestDataFactory
+						.createDocsForParseMethod("Developer",
+								parseMethod.getQualifiedIdentifier());
+				
+				parseMethod.getDocumentations().clear();
+				
+				for (Documentation documentation : refDocumentations)
 				{
-					if (i >= 51)
-					{
-						actJavadoc.append(reader.readLine());
-						actJavadoc.append('\n');
-					}
-					else
-					{
-						reader.readLine();
-					}
+					parseMethod.addDocpart(documentation);
 				}
 
-				Assert.assertEquals(refJavadoc, actJavadoc.toString());
+				parseMethod.setDocumentationChanged(true);
+
+				ServiceManager
+						.getInstance()
+						.getPersistenceService()
+						.validateInterfaceArtifact(actInterfaceArtifact, testSourceFolder);
+
+				ServiceManager.getInstance().getPersistenceService()
+						.writeInterface(actInterfaceArtifact, testSourceFolder);
+
+				File javaFile = testSourceFolder.getRawLocation().makeAbsolute().toFile();
+				String actJavadoc = readLinesFromFile(javaFile, 87, 111);
+
+				String refJavadoc =  "\t/**\n"
+									+ "\t * Reads the java- and javadoc code from the given file and<br/>\n" 
+									+ "\t * creates the returned {@link JavaInterfaceArtifact} from it.<br/>\n"
+									+ "\t * Escape Test: &lt;\n"
+									+ "\t * \n"
+									+ "\t * @source_format  Java and Javadoc according to their current specifications:<br/>\n"
+									+ "\t * <br/>\n"
+									+ "\t * Java<br/>\n"
+									+ "\t * Javadoc\n"
+									+ "\t * \n"
+									+ "\t * @instrument  To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used.\n"
+									+ "\t * @instrument  iDocIt! supports two different representations of thematicgrids in Javadoc:<br/>\n"
+									+ "\t * <br/>\n"
+									+ "\t * The simplified version is very compact, but supports only the addressee &quot;Developer&quot;.<br/>\n"
+									+ "\t * The complex version supports all addressees, but uses a lot of HTML-code.\n"
+									+ "\t * \n"
+									+ "\t * @param  iFile [SOURCE]\n"
+									+ "\t * \n"
+									+ "\t * @return  [OBJECT]\n"
+									+ "\t * \n"
+									+ "\t * @throws  Exception\n"
+									+ "\t * @see de.akra.idocit.core.extensions.Parser#parse(IFile)\n"
+									+ "\t * @thematicgrid  Parsing Operations\n"
+									+ "\t */\n";
+
+				Assert.assertEquals(refJavadoc, actJavadoc);
+
+				JavaInterfaceArtifact loadedArtifact = (JavaInterfaceArtifact) ServiceManager.getInstance().getPersistenceService().loadInterface(testSourceFolder);
+				parseMethod = (JavaMethod) loadedArtifact.getInterfaces().get(0)
+						.getOperations().get(0);
+
+				List<Documentation> actDocumentations = parseMethod.getDocumentations();
+
+				Assert.assertEquals(refDocumentations, actDocumentations);
 			}
 		}
 
@@ -366,6 +431,28 @@ public class JavaParserTest
 		{
 
 		}
+	}
+
+	private String readLinesFromFile(File javaFile, int startLine, int endLine)
+			throws FileNotFoundException, IOException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(javaFile));
+
+		StringBuffer actJavadoc = new StringBuffer();
+		// The java-file contain the javadoc in lines 51 - 58.
+		for (int i = 0; i < endLine; i++)
+		{
+			if (i >= startLine)
+			{
+				actJavadoc.append(reader.readLine());
+				actJavadoc.append('\n');
+			}
+			else
+			{
+				reader.readLine();
+			}
+		}
+		return actJavadoc.toString();
 	}
 
 	/**
