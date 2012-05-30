@@ -59,6 +59,7 @@ import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.java.JavadocTestUtils;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavadocTagElement;
 import de.akra.idocit.java.structure.ParserOutput;
@@ -239,9 +240,10 @@ public class JavadocGeneratorTest
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws ParsingException 
 	 */
 	@Test
-	public void testJavaInterfaceGenerator() throws FileNotFoundException, IOException
+	public void testJavaInterfaceGenerator() throws FileNotFoundException, IOException, ParsingException
 	{
 		ParserOutput output = JavadocTestUtils
 				.createCompilationUnit("test/source/ParsingService.java");
@@ -294,10 +296,11 @@ public class JavadocGeneratorTest
 	 * @throws BadLocationException
 	 * @throws MalformedTreeException
 	 * @throws CoreException
+	 * @throws ParsingException
 	 */
 	@Ignore
 	public void testJavaInterfaceGenerator2() throws FileNotFoundException, IOException,
-			MalformedTreeException, BadLocationException, CoreException
+			MalformedTreeException, BadLocationException, CoreException, ParsingException
 	{
 
 		ParserOutput output = JavadocTestUtils

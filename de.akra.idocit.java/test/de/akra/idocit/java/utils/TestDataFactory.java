@@ -1102,7 +1102,7 @@ public class TestDataFactory
 		Map<Addressee, String> docTextAction = new HashMap<Addressee, String>();
 		docTextAction
 				.put(addressee,
-						"Reads the java- and javadoc code from the given file and\ncreates the returned {@link JavaInterfaceArtifact} from it.\nEscape Test: <");
+						"Reads the java- and javadoc code from the given file and\ncreates the returned {@link JavaInterfaceArtifact} from it.\nEscape Test: Ö");
 		Documentation docAction = new Documentation();
 		docAction.setAddresseeSequence(addresseeSequence);
 		docAction.setDocumentation(docTextAction);
@@ -1113,7 +1113,7 @@ public class TestDataFactory
 		Map<Addressee, String> docTextSourceFormat = new HashMap<Addressee, String>();
 		docTextSourceFormat
 				.put(addressee,
-						"Java and Javadoc according to their current specifications:\n\nJava\nJavadoc");
+						"Java and Javadoc according to their current specifications:\n\n<a href=\"http://docs.oracle.com/javase/specs/\">Java</a>\nJavadoc");
 		Documentation docSourceFormat = new Documentation();
 		docSourceFormat.setAddresseeSequence(addresseeSequence);
 		docSourceFormat.setDocumentation(docTextSourceFormat);
@@ -1142,7 +1142,7 @@ public class TestDataFactory
 		docSourceInstrument2.setThematicRole(ThematicRoleUtils.findRoleByName(
 				"INSTRUMENT", roles));
 		result.add(docSourceInstrument2);
-
+		
 		return result;
 	}
 }

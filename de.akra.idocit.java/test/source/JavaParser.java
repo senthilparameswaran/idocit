@@ -90,13 +90,10 @@ public class JavaParser implements Parser
 	 * returned {@link JavaInterfaceArtifact} from it.
 	 * 
 	 * @source_format Java and Javadoc according to their current specifications
-	 *                <a href="http://docs.oracle.com/javase/specs/">Java</a> <a
-	 *                href=
-	 *                "http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html"
-	 *                >Javadoc</a>
+	 *                <a href="http://docs.oracle.com/javase/specs/">Java</a>
+	 *                <a href="http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html">Javadoc</a>
 	 * @instrument To parse the Java and Javadoc code, the parser provided by
-	 *             the <a href="http://www.eclipse.org/jdt/">Eclipse Java
-	 *             Development Tools</a> is used.
+	 *             the <a href="http://www.eclipse.org/jdt/">Eclipse Java Development Tools</a> is used.
 	 * @instrument iDocIt! supports two different representations of thematic
 	 *             grids in Javadoc: 
 	 *             

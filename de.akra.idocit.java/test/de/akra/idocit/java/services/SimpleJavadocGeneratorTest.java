@@ -20,12 +20,22 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.ThematicRoleUtils;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.JavadocTestUtils;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -36,7 +46,8 @@ public class SimpleJavadocGeneratorTest
 {
 
 	@Test
-	public void testAppendDocsToJavadoc() throws FileNotFoundException, IOException
+	public void testAppendDocsToJavadoc() throws FileNotFoundException, IOException,
+			ParsingException
 	{
 		/*
 		 * Positive tests
@@ -61,8 +72,8 @@ public class SimpleJavadocGeneratorTest
 						.createCompilationUnit("test/source/CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
-				JavaInterfaceArtifact artifact = TestDataFactory
-						.createCustomerService("Developer", true, cu);
+				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
+						"Developer", true, cu);
 
 				JavaInterfaceGenerator.updateJavadocInAST(artifact,
 						SimpleJavadocGenerator.INSTANCE);
@@ -93,8 +104,8 @@ public class SimpleJavadocGeneratorTest
 						.createCompilationUnit("test/source/InvariantService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
-				JavaInterfaceArtifact artifact = TestDataFactory
-						.createInvariantService("Developer", cu, true);
+				JavaInterfaceArtifact artifact = TestDataFactory.createInvariantService(
+						"Developer", cu, true);
 
 				JavaInterfaceGenerator.updateJavadocInAST(artifact,
 						SimpleJavadocGenerator.INSTANCE);

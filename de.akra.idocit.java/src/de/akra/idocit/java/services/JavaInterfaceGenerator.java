@@ -31,6 +31,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.java.constants.CustomTaglets;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -59,7 +60,7 @@ public class JavaInterfaceGenerator
 	 */
 	@SuppressWarnings("unchecked")
 	public static void updateJavadocInAST(JavaInterfaceArtifact artifact,
-			IJavadocGenerator javadocGenerator)
+			IJavadocGenerator javadocGenerator) throws ParsingException
 	{
 		updateInterfaces((List<JavaInterface>) artifact.getInterfaces(), javadocGenerator);
 	}
@@ -72,7 +73,7 @@ public class JavaInterfaceGenerator
 	 */
 	@SuppressWarnings("unchecked")
 	private static void updateInterfaces(List<JavaInterface> interfaces,
-			IJavadocGenerator javadocGenerator)
+			IJavadocGenerator javadocGenerator) throws ParsingException
 	{
 		for (JavaInterface jInterface : interfaces)
 		{
@@ -109,7 +110,7 @@ public class JavaInterfaceGenerator
 	 *            The {@link JavaMethod} that should be processed.
 	 */
 	private static void updateMethods(List<JavaMethod> methods,
-			IJavadocGenerator javadocGenerator)
+			IJavadocGenerator javadocGenerator) throws ParsingException
 	{
 		for (JavaMethod method : methods)
 		{
@@ -151,17 +152,27 @@ public class JavaInterfaceGenerator
 		jDocTags.add(tagElem);
 
 		Parameters inputParams = method.getInputParameters();
-		collectParametersDocumentations(inputParams.getParameters(),
-				TagElement.TAG_PARAM, jDocTags, CustomTaglets.SUB_PARAM);
+		if (inputParams != null)
+		{
+			collectParametersDocumentations(inputParams.getParameters(),
+					TagElement.TAG_PARAM, jDocTags, CustomTaglets.SUB_PARAM);
+		}
 
 		Parameters returnType = method.getOutputParameters();
-		collectParametersDocumentations(returnType.getParameters(),
-				TagElement.TAG_RETURN, jDocTags, CustomTaglets.SUB_RETURN);
+
+		if (returnType != null)
+		{
+			collectParametersDocumentations(returnType.getParameters(),
+					TagElement.TAG_RETURN, jDocTags, CustomTaglets.SUB_RETURN);
+		}
 
 		for (Parameters exception : method.getExceptions())
 		{
-			collectParametersDocumentations(exception.getParameters(),
-					TagElement.TAG_THROWS, jDocTags, null);
+			if (exception != null)
+			{
+				collectParametersDocumentations(exception.getParameters(),
+						TagElement.TAG_THROWS, jDocTags, null);
+			}
 		}
 
 		return jDocTags;
@@ -308,6 +319,7 @@ public class JavaInterfaceGenerator
 	static Javadoc createOrUpdateJavadoc(List<JavadocTagElement> javadocTagElements,
 			List<TagElement> additionalTags, Javadoc javadoc, AST ast,
 			String thematicGridName, IJavadocGenerator javadocGenerator, JavaMethod method)
+			throws ParsingException
 	{
 		Javadoc newJavadoc = javadoc;
 		if (newJavadoc == null)

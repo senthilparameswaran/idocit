@@ -40,6 +40,7 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.utils.DescribedItemUtils;
+import de.akra.idocit.java.utils.JavadocUtils;
 
 /**
  * Parser for the HTML tables in the {@link Javadoc} comments.
@@ -51,10 +52,6 @@ import de.akra.idocit.core.utils.DescribedItemUtils;
  */
 public class HTMLTableParser
 {
-	private static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
-	private static final String XML_ROOT_START = "<javadoc>";
-	private static final String XML_ROOT_END = "</javadoc>";
-
 	public static final String XML_TAG_TAB = "tab";
 	public static final String XML_TAG_BR = "br";
 	private static final String NEW_LINE = System.getProperty("line.separator");
@@ -64,7 +61,7 @@ public class HTMLTableParser
 	 * Logger.
 	 */
 	private static Logger logger = Logger.getLogger(HTMLTableParser.class.getName());
-	
+
 	private static final HTMLTableHandler handler = new HTMLTableHandler();
 
 	/**
@@ -84,9 +81,11 @@ public class HTMLTableParser
 	public static List<Documentation> convertJavadocToDocumentations(String html)
 			throws SAXException, IOException, ParserConfigurationException
 	{
-		StringBuilder xml = new StringBuilder(XML_HEADER.length()
-				+ XML_ROOT_START.length() + html.length() + XML_ROOT_END.length());
-		xml.append(XML_HEADER).append(XML_ROOT_START).append(html).append(XML_ROOT_END);
+		StringBuilder xml = new StringBuilder(JavadocUtils.XML_HEADER.length()
+				+ JavadocUtils.XML_ROOT_START.length() + html.length()
+				+ JavadocUtils.XML_ROOT_END.length());
+		xml.append(JavadocUtils.XML_HEADER).append(JavadocUtils.XML_ROOT_START)
+				.append(html).append(JavadocUtils.XML_ROOT_END);
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
@@ -269,7 +268,7 @@ public class HTMLTableParser
 				currentDoc.getDocumentation().put(currentAddressee, startedDocumentation);
 			}
 		}
-		
+
 		/**
 		 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String,
 		 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
@@ -332,11 +331,12 @@ public class HTMLTableParser
 		{
 			return dtdInputSources;
 		}
-		
+
 		/**
 		 * Resets this parser.
 		 */
-		public void reset(){
+		public void reset()
+		{
 			this.currentAddressee = null;
 			this.currentDoc = null;
 			this.currentColumn = 0;
@@ -344,7 +344,7 @@ public class HTMLTableParser
 			this.lastValue = LAST_VALUE.NONE;
 			this.startTableParsing = false;
 		}
-		
+
 		/**
 		 * The last found value determines what will come next and what should be done.
 		 * 
