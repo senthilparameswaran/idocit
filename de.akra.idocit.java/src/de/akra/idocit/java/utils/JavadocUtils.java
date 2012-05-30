@@ -22,6 +22,7 @@ import java.io.SequenceInputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,6 +51,7 @@ public class JavadocUtils
 	public static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 	public static final String XML_ROOT_START = "<javadoc>";
 	public static final String XML_ROOT_END = "</javadoc>";
+	private static final Logger logger = Logger.getLogger(JavadocUtils.class.getName());
 
 	private static class JavadocHtmlHandler extends DefaultHandler2
 	{
@@ -277,6 +279,8 @@ public class JavadocUtils
 				+ XML_ROOT_START.length() + javadocText.length() + XML_ROOT_END.length());
 		xml.append(XML_HEADER).append(XML_ROOT_START).append(javadocText)
 				.append(XML_ROOT_END);
+
+		logger.info("Parsing string " + xml.toString() + " with SAX Parser.");
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
