@@ -15,6 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +24,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,7 +59,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
@@ -64,6 +70,7 @@ import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.constants.PreferenceStoreConstants;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -283,14 +290,20 @@ public class JavaParserTest
 				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
 						.getInstance().getPersistenceService()
 						.loadInterface(testSourceFolder);
-
-				Documentation documentation = actInterfaceArtifact.getInterfaces().get(0)
-						.getOperations().get(0).getDocumentations().get(0);
+				Operation javaMethod = actInterfaceArtifact.getInterfaces().get(0)
+						.getOperations().get(0);
+				Documentation documentation = javaMethod.getDocumentations().get(0);
 
 				List<ThematicRole> roles = ServiceManager.getInstance()
 						.getPersistenceService().loadThematicRoles();
 				ThematicRole roleNone = ThematicRoleUtils.findRoleByName("NONE", roles);
 				documentation.setThematicRole(roleNone);
+
+				for (Operation operation : actInterfaceArtifact.getInterfaces().get(0)
+						.getOperations())
+				{
+					operation.setDocumentationChanged(true);
+				}
 
 				ValidationReport report = ServiceManager
 						.getInstance()
@@ -299,6 +312,9 @@ public class JavaParserTest
 
 				Assert.assertNotNull(actInterfaceArtifact);
 				Assert.assertNotNull(report);
+
+				ServiceManager.getInstance().getPersistenceService()
+						.writeInterface(actInterfaceArtifact, testSourceFolder);
 			}
 
 			clearWorkspace();
@@ -367,9 +383,9 @@ public class JavaParserTest
 				List<Documentation> refDocumentations = TestDataFactory
 						.createDocsForParseMethod("Developer",
 								parseMethod.getQualifiedIdentifier());
-				
+
 				parseMethod.getDocumentations().clear();
-				
+
 				for (Documentation documentation : refDocumentations)
 				{
 					parseMethod.addDocpart(documentation);
@@ -388,34 +404,35 @@ public class JavaParserTest
 				File javaFile = testSourceFolder.getRawLocation().makeAbsolute().toFile();
 				String actJavadoc = readLinesFromFile(javaFile, 87, 111);
 
-				String refJavadoc =  "\t/**\n"
-									+ "\t * Reads the java- and javadoc code from the given file and<br/>\n" 
-									+ "\t * creates the returned {@link JavaInterfaceArtifact} from it.<br/>\n"
-									+ "\t * Escape Test: &lt;\n"
-									+ "\t * \n"
-									+ "\t * @source_format  Java and Javadoc according to their current specifications:<br/>\n"
-									+ "\t * <br/>\n"
-									+ "\t * Java<br/>\n"
-									+ "\t * Javadoc\n"
-									+ "\t * \n"
-									+ "\t * @instrument  To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used.\n"
-									+ "\t * @instrument  iDocIt! supports two different representations of thematicgrids in Javadoc:<br/>\n"
-									+ "\t * <br/>\n"
-									+ "\t * The simplified version is very compact, but supports only the addressee &quot;Developer&quot;.<br/>\n"
-									+ "\t * The complex version supports all addressees, but uses a lot of HTML-code.\n"
-									+ "\t * \n"
-									+ "\t * @param  iFile [SOURCE]\n"
-									+ "\t * \n"
-									+ "\t * @return  [OBJECT]\n"
-									+ "\t * \n"
-									+ "\t * @throws  Exception\n"
-									+ "\t * @see de.akra.idocit.core.extensions.Parser#parse(IFile)\n"
-									+ "\t * @thematicgrid  Parsing Operations\n"
-									+ "\t */\n";
+				String refJavadoc = "\t/**\n"
+						+ "\t * Reads the java- and javadoc code from the given file and<br/>\n"
+						+ "\t * creates the returned {@link JavaInterfaceArtifact} from it.<br/>\n"
+						+ "\t * Escape Test: &Ouml;\n"
+						+ "\t * \n"
+						+ "\t * @source_format  Java and Javadoc according to their current specifications:<br/>\n"
+						+ "\t * <br/>\n"
+						+ "\t * <a href=\"http://docs.oracle.com/javase/specs/\">Java</a><br/>\n"
+						+ "\t * Javadoc\n"
+						+ "\t * \n"
+						+ "\t * @instrument  To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used.\n"
+						+ "\t * @instrument  iDocIt! supports two different representations of thematicgrids in Javadoc:<br/>\n"
+						+ "\t * <br/>\n"
+						+ "\t * The simplified version is very compact, but supports only the addressee &quot;Developer&quot;.<br/>\n"
+						+ "\t * The complex version supports all addressees, but uses a lot of HTML-code.\n"
+						+ "\t * \n"
+						+ "\t * @param  iFile [SOURCE]\n"
+						+ "\t * \n"
+						+ "\t * @return  [OBJECT]\n"
+						+ "\t * \n"
+						+ "\t * @throws  Exception\n"
+						+ "\t * @see de.akra.idocit.core.extensions.Parser#parse(IFile)\n"
+						+ "\t * @thematicgrid  Parsing Operations\n" + "\t */\n";
 
 				Assert.assertEquals(refJavadoc, actJavadoc);
 
-				JavaInterfaceArtifact loadedArtifact = (JavaInterfaceArtifact) ServiceManager.getInstance().getPersistenceService().loadInterface(testSourceFolder);
+				JavaInterfaceArtifact loadedArtifact = (JavaInterfaceArtifact) ServiceManager
+						.getInstance().getPersistenceService()
+						.loadInterface(testSourceFolder);
 				parseMethod = (JavaMethod) loadedArtifact.getInterfaces().get(0)
 						.getOperations().get(0);
 
@@ -429,7 +446,6 @@ public class JavaParserTest
 		 * Negative tests
 		 */
 		{
-
 		}
 	}
 

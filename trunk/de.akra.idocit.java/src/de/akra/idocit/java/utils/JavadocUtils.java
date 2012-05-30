@@ -15,7 +15,18 @@
  *******************************************************************************/
 package de.akra.idocit.java.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.MemberRef;
@@ -25,12 +36,59 @@ import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.DefaultHandler2;
 
 import de.akra.idocit.java.constants.CustomTaglets;
+import de.akra.idocit.java.services.HTMLTableParser;
 import de.akra.idocit.java.services.ReflectionHelper;
+import de.akra.idocit.java.structure.StringReplacement;
 
 public class JavadocUtils
 {
+	public static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+	public static final String XML_ROOT_START = "<javadoc>";
+	public static final String XML_ROOT_END = "</javadoc>";
+
+	private static class JavadocHtmlHandler extends DefaultHandler2
+	{
+
+		private List<StringReplacement> replacements = new ArrayList<StringReplacement>();
+
+		private InputSource dtdInputSources;
+
+		@Override
+		public void characters(char[] ch, int start, int length) throws SAXException
+		{
+			String origValue = String.valueOf(ch, start, length);
+			String escapedValue = StringUtils.escapeHtml(origValue);
+
+			StringReplacement replacement = new StringReplacement();
+			replacement.setOriginalString(origValue);
+			replacement.setEscapedString(escapedValue);
+
+			replacements.add(replacement);
+		}
+
+		@Override
+		public InputSource resolveEntity(String name, String publicId, String baseURI,
+				String systemId) throws SAXException, IOException
+		{
+			return dtdInputSources;
+		}
+
+		public void setDtdInputSources(InputSource dtdInputSources)
+		{
+			this.dtdInputSources = dtdInputSources;
+		}
+
+		public List<StringReplacement> getReplacements()
+		{
+			return replacements;
+		}
+	}
+
 	public static boolean isSubParam(String tagName)
 	{
 		return CustomTaglets.SUB_PARAM.equals(tagName);
@@ -90,7 +148,7 @@ public class JavadocUtils
 
 		return identifier;
 	}
-	
+
 	/**
 	 * Extracts the plain text from the <code>fragments</code>.
 	 * 
@@ -196,5 +254,47 @@ public class JavadocUtils
 			}
 		}
 		return html.toString();
+	}
+
+	private static InputSource readDTDs()
+	{
+		InputStream xhtmlLat1 = HTMLTableParser.class
+				.getResourceAsStream("xhtml-lat1.ent");
+		InputStream xhtmlSpecial = HTMLTableParser.class
+				.getResourceAsStream("xhtml-special.ent");
+		InputStream xhtmlSymbol = HTMLTableParser.class
+				.getResourceAsStream("xhtml-symbol.ent");
+
+		SequenceInputStream sequence1 = new SequenceInputStream(xhtmlSpecial, xhtmlSymbol);
+		SequenceInputStream sequence = new SequenceInputStream(xhtmlLat1, sequence1);
+		return new InputSource(sequence);
+	}
+
+	public static String escapeHtml4(String javadocText)
+			throws ParserConfigurationException, SAXException, IOException
+	{
+		StringBuilder xml = new StringBuilder(XML_HEADER.length()
+				+ XML_ROOT_START.length() + javadocText.length() + XML_ROOT_END.length());
+		xml.append(XML_HEADER).append(XML_ROOT_START).append(javadocText)
+				.append(XML_ROOT_END);
+
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		SAXParser saxParser = factory.newSAXParser();
+
+		JavadocHtmlHandler handler = new JavadocHtmlHandler();
+		handler.setDtdInputSources(readDTDs());
+		saxParser.parse(
+				new ByteArrayInputStream(xml.toString()
+						.getBytes(Charset.forName("UTF-8"))), handler);
+		List<StringReplacement> replacements = handler.getReplacements();
+
+		for (StringReplacement replacement : replacements)
+		{
+			javadocText = javadocText.replaceAll(
+					Pattern.quote(replacement.getOriginalString()),
+					replacement.getEscapedString());
+		}
+
+		return javadocText;
 	}
 }

@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.dom.TagElement;
 
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 
 /**
@@ -49,5 +50,6 @@ public interface IJavadocGenerator
 	 */
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
 			String paramName, String thematicGridName, Javadoc javadoc,
-			List<TagElement> additionalTagElements, JavaMethod method);
+			List<TagElement> additionalTagElements, JavaMethod method)
+			throws ParsingException;
 }

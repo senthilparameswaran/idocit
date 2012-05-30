@@ -17,11 +17,16 @@ package de.akra.idocit.java.services;
 
 import static de.akra.idocit.common.utils.ObjectUtils.notNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.AST;
@@ -29,6 +34,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
+import org.xml.sax.SAXException;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
@@ -40,6 +46,7 @@ import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.utils.JavadocUtils;
 
@@ -49,6 +56,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	public static final String THEMATIC_GRID_CHECKING_OPERATIONS = "Checking Operations";
 
 	public static final SimpleJavadocGenerator INSTANCE;
+
+	private static final Logger LOGGER = Logger.getLogger(SimpleJavadocGenerator.class
+			.getName());
 
 	static
 	{
@@ -671,6 +681,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
 			String paramName, String thematicGridName, Javadoc javadoc,
 			List<TagElement> additionalTagElements, JavaMethod method)
+			throws ParsingException
 	{
 		if (tagName == null)
 		{ // ACTION or new tags for specific thematic roles.
@@ -688,13 +699,57 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		List<TagElement> copiedTags = new ArrayList<TagElement>();
 		copiedTags.addAll(tags);
 		tags.clear();
-		tags.addAll(splitTextInToFragments(copiedTags, javadoc.getAST()));
+		try
+		{
+			tags.addAll(splitTextInToFragments(copiedTags, javadoc.getAST()));
+		}
+		catch (ParserConfigurationException e)
+		{
+			LOGGER.log(
+					Level.WARNING,
+					"ParserConfigurationException occured with "
+							+ de.akra.idocit.java.utils.StringUtils.asStringSequence(
+									documentations, tagName, paramName, thematicGridName,
+									javadoc, additionalTagElements, method), e);
+
+			throw new ParsingException(
+					"The internal XML-parser could not be inialized. It said: "
+							+ e.getLocalizedMessage());
+		}
+		catch (SAXException e)
+		{
+			LOGGER.log(
+					Level.WARNING,
+					"SAXException occured with "
+							+ de.akra.idocit.java.utils.StringUtils.asStringSequence(
+									documentations, tagName, paramName, thematicGridName,
+									javadoc, additionalTagElements, method), e);
+
+			throw new ParsingException(
+					"The internal XML-parser caused an error. Maybe it is not able to parse your documentation texts. It said: "
+							+ e.getLocalizedMessage());
+		}
+		catch (IOException e)
+		{
+			LOGGER.log(
+					Level.WARNING,
+					"IOException occured with "
+							+ de.akra.idocit.java.utils.StringUtils.asStringSequence(
+									documentations, tagName, paramName, thematicGridName,
+									javadoc, additionalTagElements, method), e);
+
+			throw new ParsingException(
+					"The internal XML-parser could not read your Java-file. It said: "
+							+ e.getLocalizedMessage());
+		}
 	}
 
-	private String[] appendBRTag(String[] lines)
-	{		
-		for(int i = 0; i < lines.length; i++){
-			lines[i] = de.akra.idocit.java.utils.StringUtils.escapeHtml(lines[i]);
+	private String[] appendBRTag(String[] lines) throws ParserConfigurationException,
+			SAXException, IOException
+	{
+		for (int i = 0; i < lines.length; i++)
+		{
+			lines[i] = JavadocUtils.escapeHtml4(lines[i]);
 		}
 
 		// A <br/>-tag at the end of a single line is not necessary, because there
@@ -713,6 +768,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	}
 
 	private List<TagElement> splitTextInToFragments(List<TagElement> tagElements, AST ast)
+			throws ParserConfigurationException, SAXException, IOException
 	{
 		List<TagElement> result = new ArrayList<TagElement>();
 
@@ -754,6 +810,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				}
 				else
 				{
+					identifierElement.setText(JavadocUtils.escapeHtml4(docText));
+					fragments.add(identifierElement);
+					
 					result.add(tagElement);
 				}
 			}
