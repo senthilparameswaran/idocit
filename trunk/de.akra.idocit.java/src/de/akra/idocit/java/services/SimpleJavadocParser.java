@@ -403,9 +403,15 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 					if (TagElement.TAG_PARAM.equals(parentParamTag.getTagName())
 							|| TagElement.TAG_THROWS.equals(parentParamTag.getTagName()))
 					{
-						String parentText = JavadocUtils.readFragments(parentParamTag.fragments(), 0);
-						
-						return extractIdentifierChain(parentText)[0];
+						String parentText = JavadocUtils.readFragments(
+								parentParamTag.fragments(), 0);
+
+						if (parentText.contains(" "))
+						{
+							return parentText.split(" ")[0];
+						}
+
+						return parentText;
 					}
 					else if (TagElement.TAG_RETURN.equals(parentParamTag.getTagName()))
 					{
@@ -444,17 +450,24 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	{
 		if (subParamText.contains("."))
 		{
-			return subParamText.split("\\.");
+			String[] chain = subParamText.split("\\.");
+
+			for (int i = 0; i < chain.length; i++)
+			{
+				chain[i] = chain[i].trim();
+			}
+
+			return chain;
 		}
 		else if (subParamText.contains(" "))
 		{
 			// It could be that there is only the identifier and a description, e.g.
 			// "@param identifier description". In this case the result should only
 			// contain "identifier".
-			return new String[] { subParamText.split(" ")[0] };
+			return new String[] { subParamText.split(" ")[0].trim() };
 		}
 
-		return new String[] { subParamText };
+		return new String[] { subParamText.trim() };
 	}
 
 	private String extractIdentifierPath(String identifier, TagElement tagElement,

@@ -116,7 +116,7 @@ public class SimpleJavadocParserTest
 							.createDeveloperSequence());
 
 					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
-					docSubParamFirstname.put(TestUtils.createDeveloper(), "");
+					docSubParamFirstname.put(TestUtils.createDeveloper(), "This is the customer.");
 					paramParametersDoc.setDocumentation(docSubParamFirstname);
 
 					paramParametersDoc
