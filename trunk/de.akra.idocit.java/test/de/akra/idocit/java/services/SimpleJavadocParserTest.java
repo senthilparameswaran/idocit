@@ -59,10 +59,6 @@ public class SimpleJavadocParserTest
 			// # are within another taglet (e.g. in @param) and some are own taglets (e.g.
 			// # like @source).
 			// #########################################################################
-
-			// TODO: Welches Identifier-Format erwartet iDocIt!?
-			// TODO: Wie funktioniert die Abbildung von den einzelnen Documentations auf
-			// einen Baum von SignatureElements?
 			{
 				List<Documentation> referenceDocs = new ArrayList<Documentation>();
 
@@ -113,6 +109,22 @@ public class SimpleJavadocParserTest
 					referenceDocs.add(sourceDoc);
 				}
 
+				// Parameter parameters
+				{
+					Documentation paramParametersDoc = new Documentation();
+					paramParametersDoc.setAddresseeSequence(TestUtils
+							.createDeveloperSequence());
+
+					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
+					docSubParamFirstname.put(TestUtils.createDeveloper(), "");
+					paramParametersDoc.setDocumentation(docSubParamFirstname);
+
+					paramParametersDoc
+							.setSignatureElementIdentifier("parameters:source.NameParameters");
+					paramParametersDoc.setThematicRole(TestUtils.createComparison());
+					referenceDocs.add(paramParametersDoc);	
+				}
+				
 				// Subparameter firstname
 				{
 					Documentation subparamFirstnameDoc = new Documentation();
@@ -129,7 +141,7 @@ public class SimpleJavadocParserTest
 					referenceDocs.add(subparamFirstnameDoc);
 				}
 
-				// Subparametr lastname
+				// Subparameter lastname
 				{
 					Documentation subparamLastnameDoc = new Documentation();
 					subparamLastnameDoc.setAddresseeSequence(TestUtils
@@ -158,24 +170,6 @@ public class SimpleJavadocParserTest
 					returnDoc.setThematicRole(TestUtils.createObject());
 					referenceDocs.add(returnDoc);
 				}
-
-				// IOException
-// TODO:
-//				{
-//					Documentation ioExceptionDoc = new Documentation();
-//					ioExceptionDoc.setAddresseeSequence(TestUtils
-//							.createDeveloperSequence());
-//
-//					Map<Addressee, String> docException = new HashMap<Addressee, String>();
-//					ioExceptionDoc.setDocumentation(docException);
-//
-//					ioExceptionDoc.setSignatureElementIdentifier(null);
-//					ioExceptionDoc.setThematicRole(null);
-//					ioExceptionDoc
-//							.setSignatureElementIdentifier("source.IOException:source.IOException");
-//
-//					referenceDocs.add(ioExceptionDoc);
-//				}
 
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/CustomerService.java");

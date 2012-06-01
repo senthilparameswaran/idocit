@@ -32,7 +32,7 @@ public interface CustomerService
 	 * @ordering Alphabetically by lastname
 	 * @source CRM System
 	 * 
-	 * @param parameters
+	 * @param parameters [COMPARISON]
 	 * @subparam firstName [COMPARISON]
 	 * @subparam lastName [COMPARISON]
 	 * 

@@ -403,7 +403,9 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 					if (TagElement.TAG_PARAM.equals(parentParamTag.getTagName())
 							|| TagElement.TAG_THROWS.equals(parentParamTag.getTagName()))
 					{
-						return JavadocUtils.readFragments(parentParamTag.fragments(), 0);
+						String parentText = JavadocUtils.readFragments(parentParamTag.fragments(), 0);
+						
+						return extractIdentifierChain(parentText)[0];
 					}
 					else if (TagElement.TAG_RETURN.equals(parentParamTag.getTagName()))
 					{
@@ -443,6 +445,13 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		if (subParamText.contains("."))
 		{
 			return subParamText.split("\\.");
+		}
+		else if (subParamText.contains(" "))
+		{
+			// It could be that there is only the identifier and a description, e.g.
+			// "@param identifier description". In this case the result should only
+			// contain "identifier".
+			return new String[] { subParamText.split(" ")[0] };
 		}
 
 		return new String[] { subParamText };
