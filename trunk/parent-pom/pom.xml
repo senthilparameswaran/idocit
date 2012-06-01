@@ -97,26 +97,18 @@
 		</repository>
 	</repositories>
 
-	<distributionManagement>
-		<repository>
-			<id>idocit-update-site</id>
-			<name>iDocIt! Update Site</name>
-			<url>scpexe://idocit.akra.de/home/idocit/http/updatesite</url>
-		</repository>
-	</distributionManagement>
-
 	<profiles>
 		<profile>
 			<id>nightly-build</id>
 			<properties>
-				<idocit-update-site-url>scpexe://idocit.akra.de/home/idocit/http/updatesite-nb</idocit-update-site-url>
+				<idocit-update-site-dir>/var/www/idocit/updatesite-nb</idocit-update-site-dir>
 			</properties>
 		</profile>
 
 		<profile>
 			<id>release-build</id>
 			<properties>
-				<idocit-update-site-url>scpexe://idocit.akra.de/home/idocit/http/updatesite</idocit-update-site-url>
+				<idocit-update-site-dir>/var/www/idocit/updatesite</idocit-update-site-dir>
 			</properties>
 		</profile>
 	</profiles>
