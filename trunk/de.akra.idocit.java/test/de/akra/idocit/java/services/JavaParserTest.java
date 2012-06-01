@@ -405,8 +405,8 @@ public class JavaParserTest
 				String actJavadoc = readLinesFromFile(javaFile, 87, 111);
 
 				String refJavadoc = "\t/**\n"
-						+ "\t * Reads the java- and javadoc code from the given file and<br/>\n"
-						+ "\t * creates the returned {@link JavaInterfaceArtifact} from it.<br/>\n"
+						+ "\t * Reads the java- and javadoc code from the given <b>file and<br/>\n"
+						+ "\t * creates</b> the returned {@link JavaInterfaceArtifact} from it.<br/>\n"
 						+ "\t * Escape Test: &Ouml;\n"
 						+ "\t * \n"
 						+ "\t * @source_format  Java and Javadoc according to their current specifications:<br/>\n"

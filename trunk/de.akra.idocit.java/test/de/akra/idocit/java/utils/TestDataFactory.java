@@ -1102,7 +1102,7 @@ public class TestDataFactory
 		Map<Addressee, String> docTextAction = new HashMap<Addressee, String>();
 		docTextAction
 				.put(addressee,
-						"Reads the java- and javadoc code from the given file and\ncreates the returned {@link JavaInterfaceArtifact} from it.\nEscape Test: Ö");
+						"Reads the java- and javadoc code from the given <b>file and\ncreates</b> the returned {@link JavaInterfaceArtifact} from it.\nEscape Test: Ö");
 		Documentation docAction = new Documentation();
 		docAction.setAddresseeSequence(addresseeSequence);
 		docAction.setDocumentation(docTextAction);
