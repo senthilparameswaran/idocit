@@ -197,6 +197,8 @@ public class TestDataFactory
 		parameterParameters.setDocumentationChanged(documentationChanged);
 		parameterParameters.setSignatureElementPath("parameters:source.NameParameters");
 		inputParameters.addParameter(parameterParameters);
+		addDocumentation(parameterParameters, addresseeName, "COMPARISON", "This is the customer.",
+				parameterParameters.getSignatureElementPath());
 
 		// Attributes of NameParameters
 		JavaParameter attrFirstName = new JavaParameter(parameterParameters,
