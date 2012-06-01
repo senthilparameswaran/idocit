@@ -205,7 +205,7 @@ public class SimpleJavadocGeneratorTest
 
 	private String createEmptyReferenceJDForCustomerService()
 	{
-		return "/** \n" + " * \n" + " * @param parameters\n" + " * @subparam firstName\n"
+		return "/** \n" + " * @param parameters\n" + " * @subparam firstName\n"
 				+ " * @subparam lastName\n" + " * \n" + " * @return \n" + " * \n"
 				+ " * @throws IOException\n" + " */\n";
 	}

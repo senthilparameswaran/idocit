@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -587,9 +588,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	{
 		boolean introductionSentence = (first.getTagName() == null)
 				&& (second.getTagName() != null);
-		// TODO Remove
-		// boolean betweenIntroductionSentenceAndAnyTag = introductionSentence
-		// && ("".equals(second.getTagName()) || (second.getTagName() == null));
 		boolean beforeParam = TagElement.TAG_PARAM.equals(second.getTagName());
 		boolean beforeReturn = TagElement.TAG_RETURN.equals(second.getTagName());
 		boolean beforeThrows = TagElement.TAG_THROWS.equals(second.getTagName());
@@ -648,6 +646,91 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return null;
 	}
 
+	private boolean isEmptyElement(TagElement tagElement)
+	{
+		String text = JavadocUtils.readFragments(tagElement.fragments(), 0);
+		String tagName = tagElement.getTagName();
+
+		boolean textEmpty = (text == null) || text.trim().isEmpty();
+		boolean nameEmpty = (tagName == null) || (tagName.trim().isEmpty());
+
+		return textEmpty && nameEmpty;
+	}
+
+	private String readFragments(TagElement element)
+	{
+		String text = JavadocUtils.readFragments(element.fragments(), 0);
+
+		return text.replaceAll(Pattern.quote("<br/>"), "\n");
+	}
+
+	private List<TagElement> mergeTagElements(List<TagElement> unmergedTagElements)
+	{
+		List<TagElement> mergedTagElements = new ArrayList<TagElement>();
+
+		if ((unmergedTagElements != null) && !unmergedTagElements.isEmpty())
+		{
+			int elementIndex = 0;
+			TagElement currentElement = unmergedTagElements.get(elementIndex);
+
+			// Look for the first "not empty"-element.
+			while (isEmptyElement(currentElement)
+					&& (elementIndex < unmergedTagElements.size()))
+			{
+				elementIndex++;
+			}
+
+			// Was our search for a "not empty" element successful?
+			if (!isEmptyElement(currentElement))
+			{
+				TagElement lastElement = currentElement;
+				StringBuffer lastElementText = new StringBuffer();
+				lastElementText.append(readFragments(lastElement));
+
+				for (int i = elementIndex + 1; i < unmergedTagElements.size(); i++)
+				{
+					currentElement = unmergedTagElements.get(i);
+
+					if (!isEmptyElement(currentElement))
+					{
+						if (currentElement.getTagName() == null)
+						{
+							if(!lastElementText.toString().endsWith("\n")){
+								lastElementText.append('\n');
+							}
+							
+							lastElementText.append(' ');
+							String curElemText = readFragments(currentElement);
+							lastElementText.append(curElemText);
+						}
+						else
+						{
+							lastElement.fragments().clear();
+							TextElement newFragment = lastElement.getAST()
+									.newTextElement();
+							newFragment.setText(lastElementText.toString());
+							lastElement.fragments().add(newFragment);
+
+							mergedTagElements.add(lastElement);
+
+							lastElement = currentElement;
+							lastElementText = new StringBuffer();
+							lastElementText.append(readFragments(lastElement));
+						}
+					}
+				}
+
+				lastElement.fragments().clear();
+				TextElement newFragment = lastElement.getAST().newTextElement();
+				newFragment.setText(lastElementText.toString());
+				lastElement.fragments().add(newFragment);
+				mergedTagElements.add(lastElement);
+			}
+		}
+
+		return mergedTagElements;
+	}
+
 	private void insertEmptyRows(Javadoc javadoc)
 	{
 		List<TagElement> tags = javadoc.tags();
@@ -693,15 +776,16 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					additionalTagElements);
 		}
 
-		insertEmptyRows(javadoc);
-
 		List<TagElement> tags = javadoc.tags();
 		List<TagElement> copiedTags = new ArrayList<TagElement>();
 		copiedTags.addAll(tags);
 		tags.clear();
+
+		List<TagElement> mergedTags = mergeTagElements(copiedTags);
 		try
 		{
-			tags.addAll(splitTextInToFragments(copiedTags, javadoc.getAST()));
+			tags.addAll(splitTextInToFragments(mergedTags, javadoc.getAST()));
+			insertEmptyRows(javadoc);
 		}
 		catch (ParserConfigurationException e)
 		{
@@ -747,11 +831,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private String[] appendBRTag(String[] lines) throws ParserConfigurationException,
 			SAXException, IOException
 	{
-		for (int i = 0; i < lines.length; i++)
-		{
-			lines[i] = JavadocUtils.escapeHtml4(lines[i]);
-		}
-
 		// A <br/>-tag at the end of a single line is not necessary, because there
 		// couldn't be any formatting with linebreaks, which should be kept.
 		if (lines.length >= 2)
@@ -774,20 +853,23 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 		for (TagElement tagElement : tagElements)
 		{
-			String docText = JavadocUtils.readFragments(tagElement.fragments(), 0);
+			String unescapedDocText = JavadocUtils.readFragments(tagElement.fragments(),
+					0);
 			String tagIdentifier = tagElement.getTagName();
 
-			if ((docText != null) && !docText.isEmpty())
+			if ((unescapedDocText != null) && !unescapedDocText.isEmpty())
 			{
+				String escapedDocText = JavadocUtils.escapeHtml4(unescapedDocText);
+
 				TagElement newTagElement = ast.newTagElement();
 				newTagElement.setTagName(tagIdentifier);
 				List<ASTNode> fragments = newTagElement.fragments();
 
 				TextElement identifierElement = ast.newTextElement();
 
-				if (docText.lastIndexOf('\n') > -1)
+				if (escapedDocText.lastIndexOf("<br/>") > -1)
 				{
-					String[] splittedText = docText.split("\\r?\\n");
+					String[] splittedText = escapedDocText.split(Pattern.quote("<br/>"));
 					splittedText = appendBRTag(splittedText);
 
 					identifierElement.setText(splittedText[0]);
@@ -810,9 +892,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				}
 				else
 				{
-					identifierElement.setText(JavadocUtils.escapeHtml4(docText));
+					identifierElement.setText(escapedDocText);
 					fragments.add(identifierElement);
-					
+
 					result.add(tagElement);
 				}
 			}
