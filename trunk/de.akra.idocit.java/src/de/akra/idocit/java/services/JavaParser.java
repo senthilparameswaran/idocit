@@ -45,6 +45,9 @@ import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 /**
  * Parser implementation for Java.
  * 
+ * @instrument  iDocIt! supports two different representations of thematic grids in Javadoc: <br/>
+ * - The simplified version is very compact, but supports only the addressee &quot;Developer&quot;.<br/>
+ * - The complex version supports all addressees, but uses a lot of HTML-code.
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
  * @version 0.0.1
@@ -79,16 +82,13 @@ public class JavaParser implements Parser
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc }
 	 * 
 	 * @source_format  Java and Javadoc according to their current specifications<br/>
 	 * - <a href="http://docs.oracle.com/javase/specs/">Java</a> <br/>
 	 * - <a href="http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html">Javadoc</a>
 	 * 
 	 * @instrument  To parse the Java and Javadoc code, the parser provided by the <a href="http://www.eclipse.org/jdt/">Eclipse Java Development Tools</a> is used.
-	 * @instrument  iDocIt! supports two different representations of thematic grids in Javadoc: <br/>
-	 * - The simplified version is very compact, butsupports only the addressee &quot;Developer&quot;.<br/>
-	 * - The complex version supports all addressees, but uses a lot of HTML-code.
 	 * 
 	 * @param  iFile [SOURCE]
 	 * 
@@ -134,22 +134,22 @@ public class JavaParser implements Parser
 	}
 
 	/**
-	 * {@inheritDoc   }
+	 * {@inheritDoc }
 	 * 
 	 * @destination_format  Java and Javadoc according to their current specifications<br/>
 	 * - <a href="http://docs.oracle.com/javase/specs/">Java</a> <br/>
 	 * - <a href="http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html">Javadoc</a>
 	 * 
-	 * @instrument  iDocIt! supports two different representations of thematic grids in Javadoc: <br/>
-	 * - The simplified version is very compact, butsupports only the addressee &quot;Developer&quot;.<br/>
-	 * - The complex version supports all addressees, but uses a lot of HTML-code.
-	 * 
-	 * @param  interfaceStructure 
-	 * 	[OBJECT] The interface
-	 * 	[SOURCE] The written file
-	 * @subparam interfaces [ACTION] mn,m,m
+	 * @param  interfaceStructure [OBJECT] The interface[SOURCE] The written file
+	 * @subparam  interfaces [ACTION] mn,m,m
 	 * 
 	 * @param  iFile [DESTINATION] The name can be read by:<br/>
+	 * <code><br/>
+	 * IFile file = [...];<br/>
+	 * file.getName();<br/>
+	 * </code>dfd
+	 * 
+	 * @paraminfo  iFile [NAME] The name can be read by:<br/>
 	 * <code><br/>
 	 * IFile file = [...];<br/>
 	 * file.getName();<br/>
@@ -183,13 +183,15 @@ public class JavaParser implements Parser
 	/**
 	 * Write the changes in the {@link JavaInterfaceArtifact} to the underlying file.
 	 * 
-	 * @param artifact
-	 *            The {@link JavaInterfaceArtifact} which changes should be written to the
-	 *            file.
-	 * @throws MalformedTreeException
+	 * @param artifact [DESTINATION] The {@link JavaInterfaceArtifact} which changes should be written to the
+	 * 	file.
+	 * 
+	 * @throws MalformedTreeException 
 	 * @throws BadLocationException
 	 * @throws CoreException
+	 * 
 	 * @see {@link CompilationUnit#rewrite(IDocument, java.util.Map)}
+	 * @thematicgrid  Putting Operations
 	 */
 	private void writeToFile(JavaInterfaceArtifact artifact)
 			throws MalformedTreeException, BadLocationException, CoreException
@@ -209,9 +211,17 @@ public class JavaParser implements Parser
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheridDoc}<br/>
+	 * <br/>
+	 * isSupported(&quot;java&quot;) == true
 	 * 
+	 * @comparison  This parser supports only "java".
+	 * 
+	 * @param  type [OBJECT]
+	 * 
+	 * @return  [REPORT]
 	 * @see de.akra.idocit.core.extensions.Parser#isSupported(java.lang.String)
+	 * @thematicgrid  Checking Operations
 	 */
 	@Override
 	public boolean isSupported(String type)
@@ -220,9 +230,11 @@ public class JavaParser implements Parser
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc }
 	 * 
+	 * @return  [OBJECT] "java"
 	 * @see de.akra.idocit.core.extensions.Parser#getSupportedType()
+	 * @thematicgrid  Getting Operations / Getter
 	 */
 	@Override
 	public String getSupportedType()
@@ -231,9 +243,17 @@ public class JavaParser implements Parser
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc }<br/>
+	 * <br/>
+	 * <code><br/>
+	 * getDelimiters().pathDelimiter == &quot;/&quot;;<br/>
+	 * getDelimiters().namespaceDelimiter == &quot;.&quot;;<br/>
+	 * getDelimiters().typeDelimiter == &quot;:&quot;;<br/>
+	 * </code>
 	 * 
+	 * @return  [OBJECT]
 	 * @see de.akra.idocit.core.extensions.Parser#getDelimiters()
+	 * @thematicgrid  Getting Operations / Getter
 	 */
 	@Override
 	public Delimiters getDelimiters()
@@ -241,6 +261,14 @@ public class JavaParser implements Parser
 		return delimiters;
 	}
 
+	/**
+	 * Checks if the key {@link PreferenceStoreConstants#JAVADOC_GENERATION_MODE} has the
+	 * value {@link PreferenceStoreConstants#JAVADOC_GENERATION_MODE_SIMPLE}.
+	 * 
+	 * @return [REPORT]
+	 * 
+	 * @thematicgrid  Checking Operations
+	 */
 	private boolean isSimpleModeConfigured()
 	{
 		IPreferenceStore store = PlatformUI.getPreferenceStore();
@@ -249,6 +277,14 @@ public class JavaParser implements Parser
 		return PreferenceStoreConstants.JAVADOC_GENERATION_MODE_SIMPLE.equals(mode);
 	}
 
+	/**
+	 * Rule: The {@link JavaInterfaceArtifact} should only contain {@link Documentation}s for the addressee "Developer".
+	 * 
+	 * @param  artifact [OBJECT]
+	 * 
+	 * @return  [REPORT]
+	 * @thematicgrid  Checking Operations
+	 */
 	@Override
 	public ValidationReport validateArtifact(InterfaceArtifact artifact)
 	{
