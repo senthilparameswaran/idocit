@@ -226,7 +226,7 @@ public class JavadocUtils
 						.parameters();
 				for (MethodRefParameter mRefParam : mRefParameters)
 				{
-					html.append(ReflectionHelper.getIdentifierFrom(mRefParam.getType()));
+					html.append(ReflectionHelper.extractIdentifierFrom(mRefParam.getType()));
 					if (mRefParam.isVarargs())
 					{
 						html.append("...");

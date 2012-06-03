@@ -821,7 +821,7 @@ public class JavaInterfaceParser
 			}
 			else
 			{
-				String identifier = ReflectionHelper.getIdentifierFrom(type);
+				String identifier = ReflectionHelper.extractIdentifierFrom(type);
 				if (!identifier.equals(RETURN_TYPE_VOID))
 				{
 					returnType = reflectionHelper.createParameter(parent, type,
