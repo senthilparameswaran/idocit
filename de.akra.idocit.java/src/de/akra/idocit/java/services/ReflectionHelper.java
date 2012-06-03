@@ -91,7 +91,7 @@ public class ReflectionHelper
 	 *            The qualified identifier of the parameter that should be reflected.
 	 * @return The reflected object structure as {@link JavaParameter}.
 	 */
-	public JavaParameter reflectParameter(SignatureElement parent,
+	public JavaParameter createParameter(SignatureElement parent,
 			ITypeBinding typeBinding, String identifier, String qualifiedIdentifier)
 	{
 		resetReflectedTypes();
@@ -134,7 +134,7 @@ public class ReflectionHelper
 	}
 
 	/**
-	 * @see #reflectParameter(SignatureElement, ITypeBinding, String, String)
+	 * @see #createParameter(SignatureElement, ITypeBinding, String, String)
 	 */
 	private JavaParameter doReflectParameter(SignatureElement parent,
 			ITypeBinding typeBinding, String identifier, String qualifiedIdentifier)
@@ -200,7 +200,7 @@ public class ReflectionHelper
 	 *            The qualified identifier of the parameter that should be reflected.
 	 * @return The reflected object structure as {@link JavaParameter}.
 	 */
-	public JavaParameter reflectParameter(SignatureElement parent, Type type,
+	public JavaParameter createParameter(SignatureElement parent, Type type,
 			String identifier, String qualifiedIdentifier)
 	{
 		resetReflectedTypes();
@@ -208,7 +208,7 @@ public class ReflectionHelper
 	}
 
 	/**
-	 * @see #reflectParameter(SignatureElement, Type, String, String)
+	 * @see #createParameter(SignatureElement, Type, String, String)
 	 */
 	private JavaParameter doReflectParameter(SignatureElement parent, Type type,
 			String identifier, String qualifiedIdentifier)
