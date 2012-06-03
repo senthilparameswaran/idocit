@@ -33,12 +33,15 @@ public interface CustomerService
 	 * @source CRM System
 	 * 
 	 * @param parameters [COMPARISON] This is the customer.
+	 * @paraminfo parameters [SOURCE] This is the source.
 	 * @subparam firstName [COMPARISON]
 	 * @subparam lastName [COMPARISON]
 	 * 
-	 * @return [OBJECT]
+	 * @return [OBJECT] This is the object.
+	 * @returninfo [SOURCE] This is the source.
 	 * 
 	 * @throws IOException  In case of an error
+	 * @throwsinfo IOException [ATTRIBUTE] This is also an attribute.
 	 * @thematicgrid Searching Operations
 	 */
 	public List<Customer> findCustomersByName(NameParameters parameters)

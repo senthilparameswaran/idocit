@@ -419,6 +419,27 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return "";
 	}
 
+	private String deriveTagElementName(String tagElementName, int docNumber)
+	{
+		if (TagElement.TAG_RETURN.equals(tagElementName)
+				|| TagElement.TAG_PARAM.equals(tagElementName)
+				|| TagElement.TAG_THROWS.equals(tagElementName))
+		{
+			if (docNumber == 0)
+			{
+				return tagElementName;
+			}
+			else
+			{
+				return tagElementName + "info";
+			}
+		}
+		else
+		{
+			return tagElementName;
+		}
+	}
+
 	/**
 	 * Creates Javadoc for the given parameter and its children.
 	 * 
@@ -444,12 +465,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		@SuppressWarnings("unchecked")
 		List<TagElement> tags = javadoc.tags();
 		AST jdocAST = javadoc.getAST();
-		TagElement newTag = jdocAST.newTagElement();
-
-		newTag.setTagName(tagElementName);
-
-		@SuppressWarnings("unchecked")
-		List<ASTNode> fragments = newTag.fragments();
 
 		if ((documentations != null) && !documentations.isEmpty())
 		{
@@ -457,51 +472,55 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			{
 				Documentation documentation = documentations.get(i);
 
-				if (i == 0)
+				TagElement newTag = jdocAST.newTagElement();
+				newTag.setTagName(deriveTagElementName(tagElementName, i));
+
+				@SuppressWarnings("unchecked")
+				List<ASTNode> fragments = newTag.fragments();
+
+				ThematicRole role = documentation.getThematicRole();
+
+				StringBuffer docText = new StringBuffer();
+
+				if (!TagElement.TAG_RETURN.equals(tagElementName))
 				{
-					ThematicRole role = documentation.getThematicRole();
-
-					StringBuffer docText = new StringBuffer();
-
-					if (!TagElement.TAG_RETURN.equals(tagElementName))
-					{
-						String paramIdentifier = extractIdentifier(documentation);
-						docText.append(StringUtils.toString(paramIdentifier));
-						docText.append(' ');
-					}
-
-					if (role != null)
-					{
-						docText.append(StringUtils.inBrackets(role.getName()));
-						docText.append(' ');
-					}
-
-					docText.append(getDocText(documentation));
-
-					TextElement identifierElement = jdocAST.newTextElement();
-					identifierElement.setText(' ' + docText.toString().trim());
-
-					fragments.add(identifierElement);
+					String paramIdentifier = extractIdentifier(documentation);
+					docText.append(StringUtils.toString(paramIdentifier));
+					docText.append(' ');
 				}
-				else
+
+				if (role != null)
 				{
-					TextElement textElement = jdocAST.newTextElement();
-					textElement.setText(getDocText(documentation));
-					fragments.add(textElement);
+					docText.append(StringUtils.inBrackets(role.getName()));
+					docText.append(' ');
 				}
+
+				docText.append(getDocText(documentation));
+
+				TextElement identifierElement = jdocAST.newTextElement();
+				identifierElement.setText(' ' + docText.toString().trim());
+
+				fragments.add(identifierElement);
+
+				tags.add(newTag);
 			}
 		}
 		else if (JavadocUtils.isStandardJavadocTaglet(tagElementName))
 		{
 			// @param, @return and @throws should mentioned even if no documentation has
 			// been created for the parameter, return-type or exception!
+			TagElement newTag = jdocAST.newTagElement();
+			newTag.setTagName(tagElementName);
+
+			@SuppressWarnings("unchecked")
+			List<ASTNode> fragments = newTag.fragments();
+
 			TextElement identifierElement = jdocAST.newTextElement();
 			identifierElement.setText(' ' + StringUtils.toString(identifier));
 
 			fragments.add(identifierElement);
+			tags.add(newTag);
 		}
-
-		tags.add(newTag);
 	}
 
 	private boolean containsTagElementWithIdentifier(String tagName, String identifier,
@@ -695,10 +714,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					{
 						if (currentElement.getTagName() == null)
 						{
-							if(!lastElementText.toString().endsWith("\n")){
+							if (!lastElementText.toString().endsWith("\n"))
+							{
 								lastElementText.append('\n');
 							}
-							
+
 							lastElementText.append(' ');
 							String curElemText = readFragments(currentElement);
 							lastElementText.append(curElemText);

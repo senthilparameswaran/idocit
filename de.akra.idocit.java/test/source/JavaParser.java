@@ -149,7 +149,6 @@ public class JavaParser implements Parser
 
 	/**
 	 * {@inheritDoc}
-	 * 
 	 * @see de.akra.idocit.core.extensions.Parser#write(InterfaceArtifact, IFile)
 	 */
 	@Override

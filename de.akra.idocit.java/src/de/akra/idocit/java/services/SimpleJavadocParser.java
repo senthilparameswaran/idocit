@@ -322,6 +322,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			// When using tag names, remove the '@' at the beginning.
 			structuredJavaDoc.setRoleName(tagName.substring(1));
 		}
+		// TODO: Could this condition be removed?
 		else if (!JavadocUtils.isStandardJavadocTaglet(tagName)
 				&& !JavadocUtils.isIdocitJavadocTaglet(tagName))
 		{ // Must be ACTION or RULE (depends on the reference grid)
@@ -470,6 +471,37 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		return new String[] { subParamText.trim() };
 	}
 
+	private String extractParentIdentifierPath(String identifier, TagElement tagElement,
+			List<? extends Parameter> parameters, JavaMethod method)
+	{
+		Javadoc javadoc = (Javadoc) tagElement.getParent();
+		String parentParamIdentifier = readParentParamterName(javadoc, tagElement, method);
+
+		if (!parentParamIdentifier.isEmpty())
+		{
+			JavaParameter parentParam = findParameterByName(parameters,
+					parentParamIdentifier);
+
+			if (parentParam != null)
+			{
+				return parentParam.getSignatureElementPath();
+			}
+			else
+			{
+				log.info("No parent parameter found for tag element "
+						+ String.valueOf(tagElement.toString()));
+			}
+		}
+		else
+		{
+			// jakr: if no parent is found, leave the identifier initialized with
+			// null. In this case there must be an invalid ordering of the Javadoc
+			// tags (@subparam without @param above).
+		}
+
+		return "";
+	}
+
 	private String extractIdentifierPath(String identifier, TagElement tagElement,
 			List<? extends Parameter> parameters, JavaMethod method)
 	{
@@ -491,7 +523,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 					int i = 1;
 
-					while (i < (parameterNames.length - 1))
+					while (i < parameterNames.length)
 					{
 						if (childParameter != null)
 						{
@@ -641,6 +673,31 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 				identifier = returnType.getSignatureElementPath();
 				documentation.setSignatureElementIdentifier(identifier);
 			}
+			else if (JavadocUtils.isParamInfo(tagElement.getTagName())
+					&& (method != null) && (method.getInputParameters() != null)
+					&& (annotatedDoc.getIdentifier() != null))
+			{
+				documentation.setSignatureElementIdentifier(extractParentIdentifierPath(
+						annotatedDoc.getIdentifier(), tagElement, method
+								.getInputParameters().getParameters(), method));
+			}
+			else if (JavadocUtils.isReturnInfo(tagElement.getTagName())
+					&& (method != null) && (method.getOutputParameters() != null)
+					&& (annotatedDoc.getIdentifier() != null))
+			{
+				documentation.setSignatureElementIdentifier(extractParentIdentifierPath(
+						annotatedDoc.getIdentifier(), tagElement, method
+								.getOutputParameters().getParameters(), method));
+			}
+			else if (JavadocUtils.isThrowsInfo(tagElement.getTagName())
+					&& (method != null) && (method.getExceptions() != null)
+					&& (method.getExceptions().get(0) != null)
+					&& (annotatedDoc.getIdentifier() != null))
+			{
+				documentation.setSignatureElementIdentifier(extractParentIdentifierPath(
+						annotatedDoc.getIdentifier(), tagElement, method.getExceptions()
+								.get(0).getParameters(), method));
+			}
 			else if (tagElement.getTagName() == null)
 			{
 				documentation.setSignatureElementIdentifier(null);
@@ -721,9 +778,10 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		// When passing the rolename, remove the '@' at the beginning of the tagname!
 		boolean isKnownThematicRole = isKnownThematicRole(tagName.substring(1),
 				knownThematicRoles);
+		boolean isInfoParam = JavadocUtils.isIdocItInfoTag(tagName);
 
 		return !(isParam || isSubParam || isThrows || isReturn || isSubReturn
-				|| isThematicGrid || isKnownThematicRole);
+				|| isThematicGrid || isKnownThematicRole || isInfoParam);
 	}
 
 	@Override
