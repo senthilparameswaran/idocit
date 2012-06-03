@@ -708,7 +708,7 @@ public class JavaInterfaceParser
 		if (resolvedBinding != null)
 		{
 			ITypeBinding typeBinding = resolvedBinding.getType();
-			containingAttributes = reflectionHelper.reflectParameter(parent, typeBinding,
+			containingAttributes = reflectionHelper.createParameter(parent, typeBinding,
 					variableDeclaration.getName().getIdentifier(), variableDeclaration
 							.getName().getFullyQualifiedName());
 		}
@@ -718,7 +718,7 @@ public class JavaInterfaceParser
 			// variableDeclaration.getType()
 			// and work with that Type.
 			Type type = variableDeclaration.getType();
-			containingAttributes = reflectionHelper.reflectParameter(parent, type,
+			containingAttributes = reflectionHelper.createParameter(parent, type,
 					variableDeclaration.getName().getIdentifier(), variableDeclaration
 							.getName().getFullyQualifiedName());
 		}
@@ -815,7 +815,7 @@ public class JavaInterfaceParser
 				String identifier = typeBinding.getName();
 				if (!identifier.equals(RETURN_TYPE_VOID))
 				{
-					returnType = reflectionHelper.reflectParameter(parent, typeBinding,
+					returnType = reflectionHelper.createParameter(parent, typeBinding,
 							identifier, typeBinding.getQualifiedName());
 				}
 			}
@@ -824,7 +824,7 @@ public class JavaInterfaceParser
 				String identifier = ReflectionHelper.getIdentifierFrom(type);
 				if (!identifier.equals(RETURN_TYPE_VOID))
 				{
-					returnType = reflectionHelper.reflectParameter(parent, type,
+					returnType = reflectionHelper.createParameter(parent, type,
 							identifier, identifier);
 				}
 			}

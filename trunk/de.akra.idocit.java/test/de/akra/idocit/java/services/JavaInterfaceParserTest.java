@@ -219,7 +219,7 @@ public class JavaInterfaceParserTest
 	 * </ul>
 	 * 
 	 * @throws Exception
-	 * @see {@link ReflectionHelper#reflectParameter(de.akra.idocit.core.structure.SignatureElement, org.eclipse.jdt.core.dom.ITypeBinding, String, String)}
+	 * @see {@link ReflectionHelper#createParameter(de.akra.idocit.core.structure.SignatureElement, org.eclipse.jdt.core.dom.ITypeBinding, String, String)}
 	 */
 	@Test
 	public void testParse() throws Exception
