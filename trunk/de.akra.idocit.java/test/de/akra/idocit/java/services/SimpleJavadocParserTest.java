@@ -109,7 +109,7 @@ public class SimpleJavadocParserTest
 					referenceDocs.add(sourceDoc);
 				}
 
-				// Parameter parameters
+				// Parameter parameters > COMPARISON
 				{
 					Documentation paramParametersDoc = new Documentation();
 					paramParametersDoc.setAddresseeSequence(TestUtils
@@ -122,6 +122,22 @@ public class SimpleJavadocParserTest
 					paramParametersDoc
 							.setSignatureElementIdentifier("parameters:source.NameParameters");
 					paramParametersDoc.setThematicRole(TestUtils.createComparison());
+					referenceDocs.add(paramParametersDoc);	
+				}
+
+				// Parameter parameters > SOURCE
+				{
+					Documentation paramParametersDoc = new Documentation();
+					paramParametersDoc.setAddresseeSequence(TestUtils
+							.createDeveloperSequence());
+
+					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
+					docSubParamFirstname.put(TestUtils.createDeveloper(), "This is the source.");
+					paramParametersDoc.setDocumentation(docSubParamFirstname);
+
+					paramParametersDoc
+							.setSignatureElementIdentifier("parameters:source.NameParameters");
+					paramParametersDoc.setThematicRole(TestUtils.createSource());
 					referenceDocs.add(paramParametersDoc);	
 				}
 				
@@ -163,11 +179,25 @@ public class SimpleJavadocParserTest
 					returnDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
 
 					Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
-					docReturn.put(TestUtils.createDeveloper(), "");
+					docReturn.put(TestUtils.createDeveloper(), "This is the object.");
 					returnDoc.setDocumentation(docReturn);
 
 					returnDoc.setSignatureElementIdentifier("java.util.List<source.Customer>:java.util.List<source.Customer>");
 					returnDoc.setThematicRole(TestUtils.createObject());
+					referenceDocs.add(returnDoc);
+				}
+				
+				// Return Info Source
+				{
+					Documentation returnDoc = new Documentation();
+					returnDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
+
+					Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
+					docReturn.put(TestUtils.createDeveloper(), "This is the source.");
+					returnDoc.setDocumentation(docReturn);
+
+					returnDoc.setSignatureElementIdentifier("java.util.List<source.Customer>:java.util.List<source.Customer>");
+					returnDoc.setThematicRole(TestUtils.createSource());
 					referenceDocs.add(returnDoc);
 				}
 

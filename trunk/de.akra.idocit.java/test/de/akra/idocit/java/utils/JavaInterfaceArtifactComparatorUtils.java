@@ -177,7 +177,6 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-
 		if ((parameters1 != null) && (parameters2 == null))
 		{
 			return false;
@@ -240,7 +239,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 			return false;
 		}
 
-		if (!equalsParameters(parameters1.getParameters(), parameters1.getParameters()))
+		if (!equalsParameters(parameters1.getParameters(), parameters2.getParameters()))
 		{
 			return false;
 		}

@@ -199,6 +199,8 @@ public class TestDataFactory
 		inputParameters.addParameter(parameterParameters);
 		addDocumentation(parameterParameters, addresseeName, "COMPARISON", "This is the customer.",
 				parameterParameters.getSignatureElementPath());
+		addDocumentation(parameterParameters, addresseeName, "SOURCE", "This is the source.",
+				parameterParameters.getSignatureElementPath());
 
 		// Attributes of NameParameters
 		JavaParameter attrFirstName = new JavaParameter(parameterParameters,
@@ -247,7 +249,9 @@ public class TestDataFactory
 				.setSignatureElementPath("java.util.List<source.Customer>:java.util.List<source.Customer>");
 		outputParameters.addParameter(returnCustomerList);
 
-		addDocumentation(returnCustomerList, addresseeName, "OBJECT", "",
+		addDocumentation(returnCustomerList, addresseeName, "OBJECT", "This is the object.",
+				returnCustomerList.getSignatureElementPath());
+		addDocumentation(returnCustomerList, addresseeName, "SOURCE", "This is the source.",
 				returnCustomerList.getSignatureElementPath());
 
 		// Exception
@@ -261,22 +265,23 @@ public class TestDataFactory
 		JavaParameter ioException = new JavaParameter(ioExceptions, Numerus.SINGULAR,
 				false);
 		ioException.setDataTypeName("IOException");
-		ioException.setQualifiedDataTypeName("source.IOException");
-		ioException.setSignatureElementPath("source.IOException:source.IOException");
+		ioException.setQualifiedDataTypeName("java.io.IOException");
+		ioException.setSignatureElementPath("java.io.IOException:java.io.IOException");
 		ioException.setIdentifier("IOException");
+		ioException.setQualifiedIdentifier("java.io.IOException");
 		// TODO
-		// addDocumentation(ioException, addresseeName, null, "In case of an error",
-		// ioException.getSignatureElementPath());
-		TagElement exception = customerServiceIntf.getAST().newTagElement();
-		exception.setTagName(TagElement.TAG_THROWS);
-		List fragments = exception.fragments();
-		TextElement exceptionTextElem = customerServiceIntf.getAST().newTextElement();
-		exceptionTextElem.setText(" IOException  In case of an error");
-		fragments.add(exceptionTextElem);
+		addDocumentation(ioException, addresseeName, "ATTRIBUTE", "This is also an attribute.",
+				ioException.getSignatureElementPath());
+//		TagElement exception = customerServiceIntf.getAST().newTagElement();
+//		exception.setTagName(TagElement.TAG_THROWS);
+//		List fragments = exception.fragments();
+//		TextElement exceptionTextElem = customerServiceIntf.getAST().newTextElement();
+//		exceptionTextElem.setText(" IOException  In case of an error");
+//		fragments.add(exceptionTextElem);
 
-		List<TagElement> additionalElements = new ArrayList<TagElement>();
-		additionalElements.add(exception);
-		methodFindCustomerById.setAdditionalTags(additionalElements);
+//		List<TagElement> additionalElements = new ArrayList<TagElement>();
+//		additionalElements.add(exception);
+//		methodFindCustomerById.setAdditionalTags(additionalElements);
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -322,6 +327,7 @@ public class TestDataFactory
 				Numerus.SINGULAR, true);
 		parameterParameters.setDataTypeName("CustomerNameParameters");
 		parameterParameters.setIdentifier("parameters");
+		parameterParameters.setQualifiedIdentifier("parameters");
 		parameterParameters.setQualifiedDataTypeName("source.CustomerNameParameters");
 		parameterParameters.setDocumentationChanged(documentationChanged);
 		parameterParameters
@@ -330,8 +336,9 @@ public class TestDataFactory
 
 		JavaParameter customerParameters = new JavaParameter(inputParameters,
 				Numerus.SINGULAR, true);
-		customerParameters.setDataTypeName("CustomerNameParameters");
+		customerParameters.setDataTypeName("Customer");
 		customerParameters.setIdentifier("customer");
+		customerParameters.setQualifiedIdentifier("source.CustomerNameParameters.customer");
 		customerParameters.setQualifiedDataTypeName("source.Customer");
 		customerParameters.setDocumentationChanged(documentationChanged);
 		customerParameters
@@ -395,7 +402,7 @@ public class TestDataFactory
 		returnCustomerFirstName.setQualifiedIdentifier("source.Customer.firstName");
 		returnCustomerFirstName.setDocumentationChanged(documentationChanged);
 		returnCustomerFirstName
-				.setSignatureElementPath("Customer:source.Customer/source.Customer.firstName:java.lang.String");
+				.setSignatureElementPath("source.Customer:source.Customer/source.Customer.firstName:java.lang.String");
 		returnCustomer.addParameter(returnCustomerFirstName);
 
 		addDocumentation(returnCustomerFirstName, addresseeName, "ATTRIBUTE",
@@ -410,7 +417,7 @@ public class TestDataFactory
 		returnCustomerLastName.setQualifiedIdentifier("source.Customer.lastName");
 		returnCustomerLastName.setDocumentationChanged(documentationChanged);
 		returnCustomerLastName
-				.setSignatureElementPath("Customer:source.Customer/source.Customer.lastName:java.lang.String");
+				.setSignatureElementPath("source.Customer:source.Customer/source.Customer.lastName:java.lang.String");
 		returnCustomer.addParameter(returnCustomerLastName);
 
 		addDocumentation(returnCustomerLastName, addresseeName, "ATTRIBUTE",
@@ -428,9 +435,12 @@ public class TestDataFactory
 		JavaParameter specialException = new JavaParameter(ioExceptions,
 				Numerus.SINGULAR, false);
 		specialException.setIdentifier("SpecialException");
+		specialException.setDataTypeName("SpecialException");
+		specialException.setQualifiedIdentifier("source.SpecialException");
 		specialException.setQualifiedDataTypeName("source.SpecialException");
 		specialException
 				.setSignatureElementPath("source.SpecialException:source.SpecialException");
+		specialException.setHasPublicAccessibleAttributes(true);
 		// TODO
 		// addDocumentation(specialException, addresseeName, null, "In case of an error",
 		// specialException.getSignatureElementPath());
@@ -466,6 +476,7 @@ public class TestDataFactory
 				Numerus.SINGULAR, true);
 		parameterParameters.setDataTypeName("NameParameters");
 		parameterParameters.setIdentifier("parameters");
+		parameterParameters.setQualifiedIdentifier("parameters");
 		parameterParameters.setQualifiedDataTypeName("source.NameParameters");
 		parameterParameters.setDocumentationChanged(documentationChanged);
 		parameterParameters.addDocpart(createEmptyDocumentation("parameters"));
@@ -604,9 +615,10 @@ public class TestDataFactory
 		JavaParameter ioException = new JavaParameter(ioExceptions, Numerus.SINGULAR,
 				false);
 		ioException.setDataTypeName("IOException");
-		ioException.setQualifiedDataTypeName("source.IOException");
-		ioException.setSignatureElementPath("source.IOException:source.IOException");
+		ioException.setQualifiedDataTypeName("java.io.IOException");
+		ioException.setSignatureElementPath("java.io.IOException:java.io.IOException");
 		ioException.setIdentifier("IOException");
+		ioException.setQualifiedIdentifier("java.io.IOException");
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -636,6 +648,7 @@ public class TestDataFactory
 				Numerus.SINGULAR, true);
 		parameterParameters.setDataTypeName("NameParameters");
 		parameterParameters.setIdentifier("parameters");
+		parameterParameters.setQualifiedIdentifier("parameters");
 		parameterParameters.setQualifiedDataTypeName("source.NameParameters");
 		parameterParameters.setDocumentationChanged(documentationChanged);
 		parameterParameters.addDocpart(createNullDocumentation("parameters"));

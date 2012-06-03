@@ -17,8 +17,15 @@ package de.akra.idocit.java.constants;
 
 public class CustomTaglets
 {
+	public static final String PARAM_INFO = "@paraminfo";
+	public static final String RETURN_INFO = "@returninfo";
+	public static final String THROWS_INFO = "@throwsinfo";
+	
 	public static final String SUB_RETURN = "@subreturn";
+	public static final String SUB_RETURN_INFO = "@subreturninfo";
 	public static final String SUB_PARAM = "@subparam";
+	public static final String SUB_PARAM_INFO = "@subparaminfo";
+	public static final String SUB_THROWS_INFO = "@subthrowsinfo";
 	public static final String THEMATIC_GRID = "@thematicgrid";
 	
 	public static final String SUB_RETURN_PATTERN = SUB_RETURN + "\\s*";

@@ -61,13 +61,21 @@ public class SimpleJavadocGeneratorTest
 			{
 				String referenceJavadoc = "/** \n "
 						+ "*  Only customers who placed an order within the last year are considered.\n "
-						+ "* \n " + "* @ordering Alphabetically by lastname\n "
-						+ "* @source CRM System\n " + "* \n " + "* @param parameters [COMPARISON] This is the customer.\n "
+						+ "* \n " 
+						+ "* @ordering Alphabetically by lastname\n "
+						+ "* @source CRM System\n " 
+						+ "* \n " 
+						+ "* @param parameters [COMPARISON] This is the customer.\n "
+						+ "* @paraminfo parameters [SOURCE] This is the source.\n "
 						+ "* @subparam firstName [COMPARISON]\n "
-						+ "* @subparam lastName [COMPARISON]\n " + "* \n "
-						+ "* @return [OBJECT]\n "
-						+ "* @throws IOException  In case of an error\n "
-						+ "* @thematicgrid Searching Operations\n " + "*/\n";
+						+ "* @subparam lastName [COMPARISON]\n " 
+						+ "* \n "
+						+ "* @return [OBJECT] This is the object.\n "
+						+ "* @returninfo [SOURCE] This is the source.\n "
+						+ "* \n "
+						+ "* @throws IOException [ATTRIBUTE] This is also an attribute.\n "
+						+ "* @thematicgrid Searching Operations\n " 
+						+ "*/\n";
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -98,7 +106,8 @@ public class SimpleJavadocGeneratorTest
 						+ "* @param mailAddress [OBJECT]\n "
 						+ "* \n "
 						+ "* @return [REPORT] <code>false</code> if the rule is violated\n "
-						+ "* @thematicgrid Checking Operations\n " + "*/\n";
+						+ "* @thematicgrid Checking Operations\n " 
+						+ "*/\n";
 
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/InvariantService.java");
@@ -205,8 +214,14 @@ public class SimpleJavadocGeneratorTest
 
 	private String createEmptyReferenceJDForCustomerService()
 	{
-		return "/** \n" + " * @param parameters\n" + " * @subparam firstName\n"
-				+ " * @subparam lastName\n" + " * \n" + " * @return \n" + " * \n"
-				+ " * @throws IOException\n" + " */\n";
+		return "/** \n" 
+				+ " * @param parameters\n" 
+				+ " * @subparam firstName\n"
+				+ " * @subparam lastName\n" 
+				+ " * \n" 
+				+ " * @return \n" 
+				+ " * \n"
+				+ " * @throws IOException\n" 
+				+ " */\n";
 	}
 }

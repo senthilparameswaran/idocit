@@ -242,9 +242,8 @@ public abstract class AbsJavadocParser
 			for (TagElement tag : (List<TagElement>) javadoc.tags())
 			{
 				if (!(tag.getTagName() == null
-						|| tag.getTagName().matches(JAVADOC_TAG_RETURN)
-						|| tag.getTagName().matches(JAVADOC_TAG_PARAM) || tag
-						.getTagName().matches(JAVADOC_TAG_THROWS)))
+						&& !JavadocUtils.isStandardJavadocTaglet(tag.getTagName()) && !JavadocUtils
+							.isIdocitJavadocTaglet(tag.getTagName())))
 				{
 					tags.add(tag);
 					log.log(Level.FINEST, "Keep Javadoc tag: " + tag);

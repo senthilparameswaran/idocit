@@ -91,6 +91,18 @@ public class JavadocUtils
 		}
 	}
 
+	public static boolean isParamInfo(String tagName){
+		return CustomTaglets.PARAM_INFO.equals(tagName);
+	}
+	
+	public static boolean isThrowsInfo(String tagName){
+		return CustomTaglets.THROWS_INFO.equals(tagName);
+	}
+	
+	public static boolean isReturnInfo(String tagName){
+		return CustomTaglets.RETURN_INFO.equals(tagName);
+	}
+	
 	public static boolean isSubParam(String tagName)
 	{
 		return CustomTaglets.SUB_PARAM.equals(tagName);
@@ -98,17 +110,20 @@ public class JavadocUtils
 
 	public static boolean isParam(String tagName)
 	{
-		return TagElement.TAG_PARAM.equals(tagName);
+		return TagElement.TAG_PARAM.equals(tagName)
+				|| CustomTaglets.PARAM_INFO.equals(tagName);
 	}
 
 	public static boolean isThrows(String tagName)
 	{
-		return TagElement.TAG_THROWS.equals(tagName);
+		return TagElement.TAG_THROWS.equals(tagName)
+				|| CustomTaglets.THROWS_INFO.equals(tagName);
 	}
 
 	public static boolean isReturn(String tagName)
 	{
-		return TagElement.TAG_RETURN.equals(tagName);
+		return TagElement.TAG_RETURN.equals(tagName)
+				|| CustomTaglets.RETURN_INFO.equals(tagName);
 	}
 
 	public static boolean isStandardJavadocTaglet(String tagName)
@@ -128,8 +143,17 @@ public class JavadocUtils
 	{
 		boolean isSubParam = isSubParam(tagName);
 		boolean isSubReturn = isSubReturn(tagName);
-
-		return isSubParam || isSubReturn;
+		boolean isInfoTag = isIdocItInfoTag(tagName);
+		
+		return isSubParam || isSubReturn || isInfoTag;
+	}
+	
+	public static boolean isIdocItInfoTag(String tagName){
+		boolean paramInfo = CustomTaglets.PARAM_INFO.equals(tagName);
+		boolean returnInfo = CustomTaglets.RETURN_INFO.equals(tagName);
+		boolean throwsInfo = CustomTaglets.THROWS_INFO.equals(tagName);
+		
+		return paramInfo || returnInfo || throwsInfo;
 	}
 
 	public static String readIdentifier(TagElement tag)
@@ -270,6 +294,16 @@ public class JavadocUtils
 		SequenceInputStream sequence1 = new SequenceInputStream(xhtmlSpecial, xhtmlSymbol);
 		SequenceInputStream sequence = new SequenceInputStream(xhtmlLat1, sequence1);
 		return new InputSource(sequence);
+	}
+
+	public static boolean isInfoTagElement(String tagElementName)
+	{
+		return CustomTaglets.PARAM_INFO.equals(tagElementName)
+				|| CustomTaglets.SUB_PARAM_INFO.equals(tagElementName)
+				|| CustomTaglets.RETURN_INFO.equals(tagElementName)
+				|| CustomTaglets.SUB_RETURN_INFO.equals(tagElementName)
+				|| CustomTaglets.THROWS_INFO.equals(tagElementName)
+				|| CustomTaglets.SUB_THROWS_INFO.equals(tagElementName);
 	}
 
 	public static String escapeHtml4(String javadocText)

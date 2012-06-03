@@ -440,13 +440,21 @@ public class JavaParserTest
 
 				Assert.assertEquals(refDocumentations, actDocumentations);
 			}
+
+			// #########################################################################
+			// # Test case #5: @subparam, @subreturn and @subthrows contain two thematic
+			// # roles. All documentations are correctly assigned in the InterfaceArtifact
+			// # structure.
+			// #########################################################################
+			{
+
+			}
 		}
 
 		/*
 		 * Negative tests
 		 */
-		{
-		}
+		{}
 	}
 
 	private String readLinesFromFile(File javaFile, int startLine, int endLine)
