@@ -38,6 +38,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.JavadocTestUtils;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.ParserOutput;
@@ -48,7 +49,7 @@ public class SimpleJavadocParserTest
 
 	@Test
 	public void testParseIDocItJavadoc() throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException
+			SAXException, ParserConfigurationException, ParsingException
 	{
 		/*
 		 * Positive tests
