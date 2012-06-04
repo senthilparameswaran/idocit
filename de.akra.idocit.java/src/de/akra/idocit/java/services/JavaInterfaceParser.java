@@ -59,6 +59,7 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -143,7 +144,7 @@ public class JavaInterfaceParser
 	 * @throws SAXException
 	 */
 	public InterfaceArtifact parse(AbsJavadocParser parser) throws JavaModelException,
-			SAXException, IOException, ParserConfigurationException
+			SAXException, IOException, ParserConfigurationException, ParsingException
 	{
 		JavaInterfaceArtifact artifact = (JavaInterfaceArtifact) processCompilationUnit(
 				SignatureElement.EMPTY_SIGNATURE_ELEMENT, compilationUnit, parser);
@@ -169,7 +170,7 @@ public class JavaInterfaceParser
 	 */
 	private JavaInterfaceArtifact processCompilationUnit(SignatureElement parent,
 			CompilationUnit compilationUnit, AbsJavadocParser parser)
-			throws SAXException, IOException, ParserConfigurationException
+			throws SAXException, IOException, ParserConfigurationException, ParsingException
 	{
 		JavaInterfaceArtifact artifact = new JavaInterfaceArtifact(parent,
 				CATEGORY_ARTIFACT, compilationUnit, Numerus.SINGULAR);
@@ -226,7 +227,7 @@ public class JavaInterfaceParser
 	 */
 	private JavaInterface processTypeDeclaration(SignatureElement parent,
 			TypeDeclaration typeDeclaration, AbsJavadocParser parser)
-			throws SAXException, IOException, ParserConfigurationException
+			throws SAXException, IOException, ParserConfigurationException, ParsingException
 	{
 		return processAbstractTypeDeclaration(parent, typeDeclaration,
 				typeDeclaration.isInterface() ? CATEGORY_INTERFACE : CATEGORY_CLASS,
@@ -247,7 +248,7 @@ public class JavaInterfaceParser
 	 */
 	private JavaInterface processEnumDeclaration(SignatureElement parent,
 			EnumDeclaration enumDeclaration, AbsJavadocParser parser)
-			throws SAXException, IOException, ParserConfigurationException
+			throws SAXException, IOException, ParserConfigurationException, ParsingException
 	{
 		return processAbstractTypeDeclaration(parent, enumDeclaration, CATEGORY_ENUM,
 				parser);
@@ -271,7 +272,7 @@ public class JavaInterfaceParser
 	private JavaInterface processAbstractTypeDeclaration(SignatureElement parent,
 			AbstractTypeDeclaration absTypeDeclaration, String category,
 			AbsJavadocParser parser) throws SAXException, IOException,
-			ParserConfigurationException
+			ParserConfigurationException, ParsingException
 	{
 		JavaInterface jInterface = new JavaInterface(parent, category, Numerus.SINGULAR);
 		jInterface.setIdentifier(absTypeDeclaration.getName().getIdentifier());
@@ -376,7 +377,7 @@ public class JavaInterfaceParser
 	private JavaMethod processMethodDeclaration(SignatureElement parent,
 			MethodDeclaration methodDeclaration, AbsJavadocParser parser,
 			List<ThematicRole> knownRoles) throws SAXException, IOException,
-			ParserConfigurationException
+			ParserConfigurationException, ParsingException
 	{
 		String category = CATEGORY_METHOD;
 		if (methodDeclaration.isConstructor())

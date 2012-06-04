@@ -55,6 +55,7 @@ import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 import de.akra.idocit.core.utils.TestUtils;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -583,9 +584,10 @@ public class JavaInterfaceParserTest
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws CoreException
+	 * @throws ParsingException 
 	 */
 	private String testParseWith(String fileName) throws FileNotFoundException,
-			IOException, SAXException, ParserConfigurationException, CoreException
+			IOException, SAXException, ParserConfigurationException, CoreException, ParsingException
 	{
 		IFile iFile = TestUtils.makeIFileFromFileName(fileName);
 

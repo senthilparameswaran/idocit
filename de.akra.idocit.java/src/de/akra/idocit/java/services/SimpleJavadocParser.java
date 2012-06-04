@@ -41,6 +41,7 @@ import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.java.constants.CustomTaglets;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavaParameter;
 import de.akra.idocit.java.utils.JavadocUtils;
@@ -569,24 +570,35 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	{
 		if (JavadocUtils.isParam(tagName))
 		{
-			return findParameterByName(method.getInputParameters().getParameters(),
+			if(method.getInputParameters() != null)
+			{
+				return findParameterByName(method.getInputParameters().getParameters(),
 					identifier);
+			}
 		}
 		else if (JavadocUtils.isReturn(tagName))
 		{
-			return findParameterByName(method.getOutputParameters().getParameters(),
+			if(method.getOutputParameters() != null)
+			{
+				return findParameterByName(method.getOutputParameters().getParameters(),
 					identifier);
+			}	
 		}
 		else if (JavadocUtils.isThrows(tagName))
 		{
-			return findParameterByName(method.getExceptions().get(0).getParameters(),
+			if((method.getExceptions() != null) && (method.getExceptions().get(0) != null))
+			{
+				return findParameterByName(method.getExceptions().get(0).getParameters(),
 					identifier);
+			}
 		}
 		else
 		{
 			throw new RuntimeException("The tagname " + String.valueOf(tagName)
 					+ " is unexpected.");
 		}
+		
+		return null;
 	}
 
 	private String extractDocumenationText(String identifier, String allTexts)
@@ -621,10 +633,11 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	 * @param referenceGridName
 	 *            [ATTRIBUTE] Used to derive the thematic role name
 	 * @return [OBJECT]
+	 * @throws ParsingException
 	 */
 	private Documentation createDocumentation(TagElement tagElement,
 			List<Addressee> addressees, List<ThematicRole> thematicRoles,
-			String referenceGridName, JavaMethod method)
+			String referenceGridName, JavaMethod method) throws ParsingException
 	{
 		AnnotatedDocumentation annotatedDoc = readDocumentationAndThematicRole(
 				tagElement, thematicRoles, referenceGridName, method);
@@ -670,6 +683,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 				// attributes).This is why we reference the first element here.
 				JavaParameter returnType = (JavaParameter) method.getOutputParameters()
 						.getParameters().get(0);
+
 				identifier = returnType.getSignatureElementPath();
 				documentation.setSignatureElementIdentifier(identifier);
 			}
@@ -712,8 +726,22 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		{
 			JavaParameter parentParam = findParameterByName(method, identifier,
 					tagElement.getTagName());
-			documentation.setSignatureElementIdentifier(parentParam
-					.getSignatureElementPath());
+
+			if (parentParam != null)
+			{
+				documentation.setSignatureElementIdentifier(parentParam
+						.getSignatureElementPath());
+			}
+			else
+			{
+				StringBuffer buffer = new StringBuffer("The Javadoc of method ");
+				buffer.append(method.getIdentifier());
+				buffer.append(" could not be parsed:\n\nThe documented parameter ");
+				buffer.append(identifier);
+				buffer.append(" could not be found in the method's signature.");
+
+				throw new ParsingException(buffer.toString());
+			}
 		}
 
 		documentation.setThematicRole(annotatedDoc.getThematicRole());
@@ -725,7 +753,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	public List<Documentation> parseIDocItJavadoc(Javadoc javadoc,
 			List<Addressee> addressees, List<ThematicRole> thematicRoles,
 			JavaMethod method) throws SAXException, IOException,
-			ParserConfigurationException
+			ParserConfigurationException, ParsingException
 	{
 		List<Documentation> documentations = new ArrayList<Documentation>();
 

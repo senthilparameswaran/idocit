@@ -35,6 +35,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.utils.DescribedItemUtils;
+import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.utils.JavadocUtils;
 
@@ -76,7 +77,7 @@ public abstract class AbsJavadocParser
 	public abstract List<Documentation> parseIDocItJavadoc(Javadoc javadoc,
 			List<Addressee> addressees, List<ThematicRole> thematicRoles,
 			JavaMethod method) throws SAXException, IOException,
-			ParserConfigurationException;
+			ParserConfigurationException, ParsingException;
 
 	/**
 	 * Extracts the name of the reference thematic grid from the given JavaDoc and returns

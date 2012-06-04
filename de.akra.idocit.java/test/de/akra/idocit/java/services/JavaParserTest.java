@@ -176,6 +176,18 @@ public class JavaParserTest
 		srcJavaParserWorkspaceFile.create(new FileInputStream(srcJavaParserFile), true,
 				progressMonitor);
 
+		File inconsistentFile = new File("test/source/InconsistentService.java");
+		IFile inconsistentWorkspaceFile = packageFolder
+				.getFile("InconsistentService.java");
+		inconsistentWorkspaceFile.create(new FileInputStream(inconsistentFile), true,
+				progressMonitor);
+
+		File veryInconsistentFile = new File("test/source/VeryInconsistentService.java");
+		IFile veryInconsistentWorkspaceFile = packageFolder
+				.getFile("VeryInconsistentService.java");
+		veryInconsistentWorkspaceFile.create(new FileInputStream(veryInconsistentFile),
+				true, progressMonitor);
+
 		project.refreshLocal(IProject.DEPTH_INFINITE, progressMonitor);
 
 		// Activate Simple Parser
@@ -442,19 +454,48 @@ public class JavaParserTest
 			}
 
 			// #########################################################################
-			// # Test case #5: @subparam, @subreturn and @subthrows contain two thematic
-			// # roles. All documentations are correctly assigned in the InterfaceArtifact
-			// # structure.
+			// # Test case #5: the void- and parameterless method "foo" could be parsed
+			// # without a NullPointerException
 			// #########################################################################
 			{
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IProject project = root.getProject(PROJECT_NAME);
+				IFile testSourceFolder = project
+						.getFile("src/source/VeryInconsistentService.java");
 
+				ServiceManager.getInstance().getPersistenceService()
+						.loadInterface(testSourceFolder);
 			}
 		}
 
 		/*
 		 * Negative tests
 		 */
-		{}
+		{
+			// #########################################################################
+			// # Test case #1: a documented, but not existent parameter causes a
+			// # ParsingException.
+			// #########################################################################
+			{
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IProject project = root.getProject(PROJECT_NAME);
+				IFile testSourceFolder = project
+						.getFile("src/source/InconsistentService.java");
+				boolean parsingExceptionOccured = false;
+
+				try
+				{
+					ServiceManager.getInstance().getPersistenceService()
+							.loadInterface(testSourceFolder);
+				}
+				catch (ParsingException pEx)
+				{
+					parsingExceptionOccured = true;
+				}
+
+				assertTrue(parsingExceptionOccured);
+			}
+		}
 	}
 
 	private String readLinesFromFile(File javaFile, int startLine, int endLine)
