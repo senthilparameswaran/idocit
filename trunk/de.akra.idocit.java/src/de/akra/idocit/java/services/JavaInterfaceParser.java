@@ -45,6 +45,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.xml.sax.SAXException;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
@@ -57,7 +58,6 @@ import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.SignatureElementUtils;
-import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;

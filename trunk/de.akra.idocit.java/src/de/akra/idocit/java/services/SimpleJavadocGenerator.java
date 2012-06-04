@@ -22,14 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -37,6 +36,7 @@ import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
 import org.xml.sax.SAXException;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
@@ -53,14 +53,17 @@ import de.akra.idocit.java.utils.JavadocUtils;
 
 public class SimpleJavadocGenerator implements IJavadocGenerator
 {
-	// TODO: Move this constant to a special constant-class.
-	public static final String THEMATIC_GRID_CHECKING_OPERATIONS = "Checking Operations";
-
-	public static final SimpleJavadocGenerator INSTANCE;
-
+	/**
+	 * Logger
+	 */
 	private static final Logger LOGGER = Logger.getLogger(SimpleJavadocGenerator.class
 			.getName());
 
+	/**
+	 * Singleton Instance
+	 */
+	public static final SimpleJavadocGenerator INSTANCE;
+	
 	static
 	{
 		INSTANCE = new SimpleJavadocGenerator();
@@ -78,11 +81,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * The invariant is violated if one of the given {@link Documentation}s contains
 	 * documentations for other addressees as developers.
 	 * 
-	 * @param documentations
-	 *            [OBJECT]
+	 * @param documentations [OBJECT]
 	 * 
-	 * @throws IllegalArgumentException
-	 *             [REPORT] If the invariant is violated
+	 * @throws IllegalArgumentException [REPORT] If the invariant is violated
+	 * 
+	 * @thematicgrid Checking Operations
 	 */
 	private void checkInvariant(List<Documentation> documentations)
 	{
@@ -108,10 +111,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	}
 
 	/**
-	 * @param addresseeName
-	 *            [COMPARISON]
-	 * @param docTexts
-	 *            [SOURCE]
+	 * @param addresseeName [COMPARISON]
+	 * @param docTexts [SOURCE]
 	 * @return [OBJECT] If no addressee is found, an empty string is returned.
 	 * 
 	 * @thematicgrid Searching Operations
@@ -138,10 +139,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	/**
 	 * Rule: the documentation has thematic role with given role-name.
 	 * 
-	 * @param documentation
-	 *            [OBJECT]
-	 * @param roleName
-	 *            [COMPARISON]
+	 * @param documentation [OBJECT]
+	 * @param roleName [COMPARISON]
 	 * @return [REPORT] <code>true</code> if rule is fulfilled
 	 * 
 	 * @thematicgrid Checking Operations
@@ -156,8 +155,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	/**
 	 * Returns the documented text for the addressee "Developer".
 	 * 
-	 * @param documentation
-	 *            [SOURCE]
+	 * @param documentation [SOURCE]
 	 * @return [OBJECT]
 	 * 
 	 * @thematicgrid Getting Operations
@@ -177,8 +175,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	}
 
 	/**
-	 * @param documentation
-	 *            [SOURCE]
+	 * @param documentation [SOURCE]
 	 * @return [OBJECT] If the thematic role or its name is <code>null</code>, an empty
 	 *         string is returned.
 	 * 
@@ -203,10 +200,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * Rule: the thematic role of the documentation is "RULE" and the thematic grid is
 	 * "Checking Operations".
 	 * 
-	 * @param documentation
-	 *            [SOURCE]
-	 * @param referenceGridName
-	 *            [COMPARISON]
+	 * @param documentation [SOURCE]
+	 * @param referenceGridName [COMPARISON]
 	 * @return [REPORT]
 	 * 
 	 * @thematicgrid Checking Operations
@@ -214,19 +209,18 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private boolean isRuleOfCheckingOperation(Documentation documentation,
 			String referenceGridName)
 	{
-		return (isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_RULE) && THEMATIC_GRID_CHECKING_OPERATIONS
+		return (isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_RULE) 
+				&& ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
 				.equalsIgnoreCase(referenceGridName));
 	}
 
 	/**
 	 * Creates a {@link TagElement} for the thematic role of the documentation.
 	 * 
-	 * @param documentation
+	 * @param documentation Not nullable.
 	 * @subparam thematicRole.name [SOURCE] Used as taglet-name
-	 * @param referenceGridName
-	 *            [ATTRIBUTE] Used to determine the format of the {@link TagElement}
-	 * @param jdocAST
-	 *            [FACTORY] Used to instanciate the {@link TagElement}
+	 * @param referenceGridName [ATTRIBUTE] Used to determine the format of the {@link TagElement}
+	 * @param jdocAST [FACTORY] Used to instanciate the {@link TagElement}
 	 * @return [OBJECT]
 	 * 
 	 * @thematicgrid Creating Operations
@@ -259,8 +253,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	/**
 	 * Rule: One documentation has the thematic role "ACTION".
 	 * 
-	 * @param documentations
-	 *            [SOURCE]
+	 * @param documentations [SOURCE]
 	 * @return [REPORT] <code>true</code> if the rule fulfilled
 	 * 
 	 * @thematicgrid Checking Operations
@@ -281,7 +274,23 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return false;
 	}
 
-	private boolean containsClassDescription(List<Documentation> documentations,
+	/**
+	 * Checks for class-introduction sentence. An introduction sentence could only be 
+	 * in the first {@link Documentation} of the given list. The thematic role of this
+	 * sentence is <code>null</code> or "NONE".
+	 * 
+	 * The introduction sentence is considered as class-introduction if the given method
+	 * is <code>null</code>.
+	 * 
+	 * @param documentations [OBJECT]
+	 * @param method [OBJECT] If this method is <code>null</code>, the documentations are
+	 * 	considered as clas-documentations.
+	 * 
+	 * @return [REPORT]
+	 * 
+	 * @thematicgrid Checking Operations
+	 */
+	public boolean containsClassDescription(List<Documentation> documentations,
 			JavaMethod method)
 	{
 		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
@@ -305,12 +314,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * Creates a Javadoc {@link TagElement} for each given documentation and adds it to
 	 * the given <code>javadoc</code>.
 	 * 
-	 * @param documentations
-	 *            [SOURCE]
-	 * @param referenceGridName
-	 *            [ATTRIBUTE] Used to determine the format of the {@link TagElement}
-	 * @param javadoc
-	 *            [DESTINATION]
+	 * @param documentations [SOURCE]
+	 * @param referenceGridName [ATTRIBUTE] Used to determine the format of the {@link TagElement}
+	 * @param javadoc [DESTINATION]
+	 * @param method [ATTRIBUTE] Used to determine whether the new Javadoc-tags are attached to a
+	 * 	method or a class.
 	 * 
 	 * @thematicgrid Putting Operations
 	 */
@@ -363,8 +371,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	}
 
 	/**
-	 * @param javadoc
-	 *            [FACTORY]
+	 * @param javadoc [FACTORY]
 	 * @return [OBJECT]
 	 * 
 	 * @thematicgrid Creating Operations
@@ -760,25 +767,27 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	}
 
 	/**
-	 * Creates Javadoc-representation for all {@link Documentation}s in
-	 * <code>signatureElement</code> and it's children.
+	 * Creates Javadoc-representation for all {@link Documentation}s in<code>signatureElement</code> and it's children.
 	 * 
-	 * @param documentations
-	 *            [SOURCE]
-	 * @param tagName
-	 *            Name of the current Javadoc-section to create additional Javadocs for
-	 * @param paramName
-	 *            [ATTRIBUTE] Name of the corresponding Java-element
-	 * @param referenceGridName
-	 *            [ATTRIBUTE]
-	 * @param javadoc
+	 * @format  This implementation generates a simplified Javadoc which has a 100%compliance with the Javadoc conventions.
+	 * @instrument  To parse the Java and Javadoc code, the parser provided by the <a href="http://www.eclipse.org/jdt/">Eclipse Java Development Tools</a> is used.
 	 * 
-	 *            [DESTINATION] This object is modified.
+	 * @param  documentations [OBJECT]
 	 * 
-	 * @format This implementation generates a simplified Javadoc which has a 100%
-	 *         compliance with the Javadoc conventions.
+	 * @param  tagName [ATTRIBUTE] The of the Javadoc-tag of the given documentations (e.g. @param). This parameter is nullable.
 	 * 
-	 * @thematicgrid Putting Operations
+	 * @param  paramName [ATTRIBUTE] Name of the corresponding Java-element. This parameter is nullable.
+	 * 
+	 * @param  thematicGridName [ATTRIBUTE] Reference-grid of the given Java method. This parameter is nullable.
+	 * 
+	 * @param  javadoc [DESTINATION]
+	 * 
+	 * @param  additionalTagElements [ATTRIBUTE] Existing Javadoc tags which are kept and not changed by iDocIt!.
+	 * 
+	 * @param  method [DESTINATION] The given Javadoc belongs to this method.
+	 * 
+	 * @throws  ParsingException [NONE]
+	 * @thematicgrid  Putting Operations
 	 */
 	@Override
 	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,

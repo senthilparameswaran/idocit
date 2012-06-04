@@ -33,6 +33,7 @@ import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.xml.sax.SAXException;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
@@ -327,7 +328,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		else if (!JavadocUtils.isStandardJavadocTaglet(tagName)
 				&& !JavadocUtils.isIdocitJavadocTaglet(tagName))
 		{ // Must be ACTION or RULE (depends on the reference grid)
-			if (SimpleJavadocGenerator.THEMATIC_GRID_CHECKING_OPERATIONS
+			if (ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
 					.equals(referenceGridName))
 			{
 				structuredJavaDoc.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_RULE);

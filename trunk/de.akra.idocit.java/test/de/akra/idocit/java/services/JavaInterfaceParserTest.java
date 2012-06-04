@@ -45,6 +45,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
@@ -52,7 +53,6 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.SignatureElement;
-import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.exceptions.ParsingException;
