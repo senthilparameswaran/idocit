@@ -17,5 +17,18 @@ package de.akra.idocit.common.constants;
 
 public final class ThematicGridConstants
 {	
+	/**
+	 * Default name for the reference grid of an operation.
+	 */
+	public static final String THEMATIC_GRID_DEFAULT_NAME = "None";
+	
+	/**
+	 * Default grid-based role for a thematic role in a thematic grid. 
+	 */
 	public static final String DEFAULT_RULE = "always();";
+	
+	/**
+	 * Names of special and important thematic grids
+	 */
+	public static final String THEMATIC_GRID_CHECKING_OPERATIONS = "Checking Operations";
 }

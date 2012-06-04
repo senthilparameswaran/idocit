@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
@@ -43,7 +44,6 @@ import de.akra.idocit.common.structure.ParameterPathElement;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.utils.SignatureElementUtils;
-import de.akra.idocit.core.constants.ThematicGridConstants;
 import de.akra.idocit.wsdl.structure.WSDLInterface;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLMessage;
