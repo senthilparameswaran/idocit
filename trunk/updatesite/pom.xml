@@ -33,6 +33,10 @@
 						<phase>package</phase>
 						<configuration>
 							<tasks>
+								<delete dir="${idocit-update-site-dir}" failonerror="false"/>
+								
+								<mkdir dir="${idocit-update-site-dir}"/>
+								
 								<copy todir="${idocit-update-site-dir}">
 									<fileset dir="target/site/"/>
 								</copy>
