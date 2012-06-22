@@ -63,22 +63,6 @@ public class SimpleJavadocParserTest
 			{
 				List<Documentation> referenceDocs = new ArrayList<Documentation>();
 
-				// Action Doc Text
-				{
-					Documentation actionDoc = new Documentation();
-					actionDoc.setThematicRole(TestUtils.createAction());
-
-					Map<Addressee, String> documentationsAction = new HashMap<Addressee, String>();
-					documentationsAction
-							.put(TestUtils.createDeveloper(),
-									"Only customers who placed an order within the last year are considered.");
-					actionDoc.setDocumentation(documentationsAction);
-
-					actionDoc.setSignatureElementIdentifier(null);
-					actionDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
-					referenceDocs.add(actionDoc);
-				}
-
 				// Ordering
 				{
 					Documentation orderingDoc = new Documentation();
@@ -304,7 +288,7 @@ public class SimpleJavadocParserTest
 				}
 				catch (ParsingException rEx)
 				{
-					runtimeExceptionOccured = rEx.getMessage().equals("No more subparameters to search in for the identifier notexistingattribute");
+					runtimeExceptionOccured = rEx.getMessage().equals("No more subparameters to search in for the identifier notexistingattribute in method foo");
 				}
 
 				assertTrue(runtimeExceptionOccured);
