@@ -170,12 +170,6 @@ public class TestDataFactory
 		methodFindCustomerById.setQualifiedIdentifier("findCustomersByName");
 		methodFindCustomerById.setDocumentationChanged(documentationChanged);
 
-		addDocumentation(
-				methodFindCustomerById,
-				addresseeName,
-				"ACTION",
-				"Only customers who placed an order within the last year are considered.",
-				null);
 		addDocumentation(methodFindCustomerById, addresseeName, "ORDERING",
 				"Alphabetically by lastname", null);
 		addDocumentation(methodFindCustomerById, addresseeName, "SOURCE", "CRM System",

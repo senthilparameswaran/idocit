@@ -354,8 +354,12 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					formattedRoleName = StringUtils.capitalizeFirstChar(roleName) + ':';
 				}
 
-				String docText = (formattedRoleName + " " + getDocText(documentation))
-						.trim();
+				String docText = " " + getDocText(documentation).trim();
+				
+				if(newTag.getTagName() == null){
+					docText = formattedRoleName + docText;
+				}
+				
 				textElement.setText(docText);
 				hasIntroductionSentence = true;
 			}

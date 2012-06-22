@@ -60,8 +60,6 @@ public class SimpleJavadocGeneratorTest
 			// #########################################################################
 			{
 				String referenceJavadoc = "/** \n "
-						+ "*  Only customers who placed an order within the last year are considered.\n "
-						+ "* \n " 
 						+ "* @ordering Alphabetically by lastname\n "
 						+ "* @source CRM System\n " 
 						+ "* \n " 

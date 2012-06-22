@@ -27,8 +27,6 @@ public interface CustomerService
 	}
 
 	/**
-	 * Only customers who placed an order within the last year are considered.
-	 * 
 	 * @ordering Alphabetically by lastname
 	 * @source CRM System
 	 * 
