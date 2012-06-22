@@ -42,6 +42,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.constants.ThematicRoleConstants;
 
 /**
  * Some useful methods for tests.
@@ -366,10 +367,19 @@ public class TestUtils
 
 		return action;
 	}
+
+	public static ThematicRole createRule()
+	{
+		ThematicRole action = new ThematicRole(ThematicRoleConstants.MANDATORY_ROLE_RULE);
+		// "What the operation does."
+		action.setDescription("");
+
+		return action;
+	}
 	
 	public static ThematicRole createAction()
 	{
-		ThematicRole action = new ThematicRole("ACTION");
+		ThematicRole action = new ThematicRole(ThematicRoleConstants.MANDATORY_ROLE_ACTION);
 		// "What the operation does."
 		action.setDescription("");
 
@@ -441,6 +451,7 @@ public class TestUtils
 		result.add(createSource());
 		result.add(createOrdering());
 		result.add(createObject());
+		result.add(createRule());
 
 		return result;
 	}
