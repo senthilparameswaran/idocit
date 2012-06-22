@@ -172,6 +172,47 @@ public class SimpleJavadocGeneratorTest
 				assertEquals(createEmptyReferenceJDForCustomerService(),
 						methodFindCustById.getRefToASTNode().getJavadoc().toString());
 			}
+			
+			// #########################################################################
+			// # Test case #5: @subparams must be followed by a path to the actual 
+			// # signature element and not only by the signature element's identifier.
+			// #########################################################################
+			{
+				String referenceJavadoc = "/** \n "
+						+ "*  Only customers who placed an order within the last year are considered.\n "
+						+ "* \n "
+						+ "* @ordering Alphabetically by lastname\n "
+						+ "* @source CRM System\n " 
+						+ "* \n " 
+						+ "* @param parameters\n "
+						+ "* @subparam customer.firstName [COMPARISON]\n "
+						+ "* @subparam customer.lastName [COMPARISON]\n " 
+						+ "* \n "
+						+ "* @return [OBJECT]\n "
+						+ "* @subreturn firstName [ATTRIBUTE] Won't be null, but could be an empty String\n "
+						+ "* @subreturn lastName [ATTRIBUTE] Won't be null, but could be an empty String\n "
+						+ "* \n "
+						+ "* @throws SpecialException\n "
+						+ "* @thematicgrid Searching Operations\n " 
+						+ "*/\n";
+				ParserOutput output = JavadocTestUtils
+						.createCompilationUnit("test/source/CustomerService.java");
+				CompilationUnit cu = output.getCompilationUnit();
+
+				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
+						"Developer", true, cu);
+
+				JavaInterfaceGenerator.updateJavadocInAST(artifact,
+						SimpleJavadocGenerator.INSTANCE);
+
+				JavaInterface customerServiceIntf = (JavaInterface) artifact
+						.getInterfaces().get(0);
+				JavaMethod findCustomerByIdMeth = (JavaMethod) customerServiceIntf
+						.getOperations().get(1);
+				Javadoc javadoc = findCustomerByIdMeth.getRefToASTNode().getJavadoc();
+
+				assertEquals(referenceJavadoc, javadoc.toString());
+			}
 		}
 
 		// #########################################################################
