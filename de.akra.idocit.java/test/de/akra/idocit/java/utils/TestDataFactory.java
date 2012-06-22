@@ -197,10 +197,10 @@ public class TestDataFactory
 		parameterParameters.setDocumentationChanged(documentationChanged);
 		parameterParameters.setSignatureElementPath("parameters:source.NameParameters");
 		inputParameters.addParameter(parameterParameters);
-		addDocumentation(parameterParameters, addresseeName, "COMPARISON", "This is the customer.",
-				parameterParameters.getSignatureElementPath());
-		addDocumentation(parameterParameters, addresseeName, "SOURCE", "This is the source.",
-				parameterParameters.getSignatureElementPath());
+		addDocumentation(parameterParameters, addresseeName, "COMPARISON",
+				"This is the customer.", parameterParameters.getSignatureElementPath());
+		addDocumentation(parameterParameters, addresseeName, "SOURCE",
+				"This is the source.", parameterParameters.getSignatureElementPath());
 
 		// Attributes of NameParameters
 		JavaParameter attrFirstName = new JavaParameter(parameterParameters,
@@ -249,10 +249,10 @@ public class TestDataFactory
 				.setSignatureElementPath("java.util.List<source.Customer>:java.util.List<source.Customer>");
 		outputParameters.addParameter(returnCustomerList);
 
-		addDocumentation(returnCustomerList, addresseeName, "OBJECT", "This is the object.",
-				returnCustomerList.getSignatureElementPath());
-		addDocumentation(returnCustomerList, addresseeName, "SOURCE", "This is the source.",
-				returnCustomerList.getSignatureElementPath());
+		addDocumentation(returnCustomerList, addresseeName, "OBJECT",
+				"This is the object.", returnCustomerList.getSignatureElementPath());
+		addDocumentation(returnCustomerList, addresseeName, "SOURCE",
+				"This is the source.", returnCustomerList.getSignatureElementPath());
 
 		// Exception
 		List<JavaParameters> exceptions = new ArrayList<JavaParameters>();
@@ -270,18 +270,18 @@ public class TestDataFactory
 		ioException.setIdentifier("IOException");
 		ioException.setQualifiedIdentifier("java.io.IOException");
 		// TODO
-		addDocumentation(ioException, addresseeName, "ATTRIBUTE", "This is also an attribute.",
-				ioException.getSignatureElementPath());
-//		TagElement exception = customerServiceIntf.getAST().newTagElement();
-//		exception.setTagName(TagElement.TAG_THROWS);
-//		List fragments = exception.fragments();
-//		TextElement exceptionTextElem = customerServiceIntf.getAST().newTextElement();
-//		exceptionTextElem.setText(" IOException  In case of an error");
-//		fragments.add(exceptionTextElem);
+		addDocumentation(ioException, addresseeName, "ATTRIBUTE",
+				"This is also an attribute.", ioException.getSignatureElementPath());
+		// TagElement exception = customerServiceIntf.getAST().newTagElement();
+		// exception.setTagName(TagElement.TAG_THROWS);
+		// List fragments = exception.fragments();
+		// TextElement exceptionTextElem = customerServiceIntf.getAST().newTextElement();
+		// exceptionTextElem.setText(" IOException  In case of an error");
+		// fragments.add(exceptionTextElem);
 
-//		List<TagElement> additionalElements = new ArrayList<TagElement>();
-//		additionalElements.add(exception);
-//		methodFindCustomerById.setAdditionalTags(additionalElements);
+		// List<TagElement> additionalElements = new ArrayList<TagElement>();
+		// additionalElements.add(exception);
+		// methodFindCustomerById.setAdditionalTags(additionalElements);
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -338,7 +338,8 @@ public class TestDataFactory
 				Numerus.SINGULAR, true);
 		customerParameters.setDataTypeName("Customer");
 		customerParameters.setIdentifier("customer");
-		customerParameters.setQualifiedIdentifier("source.CustomerNameParameters.customer");
+		customerParameters
+				.setQualifiedIdentifier("source.CustomerNameParameters.customer");
 		customerParameters.setQualifiedDataTypeName("source.Customer");
 		customerParameters.setDocumentationChanged(documentationChanged);
 		customerParameters
@@ -381,48 +382,19 @@ public class TestDataFactory
 		outputParameters.setQualifiedIdentifier("");
 		methodFindCustomerById.setOutputParameters(outputParameters);
 
-		JavaParameter returnCustomer = new JavaParameter(outputParameters,
-				Numerus.SINGULAR, true);
-		returnCustomer.setDataTypeName("Customer");
-		returnCustomer.setQualifiedDataTypeName("source.Customer");
-		returnCustomer.setIdentifier("Customer");
-		returnCustomer.setQualifiedIdentifier("source.Customer");
-		returnCustomer.setDocumentationChanged(documentationChanged);
-		returnCustomer.setSignatureElementPath("source.Customer:source.Customer");
-		outputParameters.addParameter(returnCustomer);
+		JavaParameter returnCustomer = createJavaParameterCustomer(addresseeName,
+				documentationChanged, outputParameters, "Customer");
 
 		addDocumentation(returnCustomer, addresseeName, "OBJECT", "",
 				returnCustomer.getSignatureElementPath());
 
-		JavaParameter returnCustomerFirstName = new JavaParameter(returnCustomer,
-				Numerus.SINGULAR, false);
-		returnCustomerFirstName.setDataTypeName("String");
-		returnCustomerFirstName.setQualifiedDataTypeName("java.lang.String");
-		returnCustomerFirstName.setIdentifier("firstName");
-		returnCustomerFirstName.setQualifiedIdentifier("source.Customer.firstName");
-		returnCustomerFirstName.setDocumentationChanged(documentationChanged);
-		returnCustomerFirstName
-				.setSignatureElementPath("source.Customer:source.Customer/source.Customer.firstName:java.lang.String");
-		returnCustomer.addParameter(returnCustomerFirstName);
+		addDocumentation(returnCustomer.getComplexType().get(0), addresseeName,
+				"ATTRIBUTE", "Won't be null, but could be an empty String",
+				returnCustomer.getComplexType().get(0).getSignatureElementPath());
 
-		addDocumentation(returnCustomerFirstName, addresseeName, "ATTRIBUTE",
-				"Won't be null, but could be an empty String",
-				returnCustomerFirstName.getSignatureElementPath());
-
-		JavaParameter returnCustomerLastName = new JavaParameter(returnCustomer,
-				Numerus.SINGULAR, false);
-		returnCustomerLastName.setDataTypeName("String");
-		returnCustomerLastName.setQualifiedDataTypeName("java.lang.String");
-		returnCustomerLastName.setIdentifier("lastName");
-		returnCustomerLastName.setQualifiedIdentifier("source.Customer.lastName");
-		returnCustomerLastName.setDocumentationChanged(documentationChanged);
-		returnCustomerLastName
-				.setSignatureElementPath("source.Customer:source.Customer/source.Customer.lastName:java.lang.String");
-		returnCustomer.addParameter(returnCustomerLastName);
-
-		addDocumentation(returnCustomerLastName, addresseeName, "ATTRIBUTE",
-				"Won't be null, but could be an empty String",
-				returnCustomerLastName.getSignatureElementPath());
+		addDocumentation(returnCustomer.getComplexType().get(1), addresseeName,
+				"ATTRIBUTE", "Won't be null, but could be an empty String",
+				returnCustomer.getComplexType().get(1).getSignatureElementPath());
 
 		// Exception
 		List<JavaParameters> exceptions = new ArrayList<JavaParameters>();
@@ -441,15 +413,50 @@ public class TestDataFactory
 		specialException
 				.setSignatureElementPath("source.SpecialException:source.SpecialException");
 		specialException.setHasPublicAccessibleAttributes(true);
-		// TODO
-		// addDocumentation(specialException, addresseeName, null, "In case of an error",
-		// specialException.getSignatureElementPath());
 
 		ioExceptions.addParameter(specialException);
 		exceptions.add(ioExceptions);
 		methodFindCustomerById.setExceptions(exceptions);
 
 		return methodFindCustomerById;
+	}
+
+	private static JavaParameter createJavaParameterCustomer(String addresseeName,
+			boolean documentationChanged, JavaParameters outputParameters,
+			String identifier)
+	{
+		JavaParameter returnCustomer = new JavaParameter(outputParameters,
+				Numerus.SINGULAR, true);
+		returnCustomer.setDataTypeName("Customer");
+		returnCustomer.setQualifiedDataTypeName("source.Customer");
+		returnCustomer.setIdentifier(identifier);
+		returnCustomer.setQualifiedIdentifier("source.Customer");
+		returnCustomer.setDocumentationChanged(documentationChanged);
+		returnCustomer.setSignatureElementPath("source.Customer:source.Customer");
+		outputParameters.addParameter(returnCustomer);
+
+		JavaParameter returnCustomerFirstName = new JavaParameter(returnCustomer,
+				Numerus.SINGULAR, false);
+		returnCustomerFirstName.setDataTypeName("String");
+		returnCustomerFirstName.setQualifiedDataTypeName("java.lang.String");
+		returnCustomerFirstName.setIdentifier("firstName");
+		returnCustomerFirstName.setQualifiedIdentifier("source.Customer.firstName");
+		returnCustomerFirstName.setDocumentationChanged(documentationChanged);
+		returnCustomerFirstName
+				.setSignatureElementPath("source.Customer:source.Customer/source.Customer.firstName:java.lang.String");
+		returnCustomer.addParameter(returnCustomerFirstName);
+
+		JavaParameter returnCustomerLastName = new JavaParameter(returnCustomer,
+				Numerus.SINGULAR, false);
+		returnCustomerLastName.setDataTypeName("String");
+		returnCustomerLastName.setQualifiedDataTypeName("java.lang.String");
+		returnCustomerLastName.setIdentifier("lastName");
+		returnCustomerLastName.setQualifiedIdentifier("source.Customer.lastName");
+		returnCustomerLastName.setDocumentationChanged(documentationChanged);
+		returnCustomerLastName
+				.setSignatureElementPath("source.Customer:source.Customer/source.Customer.lastName:java.lang.String");
+		returnCustomer.addParameter(returnCustomerLastName);
+		return returnCustomer;
 	}
 
 	public static JavaMethod createEmptyDocumentedFindCustomerById(
@@ -803,6 +810,33 @@ public class TestDataFactory
 				newParam.getSignatureElementPath());
 	}
 
+	public static JavaMethod createFooMethod(MethodDeclaration getIdDecl,
+			boolean documentationChanged, String addresseeName)
+	{
+		// Method
+		JavaMethod methodFoo = new JavaMethod(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				"Method", null, Numerus.SINGULAR);
+		methodFoo.setRefToASTNode(getIdDecl);
+		methodFoo.setIdentifier("foo");
+		methodFoo.setDocumentationChanged(documentationChanged);
+
+		// Parameters
+		JavaParameters inputParameters = new JavaParameters(methodFoo, "Parameters",
+				Numerus.SINGULAR, false);
+		methodFoo.setInputParameters(inputParameters);
+
+		JavaParameter customerParameter = createJavaParameterCustomer(addresseeName,
+				documentationChanged, inputParameters, "customer");
+		inputParameters.addParameter(customerParameter);
+
+		// Return value
+		JavaParameters outputParameters = new JavaParameters(methodFoo, "ReturnType",
+				Numerus.SINGULAR, false);
+		methodFoo.setOutputParameters(outputParameters);
+
+		return methodFoo;
+	}
+
 	public static JavaMethod createEmptyGetId(MethodDeclaration getIdDecl,
 			boolean documentationChanged)
 	{
@@ -860,6 +894,30 @@ public class TestDataFactory
 		List<JavaMethod> methods = new ArrayList<JavaMethod>();
 		methods.add(createEmptyGetId((MethodDeclaration) customerServiceIntf
 				.bodyDeclarations().get(0), documentationChanged));
+
+		customerService.setOperations(methods);
+
+		result.addInterface(customerService);
+
+		return result;
+	}
+
+	public static JavaInterfaceArtifact createExampleService(CompilationUnit cu,
+			boolean documentationChanged, String addressee)
+	{
+		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", cu, Numerus.SINGULAR);
+		result.setIdentifier("ExampleService.java");
+		result.setQualifiedIdentifier(null);
+
+		JavaInterface customerService = new JavaInterface(result, "Interface",
+				Numerus.SINGULAR);
+		TypeDeclaration customerServiceIntf = (TypeDeclaration) cu.types().get(0);
+		customerService.setRefToASTNode(customerServiceIntf);
+
+		List<JavaMethod> methods = new ArrayList<JavaMethod>();
+		methods.add(createFooMethod((MethodDeclaration) customerServiceIntf
+				.bodyDeclarations().get(0), documentationChanged, addressee));
 
 		customerService.setOperations(methods);
 
@@ -1157,7 +1215,7 @@ public class TestDataFactory
 		docSourceInstrument2.setThematicRole(ThematicRoleUtils.findRoleByName(
 				"INSTRUMENT", roles));
 		result.add(docSourceInstrument2);
-		
+
 		return result;
 	}
 }
