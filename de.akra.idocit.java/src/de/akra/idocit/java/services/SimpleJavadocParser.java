@@ -278,7 +278,8 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 	}
 
-	private StructuredJavaDoc splitJavadocText(String tagName, String docText)
+	private StructuredJavaDoc splitJavadocText(String tagName, String docText,
+			String referenceGridName)
 	{
 		Matcher matcher = SPLIT_JAVADOC_REGEXP.matcher(docText);
 		StructuredJavaDoc structuredJavaDoc = new StructuredJavaDoc();
@@ -302,11 +303,34 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			}
 			else
 			{
+				docText = docText.trim();
+
+				if (ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
+						.equals(referenceGridName))
+				{
+					int startIndex = docText.toLowerCase().indexOf(
+							ThematicRoleConstants.MANDATORY_ROLE_RULE.toLowerCase());
+
+					if (startIndex >= 0)
+					{
+						// jakr: + 1 is needed because of the ':'
+						startIndex += ThematicRoleConstants.MANDATORY_ROLE_RULE.length() + 1;
+						docText = docText.substring(startIndex).trim();
+						structuredJavaDoc.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_RULE);
+					}
+					else
+					{
+						structuredJavaDoc.setRoleName(null);
+					}
+				}
+				else
+				{
+					structuredJavaDoc.setRoleName(null);
+				}
+
 				structuredJavaDoc.setDocText(docText.trim());
 				structuredJavaDoc.setParamName(null);
 			}
-
-			structuredJavaDoc.setRoleName(null);
 		}
 
 		return structuredJavaDoc;
@@ -316,7 +340,8 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			String referenceGridName, String tagText, JavaMethod method)
 	{
 		String tagName = tagElement.getTagName();
-		StructuredJavaDoc structuredJavaDoc = splitJavadocText(tagName, tagText);
+		StructuredJavaDoc structuredJavaDoc = splitJavadocText(tagName, tagText,
+				referenceGridName);
 
 		if ((tagName != null) && !JavadocUtils.isStandardJavadocTaglet(tagName)
 				&& !JavadocUtils.isIdocitJavadocTaglet(tagName))
@@ -624,6 +649,18 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			int startIndex = allTexts.indexOf(identifier) + identifier.length();
 
 			return allTexts.substring(startIndex).trim();
+		}
+		else if (identifier == null)
+		{
+			int startIndex = allTexts.toLowerCase().indexOf(
+					ThematicRoleConstants.MANDATORY_ROLE_RULE.toLowerCase());
+
+			if (startIndex >= 0)
+			{
+				// jakr: + 1 is needed because of the ':'
+				startIndex += ThematicRoleConstants.MANDATORY_ROLE_RULE.length() + 1;
+				return allTexts.substring(startIndex).trim();
+			}
 		}
 
 		return allTexts;

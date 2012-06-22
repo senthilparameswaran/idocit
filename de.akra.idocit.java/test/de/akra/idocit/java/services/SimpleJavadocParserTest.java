@@ -250,6 +250,39 @@ public class SimpleJavadocParserTest
 
 				assertEquals(new ArrayList<Documentation>(), actualDocs);
 			}
+
+			// #########################################################################
+			// # Test case #3: in case of a Checking Operation, the prefix "Rule: " is
+			// # removed from the introduction sentence.
+			// #########################################################################
+			{
+				ParserOutput output = JavadocTestUtils
+						.createCompilationUnit("test/source/ExampleService.java");
+				CompilationUnit cu = output.getCompilationUnit();
+
+				AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu
+						.types().get(0);
+				List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
+						.bodyDeclarations();
+				JavaInterfaceArtifact artifact = TestDataFactory.createExampleService(cu,
+						true, "Developer");
+				JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
+						.getOperations().get(1);
+
+				List<Addressee> addressees = TestUtils.createDeveloperSequence();
+				List<ThematicRole> thematicRoles = TestUtils
+						.createReferenceThematicRoles();
+				boolean runtimeExceptionOccured = false;
+
+				List<Documentation> actDocumentations = SimpleJavadocParser.INSTANCE
+						.parseIDocItJavadoc(bodyDeclarations.get(1).getJavadoc(),
+								addressees, thematicRoles, method);
+
+				String actDocText = actDocumentations.get(0).getDocumentation()
+						.get(TestUtils.createDeveloper());
+
+				assertEquals("Check the beat.", actDocText);
+			}
 		}
 
 		/*
@@ -288,7 +321,9 @@ public class SimpleJavadocParserTest
 				}
 				catch (ParsingException rEx)
 				{
-					runtimeExceptionOccured = rEx.getMessage().equals("No more subparameters to search in for the identifier notexistingattribute in method foo");
+					runtimeExceptionOccured = rEx
+							.getMessage()
+							.equals("No more subparameters to search in for the identifier notexistingattribute in method foo");
 				}
 
 				assertTrue(runtimeExceptionOccured);
