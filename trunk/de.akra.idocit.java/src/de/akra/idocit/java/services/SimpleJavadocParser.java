@@ -506,6 +506,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 	private String extractIdentifierPath(String identifier, TagElement tagElement,
 			List<? extends Parameter> parameters, JavaMethod method)
+			throws ParsingException
 	{
 		String[] parameterNames = extractIdentifierChain(identifier);
 		Javadoc javadoc = (Javadoc) tagElement.getParent();
@@ -534,19 +535,32 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 						}
 						else
 						{
-							throw new RuntimeException(
+							throw new ParsingException(
 									"No more subparameters to search in for the identifier "
-											+ String.valueOf(parameterNames[i]));
+											+ String.valueOf(parameterNames[i])
+											+ " in method "
+											+ String.valueOf(method.getIdentifier()));
 						}
 
 						i++;
 					}
 
-					return childParameter.getSignatureElementPath();
+					if (childParameter != null)
+					{
+						return childParameter.getSignatureElementPath();
+					}
+					else
+					{
+						throw new ParsingException(
+								"No more subparameters to search in for the identifier "
+										+ String.valueOf(parameterNames[0])
+										+ " in method "
+										+ String.valueOf(method.getIdentifier()));
+					}
 				}
 				else
 				{
-					throw new RuntimeException("The docText "
+					throw new ParsingException("The docText "
 							+ String.valueOf(identifier) + " could not be splitted.");
 				}
 			}
@@ -571,26 +585,27 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	{
 		if (JavadocUtils.isParam(tagName))
 		{
-			if(method.getInputParameters() != null)
+			if (method.getInputParameters() != null)
 			{
 				return findParameterByName(method.getInputParameters().getParameters(),
-					identifier);
+						identifier);
 			}
 		}
 		else if (JavadocUtils.isReturn(tagName))
 		{
-			if(method.getOutputParameters() != null)
+			if (method.getOutputParameters() != null)
 			{
 				return findParameterByName(method.getOutputParameters().getParameters(),
-					identifier);
-			}	
+						identifier);
+			}
 		}
 		else if (JavadocUtils.isThrows(tagName))
 		{
-			if((method.getExceptions() != null) && (method.getExceptions().get(0) != null))
+			if ((method.getExceptions() != null)
+					&& (method.getExceptions().get(0) != null))
 			{
 				return findParameterByName(method.getExceptions().get(0).getParameters(),
-					identifier);
+						identifier);
 			}
 		}
 		else
@@ -598,7 +613,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			throw new RuntimeException("The tagname " + String.valueOf(tagName)
 					+ " is unexpected.");
 		}
-		
+
 		return null;
 	}
 

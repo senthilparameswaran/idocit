@@ -117,13 +117,14 @@ public class SimpleJavadocParserTest
 							.createDeveloperSequence());
 
 					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
-					docSubParamFirstname.put(TestUtils.createDeveloper(), "This is the customer.");
+					docSubParamFirstname.put(TestUtils.createDeveloper(),
+							"This is the customer.");
 					paramParametersDoc.setDocumentation(docSubParamFirstname);
 
 					paramParametersDoc
 							.setSignatureElementIdentifier("parameters:source.NameParameters");
 					paramParametersDoc.setThematicRole(TestUtils.createComparison());
-					referenceDocs.add(paramParametersDoc);	
+					referenceDocs.add(paramParametersDoc);
 				}
 
 				// Parameter parameters > SOURCE
@@ -133,15 +134,16 @@ public class SimpleJavadocParserTest
 							.createDeveloperSequence());
 
 					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
-					docSubParamFirstname.put(TestUtils.createDeveloper(), "This is the source.");
+					docSubParamFirstname.put(TestUtils.createDeveloper(),
+							"This is the source.");
 					paramParametersDoc.setDocumentation(docSubParamFirstname);
 
 					paramParametersDoc
 							.setSignatureElementIdentifier("parameters:source.NameParameters");
 					paramParametersDoc.setThematicRole(TestUtils.createSource());
-					referenceDocs.add(paramParametersDoc);	
+					referenceDocs.add(paramParametersDoc);
 				}
-				
+
 				// Subparameter firstname
 				{
 					Documentation subparamFirstnameDoc = new Documentation();
@@ -183,11 +185,12 @@ public class SimpleJavadocParserTest
 					docReturn.put(TestUtils.createDeveloper(), "This is the object.");
 					returnDoc.setDocumentation(docReturn);
 
-					returnDoc.setSignatureElementIdentifier("java.util.List<source.Customer>:java.util.List<source.Customer>");
+					returnDoc
+							.setSignatureElementIdentifier("java.util.List<source.Customer>:java.util.List<source.Customer>");
 					returnDoc.setThematicRole(TestUtils.createObject());
 					referenceDocs.add(returnDoc);
 				}
-				
+
 				// Return Info Source
 				{
 					Documentation returnDoc = new Documentation();
@@ -197,7 +200,8 @@ public class SimpleJavadocParserTest
 					docReturn.put(TestUtils.createDeveloper(), "This is the source.");
 					returnDoc.setDocumentation(docReturn);
 
-					returnDoc.setSignatureElementIdentifier("java.util.List<source.Customer>:java.util.List<source.Customer>");
+					returnDoc
+							.setSignatureElementIdentifier("java.util.List<source.Customer>:java.util.List<source.Customer>");
 					returnDoc.setThematicRole(TestUtils.createSource());
 					referenceDocs.add(returnDoc);
 				}
@@ -205,8 +209,8 @@ public class SimpleJavadocParserTest
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
-				JavaInterfaceArtifact artifact = TestDataFactory
-						.createCustomerService("Developer", true, cu);
+				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
+						"Developer", true, cu);
 				JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
 						.getOperations().get(0);
 
@@ -243,8 +247,8 @@ public class SimpleJavadocParserTest
 						.types().get(0);
 				List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
 						.bodyDeclarations();
-				JavaInterfaceArtifact artifact = TestDataFactory
-						.createEmptyService(cu, true);
+				JavaInterfaceArtifact artifact = TestDataFactory.createEmptyService(cu,
+						true);
 				JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
 						.getOperations().get(0);
 
@@ -268,7 +272,43 @@ public class SimpleJavadocParserTest
 		 * Negative tests
 		 */
 		{
+			// #########################################################################
+			// # Test case #1: a documented subparam which does not exist in the
+			// # parameter-class causes a RuntimeException.
+			// #########################################################################
+			{
+				ParserOutput output = JavadocTestUtils
+						.createCompilationUnit("test/source/ExampleService.java");
+				CompilationUnit cu = output.getCompilationUnit();
 
+				AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu
+						.types().get(0);
+				List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
+						.bodyDeclarations();
+				JavaInterfaceArtifact artifact = TestDataFactory.createExampleService(cu,
+						true, "Developer");
+				JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
+						.getOperations().get(0);
+
+				List<Addressee> addressees = TestUtils.createDeveloperSequence();
+				List<ThematicRole> thematicRoles = TestUtils
+						.createReferenceThematicRoles();
+				boolean runtimeExceptionOccured = false;
+
+				try
+				{
+					SimpleJavadocParser.INSTANCE.parseIDocItJavadoc(
+							bodyDeclarations.get(0).getJavadoc(), addressees,
+							thematicRoles, method);
+
+				}
+				catch (ParsingException rEx)
+				{
+					runtimeExceptionOccured = rEx.getMessage().equals("No more subparameters to search in for the identifier notexistingattribute");
+				}
+
+				assertTrue(runtimeExceptionOccured);
+			}
 		}
 	}
 }
