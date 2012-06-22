@@ -1563,28 +1563,13 @@
       <string>mount</string>
       <string>insert</string>
       <string>lodge</string>
+      <string>move</string>
     </verbs>
     <roles>
       <entry>
         <thematicRole>
-          <name>DESTINATION</name>
-          <description>A destination for an object associated with the component</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>NAME</name>
-          <description>Non-numerical identifier of the OBJECT</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>INSTRUMENT</name>
-          <description>The entity with which or through which an action is performed</description>
+          <name>ACTION</name>
+          <description>A function performed by the component</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
@@ -1599,6 +1584,38 @@
       </entry>
       <entry>
         <thematicRole>
+          <name>ALGORITHM</name>
+          <description>Set of instructions to perform the ACTION</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>INSTRUMENT</name>
+          <description>The entity with which or through which an action is performed</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>NAME</name>
+          <description>Non-numerical identifier of the OBJECT</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>false</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>DESTINATION</name>
+          <description>A destination for an object associated with the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
           <name>DESTINATION_FORMAT</name>
           <description>The FORMAT of the output(s) of an ACTION</description>
           <roleScope>BOTH</roleScope>
@@ -1607,27 +1624,11 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>ACTION</name>
-          <description>A function performed by the component</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
           <name>OBJECT</name>
           <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>ALGORITHM</name>
-          <description>Set of instructions to perform the ACTION</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
       </entry>
     </roles>
     <gridBasedRules>
