@@ -831,6 +831,21 @@ public class TestDataFactory
 		return methodFoo;
 	}
 
+	public static JavaMethod createCheckMethod(MethodDeclaration getIdDecl,
+			boolean documentationChanged, String addresseeName)
+	{
+		// Method
+		JavaMethod methodCheck = new JavaMethod(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				"Method", null, Numerus.SINGULAR);
+		methodCheck.setRefToASTNode(getIdDecl);
+		methodCheck.setIdentifier("checkSomething");
+		methodCheck.setDocumentationChanged(documentationChanged);
+
+		addDocumentation(methodCheck, "Developer", "RULE", "Check the beat.", null);
+
+		return methodCheck;
+	}
+
 	public static JavaMethod createEmptyGetId(MethodDeclaration getIdDecl,
 			boolean documentationChanged)
 	{
@@ -912,6 +927,8 @@ public class TestDataFactory
 		List<JavaMethod> methods = new ArrayList<JavaMethod>();
 		methods.add(createFooMethod((MethodDeclaration) customerServiceIntf
 				.bodyDeclarations().get(0), documentationChanged, addressee));
+		methods.add(createCheckMethod((MethodDeclaration) customerServiceIntf
+				.bodyDeclarations().get(1), documentationChanged, addressee));
 
 		customerService.setOperations(methods);
 
