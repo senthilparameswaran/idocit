@@ -2071,14 +2071,6 @@
     <roles>
       <entry>
         <thematicRole>
-          <name>NAME</name>
-          <description>Non-numerical identifier of the OBJECT</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
           <name>SOURCE_FORMAT</name>
           <description>The FORMAT of the input(s) of an ACTION</description>
           <roleScope>BOTH</roleScope>
@@ -2095,14 +2087,6 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>MESSAGE</name>
-          <description>Feedback information given by the ACTION in (structured) natural language</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
           <name>OBJECT</name>
           <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
           <roleScope>BOTH</roleScope>
@@ -2111,33 +2095,37 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>ALGORITHM</name>
-          <description>Set of instructions to perform the ACTION</description>
+          <name>DESTINATION</name>
+          <description>A destination for an object associated with the component</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
       </entry>
+      <entry>
+        <thematicRole>
+          <name>MESSAGE</name>
+          <description>Feedback information given by the ACTION in (structured) natural language</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>false</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>NAME</name>
+          <description>Non-numerical identifier of the OBJECT</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>false</boolean>
+      </entry>
     </roles>
     <gridBasedRules>
-      <entry>
-        <string>AGENT</string>
-        <string>always();</string>
-      </entry>
       <entry>
         <string>MESSAGE</string>
         <string>exists(&quot;DESTINATION&quot;)</string>
       </entry>
       <entry>
-        <string>SOURCE</string>
-        <string>always();</string>
-      </entry>
-      <entry>
         <string>NAME</string>
-        <string>always();</string>
-      </entry>
-      <entry>
-        <string>FORMAT</string>
-        <string>exists(&quot;MESSAGE&quot;)</string>
+        <string>!exists(&quot;PRIMARY_KEY&quot;)</string>
       </entry>
       <entry>
         <string>DESTINATION</string>
@@ -2148,20 +2136,12 @@
         <string>always();</string>
       </entry>
       <entry>
-        <string>ALGORITHM</string>
-        <string>always();</string>
-      </entry>
-      <entry>
         <string>SOURCE_FORMAT</string>
         <string>always();</string>
       </entry>
       <entry>
         <string>PRIMARY_KEY</string>
-        <string>always();</string>
-      </entry>
-      <entry>
-        <string>ACTION</string>
-        <string>always();</string>
+        <string>!exists(&quot;NAME&quot;)</string>
       </entry>
     </gridBasedRules>
   </thematicGrid>
