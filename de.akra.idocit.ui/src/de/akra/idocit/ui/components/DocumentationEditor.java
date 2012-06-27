@@ -281,10 +281,11 @@ public class DocumentationEditor
 					}
 					catch (Exception ex)
 					{
-						String msg = "Could not parse the interface "
-								+ interfaceIFile.getFullPath();
+						String msg = "Could not parse '" + interfaceIFile.getFullPath()
+								+ "'.";
 						logger.log(Level.SEVERE, msg, ex);
-						throw new PartInitException(msg, ex);
+						MessageBoxUtils.openErrorBox(site.getShell(), msg
+								+ "\n\nError:\n" + ex.toString());
 					}
 				}
 				else
