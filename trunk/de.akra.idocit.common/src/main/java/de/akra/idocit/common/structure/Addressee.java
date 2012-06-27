@@ -31,6 +31,12 @@ public class Addressee implements DescribedItem
 	private boolean isDefault = true;
 
 	/**
+	 * Default constructor. It is needed by XStream.
+	 */
+	public Addressee()
+	{}
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param name
