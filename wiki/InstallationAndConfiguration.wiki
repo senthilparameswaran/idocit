@@ -14,7 +14,7 @@ javadoc [...] -taglet de.akra.idocit.java.javadocext.ThematicGridTaglet -tagletp
 == Eclipse Installation ==
 
 *Prerequisites:*
- * Eclipse 3.6 (Helios) [http://www.eclipse.org/downloads/packages/eclipse-classic-362/heliossr2 Download]
+ * Eclipse 3.7 (Indigo) [http://www.eclipse.org/downloads/ Download]
 
 *Installation:*
  # Select the entry „Help“ > „Install new software ...“ in your main menubar of Eclipse.
