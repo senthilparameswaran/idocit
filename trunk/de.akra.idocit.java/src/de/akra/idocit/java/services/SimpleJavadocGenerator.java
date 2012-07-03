@@ -20,6 +20,7 @@ import static de.akra.idocit.common.utils.ObjectUtils.notNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -47,12 +48,19 @@ import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.utils.JavadocUtils;
 
 public class SimpleJavadocGenerator implements IJavadocGenerator
 {
+	private static final String JAVADOC_OPTION_TAG_HEAD = ":\" ";
+
+	private static final String JAVADOC_OPTION_TAG_PLACEMENT = ":tcm:\"";
+
+	private static final String JAVADOC_OPTION_TAG = "-tag ";
+
 	/**
 	 * Logger
 	 */
@@ -1002,5 +1010,75 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		}
 
 		return result;
+	}
+
+	/**
+	 * Generate the command line options for the Javadoc Generator from the given
+	 * <code>roles</code> and from all {@link CustomTaglets}.
+	 * 
+	 * @param roles
+	 *            [OBJECT] The {@link ThematicRole}s that shall be used to create the
+	 *            command line options for the Javadoc Generator.
+	 * @return the command line options.
+	 * 
+	 * @thematicgrid Creating Operations
+	 */
+	public String generateJavadocOptions(List<ThematicRole> roles)
+	{
+		final StringBuilder sb = new StringBuilder(1000);
+
+		for (final CustomTaglets ct : CustomTaglets.values())
+		{
+			sb.append(JAVADOC_OPTION_TAG);
+			sb.append(ct.getName());
+			sb.append(JAVADOC_OPTION_TAG_PLACEMENT);
+			sb.append(ct.getHeader());
+			sb.append(JAVADOC_OPTION_TAG_HEAD);
+		}
+
+		for (final ThematicRole role : roles)
+		{
+			sb.append(JAVADOC_OPTION_TAG);
+			sb.append(role.getName().toLowerCase(Locale.ENGLISH));
+			sb.append(JAVADOC_OPTION_TAG_PLACEMENT);
+			sb.append(convertRoleName(role.getName()));
+			sb.append(JAVADOC_OPTION_TAG_HEAD);
+		}
+
+		if (sb.length() > 0)
+		{
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the <code>roleName</code> to an appropriate name for the Javadoc export.
+	 * Role names are split by '_'. Each resulting word is formatted, that the first
+	 * character is upper case and all other characters in the word are lower case. Then
+	 * the words are concatenated by a space.
+	 * <p>
+	 * Example: <code>"TIME_TO_LIVE" => "Time To Live"</code>
+	 * </p>
+	 * 
+	 * @param roleName
+	 *            [OBJECT]
+	 * @return appropriate name for the Javadoc header.
+	 */
+	private String convertRoleName(final String roleName)
+	{
+		final StringBuilder sb = new StringBuilder(20);
+		final String[] words = roleName.split("_");
+		for (final String word : words)
+		{
+			if (word.length() > 0)
+			{
+				sb.append(word.substring(0, 1).toUpperCase(Locale.ENGLISH));
+				sb.append(word.substring(1).toLowerCase(Locale.ENGLISH));
+				sb.append(" ");
+			}
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		return sb.toString();
 	}
 }

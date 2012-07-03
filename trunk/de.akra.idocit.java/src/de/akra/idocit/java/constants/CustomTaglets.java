@@ -15,20 +15,52 @@
  *******************************************************************************/
 package de.akra.idocit.java.constants;
 
-public class CustomTaglets
+public enum CustomTaglets
 {
-	public static final String PARAM_INFO = "@paraminfo";
-	public static final String RETURN_INFO = "@returninfo";
-	public static final String THROWS_INFO = "@throwsinfo";
+	PARAM_INFO("paraminfo", "Parameter-Info"),
+	RETURN_INFO("returninfo", "Return-Info"),
+	THROWS_INFO("throwsinfo", "Throw-Info"),
+	SUB_RETURN("subreturn", "Subreturn"),
+	SUB_RETURN_INFO("subreturninfo", "Subreturn-Info"),
+	SUB_PARAM("subparam", "Subparameter"),
+	SUB_PARAM_INFO("subparaminfo", "Subparameter-Info"),
+	SUB_THROWS_INFO("subthrowsinfo", "Subthrow-Info"),
+	THEMATIC_GRID("thematicgrid", "Thematic Grid");
+
+	private String name;
+	private String header;
+
+	CustomTaglets(final String name, final String header)
+	{
+		this.name = name;
+		this.header = header;
+	}
+
+	/**
+	 * 
+	 * @return [OBJECT] name of the taglet without '@'. Example: <code>thematicgrid</code>
+	 */
+	public String getName()
+	{
+		return name;
+	}
 	
-	public static final String SUB_RETURN = "@subreturn";
-	public static final String SUB_RETURN_INFO = "@subreturninfo";
-	public static final String SUB_PARAM = "@subparam";
-	public static final String SUB_PARAM_INFO = "@subparaminfo";
-	public static final String SUB_THROWS_INFO = "@subthrowsinfo";
-	public static final String THEMATIC_GRID = "@thematicgrid";
-	
-	public static final String SUB_RETURN_PATTERN = SUB_RETURN + "\\s*";
-	public static final String SUB_PARAM_PATTERN = SUB_PARAM + "\\s*";
-	public static final String THEMATIC_GRID_PATTERN = THEMATIC_GRID + "\\s*";
+	/**
+	 * 
+	 * @return [OBJECT] the name of the taglet with leading '@'. Example: <code>@thematicgrid</code>
+	 */
+	public String getTagName()
+	{
+		return "@" + name;
+	}
+
+	/**
+	 * The header is the headline name within the exported Javadoc (e.g. HTML). 
+	 * 
+	 * @return [OBJECT] the header.
+	 */
+	public String getHeader()
+	{
+		return header;
+	}
 }

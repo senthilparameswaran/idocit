@@ -49,6 +49,12 @@ import de.akra.idocit.java.utils.JavadocUtils;
 
 public final class SimpleJavadocParser extends AbsJavadocParser
 {
+	private static final String SUB_RETURN_PATTERN = CustomTaglets.SUB_RETURN.getTagName()
+			+ "\\s*";
+	private static final String SUB_PARAM_PATTERN = CustomTaglets.SUB_PARAM.getTagName()
+			+ "\\s*";
+	private static final String THEMATIC_GRID_PATTERN = CustomTaglets.THEMATIC_GRID
+			.getTagName() + "\\s*";
 
 	private class StructuredJavaDoc
 	{
@@ -818,7 +824,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			// Parse Rule (Checking Operations) or Action (else)
 			for (TagElement tag : tags)
 			{
-				if (!CustomTaglets.THEMATIC_GRID.equals(tag.getTagName()))
+				if (!CustomTaglets.THEMATIC_GRID.getTagName().equals(tag.getTagName()))
 				{
 					Documentation documentation = createDocumentation(tag, addressees,
 							thematicRoles, referenceGridName, method);
@@ -851,11 +857,11 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	private boolean isAdditionalTag(String tagName, List<ThematicRole> knownThematicRoles)
 	{
 		boolean isParam = tagName.matches(JAVADOC_TAG_PARAM);
-		boolean isSubParam = tagName.matches(CustomTaglets.SUB_PARAM_PATTERN);
+		boolean isSubParam = tagName.matches(SUB_PARAM_PATTERN);
 		boolean isThrows = tagName.matches(JAVADOC_TAG_THROWS);
 		boolean isReturn = tagName.matches(JAVADOC_TAG_RETURN);
-		boolean isSubReturn = tagName.matches(CustomTaglets.SUB_RETURN_PATTERN);
-		boolean isThematicGrid = tagName.matches(CustomTaglets.THEMATIC_GRID_PATTERN);
+		boolean isSubReturn = tagName.matches(SUB_RETURN_PATTERN);
+		boolean isThematicGrid = tagName.matches(THEMATIC_GRID_PATTERN);
 		// When passing the rolename, remove the '@' at the beginning of the tagname!
 		boolean isKnownThematicRole = isKnownThematicRole(tagName.substring(1),
 				knownThematicRoles);

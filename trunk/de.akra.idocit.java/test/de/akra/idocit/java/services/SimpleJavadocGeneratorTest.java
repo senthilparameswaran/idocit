@@ -15,25 +15,20 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.junit.Test;
 
-import de.akra.idocit.common.structure.Addressee;
-import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicRole;
-import de.akra.idocit.common.utils.ThematicRoleUtils;
-import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
@@ -44,6 +39,8 @@ import de.akra.idocit.java.utils.TestDataFactory;
 
 public class SimpleJavadocGeneratorTest
 {
+
+	private static final String OPTIONS_FOR_CUSTOM_TAGLETS = "-tag paraminfo:tcm:\"Parameter-Info:\" -tag returninfo:tcm:\"Return-Info:\" -tag throwsinfo:tcm:\"Throw-Info:\" -tag subreturn:tcm:\"Subreturn:\" -tag subreturninfo:tcm:\"Subreturn-Info:\" -tag subparam:tcm:\"Subparameter:\" -tag subparaminfo:tcm:\"Subparameter-Info:\" -tag subthrowsinfo:tcm:\"Subthrow-Info:\" -tag thematicgrid:tcm:\"Thematic Grid:\"";
 
 	@Test
 	public void testAppendDocsToJavadoc() throws FileNotFoundException, IOException,
@@ -61,19 +58,18 @@ public class SimpleJavadocGeneratorTest
 			{
 				String referenceJavadoc = "/** \n "
 						+ "* @ordering Alphabetically by lastname\n "
-						+ "* @source CRM System\n " 
-						+ "* \n " 
+						+ "* @source CRM System\n "
+						+ "* \n "
 						+ "* @param parameters [COMPARISON] This is the customer.\n "
 						+ "* @paraminfo parameters [SOURCE] This is the source.\n "
 						+ "* @subparam firstName [COMPARISON]\n "
-						+ "* @subparam lastName [COMPARISON]\n " 
+						+ "* @subparam lastName [COMPARISON]\n "
 						+ "* \n "
 						+ "* @return [OBJECT] This is the object.\n "
 						+ "* @returninfo [SOURCE] This is the source.\n "
 						+ "* \n "
 						+ "* @throws IOException [ATTRIBUTE] This is also an attribute.\n "
-						+ "* @thematicgrid Searching Operations\n " 
-						+ "*/\n";
+						+ "* @thematicgrid Searching Operations\n " + "*/\n";
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -104,8 +100,7 @@ public class SimpleJavadocGeneratorTest
 						+ "* @param mailAddress [OBJECT]\n "
 						+ "* \n "
 						+ "* @return [REPORT] <code>false</code> if the rule is violated\n "
-						+ "* @thematicgrid Checking Operations\n " 
-						+ "*/\n";
+						+ "* @thematicgrid Checking Operations\n " + "*/\n";
 
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/InvariantService.java");
@@ -172,9 +167,9 @@ public class SimpleJavadocGeneratorTest
 				assertEquals(createEmptyReferenceJDForCustomerService(),
 						methodFindCustById.getRefToASTNode().getJavadoc().toString());
 			}
-			
+
 			// #########################################################################
-			// # Test case #5: @subparams must be followed by a path to the actual 
+			// # Test case #5: @subparams must be followed by a path to the actual
 			// # signature element and not only by the signature element's identifier.
 			// #########################################################################
 			{
@@ -182,19 +177,17 @@ public class SimpleJavadocGeneratorTest
 						+ "*  Only customers who placed an order within the last year are considered.\n "
 						+ "* \n "
 						+ "* @ordering Alphabetically by lastname\n "
-						+ "* @source CRM System\n " 
-						+ "* \n " 
+						+ "* @source CRM System\n "
+						+ "* \n "
 						+ "* @param parameters\n "
 						+ "* @subparam customer.firstName [COMPARISON]\n "
-						+ "* @subparam customer.lastName [COMPARISON]\n " 
+						+ "* @subparam customer.lastName [COMPARISON]\n "
 						+ "* \n "
 						+ "* @return [OBJECT]\n "
 						+ "* @subreturn firstName [ATTRIBUTE] Won't be null, but could be an empty String\n "
 						+ "* @subreturn lastName [ATTRIBUTE] Won't be null, but could be an empty String\n "
-						+ "* \n "
-						+ "* @throws SpecialException\n "
-						+ "* @thematicgrid Searching Operations\n " 
-						+ "*/\n";
+						+ "* \n " + "* @throws SpecialException\n "
+						+ "* @thematicgrid Searching Operations\n " + "*/\n";
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit("test/source/CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -253,14 +246,64 @@ public class SimpleJavadocGeneratorTest
 
 	private String createEmptyReferenceJDForCustomerService()
 	{
-		return "/** \n" 
-				+ " * @param parameters\n" 
-				+ " * @subparam firstName\n"
-				+ " * @subparam lastName\n" 
-				+ " * \n" 
-				+ " * @return \n" 
-				+ " * \n"
-				+ " * @throws IOException\n" 
-				+ " */\n";
+		return "/** \n" + " * @param parameters\n" + " * @subparam firstName\n"
+				+ " * @subparam lastName\n" + " * \n" + " * @return \n" + " * \n"
+				+ " * @throws IOException\n" + " */\n";
+	}
+
+	/**
+	 * Tests for {@link SimpleJavadocGenerator#generateJavadocOptions(List)}.
+	 */
+	@Test
+	public void testGenerateJavadocOptions()
+	{
+		final List<ThematicRole> roles = new ArrayList<ThematicRole>();
+		roles.add(new ThematicRole("OBJECT", "object", RoleScope.BOTH));
+		roles.add(new ThematicRole("TIME_TO_LIVE", "time to live",
+				RoleScope.OPERATION_LEVEL));
+		roles.add(new ThematicRole("YES-NO-ANSWER", "yes-no-answer",
+				RoleScope.OPERATION_LEVEL));
+
+		/*
+		 * Positive tests
+		 */
+		// #########################################################################
+		// # Test case #1: Check if the options for CustomTaglets are generated correct.
+		// #########################################################################
+		{
+			final String options = SimpleJavadocGenerator.INSTANCE
+					.generateJavadocOptions(Collections.<ThematicRole> emptyList());
+			assertEquals(OPTIONS_FOR_CUSTOM_TAGLETS, options);
+		}
+
+		// #########################################################################
+		// # Test case #2: Check if user defined roles are converted correct.
+		// #########################################################################
+		{
+			final String options = SimpleJavadocGenerator.INSTANCE
+					.generateJavadocOptions(roles);
+			assertTrue(options.startsWith(OPTIONS_FOR_CUSTOM_TAGLETS));
+			assertTrue(options.contains("-tag object:tcm:\"Object:\""));
+			assertTrue(options.contains("-tag time_to_live:tcm:\"Time To Live:\""));
+			assertTrue(options.contains("-tag yes-no-answer:tcm:\"Yes-no-answer:\""));
+		}
+
+		// #########################################################################
+		// #########################################################################
+
+		/*
+		 * Negative tests
+		 */
+		// #########################################################################
+		// # Test case #1: Test if thematic role names are converted wrong.
+		// #########################################################################
+		{
+			final String options = SimpleJavadocGenerator.INSTANCE
+					.generateJavadocOptions(roles);
+			assertFalse(options.contains("OBJECT"));
+			assertFalse(options.contains("TIME_TO_LIVE"));
+			assertFalse(options.contains("YES-NO-ANSWER"));
+			assertFalse(options.contains("@"));
+		}
 	}
 }

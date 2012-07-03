@@ -15,49 +15,87 @@
  *******************************************************************************/
 package de.akra.idocit.java.ui.components;
 
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import java.util.List;
+
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.pocui.core.actions.EmptyActionConfiguration;
+import org.pocui.core.composites.CompositeInitializationException;
+import org.pocui.core.resources.EmptyResourceConfiguration;
+import org.pocui.swt.composites.AbsComposite;
+import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
+import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.constants.PreferenceStoreConstants;
+import de.akra.idocit.java.ui.composites.ManageJavadocGeneratorComposite;
+import de.akra.idocit.java.ui.composites.ManageJavadocGeneratorCompositeSelection;
 
-public class JavadocGeneratorPreferencePage extends FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage
+public class JavadocGeneratorPreferencePage
+		extends
+		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageJavadocGeneratorCompositeSelection>
 {
-	public JavadocGeneratorPreferencePage()
-	{
-		super(FieldEditorPreferencePage.GRID);
-
-		// Set the preference store for the preference page.
-		setPreferenceStore(PlatformUI.getPreferenceStore());
-
-		getPreferenceStore().setDefault(PreferenceStoreConstants.JAVADOC_GENERATION_MODE,
-				PreferenceStoreConstants.JAVADOC_GENERATION_MODE_COMPLEX);
-	}
-
-	@Override
-	protected void createFieldEditors()
-	{
-		RadioGroupFieldEditor editorJavadocGenerationMode = new RadioGroupFieldEditor(
-				PreferenceStoreConstants.JAVADOC_GENERATION_MODE,
-				"Which kind of Javadoc do you want to be generated?",
-				1,
-				new String[][] {
-						{ "Complex Javadoc (supports many addressees)",
-								PreferenceStoreConstants.JAVADOC_GENERATION_MODE_COMPLEX },
-						{ "Simple Javadoc (supports only addressee \"Developer\")",
-								PreferenceStoreConstants.JAVADOC_GENERATION_MODE_SIMPLE } },
-				getFieldEditorParent());
-
-		addField(editorJavadocGenerationMode);
-	}
-
+	
 	@Override
 	public void init(IWorkbench workbench)
 	{
-		// Nothing to do!
+		// Set the preference store for the preference page.
+		setPreferenceStore(PlatformUI.getPreferenceStore());
+		getPreferenceStore().setDefault(PreferenceStoreConstants.JAVADOC_GENERATION_MODE,
+				PreferenceStoreConstants.JAVADOC_GENERATION_MODE_COMPLEX);
+		
+		final List<ThematicRole> roles = ServiceManager.getInstance()
+				.getPersistenceService().loadThematicRoles();
+		loadPreferences(roles);
+	}
+	
+	private void loadPreferences(final List<ThematicRole> roles)
+	{
+		final ManageJavadocGeneratorCompositeSelection selection = new ManageJavadocGeneratorCompositeSelection();
+		selection.setThematicRoles(roles);
+		selection.setSelectedJavadocType(getPreferenceStore().getString(
+				PreferenceStoreConstants.JAVADOC_GENERATION_MODE));
+		setSelection(selection);
+	}
 
+	@Override
+	public boolean performOk()
+	{
+		final boolean saveState = super.performOk();
+		performApply();
+		return saveState;
+	}
+	
+	@Override
+	protected void performApply()
+	{
+		getPreferenceStore().setValue(PreferenceStoreConstants.JAVADOC_GENERATION_MODE,
+				getSelection().getSelectedJavadocType());
+	}
+
+	@Override
+	protected AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageJavadocGeneratorCompositeSelection> instanciateMask(
+			Composite parent)
+	{
+		return new ManageJavadocGeneratorComposite(parent);
+	}
+
+	@Override
+	protected void addAllListener()
+	{
+		// Nothing to do!
+	}
+
+	@Override
+	protected void initListener() throws CompositeInitializationException
+	{
+		// Nothing to do!
+	}
+
+	@Override
+	protected void removeAllListener()
+	{
+		// Nothing to do!
 	}
 }

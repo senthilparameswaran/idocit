@@ -18,4 +18,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: AKRA GmbH
 Bundle-ClassPath: lib/commons-lang3-3.1.jar,
  .
-Export-Package: de.akra.idocit.java.constants
+Export-Package: de.akra.idocit.java.constants,
+ de.akra.idocit.java.services
