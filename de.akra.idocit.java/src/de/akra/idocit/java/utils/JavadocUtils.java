@@ -92,38 +92,38 @@ public class JavadocUtils
 	}
 
 	public static boolean isParamInfo(String tagName){
-		return CustomTaglets.PARAM_INFO.equals(tagName);
+		return CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
 	}
 	
 	public static boolean isThrowsInfo(String tagName){
-		return CustomTaglets.THROWS_INFO.equals(tagName);
+		return CustomTaglets.THROWS_INFO.getTagName().equals(tagName);
 	}
 	
 	public static boolean isReturnInfo(String tagName){
-		return CustomTaglets.RETURN_INFO.equals(tagName);
+		return CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
 	}
 	
 	public static boolean isSubParam(String tagName)
 	{
-		return CustomTaglets.SUB_PARAM.equals(tagName);
+		return CustomTaglets.SUB_PARAM.getTagName().equals(tagName);
 	}
 
 	public static boolean isParam(String tagName)
 	{
 		return TagElement.TAG_PARAM.equals(tagName)
-				|| CustomTaglets.PARAM_INFO.equals(tagName);
+				|| CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
 	}
 
 	public static boolean isThrows(String tagName)
 	{
 		return TagElement.TAG_THROWS.equals(tagName)
-				|| CustomTaglets.THROWS_INFO.equals(tagName);
+				|| CustomTaglets.THROWS_INFO.getTagName().equals(tagName);
 	}
 
 	public static boolean isReturn(String tagName)
 	{
 		return TagElement.TAG_RETURN.equals(tagName)
-				|| CustomTaglets.RETURN_INFO.equals(tagName);
+				|| CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
 	}
 
 	public static boolean isStandardJavadocTaglet(String tagName)
@@ -136,7 +136,7 @@ public class JavadocUtils
 
 	public static boolean isSubReturn(String tagName)
 	{
-		return CustomTaglets.SUB_RETURN.equals(tagName);
+		return CustomTaglets.SUB_RETURN.getTagName().equals(tagName);
 	}
 
 	public static boolean isIdocitJavadocTaglet(String tagName)
@@ -149,9 +149,9 @@ public class JavadocUtils
 	}
 	
 	public static boolean isIdocItInfoTag(String tagName){
-		boolean paramInfo = CustomTaglets.PARAM_INFO.equals(tagName);
-		boolean returnInfo = CustomTaglets.RETURN_INFO.equals(tagName);
-		boolean throwsInfo = CustomTaglets.THROWS_INFO.equals(tagName);
+		boolean paramInfo = CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
+		boolean returnInfo = CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
+		boolean throwsInfo = CustomTaglets.THROWS_INFO.getTagName().equals(tagName);
 		
 		return paramInfo || returnInfo || throwsInfo;
 	}
@@ -298,12 +298,12 @@ public class JavadocUtils
 
 	public static boolean isInfoTagElement(String tagElementName)
 	{
-		return CustomTaglets.PARAM_INFO.equals(tagElementName)
-				|| CustomTaglets.SUB_PARAM_INFO.equals(tagElementName)
-				|| CustomTaglets.RETURN_INFO.equals(tagElementName)
-				|| CustomTaglets.SUB_RETURN_INFO.equals(tagElementName)
-				|| CustomTaglets.THROWS_INFO.equals(tagElementName)
-				|| CustomTaglets.SUB_THROWS_INFO.equals(tagElementName);
+		return CustomTaglets.PARAM_INFO.getTagName().equals(tagElementName)
+				|| CustomTaglets.SUB_PARAM_INFO.getTagName().equals(tagElementName)
+				|| CustomTaglets.RETURN_INFO.getTagName().equals(tagElementName)
+				|| CustomTaglets.SUB_RETURN_INFO.getTagName().equals(tagElementName)
+				|| CustomTaglets.THROWS_INFO.getTagName().equals(tagElementName)
+				|| CustomTaglets.SUB_THROWS_INFO.getTagName().equals(tagElementName);
 	}
 
 	public static String escapeHtml4(String javadocText)

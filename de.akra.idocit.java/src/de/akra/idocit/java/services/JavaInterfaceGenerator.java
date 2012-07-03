@@ -155,7 +155,7 @@ public class JavaInterfaceGenerator
 		if (inputParams != null)
 		{
 			collectParametersDocumentations(inputParams.getParameters(),
-					TagElement.TAG_PARAM, jDocTags, CustomTaglets.SUB_PARAM);
+					TagElement.TAG_PARAM, jDocTags, CustomTaglets.SUB_PARAM.getTagName());
 		}
 
 		Parameters returnType = method.getOutputParameters();
@@ -163,7 +163,8 @@ public class JavaInterfaceGenerator
 		if (returnType != null)
 		{
 			collectParametersDocumentations(returnType.getParameters(),
-					TagElement.TAG_RETURN, jDocTags, CustomTaglets.SUB_RETURN);
+					TagElement.TAG_RETURN, jDocTags,
+					CustomTaglets.SUB_RETURN.getTagName());
 		}
 
 		for (Parameters exception : method.getExceptions())
@@ -220,7 +221,7 @@ public class JavaInterfaceGenerator
 		{
 			String identifier = param.getIdentifier();
 			if (TagElement.TAG_RETURN.equals(tagName)
-					|| CustomTaglets.SUB_RETURN.equals(tagName))
+					|| CustomTaglets.SUB_RETURN.getTagName().equals(tagName))
 			{
 				// there is only a type, no identifier, for the return
 				// value
