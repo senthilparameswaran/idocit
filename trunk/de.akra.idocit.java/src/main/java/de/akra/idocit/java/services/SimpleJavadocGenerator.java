@@ -55,6 +55,12 @@ import de.akra.idocit.java.utils.JavadocUtils;
 
 public class SimpleJavadocGenerator implements IJavadocGenerator
 {
+	private static final String EMPTY_STR = "";
+
+	private static final String NEW_LINE = System.getProperty("line.separator");
+
+	private static final String HTML_BR = "<br/>";
+
 	private static final String JAVADOC_OPTION_TAG_HEAD = ":\" ";
 
 	private static final String JAVADOC_OPTION_TAG_PLACEMENT = ":tcm:\"";
@@ -145,7 +151,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			}
 		}
 
-		return "";
+		return EMPTY_STR;
 	}
 
 	/**
@@ -186,7 +192,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			return StringUtils.toString(docText).trim();
 		}
 
-		return "";
+		return EMPTY_STR;
 	}
 
 	/**
@@ -209,7 +215,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			}
 		}
 
-		return "";
+		return EMPTY_STR;
 	}
 
 	/**
@@ -257,7 +263,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			boolean isClassIntroduction = ThematicRoleConstants.MANDATORY_ROLE_NONE
 					.equals(roleName) && (method == null);
 
-			if ((roleName != null) && !"".equals(roleName.trim()) && !isClassIntroduction)
+			if ((roleName != null) && !EMPTY_STR.equals(roleName.trim())
+					&& !isClassIntroduction)
 			{
 				newTag.setTagName('@' + getThematicRoleName(documentation).toLowerCase());
 			}
@@ -352,7 +359,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private void addTaglessJavadocs(List<Documentation> documentations,
 			String referenceGridName, Javadoc javadoc, JavaMethod method)
 	{
-		checkInvariant(documentations);
 		boolean hasIntroductionSentence = containsAction(documentations)
 				|| containsClassDescription(documentations, method);
 
@@ -374,9 +380,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			if (!hasIntroductionSentence)
 			{
 				String roleName = getThematicRoleName(documentation);
-				String formattedRoleName = (roleName != null) ? roleName : "";
+				String formattedRoleName = (roleName != null) ? roleName : EMPTY_STR;
 
-				if (!"".equals(formattedRoleName.trim()))
+				if (!EMPTY_STR.equals(formattedRoleName.trim()))
 				{
 					formattedRoleName = StringUtils.capitalizeFirstChar(roleName) + ':';
 				}
@@ -411,7 +417,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 */
 	private TagElement createaEmptyJavadocRow(Javadoc javadoc)
 	{
-		@SuppressWarnings("unchecked")
 		AST jdocAST = javadoc.getAST();
 		TagElement newTag = jdocAST.newTagElement();
 
@@ -419,7 +424,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		List<ASTNode> fragments = newTag.fragments();
 
 		TextElement textElement = jdocAST.newTextElement();
-		textElement.setText("");
+		textElement.setText(EMPTY_STR);
 		fragments.add(textElement);
 
 		return newTag;
@@ -472,7 +477,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			return buffer.substring(0, buffer.toString().length() - 1);
 		}
 
-		return "";
+		return EMPTY_STR;
 	}
 
 	private String extractLastIdentifier(Delimiters delimiters, String pathEntry)
@@ -527,8 +532,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private void createParamJavadoc(List<Documentation> documentations, Javadoc javadoc,
 			String tagElementName, String identifier)
 	{
-		checkInvariant(documentations);
-
 		@SuppressWarnings("unchecked")
 		List<TagElement> tags = javadoc.tags();
 		AST jdocAST = javadoc.getAST();
@@ -641,8 +644,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	{
 		if (!containsTagElementWithIdentifier(tagName, identifier, additionalTagElements))
 		{
-			checkInvariant(documentations);
-
 			createParamJavadoc(documentations, javadoc, tagName, identifier);
 		}
 	}
@@ -660,7 +661,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				String text = textElement.getText();
 
 				return (current.getTagName() == null)
-						&& ((text == null) || "".equals(text.trim()));
+						&& ((text == null) || EMPTY_STR.equals(text.trim()));
 			}
 
 			return false;
@@ -746,8 +747,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private String readFragments(TagElement element)
 	{
 		String text = JavadocUtils.readFragments(element.fragments(), 0);
-
-		return text.replaceAll(Pattern.quote("<br/>"), "\n");
+		return text.replaceAll(Pattern.quote(HTML_BR), NEW_LINE);
 	}
 
 	private List<TagElement> mergeTagElements(List<TagElement> unmergedTagElements)
@@ -781,9 +781,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					{
 						if (currentElement.getTagName() == null)
 						{
-							if (!lastElementText.toString().endsWith("\n"))
+							if (!lastElementText.toString().endsWith(NEW_LINE))
 							{
-								lastElementText.append('\n');
+								lastElementText.append(NEW_LINE);
 							}
 
 							lastElementText.append(' ');
@@ -871,6 +871,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			List<TagElement> additionalTagElements, JavaMethod method)
 			throws ParsingException
 	{
+		checkInvariant(documentations);
+
 		if (tagName == null)
 		{ // ACTION or new tags for specific thematic roles.
 			addTaglessJavadocs(documentations, thematicGridName, javadoc, method);
@@ -944,7 +946,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			// reason is the same as above ;).
 			for (int i = 0; i < lines.length - 1; i++)
 			{
-				lines[i] += "<br/>";
+				lines[i] += HTML_BR;
 			}
 		}
 
@@ -958,13 +960,13 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 		for (TagElement tagElement : tagElements)
 		{
-			String unescapedDocText = JavadocUtils.readFragments(tagElement.fragments(),
-					0);
-			String tagIdentifier = tagElement.getTagName();
+			final String unescapedDocText = JavadocUtils.readFragments(
+					tagElement.fragments(), 0);
+			final String tagIdentifier = tagElement.getTagName();
 
 			if ((unescapedDocText != null) && !unescapedDocText.isEmpty())
 			{
-				String escapedDocText = JavadocUtils.escapeHtml4(unescapedDocText);
+				final String escapedDocText = JavadocUtils.escapeHtml4(unescapedDocText);
 
 				TagElement newTagElement = ast.newTagElement();
 				newTagElement.setTagName(tagIdentifier);
@@ -972,9 +974,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 				TextElement identifierElement = ast.newTextElement();
 
-				if (escapedDocText.lastIndexOf("<br/>") > -1)
+				if (escapedDocText.lastIndexOf(HTML_BR) > -1)
 				{
-					String[] splittedText = escapedDocText.split(Pattern.quote("<br/>"));
+					String[] splittedText = escapedDocText.split(Pattern.quote(HTML_BR));
 					splittedText = appendBRTag(splittedText);
 
 					identifierElement.setText(splittedText[0]);
@@ -1047,6 +1049,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 		if (sb.length() > 0)
 		{
+			// delete last space
 			sb.deleteCharAt(sb.length() - 1);
 		}
 		return sb.toString();
@@ -1063,22 +1066,28 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @param roleName
 	 *            [OBJECT]
-	 * @return appropriate name for the Javadoc header.
+	 * @return appropriate name for the Javadoc header. If <code>roleName</code> is
+	 *         <code>null</code> or empty an empty string is returned.
 	 */
 	private String convertRoleName(final String roleName)
 	{
-		final StringBuilder sb = new StringBuilder(20);
-		final String[] words = roleName.split("_");
-		for (final String word : words)
+		if (roleName != null && roleName.length() > 0)
 		{
-			if (word.length() > 0)
+			final StringBuilder sb = new StringBuilder(20);
+			final String[] words = roleName.split("_");
+			for (final String word : words)
 			{
-				sb.append(word.substring(0, 1).toUpperCase(Locale.ENGLISH));
-				sb.append(word.substring(1).toLowerCase(Locale.ENGLISH));
-				sb.append(" ");
+				if (word.length() > 0)
+				{
+					sb.append(word.substring(0, 1).toUpperCase(Locale.ENGLISH));
+					sb.append(word.substring(1).toLowerCase(Locale.ENGLISH));
+					sb.append(" ");
+				}
 			}
+			sb.deleteCharAt(sb.length() - 1);
+			return sb.toString();
 		}
-		sb.deleteCharAt(sb.length() - 1);
-		return sb.toString();
+		LOGGER.log(Level.WARNING, "No role name to convert.");
+		return "";
 	}
 }
