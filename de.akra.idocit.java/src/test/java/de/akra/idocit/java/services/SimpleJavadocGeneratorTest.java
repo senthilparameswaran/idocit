@@ -72,7 +72,8 @@ public class SimpleJavadocGeneratorTest
 						+ "* @throws IOException [ATTRIBUTE] This is also an attribute.\n "
 						+ "* @thematicgrid Searching Operations\n " + "*/\n";
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
@@ -104,7 +105,8 @@ public class SimpleJavadocGeneratorTest
 						+ "* @thematicgrid Checking Operations\n " + "*/\n";
 
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "InvariantService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "InvariantService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
 				JavaInterfaceArtifact artifact = TestDataFactory.createInvariantService(
@@ -130,7 +132,8 @@ public class SimpleJavadocGeneratorTest
 				// This Java file is parsed to get a valid abstract syntax tree. We won't
 				// use its Javadoc!
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact customerService = TestDataFactory
 						.createEmptyCustomerService(cu, true);
@@ -154,7 +157,8 @@ public class SimpleJavadocGeneratorTest
 				// This Java file is parsed to get a valid abstract syntax tree. We won't
 				// use its Javadoc!
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact customerService = TestDataFactory
 						.createNullCustomerService(cu, true);
@@ -190,7 +194,8 @@ public class SimpleJavadocGeneratorTest
 						+ "* \n " + "* @throws SpecialException\n "
 						+ "* @thematicgrid Searching Operations\n " + "*/\n";
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
@@ -221,7 +226,8 @@ public class SimpleJavadocGeneratorTest
 		// #########################################################################
 		{
 			ParserOutput output = JavadocTestUtils
-					.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+					.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+							+ "CustomerService.java");
 			CompilationUnit cu = output.getCompilationUnit();
 
 			JavaInterfaceArtifact customerService = TestDataFactory
@@ -258,11 +264,11 @@ public class SimpleJavadocGeneratorTest
 	@Test
 	public void testGenerateJavadocOptions()
 	{
-		final List<ThematicRole> roles = new ArrayList<ThematicRole>();
-		roles.add(new ThematicRole("OBJECT", "object", RoleScope.BOTH));
-		roles.add(new ThematicRole("TIME_TO_LIVE", "time to live",
+		final List<ThematicRole> threeRoles = new ArrayList<ThematicRole>();
+		threeRoles.add(new ThematicRole("OBJECT", "object", RoleScope.BOTH));
+		threeRoles.add(new ThematicRole("TIME_TO_LIVE", "time to live",
 				RoleScope.OPERATION_LEVEL));
-		roles.add(new ThematicRole("YES-NO-ANSWER", "yes-no-answer",
+		threeRoles.add(new ThematicRole("YES-NO-ANSWER", "yes-no-answer",
 				RoleScope.OPERATION_LEVEL));
 
 		/*
@@ -278,11 +284,24 @@ public class SimpleJavadocGeneratorTest
 		}
 
 		// #########################################################################
-		// # Test case #2: Check if user defined roles are converted correct.
+		// # Test case #2: Check if generating options with one additional role.
+		// #########################################################################
+		{
+			final List<ThematicRole> oneRole = new ArrayList<ThematicRole>();
+			oneRole.add(new ThematicRole("TIME_TO_LIVE", "time to live",
+					RoleScope.OPERATION_LEVEL));
+			final String options = SimpleJavadocGenerator.INSTANCE
+					.generateJavadocOptions(oneRole);
+			assertTrue(options.startsWith(OPTIONS_FOR_CUSTOM_TAGLETS));
+			assertTrue(options.contains("-tag time_to_live:tcm:\"Time To Live:\""));
+		}
+
+		// #########################################################################
+		// # Test case #3: Check if user defined roles are converted correct.
 		// #########################################################################
 		{
 			final String options = SimpleJavadocGenerator.INSTANCE
-					.generateJavadocOptions(roles);
+					.generateJavadocOptions(threeRoles);
 			assertTrue(options.startsWith(OPTIONS_FOR_CUSTOM_TAGLETS));
 			assertTrue(options.contains("-tag object:tcm:\"Object:\""));
 			assertTrue(options.contains("-tag time_to_live:tcm:\"Time To Live:\""));
@@ -300,7 +319,7 @@ public class SimpleJavadocGeneratorTest
 		// #########################################################################
 		{
 			final String options = SimpleJavadocGenerator.INSTANCE
-					.generateJavadocOptions(roles);
+					.generateJavadocOptions(threeRoles);
 			assertFalse(options.contains("OBJECT"));
 			assertFalse(options.contains("TIME_TO_LIVE"));
 			assertFalse(options.contains("YES-NO-ANSWER"));

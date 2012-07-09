@@ -16,6 +16,7 @@
 package de.akra.idocit.java.services;
 
 import static org.junit.Assert.assertTrue;
+import static de.akra.idocit.java.JavadocTestUtils.NEW_LINE;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -343,9 +344,11 @@ public class JavaParserTest
 			// # Javadoc-structure (see reference Javadoc).
 			// #########################################################################
 			{
-				String refJavadoc = "/**\n" + " * Parser implementation for Java.\n"
-						+ " * \n" + " * @author Dirk Meier-Eickhoff\n"
-						+ " * @since 0.0.1\n" + " * @version 0.0.1\n" + " * \n" + " */\n";
+				String refJavadoc = "/**" + NEW_LINE
+						+ " * Parser implementation for Java." + NEW_LINE + " * "
+						+ NEW_LINE + " * @author Dirk Meier-Eickhoff" + NEW_LINE
+						+ " * @since 0.0.1" + NEW_LINE + " * @version 0.0.1" + NEW_LINE
+						+ " * " + NEW_LINE + " */" + NEW_LINE;
 				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 				IProject project = root.getProject(PROJECT_NAME);
 				IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
@@ -421,29 +424,42 @@ public class JavaParserTest
 				File javaFile = testSourceFolder.getRawLocation().makeAbsolute().toFile();
 				String actJavadoc = readLinesFromFile(javaFile, 87, 111);
 
-				String refJavadoc = "\t/**\n"
-						+ "\t * Reads the java- and javadoc code from the given <b>file and<br/>\n"
-						+ "\t * creates</b> the returned {@link JavaInterfaceArtifact} from it.<br/>\n"
-						+ "\t * Escape Test: &Ouml;\n"
-						+ "\t * \n"
-						+ "\t * @source_format  Java and Javadoc according to their current specifications:<br/>\n"
-						+ "\t * <br/>\n"
-						+ "\t * <a href=\"http://docs.oracle.com/javase/specs/\">Java</a><br/>\n"
-						+ "\t * Javadoc\n"
-						+ "\t * \n"
-						+ "\t * @instrument  To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used.\n"
-						+ "\t * @instrument  iDocIt! supports two different representations of thematicgrids in Javadoc:<br/>\n"
-						+ "\t * <br/>\n"
-						+ "\t * The simplified version is very compact, but supports only the addressee &quot;Developer&quot;.<br/>\n"
-						+ "\t * The complex version supports all addressees, but uses a lot of HTML-code.\n"
-						+ "\t * \n"
-						+ "\t * @param  iFile [SOURCE]\n"
-						+ "\t * \n"
-						+ "\t * @return  [OBJECT]\n"
-						+ "\t * \n"
-						+ "\t * @throws  Exception\n"
-						+ "\t * @see de.akra.idocit.core.extensions.Parser#parse(IFile)\n"
-						+ "\t * @thematicgrid  Parsing Operations\n" + "\t */\n";
+				String refJavadoc = "\t/**"
+						+ NEW_LINE
+						+ "\t * Reads the java- and javadoc code from the given <b>file and<br/>"
+						+ NEW_LINE
+						+ "\t * creates</b> the returned {@link JavaInterfaceArtifact} from it.<br/>"
+						+ NEW_LINE
+						+ "\t * Escape Test: &Ouml;"
+						+ NEW_LINE
+						+ "\t * "
+						+ NEW_LINE
+						+ "\t * @source_format  Java and Javadoc according to their current specifications:<br/>"
+						+ NEW_LINE
+						+ "\t * <br/>"
+						+ NEW_LINE
+						+ "\t * <a href=\"http://docs.oracle.com/javase/specs/\">Java</a><br/>"
+						+ NEW_LINE
+						+ "\t * Javadoc"
+						+ NEW_LINE
+						+ "\t * "
+						+ NEW_LINE
+						+ "\t * @instrument  To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used."
+						+ NEW_LINE
+						+ "\t * @instrument  iDocIt! supports two different representations of thematicgrids in Javadoc:<br/>"
+						+ NEW_LINE
+						+ "\t * <br/>"
+						+ NEW_LINE
+						+ "\t * The simplified version is very compact, but supports only the addressee &quot;Developer&quot;.<br/>"
+						+ NEW_LINE
+						+ "\t * The complex version supports all addressees, but uses a lot of HTML-code."
+						+ NEW_LINE + "\t * " + NEW_LINE + "\t * @param  iFile [SOURCE]"
+						+ NEW_LINE + "\t * " + NEW_LINE + "\t * @return  [OBJECT]"
+						+ NEW_LINE + "\t * " + NEW_LINE + "\t * @throws  Exception"
+						+ NEW_LINE
+						+ "\t * @see de.akra.idocit.core.extensions.Parser#parse(IFile)"
+						+ NEW_LINE + "\t * @thematicgrid  Parsing Operations" + NEW_LINE
+						+ "\t */" + NEW_LINE;
 
 				Assert.assertEquals(refJavadoc, actJavadoc);
 
@@ -455,7 +471,8 @@ public class JavaParserTest
 
 				List<Documentation> actDocumentations = parseMethod.getDocumentations();
 
-				Assert.assertEquals(refDocumentations, actDocumentations);
+				Assert.assertEquals(refDocumentations.toString(),
+						actDocumentations.toString());
 			}
 
 			// #########################################################################
@@ -516,7 +533,7 @@ public class JavaParserTest
 				if (i >= startLine)
 				{
 					actJavadoc.append(reader.readLine());
-					actJavadoc.append('\n');
+					actJavadoc.append(JavadocTestUtils.NEW_LINE);
 				}
 				else
 				{
