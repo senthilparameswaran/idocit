@@ -22,8 +22,6 @@ import java.util.Map;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TagElement;
-import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import source.CustomerService;
@@ -38,6 +36,7 @@ import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.DescribedItemUtils;
+import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.services.AddresseeUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
@@ -1186,7 +1185,10 @@ public class TestDataFactory
 		Map<Addressee, String> docTextAction = new HashMap<Addressee, String>();
 		docTextAction
 				.put(addressee,
-						"Reads the java- and javadoc code from the given <b>file and\ncreates</b> the returned {@link JavaInterfaceArtifact} from it.\nEscape Test: Ö");
+						"Reads the java- and javadoc code from the given <b>file and"
+								+ JavadocTestUtils.NEW_LINE
+								+ "creates</b> the returned {@link JavaInterfaceArtifact} from it."
+								+ JavadocTestUtils.NEW_LINE + "Escape Test: Ö");
 		Documentation docAction = new Documentation();
 		docAction.setAddresseeSequence(addresseeSequence);
 		docAction.setDocumentation(docTextAction);
@@ -1195,9 +1197,11 @@ public class TestDataFactory
 		result.add(docAction);
 
 		Map<Addressee, String> docTextSourceFormat = new HashMap<Addressee, String>();
-		docTextSourceFormat
-				.put(addressee,
-						"Java and Javadoc according to their current specifications:\n\n<a href=\"http://docs.oracle.com/javase/specs/\">Java</a>\nJavadoc");
+		docTextSourceFormat.put(addressee,
+				"Java and Javadoc according to their current specifications:"
+						+ JavadocTestUtils.NEW_LINE + JavadocTestUtils.NEW_LINE
+						+ "<a href=\"http://docs.oracle.com/javase/specs/\">Java</a>"
+						+ JavadocTestUtils.NEW_LINE + "Javadoc");
 		Documentation docSourceFormat = new Documentation();
 		docSourceFormat.setAddresseeSequence(addresseeSequence);
 		docSourceFormat.setDocumentation(docTextSourceFormat);
@@ -1219,7 +1223,12 @@ public class TestDataFactory
 		Map<Addressee, String> docTextInstrument2 = new HashMap<Addressee, String>();
 		docTextInstrument2
 				.put(addressee,
-						"iDocIt! supports two different representations of thematicgrids in Javadoc:\n\nThe simplified version is very compact, but supports only the addressee \"Developer\".\nThe complex version supports all addressees, but uses a lot of HTML-code.");
+						"iDocIt! supports two different representations of thematicgrids in Javadoc:"
+								+ JavadocTestUtils.NEW_LINE
+								+ JavadocTestUtils.NEW_LINE
+								+ "The simplified version is very compact, but supports only the addressee \"Developer\"."
+								+ JavadocTestUtils.NEW_LINE
+								+ "The complex version supports all addressees, but uses a lot of HTML-code.");
 		Documentation docSourceInstrument2 = new Documentation();
 		docSourceInstrument2.setAddresseeSequence(addresseeSequence);
 		docSourceInstrument2.setDocumentation(docTextInstrument2);

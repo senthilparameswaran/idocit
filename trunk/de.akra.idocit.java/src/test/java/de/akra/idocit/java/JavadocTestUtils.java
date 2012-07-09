@@ -28,6 +28,8 @@ import de.akra.idocit.java.structure.ParserOutput;
 
 public class JavadocTestUtils
 {
+	public static final String NEW_LINE = System.getProperty("line.separator");
+	
 	/**
 	 * Parses a file and returns it as {@link CompilationUnit}.
 	 * 
