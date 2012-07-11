@@ -33,6 +33,7 @@ import de.akra.idocit.ui.composites.factories.EditThematicRoleCompositeFactory;
 import de.akra.idocit.ui.composites.factories.ManageAddresseesCompositeFactory;
 import de.akra.idocit.ui.composites.factories.ManageThematicGridsCompositeFactory;
 import de.akra.idocit.ui.composites.factories.ManageThematicRoleCompositeFactory;
+import de.akra.idocit.ui.composites.factories.RecommendRolesCompositeFactory;
 import de.akra.idocit.ui.composites.factories.SelectSignatureElementCompositeFactory;
 
 /**
@@ -144,6 +145,14 @@ public class CompositeTester
 					{
 						viewer = new CompositeViewer<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>(
 								shell, new ManageThematicGridsCompositeFactory());
+						viewer.setBlockOnOpen(true);
+						viewer.open();
+						break;
+					}
+					case 11:
+					{
+						viewer = new CompositeViewer<EmptyActionConfiguration, EmptyResourceConfiguration, RecommendRolesCompositeSelection>(
+								shell, new RecommendRolesCompositeFactory());
 						viewer.setBlockOnOpen(true);
 						viewer.open();
 						break;
