@@ -57,8 +57,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 {
 	private static final String EMPTY_STR = "";
 
-	private static final String NEW_LINE = System.getProperty("line.separator");
-
 	private static final String HTML_BR = "<br/>";
 
 	private static final String JAVADOC_OPTION_TAG_HEAD = ":\" ";
@@ -369,29 +367,28 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		{
 			Documentation documentation = documentations.get(i);
 
-			AST jdocAST = javadoc.getAST();
-			TagElement newTag = createTagElement(documentation, referenceGridName,
+			final AST jdocAST = javadoc.getAST();
+			final TagElement newTag = createTagElement(documentation, referenceGridName,
 					jdocAST, method);
 
 			@SuppressWarnings("unchecked")
-			List<ASTNode> fragments = newTag.fragments();
-			TextElement textElement = jdocAST.newTextElement();
+			final List<ASTNode> fragments = newTag.fragments();
+			final TextElement textElement = jdocAST.newTextElement();
 
 			if (!hasIntroductionSentence)
 			{
-				String roleName = getThematicRoleName(documentation);
-				String formattedRoleName = (roleName != null) ? roleName : EMPTY_STR;
-
-				if (!EMPTY_STR.equals(formattedRoleName.trim()))
-				{
-					formattedRoleName = StringUtils.capitalizeFirstChar(roleName) + ':';
-				}
-
-				String docText = " " + getDocText(documentation).trim();
+				String docText = getDocText(documentation).trim();
 
 				if (newTag.getTagName() == null)
 				{
-					docText = formattedRoleName + docText;
+					final String roleName = getThematicRoleName(documentation);
+					String formattedRoleName = (roleName != null) ? roleName : EMPTY_STR;
+
+					if (!EMPTY_STR.equals(formattedRoleName.trim()))
+					{
+						formattedRoleName = StringUtils.capitalizeFirstChar(roleName) + ':';
+					}
+					docText = formattedRoleName + " " + docText;
 				}
 
 				textElement.setText(docText);
@@ -399,11 +396,10 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			}
 			else
 			{
-				textElement.setText(' ' + getDocText(documentation));
+				textElement.setText(getDocText(documentation));
 			}
 
 			fragments.add(textElement);
-
 			tags.add(newTag);
 		}
 	}
@@ -547,9 +543,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 				@SuppressWarnings("unchecked")
 				List<ASTNode> fragments = newTag.fragments();
-
-				ThematicRole role = documentation.getThematicRole();
-
 				StringBuffer docText = new StringBuffer();
 
 				if (!TagElement.TAG_RETURN.equals(tagElementName))
@@ -559,6 +552,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					docText.append(' ');
 				}
 
+				final ThematicRole role = documentation.getThematicRole();
 				if (role != null)
 				{
 					docText.append(StringUtils.inBrackets(role.getName()));
@@ -568,10 +562,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				docText.append(getDocText(documentation));
 
 				TextElement identifierElement = jdocAST.newTextElement();
-				identifierElement.setText(' ' + docText.toString().trim());
+				identifierElement.setText(docText.toString().trim());
 
 				fragments.add(identifierElement);
-
 				tags.add(newTag);
 			}
 		}
@@ -579,14 +572,14 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		{
 			// @param, @return and @throws should mentioned even if no documentation has
 			// been created for the parameter, return-type or exception!
-			TagElement newTag = jdocAST.newTagElement();
+			final TagElement newTag = jdocAST.newTagElement();
 			newTag.setTagName(tagElementName);
 
 			@SuppressWarnings("unchecked")
-			List<ASTNode> fragments = newTag.fragments();
+			final List<ASTNode> fragments = newTag.fragments();
 
-			TextElement identifierElement = jdocAST.newTextElement();
-			identifierElement.setText(' ' + StringUtils.toString(identifier));
+			final TextElement identifierElement = jdocAST.newTextElement();
+			identifierElement.setText(StringUtils.toString(identifier));
 
 			fragments.add(identifierElement);
 			tags.add(newTag);
@@ -747,12 +740,12 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private String readFragments(TagElement element)
 	{
 		String text = JavadocUtils.readFragments(element.fragments(), 0);
-		return text.replaceAll(Pattern.quote(HTML_BR), NEW_LINE);
+		return text.replaceAll(Pattern.quote(HTML_BR), JavadocUtils.NEW_LINE);
 	}
 
 	private List<TagElement> mergeTagElements(List<TagElement> unmergedTagElements)
 	{
-		List<TagElement> mergedTagElements = new ArrayList<TagElement>();
+		final List<TagElement> mergedTagElements = new ArrayList<TagElement>();
 
 		if ((unmergedTagElements != null) && !unmergedTagElements.isEmpty())
 		{
@@ -781,19 +774,20 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					{
 						if (currentElement.getTagName() == null)
 						{
-							if (!lastElementText.toString().endsWith(NEW_LINE))
+							if (!lastElementText.toString().endsWith(
+									JavadocUtils.NEW_LINE))
 							{
-								lastElementText.append(NEW_LINE);
+								lastElementText.append(JavadocUtils.NEW_LINE);
 							}
 
 							lastElementText.append(' ');
-							String curElemText = readFragments(currentElement);
+							final String curElemText = readFragments(currentElement);
 							lastElementText.append(curElemText);
 						}
 						else
 						{
 							lastElement.fragments().clear();
-							TextElement newFragment = lastElement.getAST()
+							final TextElement newFragment = lastElement.getAST()
 									.newTextElement();
 							newFragment.setText(lastElementText.toString());
 							lastElement.fragments().add(newFragment);
@@ -808,7 +802,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				}
 
 				lastElement.fragments().clear();
-				TextElement newFragment = lastElement.getAST().newTextElement();
+				final TextElement newFragment = lastElement.getAST().newTextElement();
 				newFragment.setText(lastElementText.toString());
 				lastElement.fragments().add(newFragment);
 				mergedTagElements.add(lastElement);

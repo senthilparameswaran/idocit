@@ -265,7 +265,7 @@ public class JavaInterfaceGenerator
 
 	private static TagElement findTagElementByName(String name, List<TagElement> elements)
 	{
-		for (TagElement tagElement : elements)
+		for (final TagElement tagElement : elements)
 		{
 			if ((name != null) && name.equals(tagElement.getTagName()))
 			{
@@ -278,7 +278,7 @@ public class JavaInterfaceGenerator
 
 	private static TextElement findFirstTextElement(List<ASTNode> nodes)
 	{
-		for (ASTNode node : nodes)
+		for (final ASTNode node : nodes)
 		{
 			if (node instanceof TextElement)
 			{
@@ -348,6 +348,7 @@ public class JavaInterfaceGenerator
 
 	// End changes due to Issue #62
 
+	@SuppressWarnings("unchecked")
 	private static void addThematicGridTag(AST ast, String thematicGridName,
 			Javadoc newJavadoc)
 	{
@@ -364,7 +365,7 @@ public class JavaInterfaceGenerator
 				newJavadoc.tags().add(thematicGridElement);
 			}
 
-			List<ASTNode> fragments = (List<ASTNode>) thematicGridElement.fragments();
+			final List<ASTNode> fragments = (List<ASTNode>) thematicGridElement.fragments();
 			TextElement textElement = findFirstTextElement(fragments);
 
 			if (textElement == null)
@@ -373,7 +374,7 @@ public class JavaInterfaceGenerator
 				fragments.add(textElement);
 			}
 
-			textElement.setText(" " + thematicGridName);
+			textElement.setText(thematicGridName);
 		}
 		else
 		{

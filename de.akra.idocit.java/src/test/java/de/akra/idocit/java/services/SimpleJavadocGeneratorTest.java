@@ -15,7 +15,10 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
-import static org.junit.Assert.*;
+import static de.akra.idocit.java.JavadocTestUtils.JAVADOC_NEW_LINE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,36 +60,40 @@ public class SimpleJavadocGeneratorTest
 			// # like @source).
 			// #########################################################################
 			{
-				String referenceJavadoc = "/** \n "
-						+ "* @ordering Alphabetically by lastname\n "
-						+ "* @source CRM System\n "
-						+ "* \n "
-						+ "* @param parameters [COMPARISON] This is the customer.\n "
-						+ "* @paraminfo parameters [SOURCE] This is the source.\n "
-						+ "* @subparam firstName [COMPARISON]\n "
-						+ "* @subparam lastName [COMPARISON]\n "
-						+ "* \n "
-						+ "* @return [OBJECT] This is the object.\n "
-						+ "* @returninfo [SOURCE] This is the source.\n "
-						+ "* \n "
-						+ "* @throws IOException [ATTRIBUTE] This is also an attribute.\n "
-						+ "* @thematicgrid Searching Operations\n " + "*/\n";
-				ParserOutput output = JavadocTestUtils
+				final String referenceJavadoc = String
+						.format("/** %1$s"
+								+ " * @orderingAlphabetically by lastname%1$s"
+								+ " * @sourceCRM System%1$s"
+								+ " * %1$s"
+								+ " * @paramparameters [COMPARISON] This is the customer.%1$s"
+								+ " * @paraminfoparameters [SOURCE] This is the source.%1$s"
+								+ " * @subparamfirstName [COMPARISON]%1$s"
+								+ " * @subparamlastName [COMPARISON]%1$s"
+								+ " * %1$s"
+								+ " * @return[OBJECT] This is the object.%1$s"
+								+ " * @returninfo[SOURCE] This is the source.%1$s"
+								+ " * %1$s"
+								+ " * @throwsIOException [ATTRIBUTE] This is also an attribute.%1$s"
+								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
+								JAVADOC_NEW_LINE);
+
+				final ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
-				CompilationUnit cu = output.getCompilationUnit();
+				final CompilationUnit cu = output.getCompilationUnit();
 
-				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
-						"Developer", true, cu);
+				final JavaInterfaceArtifact artifact = TestDataFactory
+						.createCustomerService("Developer", true, cu);
 
 				JavaInterfaceGenerator.updateJavadocInAST(artifact,
 						SimpleJavadocGenerator.INSTANCE);
 
-				JavaInterface customerServiceIntf = (JavaInterface) artifact
+				final JavaInterface customerServiceIntf = (JavaInterface) artifact
 						.getInterfaces().get(0);
-				JavaMethod findCustomerByIdMeth = (JavaMethod) customerServiceIntf
+				final JavaMethod findCustomerByIdMeth = (JavaMethod) customerServiceIntf
 						.getOperations().get(0);
-				Javadoc javadoc = findCustomerByIdMeth.getRefToASTNode().getJavadoc();
+				final Javadoc javadoc = findCustomerByIdMeth.getRefToASTNode()
+						.getJavadoc();
 
 				assertEquals(referenceJavadoc, javadoc.toString());
 			}
@@ -96,13 +103,15 @@ public class SimpleJavadocGeneratorTest
 			// # by the rule.
 			// #########################################################################
 			{
-				String referenceJavadoc = "/** \n "
-						+ "* Rule: Maximum length of an address are 40 chars.\n "
-						+ "* \n "
-						+ "* @param mailAddress [OBJECT]\n "
-						+ "* \n "
-						+ "* @return [REPORT] <code>false</code> if the rule is violated\n "
-						+ "* @thematicgrid Checking Operations\n " + "*/\n";
+				final String referenceJavadoc = String
+						.format("/** %1$s"
+								+ " * Rule: Maximum length of an address are 40 chars.%1$s"
+								+ " * %1$s"
+								+ " * @parammailAddress [OBJECT]%1$s"
+								+ " * %1$s"
+								+ " * @return[REPORT] <code>false</code> if the rule is violated%1$s"
+								+ " * @thematicgridChecking Operations%1$s" + " */%1$s",
+								JAVADOC_NEW_LINE);
 
 				ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
@@ -178,37 +187,40 @@ public class SimpleJavadocGeneratorTest
 			// # signature element and not only by the signature element's identifier.
 			// #########################################################################
 			{
-				String referenceJavadoc = "/** \n "
-						+ "*  Only customers who placed an order within the last year are considered.\n "
-						+ "* \n "
-						+ "* @ordering Alphabetically by lastname\n "
-						+ "* @source CRM System\n "
-						+ "* \n "
-						+ "* @param parameters\n "
-						+ "* @subparam customer.firstName [COMPARISON]\n "
-						+ "* @subparam customer.lastName [COMPARISON]\n "
-						+ "* \n "
-						+ "* @return [OBJECT]\n "
-						+ "* @subreturn firstName [ATTRIBUTE] Won't be null, but could be an empty String\n "
-						+ "* @subreturn lastName [ATTRIBUTE] Won't be null, but could be an empty String\n "
-						+ "* \n " + "* @throws SpecialException\n "
-						+ "* @thematicgrid Searching Operations\n " + "*/\n";
-				ParserOutput output = JavadocTestUtils
+				final String referenceJavadoc = String
+						.format("/** %1$s"
+								+ " * Only customers who placed an order within the last year are considered.%1$s"
+								+ " * %1$s"
+								+ " * @orderingAlphabetically by lastname%1$s"
+								+ " * @sourceCRM System%1$s"
+								+ " * %1$s"
+								+ " * @paramparameters%1$s"
+								+ " * @subparamcustomer.firstName [COMPARISON]%1$s"
+								+ " * @subparamcustomer.lastName [COMPARISON]%1$s"
+								+ " * %1$s"
+								+ " * @return[OBJECT]%1$s"
+								+ " * @subreturnfirstName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
+								+ " * @subreturnlastName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
+								+ " * %1$s" + " * @throwsSpecialException%1$s"
+								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
+								JAVADOC_NEW_LINE);
+				final ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
-				CompilationUnit cu = output.getCompilationUnit();
+				final CompilationUnit cu = output.getCompilationUnit();
 
-				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
-						"Developer", true, cu);
+				final JavaInterfaceArtifact artifact = TestDataFactory
+						.createCustomerService("Developer", true, cu);
 
 				JavaInterfaceGenerator.updateJavadocInAST(artifact,
 						SimpleJavadocGenerator.INSTANCE);
 
-				JavaInterface customerServiceIntf = (JavaInterface) artifact
+				final JavaInterface customerServiceIntf = (JavaInterface) artifact
 						.getInterfaces().get(0);
-				JavaMethod findCustomerByIdMeth = (JavaMethod) customerServiceIntf
+				final JavaMethod findCustomerByIdMeth = (JavaMethod) customerServiceIntf
 						.getOperations().get(1);
-				Javadoc javadoc = findCustomerByIdMeth.getRefToASTNode().getJavadoc();
+				final Javadoc javadoc = findCustomerByIdMeth.getRefToASTNode()
+						.getJavadoc();
 
 				assertEquals(referenceJavadoc, javadoc.toString());
 			}
@@ -225,12 +237,12 @@ public class SimpleJavadocGeneratorTest
 		// # IllegalArgumentException.
 		// #########################################################################
 		{
-			ParserOutput output = JavadocTestUtils
+			final ParserOutput output = JavadocTestUtils
 					.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 							+ "CustomerService.java");
-			CompilationUnit cu = output.getCompilationUnit();
+			final CompilationUnit cu = output.getCompilationUnit();
 
-			JavaInterfaceArtifact customerService = TestDataFactory
+			final JavaInterfaceArtifact customerService = TestDataFactory
 					.createCustomerService("Tester", true, cu);
 
 			{
@@ -253,9 +265,10 @@ public class SimpleJavadocGeneratorTest
 
 	private String createEmptyReferenceJDForCustomerService()
 	{
-		return "/** \n" + " * @param parameters\n" + " * @subparam firstName\n"
-				+ " * @subparam lastName\n" + " * \n" + " * @return \n" + " * \n"
-				+ " * @throws IOException\n" + " */\n";
+		return String.format("/** %1$s" + " * @paramparameters%1$s"
+				+ " * @subparamfirstName%1$s" + " * @subparamlastName%1$s" + " * %1$s"
+				+ " * @return%1$s" + " * %1$s" + " * @throwsIOException%1$s" + " */%1$s",
+				JAVADOC_NEW_LINE);
 	}
 
 	/**

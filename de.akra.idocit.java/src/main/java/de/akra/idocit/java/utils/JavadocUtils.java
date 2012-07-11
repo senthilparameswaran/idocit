@@ -22,6 +22,7 @@ import java.io.SequenceInputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -48,9 +49,14 @@ import de.akra.idocit.java.structure.StringReplacement;
 
 public class JavadocUtils
 {
+	private static final String EMPTY = "";
+	private static final String REGEX_CR = "[\r]";
+	public static final String NEW_LINE = System.getProperty("line.separator");
+	
 	public static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 	public static final String XML_ROOT_START = "<javadoc>";
 	public static final String XML_ROOT_END = "</javadoc>";
+	
 	private static final Logger logger = Logger.getLogger(JavadocUtils.class.getName());
 
 	private static class JavadocHtmlHandler extends DefaultHandler2
@@ -91,18 +97,21 @@ public class JavadocUtils
 		}
 	}
 
-	public static boolean isParamInfo(String tagName){
+	public static boolean isParamInfo(String tagName)
+	{
 		return CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
 	}
-	
-	public static boolean isThrowsInfo(String tagName){
+
+	public static boolean isThrowsInfo(String tagName)
+	{
 		return CustomTaglets.THROWS_INFO.getTagName().equals(tagName);
 	}
-	
-	public static boolean isReturnInfo(String tagName){
+
+	public static boolean isReturnInfo(String tagName)
+	{
 		return CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
 	}
-	
+
 	public static boolean isSubParam(String tagName)
 	{
 		return CustomTaglets.SUB_PARAM.getTagName().equals(tagName);
@@ -144,15 +153,16 @@ public class JavadocUtils
 		boolean isSubParam = isSubParam(tagName);
 		boolean isSubReturn = isSubReturn(tagName);
 		boolean isInfoTag = isIdocItInfoTag(tagName);
-		
+
 		return isSubParam || isSubReturn || isInfoTag;
 	}
-	
-	public static boolean isIdocItInfoTag(String tagName){
+
+	public static boolean isIdocItInfoTag(String tagName)
+	{
 		boolean paramInfo = CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
 		boolean returnInfo = CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
 		boolean throwsInfo = CustomTaglets.THROWS_INFO.getTagName().equals(tagName);
-		
+
 		return paramInfo || returnInfo || throwsInfo;
 	}
 
@@ -226,7 +236,8 @@ public class JavadocUtils
 						.parameters();
 				for (MethodRefParameter mRefParam : mRefParameters)
 				{
-					html.append(ReflectionHelper.extractIdentifierFrom(mRefParam.getType()));
+					html.append(ReflectionHelper.extractIdentifierFrom(mRefParam
+							.getType()));
 					if (mRefParam.isVarargs())
 					{
 						html.append("...");
@@ -309,22 +320,28 @@ public class JavadocUtils
 	public static String escapeHtml4(String javadocText)
 			throws ParserConfigurationException, SAXException, IOException
 	{
-		StringBuilder xml = new StringBuilder(XML_HEADER.length()
+		// Changes due to Issue #105
+		// delete all '\r' from original text, because the SAXParser will loose them during
+		// parsing process. Because of that string replacement would not work at the end.
+		javadocText = javadocText.replaceAll(REGEX_CR, EMPTY);
+		// Changes due to Issue #105
+
+		final StringBuilder xml = new StringBuilder(XML_HEADER.length()
 				+ XML_ROOT_START.length() + javadocText.length() + XML_ROOT_END.length());
 		xml.append(XML_HEADER).append(XML_ROOT_START).append(javadocText)
 				.append(XML_ROOT_END);
 
-		logger.info("Parsing string " + xml.toString() + " with SAX Parser.");
+		logger.log(Level.INFO, "Parsing string with SAX Parser: {0}", xml.toString());
 
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser saxParser = factory.newSAXParser();
+		final SAXParserFactory factory = SAXParserFactory.newInstance();
+		final SAXParser saxParser = factory.newSAXParser();
 
-		JavadocHtmlHandler handler = new JavadocHtmlHandler();
+		final JavadocHtmlHandler handler = new JavadocHtmlHandler();
 		handler.setDtdInputSources(readDTDs());
 		saxParser.parse(
 				new ByteArrayInputStream(xml.toString()
 						.getBytes(Charset.forName("UTF-8"))), handler);
-		List<StringReplacement> replacements = handler.getReplacements();
+		final List<StringReplacement> replacements = handler.getReplacements();
 
 		for (StringReplacement replacement : replacements)
 		{
