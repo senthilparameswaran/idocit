@@ -49,7 +49,7 @@ import de.akra.idocit.ui.Activator;
  */
 public class SelectSignatureElementCompositeRC implements IResourceConfiguration
 {
-	private static final String IMAGE_PATH = "resources/images/";
+	private static final String IMAGE_PATH = "src/main/resources/images/";
 
 	/**
 	 * Logger.
