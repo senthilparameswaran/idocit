@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jface.text.Document;
 
 import de.akra.idocit.core.utils.TestUtils;
@@ -28,8 +29,16 @@ import de.akra.idocit.java.structure.ParserOutput;
 
 public class JavadocTestUtils
 {
+	/**
+	 * Operating system's line separator.
+	 */
 	public static final String NEW_LINE = System.getProperty("line.separator");
-	
+
+	/**
+	 * {@link Javadoc#toString()} always uses '\n' as line separator.
+	 */
+	public static final String JAVADOC_NEW_LINE = "\n";
+
 	/**
 	 * Parses a file and returns it as {@link CompilationUnit}.
 	 * 
