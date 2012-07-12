@@ -24,19 +24,73 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Some useful methods for working with strings.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class StringUtils
 {
+	/**
+	 * An empty String ({@code ""}).
+	 * 
+	 * @since 0.0.2
+	 */
+	public static final String EMPTY = "";
+
+	/**
+	 * A space ({@code " "}).
+	 * 
+	 * @since 0.0.2
+	 */
+	public static final String SPACE = " ";
+
+	/**
+	 * The operating system's default line separator sequence.
+	 * <p>
+	 * {@code System.getProperty("line.separator")}
+	 * </p>
+	 * 
+	 * @since 0.0.2
+	 */
+	public static final String NEW_LINE = System.getProperty("line.separator");
+
+	private static final Pattern PATTERN_WHITESPACE = Pattern.compile("^\\s*$");
 	private static final String ASCII_TAB = "\t";
 	private static final String ASCII_LF = "\n";
 	private static final String ASCII_CR = "\r";
+
+	/**
+	 * <p>
+	 * Checks if a CharSequence is whitespace, empty ("") or <code>null</code>.
+	 * </p>
+	 * 
+	 * <pre>
+	 * StringUtils.isBlank(<code>null</code>)      = true
+	 * StringUtils.isBlank("")        = true
+	 * StringUtils.isBlank(" ")       = true
+	 * StringUtils.isBlank("abc")     = false
+	 * StringUtils.isBlank("  abc  ") = false
+	 * </pre>
+	 * 
+	 * @param cs
+	 *            the CharSequence to check, may be <code>null</code>
+	 * @return <code>true</code> if the CharSequence is <code>null</code>, empty or
+	 *         whitespace
+	 * @since 0.0.2
+	 */
+	public static boolean isBlank(final CharSequence cs)
+	{
+		if (cs == null || cs.length() == 0)
+		{
+			return true;
+		}
+		return PATTERN_WHITESPACE.matcher(cs).matches();
+	}
 
 	/**
 	 * 
@@ -52,22 +106,23 @@ public class StringUtils
 	 *            Char to split the <code>string</code> into words.
 	 * @return New String with new lines.
 	 */
-	public static String addLineBreaks(String string, int maxLineLength, char splitChar)
+	public static String addLineBreaks(final String string, final int maxLineLength,
+			final char splitChar)
 	{
-		StringBuffer buffer = new StringBuffer();
-		String[] splitString = string.split(String.valueOf(splitChar));
+		final StringBuffer buffer = new StringBuffer();
+		final String[] splitString = string.split(String.valueOf(splitChar));
 		int currentLineLength = 0;
 
-		for (String token : splitString)
+		for (final String token : splitString)
 		{
 			if (currentLineLength > maxLineLength)
 			{
-				buffer.append(System.getProperty("line.separator"));
+				buffer.append(NEW_LINE);
 				currentLineLength = 0;
 			}
 			else if (currentLineLength > 0)
 			{
-				buffer.append(' ');
+				buffer.append(SPACE);
 				currentLineLength++;
 			}
 
@@ -91,18 +146,19 @@ public class StringUtils
 	 *            Maximum characters in a line.
 	 * @return New String with additional lines.
 	 */
-	public static String addAdditionalLineBreaks(String string, int maxLineLength)
+	public static String addAdditionalLineBreaks(final String string,
+			final int maxLineLength)
 	{
-		char splitChar = ' ';
-		StringBuffer buffer = new StringBuffer();
-		String[] splitString = string.split(String.valueOf(splitChar));
+		final char splitChar = ' ';
+		final StringBuffer buffer = new StringBuffer();
+		final String[] splitString = string.split(String.valueOf(splitChar));
 		int currentLineLength = 0;
 
-		for (String token : splitString)
+		for (final String token : splitString)
 		{
 			if (currentLineLength > maxLineLength)
 			{
-				buffer.append(System.getProperty("line.separator"));
+				buffer.append(NEW_LINE);
 				currentLineLength = 0;
 			}
 			else if (token.matches("[\r\n]+"))
@@ -112,7 +168,7 @@ public class StringUtils
 			}
 			else if (currentLineLength > 0)
 			{
-				buffer.append(' ');
+				buffer.append(SPACE);
 				currentLineLength++;
 			}
 
@@ -130,20 +186,19 @@ public class StringUtils
 	 *            The string from which all new lines should be removed.
 	 * @return String without new lines.
 	 */
-	public static String removeLineBreaks(String string)
+	public static String removeLineBreaks(final String string)
 	{
-		StringBuffer buffer = new StringBuffer();
-		String[] splitString = string.split(System.getProperty("line.separator"));
+		final StringBuffer buffer = new StringBuffer();
+		final String[] splitString = string.split(NEW_LINE);
 
 		for (int i = 0; i < splitString.length; i++)
 		{
-			String token = splitString[i];
-
+			final String token = splitString[i];
 			buffer.append(token);
 
 			if (i < (splitString.length - 1))
 			{
-				buffer.append(' ');
+				buffer.append(SPACE);
 			}
 		}
 
@@ -212,8 +267,8 @@ public class StringUtils
 	public static String cleanFormatting(String text)
 	{
 		// Changes due to Issue #29
-		return text.replaceAll("[" + ASCII_CR + ASCII_LF + ASCII_TAB + "]+", " ")
-				.replaceAll("[ ]+", " ").trim();
+		return text.replaceAll("[" + ASCII_CR + ASCII_LF + ASCII_TAB + "]+", SPACE)
+				.replaceAll("[ ]+", SPACE).trim();
 		// End changes due to Issue #29
 	}
 
@@ -235,7 +290,7 @@ public class StringUtils
 
 		for (String unstructuredSentence : unstructuredSentences)
 		{
-			String colonFreeSentence = unstructuredSentence.replaceAll("\\.", " ");
+			String colonFreeSentence = unstructuredSentence.replaceAll("\\.", SPACE);
 
 			colonFreeSentences.add(colonFreeSentence);
 		}
@@ -245,7 +300,7 @@ public class StringUtils
 
 	public static String addBlanksToCamelSyntax(String camelSyntaxLabel)
 	{
-		StringBuffer labelWithBlanks = new StringBuffer();
+		final StringBuffer labelWithBlanks = new StringBuffer();
 
 		if (camelSyntaxLabel != null)
 		{
@@ -262,7 +317,7 @@ public class StringUtils
 
 					if (!isBigCharacter(prevChar) || Character.isDigit(prevChar))
 					{
-						labelWithBlanks.append(' ');
+						labelWithBlanks.append(SPACE);
 					}
 				}
 
@@ -278,9 +333,9 @@ public class StringUtils
 		return (currentLetter >= 65) && (currentLetter <= 90);
 	}
 
-	public static List<String> addBlanksToCamelSyntax(List<String> camelSyntaxLabels)
+	public static List<String> addBlanksToCamelSyntax(final List<String> camelSyntaxLabels)
 	{
-		List<String> blankCamelSyntax = new ArrayList<String>();
+		final List<String> blankCamelSyntax = new ArrayList<String>();
 
 		for (String camelLabel : camelSyntaxLabels)
 		{
@@ -305,45 +360,45 @@ public class StringUtils
 
 		try
 		{
-			char[] buffer = new char[256];
-	        int n = 0;
-	        while (-1 != (n = isr.read(buffer))) {
-	            sw.write(buffer, 0, n);
-	        }
-        }
-		
-		catch (IOException e)
+			final char[] buffer = new char[256];
+			int n = 0;
+			while (-1 != (n = isr.read(buffer)))
+			{
+				sw.write(buffer, 0, n);
+			}
+		}
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
 
 		return sw.toString();
 	}
-	
-	public static String capitalizeFirstChar(String string){
-		StringBuffer buffer = new StringBuffer();
-		
+
+	public static String capitalizeFirstChar(final String string)
+	{
+		final StringBuffer buffer = new StringBuffer();
+
 		buffer.append(String.valueOf(string.charAt(0)).toUpperCase());
 		buffer.append(string.substring(1).toLowerCase());
-		
+
 		return buffer.toString();
 	}
-	
-	public static String toString(String string)
+
+	public static String toString(final String string)
 	{
 		if (string == null)
 		{
-			return "";
+			return EMPTY;
 		}
-
 		return string;
 	}
 
-	public static String inBrackets(String string)
+	public static String inBrackets(final String string)
 	{
 		if (string == null)
 		{
-			return "";
+			return EMPTY;
 		}
 		else
 		{

@@ -46,6 +46,7 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.constants.ThematicGridConstants;
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 
 /**
@@ -135,20 +136,19 @@ public class DisplayRecommendedRolesComposite
 		if (newInSelection != null && (!newInSelection.equals(oldInSelection)))
 		{
 			rolesTree.removeAll();
-			Map<String, Map<ThematicRole, Boolean>> recThematicRoles = newInSelection
-					.getRecommendedThematicRoles();
-			Set<ThematicRole> allAssignedThematicRoles = newInSelection
+			final Map<String, ThematicGrid> recThematicGrids = newInSelection
+					.getRecommendedThematicGrids();
+			final Set<ThematicRole> allAssignedThematicRoles = newInSelection
 					.getAssignedThematicRoles();
 
 			// Sort verb classes alphabetically
-			TreeMap<String, Map<ThematicRole, Boolean>> sortedVerbClasses = new TreeMap<String, Map<ThematicRole, Boolean>>(
-					recThematicRoles);
+			final TreeMap<String, ThematicGrid> sortedVerbClasses = new TreeMap<String, ThematicGrid>(
+					recThematicGrids);
 
-			for (Entry<String, Map<ThematicRole, Boolean>> roleClass : sortedVerbClasses
-					.entrySet())
+			for (Entry<String, ThematicGrid> roleClass : sortedVerbClasses.entrySet())
 			{
-				TreeItem verbClassRoot = new TreeItem(rolesTree, SWT.NONE);
-				String thematicGridName = roleClass.getKey();
+				final TreeItem verbClassRoot = new TreeItem(rolesTree, SWT.NONE);
+				final String thematicGridName = roleClass.getKey();
 
 				if (thematicGridName
 						.equals(newInSelection.getReferenceThematicGridName()))
@@ -162,14 +162,14 @@ public class DisplayRecommendedRolesComposite
 
 				if (roleClass.getValue() != null)
 				{
-					Set<ThematicRole> displayNotAssignedRoles = new TreeSet<ThematicRole>();
-					Set<ThematicRole> displayAssignedRoles = new TreeSet<ThematicRole>();
+					final Set<ThematicRole> displayNotAssignedRoles = new TreeSet<ThematicRole>();
+					final Set<ThematicRole> displayAssignedRoles = new TreeSet<ThematicRole>();
 
-					Iterator<ThematicRole> iter = roleClass.getValue().keySet()
-							.iterator();
+					final Iterator<ThematicRole> iter = roleClass.getValue().getRoles()
+							.keySet().iterator();
 					while (iter.hasNext())
 					{
-						ThematicRole recRole = iter.next();
+						final ThematicRole recRole = iter.next();
 						if (allAssignedThematicRoles.contains(recRole))
 						{
 							displayAssignedRoles.add(recRole);
@@ -189,7 +189,7 @@ public class DisplayRecommendedRolesComposite
 						roleItem.setText(role.getName() + ASSOCIATED_ROLE);
 						roleItem.setForeground(GREEN);
 
-						if (roleClass.getValue().get(role))
+						if (roleClass.getValue().getRoles().get(role))
 						{
 							// role is mandatory and associated
 							roleItem.setFont(boldFont);
@@ -200,7 +200,7 @@ public class DisplayRecommendedRolesComposite
 						TreeItem roleItem = new TreeItem(verbClassRoot, SWT.NONE);
 						roleItem.setText(role.getName());
 
-						if (roleClass.getValue().get(role))
+						if (roleClass.getValue().getRoles().get(role))
 						{
 							// role is mandatory and not associated
 							roleItem.setForeground(RED);
@@ -302,7 +302,7 @@ public class DisplayRecommendedRolesComposite
 
 				if (selection != null)
 				{
-					boolean isThematicGridItem = selection.getRecommendedThematicRoles()
+					boolean isThematicGridItem = selection.getRecommendedThematicGrids()
 							.containsKey(itemText);
 					tablePopUpMenu.setVisible(isThematicGridItem);
 				}

@@ -31,6 +31,7 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
 
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.DisplayRecommendedRolesComposite;
 import de.akra.idocit.ui.composites.DisplayRecommendedRolesCompositeSelection;
@@ -66,16 +67,23 @@ public class DisplayRecommendedRolesCompositeFactory
 		Set<ThematicRole> assignedThematicRoles = new TreeSet<ThematicRole>();
 		assignedThematicRoles.add((ThematicRole) (thematicRoles.toArray()[0]));
 
-		Map<String, Map<ThematicRole, Boolean>> roles = new HashMap<String, Map<ThematicRole, Boolean>>();
-		Map<ThematicRole, Boolean> recRoles = new HashMap<ThematicRole, Boolean>();
+		final Map<String, ThematicGrid> recommendedGrids = new HashMap<String, ThematicGrid>();
+		final Map<ThematicRole, Boolean> recRoles = new HashMap<ThematicRole, Boolean>();
 
 		recRoles.put(thematicRoles.get(0), Boolean.TRUE);
 		recRoles.put(thematicRoles.get(1), Boolean.FALSE);
+		
+		final ThematicGrid grid1 = new ThematicGrid();
+		grid1.setName("Class 1");
+		grid1.setRoles(recRoles);
+		recommendedGrids.put(grid1.getName(), grid1);
 
-		roles.put("Class 1", recRoles);
-		roles.put("Class 2", recRoles);
-
-		selection = selection.setRecommendedThematicRoles(roles);
+		final ThematicGrid grid2 = new ThematicGrid();
+		grid2.setName("Class 2");
+		grid2.setRoles(recRoles);
+		recommendedGrids.put(grid2.getName(), grid2);
+		
+		selection = selection.setRecommendedThematicGrids(recommendedGrids);
 		selection = selection.setAssignedThematicRoles(assignedThematicRoles);
 
 		recRolesComp.setSelection(selection);

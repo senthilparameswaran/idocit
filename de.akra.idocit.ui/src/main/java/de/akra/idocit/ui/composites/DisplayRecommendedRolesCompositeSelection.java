@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.pocui.core.composites.ISelection;
 
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 
 /**
@@ -33,8 +34,9 @@ import de.akra.idocit.common.structure.ThematicRole;
  * @version 0.0.1
  * 
  */
-public class DisplayRecommendedRolesCompositeSelection implements ISelection {
-	private Map<String, Map<ThematicRole, Boolean>> recommendedThematicRoles;
+public class DisplayRecommendedRolesCompositeSelection implements ISelection
+{
+	private Map<String, ThematicGrid> recommendedThematicGrids;
 
 	private Set<ThematicRole> assignedThematicRoles;
 
@@ -48,23 +50,23 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection {
 	/**
 	 * The default constructor
 	 */
-	public DisplayRecommendedRolesCompositeSelection() {
+	public DisplayRecommendedRolesCompositeSelection()
+	{
 		assignedThematicRoles = new HashSet<ThematicRole>();
 		referenceThematicGridName = "";
-		recommendedThematicRoles = new HashMap<String, Map<ThematicRole, Boolean>>();
+		recommendedThematicGrids = new HashMap<String, ThematicGrid>();
 		collapsedThematicGridNames = new HashSet<String>();
 	}
 
 	/**
 	 * Complete Constructor
 	 * 
-	 * Intention: this constructor has been implemented for convenience within
-	 * internal setters. But it could be used from outside as well.
+	 * Intention: this constructor has been implemented for convenience within internal
+	 * setters. But it could be used from outside as well.
 	 * 
-	 * @param recommendedThematicRoles
-	 *            The recommended thematic roles (key: name of thematic grid,
-	 *            value: Map of thematic role to boolean (key: role, value: role
-	 *            is mandatory))
+	 * @param recommendedThematicGrids
+	 *            The recommended thematic grids (key: name of thematic grid, value: the
+	 *            ThematicGrid))
 	 * @param assignedThematicRoles
 	 *            The set of documented roles
 	 * @param referenceThematicGridName
@@ -73,25 +75,16 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection {
 	 *            The set of names of collapsed thematic grids
 	 */
 	public DisplayRecommendedRolesCompositeSelection(
-			Map<String, Map<ThematicRole, Boolean>> recommendedThematicRoles,
-			Set<ThematicRole> assignedThematicRoles,
-			String referenceThematicGridName,
-			Set<String> collapsedThematicGridNames) {
+			Map<String, ThematicGrid> recommendedThematicGrids,
+			Set<ThematicRole> assignedThematicRoles, String referenceThematicGridName,
+			Set<String> collapsedThematicGridNames)
+	{
 
-		this.recommendedThematicRoles = new HashMap<String, Map<ThematicRole, Boolean>>(
-				recommendedThematicRoles);
-		this.assignedThematicRoles = new HashSet<ThematicRole>(
-				assignedThematicRoles);
+		this.recommendedThematicGrids = new HashMap<String, ThematicGrid>(
+				recommendedThematicGrids);
+		this.assignedThematicRoles = new HashSet<ThematicRole>(assignedThematicRoles);
 		this.referenceThematicGridName = referenceThematicGridName;
-		this.collapsedThematicGridNames = new HashSet<String>(
-				collapsedThematicGridNames);
-	}
-
-	/**
-	 * @return the assignedThematicRoles
-	 */
-	public Set<ThematicRole> getAssignedThematicRoles() {
-		return new HashSet<ThematicRole>(assignedThematicRoles);
+		this.collapsedThematicGridNames = new HashSet<String>(collapsedThematicGridNames);
 	}
 
 	/**
@@ -99,29 +92,39 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection {
 	 *            the assignedThematicRoles to set
 	 */
 	public DisplayRecommendedRolesCompositeSelection setAssignedThematicRoles(
-			Set<ThematicRole> assignedThematicRoles) {
-		return new DisplayRecommendedRolesCompositeSelection(
-				recommendedThematicRoles, assignedThematicRoles,
-				referenceThematicGridName, collapsedThematicGridNames);
+			final Set<ThematicRole> assignedThematicRoles)
+	{
+		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
+				assignedThematicRoles, referenceThematicGridName,
+				collapsedThematicGridNames);
 	}
 
 	/**
-	 * @param recommendedThematicRoles
-	 *            the recommendedThematicRoles to set
+	 * @param recommendedThematicGrids
+	 *            the recommendedThematicGrids to set
 	 */
-	public DisplayRecommendedRolesCompositeSelection setRecommendedThematicRoles(
-			Map<String, Map<ThematicRole, Boolean>> recommendedThematicRoles) {
-		return new DisplayRecommendedRolesCompositeSelection(
-				recommendedThematicRoles, assignedThematicRoles,
-				referenceThematicGridName, collapsedThematicGridNames);
+	public DisplayRecommendedRolesCompositeSelection setRecommendedThematicGrids(
+			final Map<String, ThematicGrid> recommendedThematicGrids)
+	{
+		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
+				assignedThematicRoles, referenceThematicGridName,
+				collapsedThematicGridNames);
 	}
 
 	/**
-	 * @return the recommendedThematicRoles
+	 * @return the assignedThematicRoles
 	 */
-	public Map<String, Map<ThematicRole, Boolean>> getRecommendedThematicRoles() {
-		return new HashMap<String, Map<ThematicRole, Boolean>>(
-				recommendedThematicRoles);
+	public Set<ThematicRole> getAssignedThematicRoles()
+	{
+		return new HashSet<ThematicRole>(assignedThematicRoles);
+	}
+
+	/**
+	 * @return the recommendedThematicGrids
+	 */
+	public Map<String, ThematicGrid> getRecommendedThematicGrids()
+	{
+		return new HashMap<String, ThematicGrid>(recommendedThematicGrids);
 	}
 
 	/**
@@ -129,53 +132,57 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection {
 	 *            the collapsedThematicGridNames to set
 	 */
 	public DisplayRecommendedRolesCompositeSelection setCollapsedThematicGridNames(
-			Set<String> collapsedThematicGridNames) {
-		return new DisplayRecommendedRolesCompositeSelection(
-				recommendedThematicRoles, assignedThematicRoles,
-				referenceThematicGridName, collapsedThematicGridNames);
+			final Set<String> collapsedThematicGridNames)
+	{
+		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
+				assignedThematicRoles, referenceThematicGridName,
+				collapsedThematicGridNames);
 	}
 
 	/**
 	 * @return the collapsedThematicGridNames
 	 */
-	public Set<String> getCollapsedThematicGridNames() {
+	public Set<String> getCollapsedThematicGridNames()
+	{
 		return new HashSet<String>(collapsedThematicGridNames);
 	}
 
-	public String getReferenceThematicGridName() {
+	public String getReferenceThematicGridName()
+	{
 		return referenceThematicGridName;
 	}
 
 	public DisplayRecommendedRolesCompositeSelection setReferenceThematicGridName(
-			String referenceThematicGridName) {
-		return new DisplayRecommendedRolesCompositeSelection(
-				recommendedThematicRoles, assignedThematicRoles,
-				referenceThematicGridName, collapsedThematicGridNames);
+			final String referenceThematicGridName)
+	{
+		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
+				assignedThematicRoles, referenceThematicGridName,
+				collapsedThematicGridNames);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime
 				* result
-				+ ((assignedThematicRoles == null) ? 0 : assignedThematicRoles
+				+ ((assignedThematicRoles == null) ? 0 : assignedThematicRoles.hashCode());
+		result = prime
+				* result
+				+ ((collapsedThematicGridNames == null) ? 0 : collapsedThematicGridNames
 						.hashCode());
 		result = prime
 				* result
-				+ ((collapsedThematicGridNames == null) ? 0
-						: collapsedThematicGridNames.hashCode());
+				+ ((recommendedThematicGrids == null) ? 0 : recommendedThematicGrids
+						.hashCode());
 		result = prime
 				* result
-				+ ((recommendedThematicRoles == null) ? 0
-						: recommendedThematicRoles.hashCode());
-		result = prime
-				* result
-				+ ((referenceThematicGridName == null) ? 0
-						: referenceThematicGridName.hashCode());
+				+ ((referenceThematicGridName == null) ? 0 : referenceThematicGridName
+						.hashCode());
 		return result;
 	}
 
@@ -183,7 +190,8 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -191,28 +199,33 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection {
 		if (getClass() != obj.getClass())
 			return false;
 		DisplayRecommendedRolesCompositeSelection other = (DisplayRecommendedRolesCompositeSelection) obj;
-		if (assignedThematicRoles == null) {
+		if (assignedThematicRoles == null)
+		{
 			if (other.assignedThematicRoles != null)
 				return false;
-		} else if (!assignedThematicRoles.equals(other.assignedThematicRoles))
+		}
+		else if (!assignedThematicRoles.equals(other.assignedThematicRoles))
 			return false;
-		if (collapsedThematicGridNames == null) {
+		if (collapsedThematicGridNames == null)
+		{
 			if (other.collapsedThematicGridNames != null)
 				return false;
-		} else if (!collapsedThematicGridNames
-				.equals(other.collapsedThematicGridNames))
+		}
+		else if (!collapsedThematicGridNames.equals(other.collapsedThematicGridNames))
 			return false;
-		if (recommendedThematicRoles == null) {
-			if (other.recommendedThematicRoles != null)
+		if (recommendedThematicGrids == null)
+		{
+			if (other.recommendedThematicGrids != null)
 				return false;
-		} else if (!recommendedThematicRoles
-				.equals(other.recommendedThematicRoles))
+		}
+		else if (!recommendedThematicGrids.equals(other.recommendedThematicGrids))
 			return false;
-		if (referenceThematicGridName == null) {
+		if (referenceThematicGridName == null)
+		{
 			if (other.referenceThematicGridName != null)
 				return false;
-		} else if (!referenceThematicGridName
-				.equals(other.referenceThematicGridName))
+		}
+		else if (!referenceThematicGridName.equals(other.referenceThematicGridName))
 			return false;
 		return true;
 	}
@@ -221,14 +234,12 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "DisplayRecommendedRolesCompositeSelection [recommendedThematicRoles="
-				+ recommendedThematicRoles
-				+ ", assignedThematicRoles="
-				+ assignedThematicRoles
-				+ ", referenceThematicGridName="
-				+ referenceThematicGridName
-				+ ", collapsedThematicGridNames="
+				+ recommendedThematicGrids + ", assignedThematicRoles="
+				+ assignedThematicRoles + ", referenceThematicGridName="
+				+ referenceThematicGridName + ", collapsedThematicGridNames="
 				+ collapsedThematicGridNames + "]";
 	}
 }

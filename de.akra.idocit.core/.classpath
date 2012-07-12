@@ -4,9 +4,9 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry exported="true" kind="lib" path="lib/de.akra.idocit.common-0.0.3-tests.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/de.akra.idocit.common-0.0.3.jar" sourcepath="/de.akra.idocit.common"/>
 	<classpathentry exported="true" kind="lib" path="lib/annotations.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/de.akra.idocit.common-0.0.2-tests.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/de.akra.idocit.common-0.0.2.jar" sourcepath="/de.akra.idocit.common"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="lib" path="lib/idocit.wsdl.wsdl4j.jar" sourcepath="/de.akra.idocit.wsdl.wsdl4j"/>
