@@ -29,7 +29,8 @@ import de.akra.idocit.common.utils.StringUtils;
  * Service to derive thematic grids for a verb out of an identifier.
  * 
  * @author Jan Christian Krause
- * 
+ * @since 0.0.1
+ * @version 0.0.2
  */
 public class ThematicGridService
 {
@@ -44,14 +45,14 @@ public class ThematicGridService
 	 * 
 	 * @return List of found {@link ThematicGrid}s.
 	 */
-	private static List<ThematicGrid> findMatchingGrids(String verb,
-			List<ThematicGrid> definedGrids)
+	private static List<ThematicGrid> findMatchingGrids(final String verb,
+			final List<ThematicGrid> definedGrids)
 	{
-		List<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
+		final List<ThematicGrid> matchingGrids = new ArrayList<ThematicGrid>();
 
-		for (ThematicGrid definedGrid : definedGrids)
+		for (final ThematicGrid definedGrid : definedGrids)
 		{
-			Set<String> verbs = definedGrid.getVerbs();
+			final Set<String> verbs = definedGrid.getVerbs();
 
 			if (verbs.contains(verb))
 			{
@@ -71,14 +72,15 @@ public class ThematicGridService
 	 * 
 	 * @return Extracted verb (<code>null</code> if no verb could be identified)
 	 */
-	public static String extractVerb(String identifier)
+	public static String extractVerb(final String identifier)
 	{
 		if ((identifier != null) && (!identifier.trim().isEmpty()))
 		{
-			String sentenceIdentifier = StringUtils.addBlanksToCamelSyntax(identifier);
+			final String sentenceIdentifier = StringUtils
+					.addBlanksToCamelSyntax(identifier);
 
 			// Identify the verb.
-			String[] words = sentenceIdentifier.split(" ");
+			final String[] words = sentenceIdentifier.split(StringUtils.SPACE);
 			if (words.length > 0)
 			{
 				return words[0].toLowerCase();
@@ -98,31 +100,29 @@ public class ThematicGridService
 	 *            grids should be derived.
 	 * @param definedGrids
 	 *            The list of defined {@link ThematicGrid}s (SOURCE)
-	 * @return Map of thematic grid names linking to Set of {@link ThematicRole}s.
+	 * @return Map of thematic grid names linking to the {@link ThematicGrid}.
 	 */
-	public static Map<String, Map<ThematicRole, Boolean>> deriveThematicGrid(
-			String identifier, List<ThematicGrid> definedGrids)
+	public static Map<String, ThematicGrid> deriveThematicGrid(final String identifier,
+			final List<ThematicGrid> definedGrids)
 	{
-		Map<String, Map<ThematicRole, Boolean>> matchingRoles = new HashMap<String, Map<ThematicRole, Boolean>>();
+		final Map<String, ThematicGrid> matchingGrids = new HashMap<String, ThematicGrid>();
 
-		String verb = extractVerb(identifier);
-
+		final String verb = extractVerb(identifier);
 		if (verb != null)
 		{
 			// Classify the verb.
-			List<ThematicGrid> matchingVerbClasses = findMatchingGrids(verb, definedGrids);
-
+			final List<ThematicGrid> matchingVerbClasses = findMatchingGrids(verb,
+					definedGrids);
 			if (!matchingVerbClasses.isEmpty())
 			{
-				// Lookup the recommended arguments and modificators.
 				for (ThematicGrid verbClass : matchingVerbClasses)
 				{
-					matchingRoles.put(verbClass.getName(), verbClass.getRoles());
+					matchingGrids.put(verbClass.getName(), verbClass);
 				}
 			}
 		}
 
-		return matchingRoles;
+		return matchingGrids;
 	}
 
 	/**
@@ -138,9 +138,10 @@ public class ThematicGridService
 	 * @return <code>true</code>, if the role is included in the list, else
 	 *         <code>false</code>
 	 */
-	public static boolean containsRole(List<ThematicRole> roles, ThematicRole role)
+	public static boolean containsRole(final List<ThematicRole> roles,
+			final ThematicRole role)
 	{
-		for (ThematicRole referenceRole : roles)
+		for (final ThematicRole referenceRole : roles)
 		{
 			if ((referenceRole.getName() != null)
 					&& (referenceRole.getName().equals(role.getName())))
@@ -169,15 +170,15 @@ public class ThematicGridService
 	 *         {@link ThematicGrid}s
 	 * 
 	 */
-	public static List<ThematicRole> collectThematicRoles(List<ThematicGrid> grids,
-			List<ThematicRole> existingRoles)
+	public static List<ThematicRole> collectThematicRoles(final List<ThematicGrid> grids,
+			final List<ThematicRole> existingRoles)
 	{
-		List<ThematicRole> roles = new ArrayList<ThematicRole>();
+		final List<ThematicRole> roles = new ArrayList<ThematicRole>();
 		roles.addAll(existingRoles);
 
-		for (ThematicGrid grid : grids)
+		for (final ThematicGrid grid : grids)
 		{
-			for (ThematicRole role : grid.getRoles().keySet())
+			for (final ThematicRole role : grid.getRoles().keySet())
 			{
 				if (!containsRole(roles, role))
 				{
@@ -189,10 +190,10 @@ public class ThematicGridService
 		return roles;
 	}
 
-	public static ThematicGrid findThematicGridByName(String thematicGridName,
-			List<ThematicGrid> grids)
+	public static ThematicGrid findThematicGridByName(final String thematicGridName,
+			final List<ThematicGrid> grids)
 	{
-		for (ThematicGrid grid : grids)
+		for (final ThematicGrid grid : grids)
 		{
 			if (grid.getName().equals(thematicGridName))
 			{

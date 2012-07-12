@@ -228,7 +228,8 @@ public class EditArtifactDocumentationComposite
 				}
 				else
 				{
-					editArtSelection.setSelectedSignatureElement(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
+					editArtSelection
+							.setSelectedSignatureElement(SignatureElement.EMPTY_SIGNATURE_ELEMENT);
 					// Changes due to Issue #21
 					List<Documentation> emptyDocs = Collections.emptyList();
 					editArtSelection.setCurrentDocumentations(emptyDocs);
@@ -361,22 +362,23 @@ public class EditArtifactDocumentationComposite
 	{
 		if (newInSelection != null && !newInSelection.equals(oldInSelection))
 		{
-			SignatureElement selectedSigElem = newInSelection
+			final SignatureElement selectedSigElem = newInSelection
 					.getSelectedSignatureElement();
-			SignatureElement sigElemOperation = SignatureElementUtils
+			final SignatureElement sigElemOperation = SignatureElementUtils
 					.findOperationForParameter(selectedSigElem);
-			Map<String, Map<ThematicRole, Boolean>> roles = new HashMap<String, Map<ThematicRole, Boolean>>();
+			Map<String, ThematicGrid> matchingGrids = new HashMap<String, ThematicGrid>();
 
 			// Changes due to Issue #23
 			try
 			{
-				List<ThematicGrid> thematicGrids = ServiceManager.getInstance()
+				List<ThematicGrid> allThematicGrids = ServiceManager.getInstance()
 						.getPersistenceService().loadThematicGrids();
-				roles = ThematicGridService.deriveThematicGrid(
-						sigElemOperation.getIdentifier(), thematicGrids);
-				roles = reduceGrids(roles.keySet(), thematicGrids, selectedSigElem);
+				matchingGrids = ThematicGridService.deriveThematicGrid(
+						sigElemOperation.getIdentifier(), allThematicGrids);
+				matchingGrids = reduceGrids(matchingGrids.keySet(), allThematicGrids,
+						selectedSigElem);
 
-				updateDocumentItemListComposite(newInSelection, roles);
+				updateDocumentItemListComposite(newInSelection, matchingGrids);
 			}
 			catch (UnitializedIDocItException unEx)
 			{
@@ -390,7 +392,7 @@ public class EditArtifactDocumentationComposite
 			// End changes due to Issue #23
 
 			updateSelectSignatureElementComposite(newInSelection);
-			updateDisplayRecommendedRolesComposite(newInSelection, roles,
+			updateDisplayRecommendedRolesComposite(newInSelection, matchingGrids,
 					sigElemOperation, selectedSigElem);
 		}
 	}
@@ -421,17 +423,17 @@ public class EditArtifactDocumentationComposite
 	 */
 	private void updateDocumentItemListComposite(
 			EditArtifactDocumentationCompositeSelection newInSelection,
-			Map<String, Map<ThematicRole, Boolean>> roles)
+			Map<String, ThematicGrid> thematicGrids)
 			throws UnitializedIDocItException
 	{
-		SignatureElement selectedSigElem = newInSelection.getSelectedSignatureElement();
-		List<ThematicGrid> grids = convertToList(roles.keySet());
+		final SignatureElement selectedSigElem = newInSelection.getSelectedSignatureElement();
+		final List<ThematicGrid> grids = convertToList(thematicGrids.keySet());
 
-		RolesRecommendations rolesRecommendations = RuleService
+		final RolesRecommendations rolesRecommendations = RuleService
 				.deriveRolesRecommendation(grids, newInSelection.getThematicRoleList(),
 						selectedSigElem);
 
-		DocumentItemListCompositeSelection docItemListSelection = new DocumentItemListCompositeSelection();
+		final DocumentItemListCompositeSelection docItemListSelection = new DocumentItemListCompositeSelection();
 		docItemListSelection.setAddresseeList(newInSelection.getAddresseeList());
 		docItemListSelection.setRolesRecommendations(rolesRecommendations);
 		docItemListSelection.setDocumentationAllowed(selectedSigElem != null
@@ -508,7 +510,7 @@ public class EditArtifactDocumentationComposite
 	 */
 	private void updateDisplayRecommendedRolesComposite(
 			EditArtifactDocumentationCompositeSelection newInSelection,
-			Map<String, Map<ThematicRole, Boolean>> roles, SignatureElement operation,
+			Map<String, ThematicGrid> grids, SignatureElement operation,
 			SignatureElement selectedSigElem)
 	{
 		DisplayRecommendedRolesCompositeSelection recRolesCompSelection = new DisplayRecommendedRolesCompositeSelection();
@@ -535,7 +537,7 @@ public class EditArtifactDocumentationComposite
 							OPERATION_NAME_NOT_AVAILABLE));
 		}
 
-		recRolesCompSelection = recRolesCompSelection.setRecommendedThematicRoles(roles);
+		recRolesCompSelection = recRolesCompSelection.setRecommendedThematicGrids(grids);
 		recRolesCompSelection = recRolesCompSelection
 				.setAssignedThematicRoles(associatedThematicRoles);
 
@@ -559,22 +561,21 @@ public class EditArtifactDocumentationComposite
 		displayRecommendedRolesComposite.setSelection(recRolesCompSelection);
 	}
 
-	private Map<String, Map<ThematicRole, Boolean>> reduceGrids(
-			Set<String> thematicGridNames, List<ThematicGrid> grids,
-			SignatureElement selectedSigElem)
+	private Map<String, ThematicGrid> reduceGrids(Set<String> thematicGridNames,
+			List<ThematicGrid> grids, SignatureElement selectedSigElem)
 	{
-		Map<String, Map<ThematicRole, Boolean>> reducedGrids = new HashMap<String, Map<ThematicRole, Boolean>>();
+		final Map<String, ThematicGrid> reducedGrids = new HashMap<String, ThematicGrid>();
 
-		for (String thematicGridName : thematicGridNames)
+		for (final String thematicGridName : thematicGridNames)
 		{
-			ThematicGrid thematicGrid = ThematicGridService.findThematicGridByName(
+			final ThematicGrid thematicGrid = ThematicGridService.findThematicGridByName(
 					thematicGridName, grids);
 
 			if (thematicGrid != null)
 			{
-				ThematicGrid reducedGrid = RuleService.reduceGrid(thematicGrid,
+				final ThematicGrid reducedGrid = RuleService.reduceGrid(thematicGrid,
 						selectedSigElem);
-				reducedGrids.put(thematicGridName, reducedGrid.getRoles());
+				reducedGrids.put(thematicGridName, reducedGrid);
 			}
 			else
 			{

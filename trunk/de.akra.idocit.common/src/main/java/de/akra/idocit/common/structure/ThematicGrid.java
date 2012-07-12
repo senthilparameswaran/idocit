@@ -239,25 +239,25 @@ public class ThematicGrid implements DescribedItem, Cloneable
 	{
 		try
 		{
-			ThematicGrid clone = (ThematicGrid) super.clone();
+			final ThematicGrid clone = (ThematicGrid) super.clone();
 
 			clone.setDescription(description);
 			clone.setName(name);
 			clone.setRefernceVerb(referenceVerb);
 
-			Set<String> cloneVerbs = new HashSet<String>(verbs);
+			final Set<String> cloneVerbs = new HashSet<String>(verbs);
 			clone.setVerbs(cloneVerbs);
 
 			if (roles != null)
 			{
-				Map<ThematicRole, Boolean> cloneRoles = new HashMap<ThematicRole, Boolean>();
-				cloneRoles.putAll(roles);
+				final Map<ThematicRole, Boolean> cloneRoles = new HashMap<ThematicRole, Boolean>();
+				cloneRoles.putAll(cloneRoles);
 				clone.setRoles(cloneRoles);
 			}
 
 			if (gridBasedRules != null)
 			{
-				Map<String, String> cloneGridBasedRules = new HashMap<String, String>();
+				final Map<String, String> cloneGridBasedRules = new HashMap<String, String>();
 				cloneGridBasedRules.putAll(gridBasedRules);
 				clone.setGridBasedRules(cloneGridBasedRules);
 			}

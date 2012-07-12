@@ -135,17 +135,18 @@ public final class RuleService
 	public static ThematicGrid reduceGrid(final ThematicGrid gridToReduce,
 			final SignatureElement selectedSignatureElement)
 	{
-		ThematicGrid reducedGrid = (ThematicGrid) gridToReduce.clone();
-		Map<ThematicRole, Boolean> reducedRoles = new HashMap<ThematicRole, Boolean>();
-		Map<String, String> reducedRules = new HashMap<String, String>();
+		final ThematicGrid reducedGrid = (ThematicGrid) gridToReduce.clone();
+		final Map<ThematicRole, Boolean> reducedRoles = new HashMap<ThematicRole, Boolean>();
+		final Map<String, String> reducedRules = new HashMap<String, String>();
 
 		if (gridToReduce.getRoles() != null)
 		{
 			for (Entry<ThematicRole, Boolean> entry : gridToReduce.getRoles().entrySet())
 			{
-				Map<String, String> gridBasedRules = gridToReduce.getGridBasedRules();
-				ThematicRole role = entry.getKey();
-				String gridRule = gridBasedRules.get(role.getName());
+				final Map<String, String> gridBasedRules = gridToReduce
+						.getGridBasedRules();
+				final ThematicRole role = entry.getKey();
+				final String gridRule = gridBasedRules.get(role.getName());
 
 				if (LOG.isLoggable(Level.INFO))
 				{
@@ -309,14 +310,14 @@ public final class RuleService
 					secondLevel);
 		}
 
-		Set<ThematicRole> associatedThematicRoles = new HashSet<ThematicRole>();
+		final Set<ThematicRole> associatedThematicRoles = new HashSet<ThematicRole>();
 		SignatureElementUtils.collectAssociatedThematicRoles(associatedThematicRoles,
 				selectedSignatureElement);
 
 		firstLevel.removeAll(associatedThematicRoles);
 		secondLevel.addAll(associatedThematicRoles);
 
-		for (ThematicRole role : definedRoles)
+		for (final ThematicRole role : definedRoles)
 		{
 			if (!firstLevel.contains(role))
 			{
@@ -327,7 +328,7 @@ public final class RuleService
 		return new RolesRecommendations(sortByName(firstLevel), sortByName(secondLevel));
 	}
 
-	private static boolean isInterfaceLevel(SignatureElement sigElem)
+	private static boolean isInterfaceLevel(final SignatureElement sigElem)
 	{
 		return (sigElem instanceof Interface) || (sigElem instanceof InterfaceArtifact);
 	}
@@ -355,13 +356,14 @@ public final class RuleService
 		}
 	}
 
-	private static void removeNonGridRoles(ThematicGrid grid, Set<ThematicRole> roles)
+	private static void removeNonGridRoles(final ThematicGrid grid,
+			final Set<ThematicRole> roles)
 	{
-		Set<ThematicRole> gridRoles = new HashSet<ThematicRole>(roles.size());
+		final Set<ThematicRole> gridRoles = new HashSet<ThematicRole>(roles.size());
 		gridRoles.addAll(roles);
 		roles.clear();
 
-		for (ThematicRole role : gridRoles)
+		for (final ThematicRole role : gridRoles)
 		{
 			if (grid.getRoles().containsKey(role))
 			{
@@ -430,7 +432,7 @@ public final class RuleService
 	 * @return The list of created contexts
 	 */
 	private static List<ThematicRoleContext> createThematicRolesContextsForOperation(
-			Operation operation)
+			final Operation operation)
 	{
 		Preconditions.checkNotNull(operation, "The operation must not be null.");
 
@@ -439,9 +441,9 @@ public final class RuleService
 		// Create the context for ...
 		// ... the operation itsself.
 		final String verb = ThematicGridService.extractVerb(operation.getIdentifier());
-		final ThematicRoleContext operationContext = new ThematicRoleContext(new ThematicRole("NONE"),
-				operation.getNumerus(), operation.hasPublicAccessibleAttributes(), false,
-				verb);
+		final ThematicRoleContext operationContext = new ThematicRoleContext(
+				new ThematicRole("NONE"), operation.getNumerus(),
+				operation.hasPublicAccessibleAttributes(), false, verb);
 
 		thematicRoleContexts.add(operationContext);
 		createThematicRoleContexts(thematicRoleContexts, operation);
