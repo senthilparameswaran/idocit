@@ -125,7 +125,7 @@ public class DocumentationEditor
 					{
 						logger.log(
 								Level.SEVERE,
-								"The iDocIt! editor could not be initialized du to the following exception:",
+								"The iDocIt! editor could not be initialized due to the following exception:",
 								e);
 					}
 				}
@@ -396,13 +396,13 @@ public class DocumentationEditor
 	/**
 	 * Returns a label with an initialization-message
 	 * 
-	 * @param arg0
+	 * @param parent
 	 *            The parent composite
 	 * @return The message-label
 	 */
-	private Label createInitializingLabel(Composite arg0)
+	private Label createInitializingLabel(Composite parent)
 	{
-		Label initializingMessageLabel = new Label(arg0, SWT.NONE);
+		Label initializingMessageLabel = new Label(parent, SWT.NONE);
 		initializationFont = new Font(Display.getDefault(), new FontData("Arial", 20,
 				SWT.BOLD));
 		initializingMessageLabel.setFont(initializationFont);
