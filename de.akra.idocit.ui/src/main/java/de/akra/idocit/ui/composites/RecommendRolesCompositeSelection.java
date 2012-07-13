@@ -1,27 +1,33 @@
 package de.akra.idocit.ui.composites;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.structure.ThematicGrid;
 
+/**
+ * Selection for {@link RecommendRolesComposite}.
+ * 
+ * @author Dirk Meier-Eickhoff
+ * 
+ */
 public class RecommendRolesCompositeSelection implements ISelection
 {
-	
-	private Map<String, Map<ThematicRole, Boolean>> recommendedThematicRoles;
+	private Map<String, ThematicGrid> recommendedThematicGrids = Collections.emptyMap();
 
 	private String operationIdentifier;
 
-	public Map<String, Map<ThematicRole, Boolean>> getRecommendedThematicRoles()
+	public Map<String, ThematicGrid> getRecommendedThematicGrids()
 	{
-		return recommendedThematicRoles;
+		return recommendedThematicGrids;
 	}
 
-	public void setRecommendedThematicRoles(
-			Map<String, Map<ThematicRole, Boolean>> recommendedThematicRoles)
+	public void setRecommendedThematicGrids(
+			Map<String, ThematicGrid> recommendedThematicGrids)
 	{
-		this.recommendedThematicRoles = recommendedThematicRoles;
+		this.recommendedThematicGrids = recommendedThematicGrids;
 	}
 
 	public String getOperationIdentifier()
@@ -43,7 +49,7 @@ public class RecommendRolesCompositeSelection implements ISelection
 				+ ((operationIdentifier == null) ? 0 : operationIdentifier.hashCode());
 		result = prime
 				* result
-				+ ((recommendedThematicRoles == null) ? 0 : recommendedThematicRoles
+				+ ((recommendedThematicGrids == null) ? 0 : recommendedThematicGrids
 						.hashCode());
 		return result;
 	}
@@ -65,12 +71,12 @@ public class RecommendRolesCompositeSelection implements ISelection
 		}
 		else if (!operationIdentifier.equals(other.operationIdentifier))
 			return false;
-		if (recommendedThematicRoles == null)
+		if (recommendedThematicGrids == null)
 		{
-			if (other.recommendedThematicRoles != null)
+			if (other.recommendedThematicGrids != null)
 				return false;
 		}
-		else if (!recommendedThematicRoles.equals(other.recommendedThematicRoles))
+		else if (!recommendedThematicGrids.equals(other.recommendedThematicGrids))
 			return false;
 		return true;
 	}
@@ -78,12 +84,8 @@ public class RecommendRolesCompositeSelection implements ISelection
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("RecommendRolesCompositeSelection [recommendedThematicRoles=");
-		builder.append(recommendedThematicRoles);
-		builder.append(", operationIdentifier=");
-		builder.append(operationIdentifier);
-		builder.append("]");
-		return builder.toString();
+		return "RecommendRolesCompositeSelection [recommendedThematicGrids="
+				+ recommendedThematicGrids + ", operationIdentifier="
+				+ operationIdentifier + "]";
 	}
 }

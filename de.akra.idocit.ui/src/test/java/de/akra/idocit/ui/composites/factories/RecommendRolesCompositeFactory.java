@@ -6,8 +6,10 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
 
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.RecommendRolesComposite;
 import de.akra.idocit.ui.composites.RecommendRolesCompositeSelection;
+import de.akra.idocit.ui.services.CompositeTestPersistenceService;
 
 public class RecommendRolesCompositeFactory
 		implements
@@ -18,10 +20,12 @@ public class RecommendRolesCompositeFactory
 	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, RecommendRolesCompositeSelection> createComposite(
 			Composite parent, int style)
 	{
-		RecommendRolesComposite composite = new RecommendRolesComposite(parent, style);
-		
-		
-		
+		ServiceManager.getInstance().setPersistenceService(
+				new CompositeTestPersistenceService());
+
+		final RecommendRolesComposite composite = new RecommendRolesComposite(parent,
+				style);
+		composite.setSelection(new RecommendRolesCompositeSelection());
 		return composite;
 	}
 
