@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="customerservice_undocumented"
+	targetNamespace="http://www.akra.de/ccs" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:ccs="http://www.akra.de/ccs">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.akra.de/ccs">
+			<xsd:element name="findCustomerById">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="id" type="xsd:int" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="findCustomerByIdResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="customer" type="ccs:Customer" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:complexType name="Customer">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string" />
+					<xsd:element name="firstname" type="xsd:string" />
+					<xsd:element name="address" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="findCustomerByIdResponse">
+		<wsdl:part name="parameters" element="ccs:findCustomerByIdResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="findCustomerByIdRequest">
+		<wsdl:part name="parameters" element="ccs:findCustomerById">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="CustomerCareService">
+		<wsdl:operation name="findCustomerById">
+			<wsdl:documentation>
+				<docpart role="ACTION">
+					<addressee group="Developer">Finds the customer with the given id.If
+						no customer is found, null will be returned.</addressee>
+					<addressee group="Integrater" />
+				</docpart>
+				<docpart role="SOURCE">
+					<addressee group="Integrater">The datasource is namedDATA_SOURCE_CCS
+						and could be configured in the file WEB.INF/web.xml</addressee>
+				</docpart>
+			</wsdl:documentation>
+			<wsdl:input message="ccs:findCustomerByIdRequest">
+				<wsdl:documentation>
+					<docpart role="COMPARISON"
+						signatureElement="findCustomerByIdRequest;parameters+findCustomerById;findCustomerById+anonymous;id+int">
+						<addressee group="Developer">Must be greater than zero.</addressee>
+					</docpart>
+				</wsdl:documentation>
+			</wsdl:input>
+			<wsdl:output message="ccs:findCustomerByIdResponse">
+				<wsdl:documentation>
+					<docpart role="ATTRIBUTE"
+						signatureElement="findCustomerByIdResponse;parameters+findCustomerByIdResponse;findCustomerByIdResponse+anonymous;customer+Customer;name+string" />
+					<docpart role="ATTRIBUTE"
+						signatureElement="findCustomerByIdResponse;parameters+findCustomerByIdResponse;findCustomerByIdResponse+anonymous;customer+Customer;firstname+string" />
+					<docpart role="ATTRIBUTE"
+						signatureElement="findCustomerByIdResponse;parameters+findCustomerByIdResponse;findCustomerByIdResponse+anonymous;customer+Customer;address+string" />
+				</wsdl:documentation>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+</wsdl:definitions>
