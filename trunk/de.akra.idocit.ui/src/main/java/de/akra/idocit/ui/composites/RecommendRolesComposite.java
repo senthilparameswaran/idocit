@@ -111,7 +111,7 @@ public class RecommendRolesComposite
 		btnFindThematicGrid = new Button(this, SWT.PUSH);
 		btnFindThematicGrid.setText("Find matching grids");
 
-		initializationFont = new Font(Display.getDefault(), new FontData("Arial", 14,
+		initializationFont = new Font(Display.getDefault(), new FontData("Arial", 12,
 				SWT.BOLD));
 
 		this.contentCompositeLayout = new StackLayout();
@@ -135,7 +135,7 @@ public class RecommendRolesComposite
 				.applyTo(this.displayRecommendedRolesComposite);
 	}
 
-	public void createInitializingComposite(final Composite parent)
+	private void createInitializingComposite(final Composite parent)
 	{
 		this.intializationMessageComposite = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.fillDefaults().applyTo(intializationMessageComposite);
@@ -156,7 +156,7 @@ public class RecommendRolesComposite
 	 */
 	private Label createInitializingLabel(final Composite parent)
 	{
-		final Label initializingMessageLabel = new Label(parent, SWT.NONE);
+		final Label initializingMessageLabel = new Label(parent, SWT.WRAP);
 		initializingMessageLabel.setFont(initializationFont);
 		initializingMessageLabel
 				.setText("iDocIt! is initializing at the moment.\n\nPlease try again ...");
