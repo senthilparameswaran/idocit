@@ -15,9 +15,6 @@
  *******************************************************************************/
 package de.akra.idocit.java.ui.composites;
 
-import java.util.List;
-import java.util.Locale;
-
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -36,9 +33,6 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.common.structure.ThematicRole;
-import de.akra.idocit.common.utils.StringUtils;
-import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.constants.PreferenceStoreConstants;
 import de.akra.idocit.java.services.SimpleJavadocGenerator;
 import de.akra.idocit.java.ui.RadioButtonGroup;
@@ -136,7 +130,7 @@ public class ManageJavadocGeneratorComposite
 		final Label lblJavadocGeneratorOptions = new Label(grpJavadocGeneratorOptions,
 				SWT.WRAP);
 		lblJavadocGeneratorOptions
-				.setText("Javadoc does not know the iDocIt! tags used in javadoc. Here, you can generate options for javadoc, that introduces the iDocIt! tags to javadoc.\nCopy the generated options to your javadoc command.");
+				.setText("Javadoc does not know the iDocIt! tags used in Javadoc. Here, you can generate options for Javadoc, that introduces the iDocIt! tags to Javadoc.\nCopy the generated options to your Javadoc command.");
 
 		final Button btnGenerateOptions = new Button(grpJavadocGeneratorOptions, SWT.PUSH);
 		btnGenerateOptions.setText("Generate options");

@@ -7,7 +7,7 @@
             category="de.akra.idocit.ui.components.IDocItPreferencePage"
             class="de.akra.idocit.java.ui.components.JavadocGeneratorPreferencePage"
             id="de.akra.idocit.java.ui.components.JavadocGeneratorPreferencePage"
-            name="Java Settings">
+            name="Javadoc Settings">
       </page>
    </extension>
 
