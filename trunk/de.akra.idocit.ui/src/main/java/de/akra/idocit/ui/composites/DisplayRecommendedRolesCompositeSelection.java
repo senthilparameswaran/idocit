@@ -79,7 +79,6 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 			Set<ThematicRole> assignedThematicRoles, String referenceThematicGridName,
 			Set<String> collapsedThematicGridNames)
 	{
-
 		this.recommendedThematicGrids = new HashMap<String, ThematicGrid>(
 				recommendedThematicGrids);
 		this.assignedThematicRoles = new HashSet<ThematicRole>(assignedThematicRoles);
