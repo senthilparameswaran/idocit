@@ -95,7 +95,7 @@ public class EditThematicRoleComposite
 
 		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(300, 100).grab(true, true)
+		GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, true)
 				.applyTo(txtDescription);
 
 		lblScope = new Label(this, SWT.NONE);
