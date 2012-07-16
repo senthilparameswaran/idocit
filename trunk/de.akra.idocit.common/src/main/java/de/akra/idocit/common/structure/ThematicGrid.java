@@ -251,7 +251,7 @@ public class ThematicGrid implements DescribedItem, Cloneable
 			if (roles != null)
 			{
 				final Map<ThematicRole, Boolean> cloneRoles = new HashMap<ThematicRole, Boolean>();
-				cloneRoles.putAll(cloneRoles);
+				cloneRoles.putAll(roles);
 				clone.setRoles(cloneRoles);
 			}
 
