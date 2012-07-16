@@ -32,6 +32,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
@@ -87,7 +88,7 @@ public class TestDataFactory
 		Map<Addressee, String> comparisonDocumentation = new HashMap<Addressee, String>();
 		Addressee addressee = DescribedItemUtils.findAddressee(addresseeName);
 
-		comparisonDocumentation.put(addressee, "");
+		comparisonDocumentation.put(addressee, StringUtils.EMPTY);
 
 		return comparisonDocumentation;
 	}
@@ -122,7 +123,7 @@ public class TestDataFactory
 		parameterParameters.setDocumentationChanged(documentationChanged);
 		inputParameters.addParameter(parameterParameters);
 
-		addDocumentation(parameterParameters, addresseeName, "OBJECT", "",
+		addDocumentation(parameterParameters, addresseeName, "OBJECT", StringUtils.EMPTY,
 				parameterParameters.getSignatureElementPath());
 
 		// Return value
@@ -177,8 +178,8 @@ public class TestDataFactory
 		// Parameters
 		JavaParameters inputParameters = new JavaParameters(methodFindCustomerById,
 				"Parameters", Numerus.SINGULAR, false);
-		inputParameters.setIdentifier("");
-		inputParameters.setQualifiedIdentifier("");
+		inputParameters.setIdentifier(StringUtils.EMPTY);
+		inputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 		methodFindCustomerById.setInputParameters(inputParameters);
 
 		JavaParameter parameterParameters = new JavaParameter(inputParameters,
@@ -207,7 +208,7 @@ public class TestDataFactory
 				.setSignatureElementPath("parameters:source.NameParameters/source.NameParameters.firstName:java.lang.String");
 		parameterParameters.addParameter(attrFirstName);
 
-		addDocumentation(attrFirstName, addresseeName, "COMPARISON", "",
+		addDocumentation(attrFirstName, addresseeName, "COMPARISON", StringUtils.EMPTY,
 				attrFirstName.getSignatureElementPath());
 
 		JavaParameter attrLastName = new JavaParameter(parameterParameters,
@@ -221,14 +222,14 @@ public class TestDataFactory
 		attrLastName.setDocumentationChanged(documentationChanged);
 		parameterParameters.addParameter(attrLastName);
 
-		addDocumentation(attrLastName, addresseeName, "COMPARISON", "",
+		addDocumentation(attrLastName, addresseeName, "COMPARISON", StringUtils.EMPTY,
 				attrLastName.getSignatureElementPath());
 
 		// Return value
 		JavaParameters outputParameters = new JavaParameters(methodFindCustomerById,
 				"ReturnType", Numerus.SINGULAR, false);
-		outputParameters.setIdentifier("");
-		outputParameters.setQualifiedIdentifier("");
+		outputParameters.setIdentifier(StringUtils.EMPTY);
+		outputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 		methodFindCustomerById.setOutputParameters(outputParameters);
 
 		JavaParameter returnCustomerList = new JavaParameter(outputParameters,
@@ -252,8 +253,8 @@ public class TestDataFactory
 
 		JavaParameters ioExceptions = new JavaParameters(methodFindCustomerById,
 				"Throws", Numerus.SINGULAR, false);
-		ioExceptions.setQualifiedIdentifier("");
-		ioExceptions.setIdentifier("");
+		ioExceptions.setQualifiedIdentifier(StringUtils.EMPTY);
+		ioExceptions.setIdentifier(StringUtils.EMPTY);
 
 		JavaParameter ioException = new JavaParameter(ioExceptions, Numerus.SINGULAR,
 				false);
@@ -312,8 +313,8 @@ public class TestDataFactory
 		// Parameters
 		JavaParameters inputParameters = new JavaParameters(methodFindCustomerById,
 				"Parameters", Numerus.SINGULAR, false);
-		inputParameters.setIdentifier("");
-		inputParameters.setQualifiedIdentifier("");
+		inputParameters.setIdentifier(StringUtils.EMPTY);
+		inputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 		methodFindCustomerById.setInputParameters(inputParameters);
 
 		JavaParameter parameterParameters = new JavaParameter(inputParameters,
@@ -351,7 +352,7 @@ public class TestDataFactory
 				.setSignatureElementPath("parameters:source.CustomerNameParameters/source.CustomerNameParameters.customer:source.Customer/source.Customer.firstName:java.lang.String");
 		customerParameters.addParameter(attrFirstName);
 
-		addDocumentation(attrFirstName, addresseeName, "COMPARISON", "",
+		addDocumentation(attrFirstName, addresseeName, "COMPARISON", StringUtils.EMPTY,
 				attrFirstName.getSignatureElementPath());
 
 		JavaParameter attrLastName = new JavaParameter(parameterParameters,
@@ -365,20 +366,20 @@ public class TestDataFactory
 		attrLastName.setDocumentationChanged(documentationChanged);
 		customerParameters.addParameter(attrLastName);
 
-		addDocumentation(attrLastName, addresseeName, "COMPARISON", "",
+		addDocumentation(attrLastName, addresseeName, "COMPARISON", StringUtils.EMPTY,
 				attrLastName.getSignatureElementPath());
 
 		// Return value
 		JavaParameters outputParameters = new JavaParameters(methodFindCustomerById,
 				"ReturnType", Numerus.SINGULAR, false);
-		outputParameters.setIdentifier("");
-		outputParameters.setQualifiedIdentifier("");
+		outputParameters.setIdentifier(StringUtils.EMPTY);
+		outputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 		methodFindCustomerById.setOutputParameters(outputParameters);
 
 		JavaParameter returnCustomer = createJavaParameterCustomer(addresseeName,
 				documentationChanged, outputParameters, "Customer");
 
-		addDocumentation(returnCustomer, addresseeName, "OBJECT", "",
+		addDocumentation(returnCustomer, addresseeName, "OBJECT", StringUtils.EMPTY,
 				returnCustomer.getSignatureElementPath());
 
 		addDocumentation(returnCustomer.getComplexType().get(0), addresseeName,
@@ -394,8 +395,8 @@ public class TestDataFactory
 
 		JavaParameters ioExceptions = new JavaParameters(methodFindCustomerById,
 				"Throws", Numerus.SINGULAR, false);
-		ioExceptions.setIdentifier("");
-		ioExceptions.setQualifiedIdentifier("");
+		ioExceptions.setIdentifier(StringUtils.EMPTY);
+		ioExceptions.setQualifiedIdentifier(StringUtils.EMPTY);
 
 		JavaParameter specialException = new JavaParameter(ioExceptions,
 				Numerus.SINGULAR, false);
@@ -549,8 +550,8 @@ public class TestDataFactory
 		// Parameters
 		JavaParameters inputParameters = new JavaParameters(methodFindCustomerById,
 				"Parameters", Numerus.SINGULAR, false);
-		inputParameters.setIdentifier("");
-		inputParameters.setQualifiedIdentifier("");
+		inputParameters.setIdentifier(StringUtils.EMPTY);
+		inputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 		methodFindCustomerById.setInputParameters(inputParameters);
 
 		JavaParameter parameterParameters = new JavaParameter(inputParameters,
@@ -589,8 +590,8 @@ public class TestDataFactory
 		// Return value
 		JavaParameters outputParameters = new JavaParameters(methodFindCustomerById,
 				"ReturnType", Numerus.SINGULAR, false);
-		outputParameters.setIdentifier("");
-		outputParameters.setQualifiedIdentifier("");
+		outputParameters.setIdentifier(StringUtils.EMPTY);
+		outputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 		methodFindCustomerById.setOutputParameters(outputParameters);
 
 		JavaParameter returnCustomerList = new JavaParameter(outputParameters,
@@ -609,8 +610,8 @@ public class TestDataFactory
 
 		JavaParameters ioExceptions = new JavaParameters(methodFindCustomerById,
 				"Throws", Numerus.SINGULAR, false);
-		ioExceptions.setQualifiedIdentifier("");
-		ioExceptions.setIdentifier("");
+		ioExceptions.setQualifiedIdentifier(StringUtils.EMPTY);
+		ioExceptions.setIdentifier(StringUtils.EMPTY);
 
 		JavaParameter ioException = new JavaParameter(ioExceptions, Numerus.SINGULAR,
 				false);
@@ -890,7 +891,7 @@ public class TestDataFactory
 			boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", cu, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, cu, Numerus.SINGULAR);
 		result.setIdentifier("EmptyService.java");
 		result.setQualifiedIdentifier(null);
 
@@ -914,7 +915,7 @@ public class TestDataFactory
 			boolean documentationChanged, String addressee)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", cu, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, cu, Numerus.SINGULAR);
 		result.setIdentifier("ExampleService.java");
 		result.setQualifiedIdentifier(null);
 
@@ -1010,7 +1011,7 @@ public class TestDataFactory
 			CompilationUnit cuInvariantService, boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", null, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null, Numerus.SINGULAR);
 		result.setIdentifier("InvariantService.java");
 		result.setQualifiedIdentifier(null);
 		result.setDocumentationChanged(documentationChanged);
@@ -1062,11 +1063,11 @@ public class TestDataFactory
 			boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", null, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null, Numerus.SINGULAR);
 		result.setIdentifier("EmptyService.java");
 		result.setQualifiedIdentifier(null);
 
-		result.addDocpart(createEmptyDocumentation(""));
+		result.addDocpart(createEmptyDocumentation(StringUtils.EMPTY));
 
 		JavaInterface customerService = new JavaInterface(result, "Interface",
 				Numerus.SINGULAR);
@@ -1118,11 +1119,11 @@ public class TestDataFactory
 			boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "", null, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null, Numerus.SINGULAR);
 		result.setIdentifier("CustomerService.java");
 		result.setQualifiedIdentifier(null);
 
-		result.addDocpart(createNullDocumentation(""));
+		result.addDocpart(createNullDocumentation(StringUtils.EMPTY));
 
 		JavaInterface customerService = new JavaInterface(result, "Interface",
 				Numerus.SINGULAR);

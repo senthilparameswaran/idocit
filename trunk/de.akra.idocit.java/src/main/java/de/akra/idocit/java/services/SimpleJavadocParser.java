@@ -38,6 +38,7 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
@@ -305,7 +306,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			if (JavadocUtils.isParam(tagName))
 			{
 				structuredJavaDoc.setParamName(docText.trim());
-				structuredJavaDoc.setDocText("");
+				structuredJavaDoc.setDocText(StringUtils.EMPTY);
 			}
 			else
 			{
@@ -395,6 +396,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			TagElement tagElement, List<ThematicRole> thematicRoles,
 			String referenceGridName, JavaMethod method)
 	{
+		@SuppressWarnings("unchecked")
 		String origTagText = JavadocUtils.readFragments(tagElement.fragments(), 0);
 		StructuredJavaDoc structuredJavaDoc = readRoleName(tagElement, referenceGridName,
 				origTagText, method);
@@ -419,7 +421,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	private String readParentParamterName(Javadoc javadoc, TagElement childTagElem,
 			JavaMethod method)
 	{
-		List tags = javadoc.tags();
+		List<?> tags = javadoc.tags();
 
 		for (int i = 0; i < tags.size(); i++)
 		{
@@ -430,26 +432,27 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 				while (prev >= 0)
 				{
-					TagElement parentParamTag = (TagElement) tags.get(prev);
+					final TagElement parentParamTag = (TagElement) tags.get(prev);
 
 					// In a @return-tag no identifier is mentioned. So must not test
 					// against @return here.
 					if (TagElement.TAG_PARAM.equals(parentParamTag.getTagName())
 							|| TagElement.TAG_THROWS.equals(parentParamTag.getTagName()))
 					{
-						String parentText = JavadocUtils.readFragments(
+						@SuppressWarnings("unchecked")
+						final String parentText = JavadocUtils.readFragments(
 								parentParamTag.fragments(), 0);
 
-						if (parentText.contains(" "))
+						if (parentText.contains(StringUtils.SPACE))
 						{
-							return parentText.split(" ")[0];
+							return parentText.split(StringUtils.SPACE)[0];
 						}
 
 						return parentText;
 					}
 					else if (TagElement.TAG_RETURN.equals(parentParamTag.getTagName()))
 					{
-						JavaParameter returnType = (JavaParameter) method
+						final JavaParameter returnType = (JavaParameter) method
 								.getOutputParameters().getParameters().get(0);
 
 						return returnType.getIdentifier();
@@ -460,7 +463,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			}
 		}
 
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	private JavaParameter findParameterByName(List<? extends Parameter> parameters,
@@ -493,12 +496,12 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 			return chain;
 		}
-		else if (subParamText.contains(" "))
+		else if (subParamText.contains(StringUtils.SPACE))
 		{
 			// It could be that there is only the identifier and a description, e.g.
 			// "@param identifier description". In this case the result should only
 			// contain "identifier".
-			return new String[] { subParamText.split(" ")[0].trim() };
+			return new String[] { subParamText.split(StringUtils.SPACE)[0].trim() };
 		}
 
 		return new String[] { subParamText.trim() };
@@ -532,7 +535,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			// tags (@subparam without @param above).
 		}
 
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	private String extractIdentifierPath(String identifier, TagElement tagElement,
@@ -608,7 +611,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			// tags (@subparam without @param above).
 		}
 
-		return "";
+		return StringUtils.EMPTY;
 	}
 
 	private JavaParameter findParameterByName(JavaMethod method, String identifier,
@@ -818,6 +821,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 		if (javadoc != null)
 		{
+			@SuppressWarnings("unchecked")
 			List<TagElement> tags = (List<TagElement>) javadoc.tags();
 			String referenceGridName = parseIDocItReferenceGrid(javadoc);
 
@@ -871,6 +875,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 				|| isThematicGrid || isKnownThematicRole || isInfoParam);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TagElement> findAdditionalTags(Javadoc javadoc,
 			List<ThematicRole> knownRoles)

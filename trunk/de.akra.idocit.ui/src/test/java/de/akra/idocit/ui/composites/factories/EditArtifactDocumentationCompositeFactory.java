@@ -42,6 +42,7 @@ import de.akra.idocit.common.structure.impl.TestInterfaceArtifact;
 import de.akra.idocit.common.structure.impl.TestOperation;
 import de.akra.idocit.common.structure.impl.TestParameter;
 import de.akra.idocit.common.structure.impl.TestParameters;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeSelection;
@@ -148,14 +149,16 @@ public class EditArtifactDocumentationCompositeFactory
 		paramCust.setSignatureElementPath("getIn.Cust(Customer)");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
+		Parameter paramId = new TestParameter(paramCust, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramCust.setQualifiedDataTypeName("int");
 		paramId.setSignatureElementPath("getIn.Cust(Customer).id(int)");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
+		Parameter paramNameIn = new TestParameter(paramCust, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
 		paramNameIn.setSignatureElementPath("getIn.Cust(Customer).name(String)");
@@ -177,29 +180,29 @@ public class EditArtifactDocumentationCompositeFactory
 		paramCustOut.setSignatureElementPath("getOut.Cust(Customer)");
 		outputParameters.addParameter(paramCustOut);
 
-		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR,
-				false);
+		Parameter paramIdOut = new TestParameter(paramCustOut, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setSignatureElementPath("getOut.Cust(Customer).id(int)");
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR,
-				false);
+		Parameter paramNameOut = new TestParameter(paramCustOut, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramCust.setQualifiedDataTypeName("java.lang.String");
 		paramNameOut.setSignatureElementPath("getOut.Cust(Customer).name(String)");
 		paramCustOut.addParameter(paramNameOut);
 
-		Parameter test1 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "",
-				Numerus.SINGULAR, false);
+		Parameter test1 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				StringUtils.EMPTY, Numerus.SINGULAR, false);
 		test1.setIdentifier("id");
 		test1.setDataTypeName("int");
 		test1.setSignatureElementPath("getOut.Cust(Customer).id(int)");
 
-		Parameter test2 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT, "",
-				Numerus.SINGULAR, false);
+		Parameter test2 = new TestParameter(SignatureElement.EMPTY_SIGNATURE_ELEMENT,
+				StringUtils.EMPTY, Numerus.SINGULAR, false);
 		test2.setIdentifier("id");
 		test2.setDataTypeName("int");
 		test2.setSignatureElementPath("getOu2.Cust(Customer).id(int)");

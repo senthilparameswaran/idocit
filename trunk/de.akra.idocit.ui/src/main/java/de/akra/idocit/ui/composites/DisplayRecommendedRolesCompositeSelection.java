@@ -25,6 +25,7 @@ import org.pocui.core.composites.ISelection;
 
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Selection for {@link DisplayRecommendedRolesComposite}.
@@ -53,7 +54,7 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 	public DisplayRecommendedRolesCompositeSelection()
 	{
 		assignedThematicRoles = new HashSet<ThematicRole>();
-		referenceThematicGridName = "";
+		referenceThematicGridName = StringUtils.EMPTY;
 		recommendedThematicGrids = new HashMap<String, ThematicGrid>();
 		collapsedThematicGridNames = new HashSet<String>();
 	}

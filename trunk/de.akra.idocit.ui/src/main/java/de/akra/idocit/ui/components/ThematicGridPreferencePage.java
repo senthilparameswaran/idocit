@@ -29,6 +29,7 @@ import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
@@ -158,7 +159,7 @@ public class ThematicGridPreferencePage
 	protected void performDefaults()
 	{
 		PlatformUI.getPreferenceStore().setValue(
-				PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING, "");
+				PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING, StringUtils.EMPTY);
 
 		loadPreferences();
 	}

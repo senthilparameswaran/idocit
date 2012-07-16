@@ -288,7 +288,7 @@ public class EditThematicGridComposite
 				{
 					items[i].setChecked(false);
 					items[i].setText(ROLE_TABLE_COL_STATUS, STATUS_MANDATORY);
-					items[i].setText(ROLE_TABLE_COL_RULE, "");
+					items[i].setText(ROLE_TABLE_COL_RULE, StringUtils.EMPTY);
 				}
 			}
 			// End changes due to Issue #27
@@ -328,7 +328,7 @@ public class EditThematicGridComposite
 						}
 						else
 						{
-							items[i].setText(ROLE_TABLE_COL_RULE, "");
+							items[i].setText(ROLE_TABLE_COL_RULE, StringUtils.EMPTY);
 						}
 
 					}
@@ -495,7 +495,7 @@ public class EditThematicGridComposite
 
 					InputDialog ruleInputDialog = new InputDialog(
 							getShell(),
-							"",
+							StringUtils.EMPTY,
 							"Please specify when the role "
 									+ selectedRole.getName()
 									+ " should be recommended in the thematic grid "

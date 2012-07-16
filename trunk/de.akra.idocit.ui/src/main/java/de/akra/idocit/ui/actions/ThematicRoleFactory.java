@@ -16,6 +16,7 @@
 package de.akra.idocit.ui.actions;
 
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Factory for {@link ThematicRole}s.
@@ -31,7 +32,7 @@ public class ThematicRoleFactory extends AbsItemFactory
 	public ThematicRole createNewItem()
 	{
 		ThematicRole role = new ThematicRole("<Not defined yet>");
-		role.setDescription("");
+		role.setDescription(StringUtils.EMPTY);
 
 		return role;
 	}

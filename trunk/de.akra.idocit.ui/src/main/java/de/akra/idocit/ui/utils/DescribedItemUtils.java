@@ -24,6 +24,7 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.DescribedItem;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Useful methods for working with {@link DescribedItem}s.
@@ -111,7 +112,7 @@ public final class DescribedItemUtils
 	public static Addressee createNewAddressee()
 	{
 		Addressee addressee = new Addressee(NAME_NOT_DEFINED_YET);
-		addressee.setDescription("");
+		addressee.setDescription(StringUtils.EMPTY);
 		return addressee;
 	}
 
@@ -123,7 +124,7 @@ public final class DescribedItemUtils
 	public static ThematicRole createNewThematicRole()
 	{
 		ThematicRole role = new ThematicRole(NAME_NOT_DEFINED_YET);
-		role.setDescription("");
+		role.setDescription(StringUtils.EMPTY);
 		return role;
 	}
 
@@ -136,7 +137,7 @@ public final class DescribedItemUtils
 	{
 		ThematicGrid grid = new ThematicGrid();
 		grid.setName(NAME_NOT_DEFINED_YET);
-		grid.setDescription("");
+		grid.setDescription(StringUtils.EMPTY);
 		grid.setVerbs(new HashSet<String>());
 		grid.setRoles(new HashMap<ThematicRole, Boolean>());
 		grid.setGridBasedRules(new HashMap<String, String>());

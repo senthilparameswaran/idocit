@@ -53,6 +53,7 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.AllIDocItJavaTests;
@@ -350,8 +351,8 @@ public class JavaInterfaceParserTest
 		 */
 		JavaParameters inputParams = new JavaParameters(method, CATEGORY_PARAMETERS,
 				Numerus.SINGULAR, false);
-		inputParams.setIdentifier("");
-		inputParams.setQualifiedIdentifier("");
+		inputParams.setIdentifier(StringUtils.EMPTY);
+		inputParams.setQualifiedIdentifier(StringUtils.EMPTY);
 		method.setInputParameters(inputParams);
 
 		JavaParameter param = new JavaParameter(inputParams, Numerus.SINGULAR, false);
@@ -448,8 +449,8 @@ public class JavaInterfaceParserTest
 		 */
 		inputParams = new JavaParameters(method, CATEGORY_PARAMETERS, Numerus.SINGULAR,
 				false);
-		inputParams.setIdentifier("");
-		inputParams.setQualifiedIdentifier("");
+		inputParams.setIdentifier(StringUtils.EMPTY);
+		inputParams.setQualifiedIdentifier(StringUtils.EMPTY);
 		method.setInputParameters(inputParams);
 
 		param = new JavaParameter(inputParams, Numerus.SINGULAR, false);
@@ -487,8 +488,8 @@ public class JavaInterfaceParserTest
 		 */
 		JavaParameters outputParam = new JavaParameters(method, CATEGORY_RETURN_TYPE,
 				Numerus.SINGULAR, false);
-		outputParam.setIdentifier("");
-		outputParam.setQualifiedIdentifier("");
+		outputParam.setIdentifier(StringUtils.EMPTY);
+		outputParam.setQualifiedIdentifier(StringUtils.EMPTY);
 		method.setOutputParameters(outputParam);
 
 		param = new JavaParameter(outputParam, Numerus.SINGULAR, true);
@@ -510,8 +511,8 @@ public class JavaInterfaceParserTest
 
 		JavaParameters exceptions = new JavaParameters(method, CATEGORY_THROWS,
 				Numerus.SINGULAR, false);
-		exceptions.setIdentifier("");
-		exceptions.setQualifiedIdentifier("");
+		exceptions.setIdentifier(StringUtils.EMPTY);
+		exceptions.setQualifiedIdentifier(StringUtils.EMPTY);
 		exceptionList.add(exceptions);
 
 		param = new JavaParameter(exceptions, Numerus.SINGULAR, false);
@@ -531,7 +532,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("SAXException");
 		param.setQualifiedDataTypeName("SAXException");
 		param.setSignatureElementPath("SAXException:SAXException");
-		param.addDocpart(makeDocumentation(developer, "SAXException:SAXException", ""));
+		param.addDocpart(makeDocumentation(developer, "SAXException:SAXException", StringUtils.EMPTY));
 		exceptions.addParameter(param);
 
 		param = new JavaParameter(exceptions, Numerus.SINGULAR, false);
@@ -540,7 +541,7 @@ public class JavaInterfaceParserTest
 		param.setDataTypeName("IOException");
 		param.setQualifiedDataTypeName("IOException");
 		param.setSignatureElementPath("IOException:IOException");
-		param.addDocpart(makeDocumentation(developer, "IOException:IOException", ""));
+		param.addDocpart(makeDocumentation(developer, "IOException:IOException", StringUtils.EMPTY));
 		exceptions.addParameter(param);
 
 		param = new JavaParameter(exceptions, Numerus.SINGULAR, false);
@@ -550,7 +551,7 @@ public class JavaInterfaceParserTest
 		param.setQualifiedDataTypeName("ParserConfigurationException");
 		param.setSignatureElementPath("ParserConfigurationException:ParserConfigurationException");
 		param.addDocpart(makeDocumentation(developer,
-				"ParserConfigurationException:ParserConfigurationException", ""));
+				"ParserConfigurationException:ParserConfigurationException", StringUtils.EMPTY));
 		exceptions.addParameter(param);
 
 		return artifact;

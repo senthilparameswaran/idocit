@@ -33,6 +33,7 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.structure.DescribedItem;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -84,7 +85,7 @@ public class EditThematicRoleListComposite
 		lblListDescription.setText("Defined Items:");
 
 		Label lblEmpty = new Label(this, SWT.NONE);
-		lblEmpty.setText("");
+		lblEmpty.setText(StringUtils.EMPTY);
 
 		itemList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 		GridDataFactory.fillDefaults().grab(true, true).hint(100, 100).span(2, 1)

@@ -32,6 +32,7 @@ import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Tests for {@link InterfaceArtifact}.
@@ -128,7 +129,8 @@ public class JavaInterfaceArtifactTest
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
+		Parameters inputParameters = new JavaParameters(op, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		inputParameters.setIdentifier("findIn");
 		op.setInputParameters(inputParameters);
 
@@ -156,7 +158,8 @@ public class JavaInterfaceArtifactTest
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
+		Parameters outputParameters = new JavaParameters(op, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 
