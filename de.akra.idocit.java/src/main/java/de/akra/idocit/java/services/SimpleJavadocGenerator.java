@@ -55,8 +55,6 @@ import de.akra.idocit.java.utils.JavadocUtils;
 
 public class SimpleJavadocGenerator implements IJavadocGenerator
 {
-	private static final String EMPTY_STR = "";
-
 	private static final String HTML_BR = "<br/>";
 
 	private static final String JAVADOC_OPTION_TAG_HEAD = ":\" ";
@@ -149,7 +147,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			}
 		}
 
-		return EMPTY_STR;
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -190,7 +188,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			return StringUtils.toString(docText).trim();
 		}
 
-		return EMPTY_STR;
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -213,7 +211,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			}
 		}
 
-		return EMPTY_STR;
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -261,7 +259,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			boolean isClassIntroduction = ThematicRoleConstants.MANDATORY_ROLE_NONE
 					.equals(roleName) && (method == null);
 
-			if ((roleName != null) && !EMPTY_STR.equals(roleName.trim())
+			if ((roleName != null) && !StringUtils.EMPTY.equals(roleName.trim())
 					&& !isClassIntroduction)
 			{
 				newTag.setTagName('@' + getThematicRoleName(documentation).toLowerCase());
@@ -382,13 +380,14 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				if (newTag.getTagName() == null)
 				{
 					final String roleName = getThematicRoleName(documentation);
-					String formattedRoleName = (roleName != null) ? roleName : EMPTY_STR;
+					String formattedRoleName = (roleName != null) ? roleName
+							: StringUtils.EMPTY;
 
-					if (!EMPTY_STR.equals(formattedRoleName.trim()))
+					if (!StringUtils.EMPTY.equals(formattedRoleName.trim()))
 					{
 						formattedRoleName = StringUtils.capitalizeFirstChar(roleName) + ':';
 					}
-					docText = formattedRoleName + " " + docText;
+					docText = formattedRoleName + StringUtils.SPACE + docText;
 				}
 
 				textElement.setText(docText);
@@ -420,7 +419,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		List<ASTNode> fragments = newTag.fragments();
 
 		TextElement textElement = jdocAST.newTextElement();
-		textElement.setText(EMPTY_STR);
+		textElement.setText(StringUtils.EMPTY);
 		fragments.add(textElement);
 
 		return newTag;
@@ -473,7 +472,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			return buffer.substring(0, buffer.toString().length() - 1);
 		}
 
-		return EMPTY_STR;
+		return StringUtils.EMPTY;
 	}
 
 	private String extractLastIdentifier(Delimiters delimiters, String pathEntry)
@@ -600,8 +599,10 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				{
 					if (currentIdentifier == null)
 					{
+						@SuppressWarnings("unchecked")
 						String[] splittedDocText = JavadocUtils
-								.readFragments(element.fragments(), 0).trim().split(" ");
+								.readFragments(element.fragments(), 0).trim()
+								.split(StringUtils.SPACE);
 
 						currentIdentifier = splittedDocText[0];
 					}
@@ -643,6 +644,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 	private boolean isEmptyRow(TagElement current)
 	{
+		@SuppressWarnings("unchecked")
 		List<ASTNode> fragments = current.fragments();
 
 		if (fragments.size() == 1)
@@ -654,7 +656,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				String text = textElement.getText();
 
 				return (current.getTagName() == null)
-						&& ((text == null) || EMPTY_STR.equals(text.trim()));
+						&& ((text == null) || StringUtils.EMPTY.equals(text.trim()));
 			}
 
 			return false;
@@ -728,6 +730,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 	private boolean isEmptyElement(TagElement tagElement)
 	{
+		@SuppressWarnings("unchecked")
 		String text = JavadocUtils.readFragments(tagElement.fragments(), 0);
 		String tagName = tagElement.getTagName();
 
@@ -739,10 +742,12 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 	private String readFragments(TagElement element)
 	{
+		@SuppressWarnings("unchecked")
 		String text = JavadocUtils.readFragments(element.fragments(), 0);
 		return text.replaceAll(Pattern.quote(HTML_BR), JavadocUtils.NEW_LINE);
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<TagElement> mergeTagElements(List<TagElement> unmergedTagElements)
 	{
 		final List<TagElement> mergedTagElements = new ArrayList<TagElement>();
@@ -814,8 +819,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 	private void insertEmptyRows(Javadoc javadoc)
 	{
-		List<TagElement> tags = javadoc.tags();
-		List<TagElement> tagsWithEmptyRows = insertEmptyRows(tags, javadoc);
+		@SuppressWarnings("unchecked")
+		final List<TagElement> tags = javadoc.tags();
+		final List<TagElement> tagsWithEmptyRows = insertEmptyRows(tags, javadoc);
 		tags.clear();
 		tags.addAll(tagsWithEmptyRows);
 	}
@@ -877,8 +883,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					additionalTagElements);
 		}
 
-		List<TagElement> tags = javadoc.tags();
-		List<TagElement> copiedTags = new ArrayList<TagElement>();
+		@SuppressWarnings("unchecked")
+		final List<TagElement> tags = javadoc.tags();
+		final List<TagElement> copiedTags = new ArrayList<TagElement>();
 		copiedTags.addAll(tags);
 		tags.clear();
 
@@ -947,10 +954,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return lines;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<TagElement> splitTextInToFragments(List<TagElement> tagElements, AST ast)
 			throws ParserConfigurationException, SAXException, IOException
 	{
-		List<TagElement> result = new ArrayList<TagElement>();
+		final List<TagElement> result = new ArrayList<TagElement>();
 
 		for (TagElement tagElement : tagElements)
 		{
@@ -1075,13 +1083,13 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				{
 					sb.append(word.substring(0, 1).toUpperCase(Locale.ENGLISH));
 					sb.append(word.substring(1).toLowerCase(Locale.ENGLISH));
-					sb.append(" ");
+					sb.append(StringUtils.SPACE);
 				}
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			return sb.toString();
 		}
 		LOGGER.log(Level.WARNING, "No role name to convert.");
-		return "";
+		return StringUtils.EMPTY;
 	}
 }

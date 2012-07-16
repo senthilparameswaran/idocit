@@ -62,6 +62,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.services.impl.ServiceManager;
@@ -212,7 +213,7 @@ public class JavaParserTest
 
 		// Deactivate Simple Parser
 		IPreferenceStore store = PlatformUI.getPreferenceStore();
-		store.setValue(PreferenceStoreConstants.JAVADOC_GENERATION_MODE, "");
+		store.setValue(PreferenceStoreConstants.JAVADOC_GENERATION_MODE, StringUtils.EMPTY);
 	}
 
 	/**

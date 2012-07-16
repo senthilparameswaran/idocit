@@ -36,6 +36,7 @@ import org.xml.sax.SAXException;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.AllIDocItJavaTests;
 import de.akra.idocit.java.JavadocTestUtils;
@@ -48,6 +49,7 @@ import de.akra.idocit.java.utils.TestDataFactory;
 public class SimpleJavadocParserTest
 {
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testParseIDocItJavadoc() throws FileNotFoundException, IOException,
 			SAXException, ParserConfigurationException, ParsingException
@@ -136,7 +138,7 @@ public class SimpleJavadocParserTest
 							.createDeveloperSequence());
 
 					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
-					docSubParamFirstname.put(TestUtils.createDeveloper(), "");
+					docSubParamFirstname.put(TestUtils.createDeveloper(), StringUtils.EMPTY);
 					subparamFirstnameDoc.setDocumentation(docSubParamFirstname);
 
 					subparamFirstnameDoc
@@ -152,7 +154,7 @@ public class SimpleJavadocParserTest
 							.createDeveloperSequence());
 
 					Map<Addressee, String> docSubparamLastname = new HashMap<Addressee, String>();
-					docSubparamLastname.put(TestUtils.createDeveloper(), "");
+					docSubparamLastname.put(TestUtils.createDeveloper(), StringUtils.EMPTY);
 					subparamLastnameDoc.setDocumentation(docSubparamLastname);
 
 					subparamLastnameDoc
@@ -273,7 +275,6 @@ public class SimpleJavadocParserTest
 				List<Addressee> addressees = TestUtils.createDeveloperSequence();
 				List<ThematicRole> thematicRoles = TestUtils
 						.createReferenceThematicRoles();
-				boolean runtimeExceptionOccured = false;
 
 				List<Documentation> actDocumentations = SimpleJavadocParser.INSTANCE
 						.parseIDocItJavadoc(bodyDeclarations.get(1).getJavadoc(),

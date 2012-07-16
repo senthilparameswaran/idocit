@@ -36,6 +36,7 @@ import org.eclipse.ui.PlatformUI;
 
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.extensions.Parser;
 import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.extensions.ValidationReport.ValidationCode;
@@ -299,7 +300,7 @@ public class JavaParser implements Parser
 				if (AddresseeUtils.containsOnlyOneAddressee(javaArtifact, "Developer"))
 				{
 					report.setReturnCode(ValidationCode.OK);
-					report.setMessage("");
+					report.setMessage(StringUtils.EMPTY);
 				}
 				else
 				{
@@ -310,7 +311,7 @@ public class JavaParser implements Parser
 			else
 			{
 				report.setReturnCode(ValidationCode.OK);
-				report.setMessage("");
+				report.setMessage(StringUtils.EMPTY);
 			}
 
 			return report;

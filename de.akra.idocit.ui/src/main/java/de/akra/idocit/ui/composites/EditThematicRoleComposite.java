@@ -35,6 +35,7 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Composite to edit a {@link ThematicRole}.
@@ -188,7 +189,7 @@ public class EditThematicRoleComposite
 				}
 				else
 				{
-					txtDescription.setText("");
+					txtDescription.setText(StringUtils.EMPTY);
 				}
 			}
 

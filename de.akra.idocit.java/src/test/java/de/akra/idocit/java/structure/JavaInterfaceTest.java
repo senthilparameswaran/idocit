@@ -28,6 +28,7 @@ import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Tests for {@link Interface}.
@@ -108,7 +109,8 @@ public class JavaInterfaceTest
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
+		Parameters inputParameters = new JavaParameters(op, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		inputParameters.setIdentifier("findIn");
 		op.setInputParameters(inputParameters);
 
@@ -135,7 +137,8 @@ public class JavaInterfaceTest
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new JavaParameters(op, "", Numerus.SINGULAR, false);
+		Parameters outputParameters = new JavaParameters(op, StringUtils.EMPTY,
+				Numerus.SINGULAR, false);
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 

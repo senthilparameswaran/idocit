@@ -18,6 +18,7 @@ package de.akra.idocit.java.structure;
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Representation of a single Java parameter, return type or thrown exception.<br />
@@ -40,7 +41,7 @@ public class JavaParameter extends Parameter
 	public JavaParameter(SignatureElement parent, Numerus numerus,
 			boolean hasPublicAccessableAttributes)
 	{
-		super(parent, "", numerus, hasPublicAccessableAttributes);
+		super(parent, StringUtils.EMPTY, numerus, hasPublicAccessableAttributes);
 	}
 
 	/**

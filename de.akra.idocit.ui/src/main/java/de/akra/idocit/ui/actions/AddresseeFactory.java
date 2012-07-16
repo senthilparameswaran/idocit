@@ -16,6 +16,7 @@
 package de.akra.idocit.ui.actions;
 
 import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Factory for {@link Addressee}s.
@@ -32,7 +33,7 @@ public class AddresseeFactory extends AbsItemFactory
 	public Addressee createNewItem()
 	{
 		Addressee addressee = new Addressee("<Not defined yet>");
-		addressee.setDescription("");
+		addressee.setDescription(StringUtils.EMPTY);
 		return addressee;
 	}
 }

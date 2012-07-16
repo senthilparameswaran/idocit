@@ -58,6 +58,7 @@ import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.SignatureElementUtils;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
@@ -410,8 +411,8 @@ public class JavaInterfaceParser
 			JavaParameters inputParameters = new JavaParameters(method,
 					CATEGORY_PARAMETERS, Numerus.SINGULAR, false);
 			inputParameters.setDocumentationAllowed(false);
-			inputParameters.setIdentifier("");
-			inputParameters.setQualifiedIdentifier("");
+			inputParameters.setIdentifier(StringUtils.EMPTY);
+			inputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 
 			@SuppressWarnings("unchecked")
 			List<SingleVariableDeclaration> parameters = (List<SingleVariableDeclaration>) methodDeclaration
@@ -439,8 +440,8 @@ public class JavaInterfaceParser
 		if (returnType != null)
 		{
 			outputParameters.setDocumentationAllowed(false);
-			outputParameters.setIdentifier("");
-			outputParameters.setQualifiedIdentifier("");
+			outputParameters.setIdentifier(StringUtils.EMPTY);
+			outputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
 			outputParameters.addParameter(returnType);
 
 			SignatureElementUtils.setParametersPaths(delimiters,
@@ -744,8 +745,8 @@ public class JavaInterfaceParser
 		JavaParameters exceptions = new JavaParameters(parent, CATEGORY_THROWS,
 				Numerus.SINGULAR, false);
 		exceptions.setDocumentationAllowed(false);
-		exceptions.setIdentifier("");
-		exceptions.setQualifiedIdentifier("");
+		exceptions.setIdentifier(StringUtils.EMPTY);
+		exceptions.setQualifiedIdentifier(StringUtils.EMPTY);
 
 		for (Name name : thrownExceptions)
 		{

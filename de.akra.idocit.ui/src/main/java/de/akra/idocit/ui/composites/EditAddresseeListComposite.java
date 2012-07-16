@@ -33,6 +33,7 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.DescribedItem;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -84,7 +85,7 @@ public class EditAddresseeListComposite
 		lblListDescription.setText("Defined Items:");
 
 		Label lblEmpty = new Label(this, SWT.NONE);
-		lblEmpty.setText("");
+		lblEmpty.setText(StringUtils.EMPTY);
 
 		itemList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 		GridDataFactory.fillDefaults().hint(100, 100).grab(true, true).span(2, 1).applyTo(itemList);

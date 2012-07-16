@@ -32,6 +32,7 @@ import de.akra.idocit.common.structure.impl.TestInterfaceArtifact;
 import de.akra.idocit.common.structure.impl.TestOperation;
 import de.akra.idocit.common.structure.impl.TestParameter;
 import de.akra.idocit.common.structure.impl.TestParameters;
+import de.akra.idocit.common.utils.StringUtils;
 
 /**
  * Helper factory to create a test {@link InterfaceArtifact}.
@@ -142,7 +143,8 @@ public class InterfaceArtifactTestFactory
 			return null;
 		}
 
-		Parameter param = new TestParameter(parent, "", Numerus.SINGULAR, false);
+		Parameter param = new TestParameter(parent, StringUtils.EMPTY, Numerus.SINGULAR,
+				false);
 		param.setDataTypeName("TestType");
 
 		for (int i = 0; i < complexIndex; i++)

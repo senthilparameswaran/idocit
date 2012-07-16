@@ -111,7 +111,7 @@ public class JavadocGenerator implements IJavadocGenerator
 		if (tagName != null)
 		{
 			tagChanged = true;
-			newTag.setTagName(tagName + "");
+			newTag.setTagName(tagName + de.akra.idocit.common.utils.StringUtils.EMPTY);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -121,7 +121,7 @@ public class JavadocGenerator implements IJavadocGenerator
 		{
 			tagChanged = true;
 			TextElement paramNameElement = jdocAST.newTextElement();
-			paramNameElement.setText(paramName + "");
+			paramNameElement.setText(paramName + de.akra.idocit.common.utils.StringUtils.EMPTY);
 			fragments.add(paramNameElement);
 		}
 

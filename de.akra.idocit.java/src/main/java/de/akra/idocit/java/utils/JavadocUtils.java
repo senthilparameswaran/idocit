@@ -49,14 +49,13 @@ import de.akra.idocit.java.structure.StringReplacement;
 
 public class JavadocUtils
 {
-	private static final String EMPTY = "";
 	private static final String REGEX_CR = "[\r]";
 	public static final String NEW_LINE = System.getProperty("line.separator");
-	
+
 	public static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 	public static final String XML_ROOT_START = "<javadoc>";
 	public static final String XML_ROOT_END = "</javadoc>";
-	
+
 	private static final Logger logger = Logger.getLogger(JavadocUtils.class.getName());
 
 	private static class JavadocHtmlHandler extends DefaultHandler2
@@ -321,9 +320,11 @@ public class JavadocUtils
 			throws ParserConfigurationException, SAXException, IOException
 	{
 		// Changes due to Issue #105
-		// delete all '\r' from original text, because the SAXParser will loose them during
+		// delete all '\r' from original text, because the SAXParser will loose them
+		// during
 		// parsing process. Because of that string replacement would not work at the end.
-		javadocText = javadocText.replaceAll(REGEX_CR, EMPTY);
+		javadocText = javadocText.replaceAll(REGEX_CR,
+				de.akra.idocit.common.utils.StringUtils.EMPTY);
 		// Changes due to Issue #105
 
 		final StringBuilder xml = new StringBuilder(XML_HEADER.length()
