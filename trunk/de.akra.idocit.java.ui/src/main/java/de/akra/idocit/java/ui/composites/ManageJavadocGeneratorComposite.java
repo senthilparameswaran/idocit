@@ -133,7 +133,7 @@ public class ManageJavadocGeneratorComposite
 				.setText("Javadoc does not know the iDocIt! tags used in Javadoc. Here, you can generate options for Javadoc, that introduces the iDocIt! tags to Javadoc.\nCopy the generated options to your Javadoc command.");
 
 		final Button btnGenerateOptions = new Button(grpJavadocGeneratorOptions, SWT.PUSH);
-		btnGenerateOptions.setText("Generate options");
+		btnGenerateOptions.setText("Generate Options");
 		btnGenerateOptions.addSelectionListener(new SelectionListener() {
 
 			@Override
