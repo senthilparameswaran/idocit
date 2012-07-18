@@ -15,9 +15,11 @@
  *******************************************************************************/
 package de.akra.idocit.ui.actions;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +40,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.services.impl.HTMLDocGenerator;
 import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.core.utils.ResourceUtils;
 import de.akra.idocit.ui.components.DocumentationEditor;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -124,16 +127,30 @@ public class HTMLExport implements IObjectActionDelegate {
 												.getInstance()
 												.getParsingService()
 												.getDelimiters(
-														file.getFileExtension()));
+														file.getFileExtension()));								
 								String html = docGen.generateHTML();
 								logger.log(Level.INFO, "End converting");
 
 								BufferedWriter writer = new BufferedWriter(
 										new FileWriter(new File(
 												selectedFileName)));
-
 								writer.write(html);
 								writer.close();
+								
+								// copy css file
+								BufferedReader reader = new BufferedReader(
+										new InputStreamReader(ResourceUtils.getResourceInputStream("stylesheet.css")));
+								String cssFileName = selectedFileName.substring(0, selectedFileName.lastIndexOf('\\')+1) + "stylesheet.css";
+								writer = new BufferedWriter(new FileWriter(new File(cssFileName)));
+								String line = reader.readLine();
+								while (line != null)
+								{
+									writer.write(line + "\n");
+									line = reader.readLine();
+								}
+								reader.close();
+								writer.close();
+								
 							} catch (Exception ex) {
 								String msg = "Could not export documentation for "
 										+ interfaceIFile.getFullPath();
