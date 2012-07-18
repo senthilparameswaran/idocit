@@ -140,7 +140,8 @@ public class HTMLExport implements IObjectActionDelegate {
 								// copy css file
 								BufferedReader reader = new BufferedReader(
 										new InputStreamReader(ResourceUtils.getResourceInputStream("stylesheet.css")));
-								String cssFileName = selectedFileName.substring(0, selectedFileName.lastIndexOf('\\')+1) + "stylesheet.css";
+								String cssFileName = selectedFileName.substring(
+										0, selectedFileName.lastIndexOf(System.getProperty("file.separator"))+1) + "stylesheet.css";
 								writer = new BufferedWriter(new FileWriter(new File(cssFileName)));
 								String line = reader.readLine();
 								while (line != null)
