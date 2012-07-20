@@ -99,13 +99,14 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Checking Operations
 	 */
-	private void checkInvariant(List<Documentation> documentations)
+	private void checkInvariant(final List<Documentation> documentations)
 	{
 		if (documentations != null)
 		{
-			for (Documentation documentation : documentations)
+			for (final Documentation documentation : documentations)
 			{
-				Map<Addressee, String> addresseeDocs = documentation.getDocumentation();
+				final Map<Addressee, String> addresseeDocs = documentation
+						.getDocumentation();
 
 				if ((addresseeDocs != null) && !addresseeDocs.isEmpty())
 				{
@@ -131,15 +132,15 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Searching Operations
 	 */
-	private String findDocTextByAddresseeName(String addresseeName,
-			Map<Addressee, String> docTexts)
+	private String findDocTextByAddresseeName(final String addresseeName,
+			final Map<Addressee, String> docTexts)
 	{
-		Set<Entry<Addressee, String>> addressees = docTexts.entrySet();
+		final Set<Entry<Addressee, String>> addressees = docTexts.entrySet();
 
-		for (Entry<Addressee, String> addresseeEntry : addressees)
+		for (final Entry<Addressee, String> addresseeEntry : addressees)
 		{
-			Addressee addressee = addresseeEntry.getKey();
-			String name = addressee.getName();
+			final Addressee addressee = addresseeEntry.getKey();
+			final String name = addressee.getName();
 
 			if (addresseeName.equals(name))
 			{
@@ -161,7 +162,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Checking Operations
 	 */
-	private boolean isRole(Documentation documentation, String roleName)
+	private boolean isRole(final Documentation documentation, final String roleName)
 	{
 		return notNull(documentation) && notNull(documentation.getThematicRole())
 				&& notNull(documentation.getThematicRole().getName())
@@ -177,12 +178,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Getting Operations
 	 */
-	private String getDocText(Documentation documentation)
+	private String getDocText(final Documentation documentation)
 	{
-
 		if (documentation.getDocumentation() != null)
 		{
-			String docText = findDocTextByAddresseeName(
+			final String docText = findDocTextByAddresseeName(
 					AddresseeConstants.MOST_IMPORTANT_ADDRESSEE,
 					documentation.getDocumentation());
 			return StringUtils.toString(docText).trim();
@@ -199,18 +199,16 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Getting Operations
 	 */
-	private String getThematicRoleName(Documentation documentation)
+	private String getThematicRoleName(final Documentation documentation)
 	{
 		if (documentation.getThematicRole() != null)
 		{
-			String roleName = documentation.getThematicRole().getName();
-
+			final String roleName = documentation.getThematicRole().getName();
 			if (roleName != null)
 			{
 				return roleName;
 			}
 		}
-
 		return StringUtils.EMPTY;
 	}
 
@@ -226,8 +224,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Checking Operations
 	 */
-	private boolean isRuleOfCheckingOperation(Documentation documentation,
-			String referenceGridName)
+	private boolean isRuleOfCheckingOperation(final Documentation documentation,
+			final String referenceGridName)
 	{
 		return (isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_RULE) && ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
 				.equalsIgnoreCase(referenceGridName));
@@ -247,16 +245,16 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Creating Operations
 	 */
-	private TagElement createTagElement(Documentation documentation,
-			String referenceGridName, AST jdocAST, JavaMethod method)
+	private TagElement createTagElement(final Documentation documentation,
+			final String referenceGridName, final AST jdocAST, final JavaMethod method)
 	{
-		TagElement newTag = jdocAST.newTagElement();
+		final TagElement newTag = jdocAST.newTagElement();
 
 		if (!isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_ACTION)
 				&& !isRuleOfCheckingOperation(documentation, referenceGridName))
 		{
-			String roleName = getThematicRoleName(documentation);
-			boolean isClassIntroduction = ThematicRoleConstants.MANDATORY_ROLE_NONE
+			final String roleName = getThematicRoleName(documentation);
+			final boolean isClassIntroduction = ThematicRoleConstants.MANDATORY_ROLE_NONE
 					.equals(roleName) && (method == null);
 
 			if ((roleName != null) && !StringUtils.EMPTY.equals(roleName.trim())
@@ -282,11 +280,11 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Checking Operations
 	 */
-	private boolean containsAction(List<Documentation> documentations)
+	private boolean containsAction(final List<Documentation> documentations)
 	{
 		if (documentations != null)
 		{
-			for (Documentation documentation : documentations)
+			for (final Documentation documentation : documentations)
 			{
 				if (isRole(documentation, ThematicRoleConstants.MANDATORY_ROLE_ACTION))
 				{
@@ -294,7 +292,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				}
 			}
 		}
-
 		return false;
 	}
 
@@ -316,18 +313,19 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Checking Operations
 	 */
-	public boolean containsClassDescription(List<Documentation> documentations,
-			JavaMethod method)
+	public boolean containsClassDescription(final List<Documentation> documentations,
+			final JavaMethod method)
 	{
-		List<ThematicRole> roles = ServiceManager.getInstance().getPersistenceService()
-				.loadThematicRoles();
-		ThematicRole noneRole = ThematicRoleUtils.findRoleByName(
+		final List<ThematicRole> roles = ServiceManager.getInstance()
+				.getPersistenceService().loadThematicRoles();
+		final ThematicRole noneRole = ThematicRoleUtils.findRoleByName(
 				ThematicRoleConstants.MANDATORY_ROLE_NONE, roles);
-		boolean hasDocumentations = notNull(documentations) && !documentations.isEmpty();
+		final boolean hasDocumentations = notNull(documentations)
+				&& !documentations.isEmpty();
 
 		if (hasDocumentations)
 		{
-			ThematicRole currentRole = documentations.get(0).getThematicRole();
+			final ThematicRole currentRole = documentations.get(0).getThematicRole();
 			boolean withoutThematicRole = (currentRole == null)
 					|| noneRole.equals(currentRole);
 			return (method == null) && withoutThematicRole;
@@ -352,18 +350,18 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Putting Operations
 	 */
-	private void addTaglessJavadocs(List<Documentation> documentations,
-			String referenceGridName, Javadoc javadoc, JavaMethod method)
+	private void addTaglessJavadocs(final List<Documentation> documentations,
+			final String referenceGridName, final Javadoc javadoc, final JavaMethod method)
 	{
 		boolean hasIntroductionSentence = containsAction(documentations)
 				|| containsClassDescription(documentations, method);
 
 		@SuppressWarnings("unchecked")
-		List<TagElement> tags = javadoc.tags();
+		final List<TagElement> tags = javadoc.tags();
 
 		for (int i = 0; i < documentations.size(); i++)
 		{
-			Documentation documentation = documentations.get(i);
+			final Documentation documentation = documentations.get(i);
 
 			final AST jdocAST = javadoc.getAST();
 			final TagElement newTag = createTagElement(documentation, referenceGridName,
@@ -410,50 +408,50 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Creating Operations
 	 */
-	private TagElement createaEmptyJavadocRow(Javadoc javadoc)
+	private TagElement createaEmptyJavadocRow(final Javadoc javadoc)
 	{
-		AST jdocAST = javadoc.getAST();
-		TagElement newTag = jdocAST.newTagElement();
+		final AST jdocAST = javadoc.getAST();
+		final TagElement newTag = jdocAST.newTagElement();
 
 		@SuppressWarnings("unchecked")
-		List<ASTNode> fragments = newTag.fragments();
+		final List<ASTNode> fragments = newTag.fragments();
 
-		TextElement textElement = jdocAST.newTextElement();
+		final TextElement textElement = jdocAST.newTextElement();
 		textElement.setText(StringUtils.EMPTY);
 		fragments.add(textElement);
 
 		return newTag;
 	}
 
-	private String[] extractLastPath(String signatureElementPath, Delimiters delimiters)
+	private String[] extractLastPath(final String signatureElementPath,
+			final Delimiters delimiters)
 	{
 		if (signatureElementPath.lastIndexOf(delimiters.pathDelimiter) > -1)
 		{
-			String[] paths = signatureElementPath.split(delimiters
+			final String[] paths = signatureElementPath.split(delimiters
 					.getQuotedPathDelimiter());
-
 			return paths;
 		}
 
 		return new String[] { signatureElementPath };
 	}
 
-	private String extractIdentifier(Documentation documentation)
+	private String extractIdentifier(final Documentation documentation)
 	{
-		Delimiters delimiters = JavaParser.delimiters;
-		String signatureElementPath = documentation.getSignatureElementIdentifier();
+		final Delimiters delimiters = JavaParser.delimiters;
+		final String signatureElementPath = documentation.getSignatureElementIdentifier();
 
 		if (signatureElementPath != null)
 		{
-			String[] path = extractLastPath(signatureElementPath, delimiters);
-			StringBuffer buffer = new StringBuffer();
+			final String[] path = extractLastPath(signatureElementPath, delimiters);
+			final StringBuffer buffer = new StringBuffer();
 
 			if (path.length > 2)
 			{
 				for (int i = 1; i < path.length; i++)
 				{
-					String pathEntry = path[i];
-					String identifer = extractLastIdentifier(delimiters, pathEntry);
+					final String pathEntry = path[i];
+					final String identifer = extractLastIdentifier(delimiters, pathEntry);
 
 					buffer.append(identifer);
 					buffer.append('.');
@@ -461,7 +459,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			}
 			else
 			{
-				String identifer = extractLastIdentifier(delimiters,
+				final String identifer = extractLastIdentifier(delimiters,
 						path[path.length - 1]);
 
 				buffer.append(identifer);
@@ -475,18 +473,19 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return StringUtils.EMPTY;
 	}
 
-	private String extractLastIdentifier(Delimiters delimiters, String pathEntry)
+	private String extractLastIdentifier(final Delimiters delimiters,
+			final String pathEntry)
 	{
-		String[] types = pathEntry.split(delimiters.getQuotedTypeDelimiter());
-		String identifers = types[0];
+		final String[] types = pathEntry.split(delimiters.getQuotedTypeDelimiter());
+		final String identifers = types[0];
 
-		String[] identiferPath = identifers.split(delimiters
+		final String[] identiferPath = identifers.split(delimiters
 				.getQuotedNamespaceDelimiter());
 
 		return identiferPath[identiferPath.length - 1];
 	}
 
-	private String deriveTagElementName(String tagElementName, int docNumber)
+	private String deriveTagElementName(final String tagElementName, final int docNumber)
 	{
 		if (TagElement.TAG_RETURN.equals(tagElementName)
 				|| TagElement.TAG_PARAM.equals(tagElementName)
@@ -524,29 +523,29 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Creating Operations
 	 */
-	private void createParamJavadoc(List<Documentation> documentations, Javadoc javadoc,
-			String tagElementName, String identifier)
+	private void createParamJavadoc(final List<Documentation> documentations,
+			final Javadoc javadoc, final String tagElementName, final String identifier)
 	{
 		@SuppressWarnings("unchecked")
-		List<TagElement> tags = javadoc.tags();
-		AST jdocAST = javadoc.getAST();
+		final List<TagElement> tags = javadoc.tags();
+		final AST jdocAST = javadoc.getAST();
 
 		if ((documentations != null) && !documentations.isEmpty())
 		{
 			for (int i = 0; i < documentations.size(); i++)
 			{
-				Documentation documentation = documentations.get(i);
+				final Documentation documentation = documentations.get(i);
 
-				TagElement newTag = jdocAST.newTagElement();
+				final TagElement newTag = jdocAST.newTagElement();
 				newTag.setTagName(deriveTagElementName(tagElementName, i));
 
 				@SuppressWarnings("unchecked")
-				List<ASTNode> fragments = newTag.fragments();
-				StringBuffer docText = new StringBuffer();
+				final List<ASTNode> fragments = newTag.fragments();
+				final StringBuffer docText = new StringBuffer();
 
 				if (!TagElement.TAG_RETURN.equals(tagElementName))
 				{
-					String paramIdentifier = extractIdentifier(documentation);
+					final String paramIdentifier = extractIdentifier(documentation);
 					docText.append(StringUtils.toString(paramIdentifier));
 					docText.append(' ');
 				}
@@ -560,7 +559,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 				docText.append(getDocText(documentation));
 
-				TextElement identifierElement = jdocAST.newTextElement();
+				final TextElement identifierElement = jdocAST.newTextElement();
 				identifierElement.setText(docText.toString().trim());
 
 				fragments.add(identifierElement);
@@ -585,14 +584,14 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		}
 	}
 
-	private boolean containsTagElementWithIdentifier(String tagName, String identifier,
-			List<TagElement> additionalTagElements)
+	private boolean containsTagElementWithIdentifier(final String tagName,
+			final String identifier, final List<TagElement> additionalTagElements)
 	{
 		if (additionalTagElements != null)
 		{
-			for (TagElement element : additionalTagElements)
+			for (final TagElement element : additionalTagElements)
 			{
-				String currentTagName = element.getTagName();
+				final String currentTagName = element.getTagName();
 				String currentIdentifier = JavadocUtils.readIdentifier(element);
 
 				if ((currentTagName != null) && (currentTagName.equals(tagName)))
@@ -600,7 +599,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					if (currentIdentifier == null)
 					{
 						@SuppressWarnings("unchecked")
-						String[] splittedDocText = JavadocUtils
+						final String[] splittedDocText = JavadocUtils
 								.readFragments(element.fragments(), 0).trim()
 								.split(StringUtils.SPACE);
 
@@ -633,8 +632,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Putting Operations
 	 */
-	private void appendJavadoc(List<Documentation> documentations, String tagName,
-			Javadoc javadoc, String identifier, List<TagElement> additionalTagElements)
+	private void appendJavadoc(final List<Documentation> documentations,
+			final String tagName, final Javadoc javadoc, final String identifier,
+			final List<TagElement> additionalTagElements)
 	{
 		if (!containsTagElementWithIdentifier(tagName, identifier, additionalTagElements))
 		{
@@ -642,54 +642,52 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		}
 	}
 
-	private boolean isEmptyRow(TagElement current)
+	private boolean isEmptyRow(final TagElement current)
 	{
 		@SuppressWarnings("unchecked")
-		List<ASTNode> fragments = current.fragments();
+		final List<ASTNode> fragments = current.fragments();
 
 		if (fragments.size() == 1)
 		{
-			ASTNode node = fragments.get(0);
+			final ASTNode node = fragments.get(0);
 			if (node.getNodeType() == ASTNode.TEXT_ELEMENT)
 			{
-				TextElement textElement = (TextElement) node;
-				String text = textElement.getText();
+				final TextElement textElement = (TextElement) node;
+				final String text = textElement.getText();
 
 				return (current.getTagName() == null)
 						&& ((text == null) || StringUtils.EMPTY.equals(text.trim()));
 			}
-
-			return false;
 		}
-
 		return false;
 	}
 
-	private boolean shouldInsertEmptyRow(TagElement first, TagElement second,
-			boolean firstHasIndex0)
+	private boolean shouldInsertEmptyRow(final TagElement first, final TagElement second,
+			final boolean firstHasIndex0)
 	{
-		boolean introductionSentence = (first.getTagName() == null)
+		final boolean introductionSentence = (first.getTagName() == null)
 				&& (second.getTagName() != null);
-		boolean beforeParam = TagElement.TAG_PARAM.equals(second.getTagName());
-		boolean beforeReturn = TagElement.TAG_RETURN.equals(second.getTagName());
-		boolean beforeThrows = TagElement.TAG_THROWS.equals(second.getTagName());
+		final boolean beforeParam = TagElement.TAG_PARAM.equals(second.getTagName());
+		final boolean beforeReturn = TagElement.TAG_RETURN.equals(second.getTagName());
+		final boolean beforeThrows = TagElement.TAG_THROWS.equals(second.getTagName());
 
 		return !isEmptyRow(first) && !isEmptyRow(second) && (introductionSentence || // betweenIntroductionSentenceAndAnyTag
 																						// ||
 				beforeParam || beforeReturn || beforeThrows);
 	}
 
-	private List<TagElement> insertEmptyRows(List<TagElement> tags, Javadoc javadoc)
+	private List<TagElement> insertEmptyRows(final List<TagElement> tags,
+			final Javadoc javadoc)
 	{
 		if (tags != null)
 		{
-			List<TagElement> resultTags = new ArrayList<TagElement>();
+			final List<TagElement> resultTags = new ArrayList<TagElement>();
 
 			if (!tags.isEmpty())
 			{
 				if (tags.size() > 1)
 				{
-					int lastIndex = tags.size() - 1;
+					final int lastIndex = tags.size() - 1;
 
 					// We start with i=1, because an empty row should never be added
 					// before the first sentence (at index 0). Its the same with the last
@@ -697,9 +695,9 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					// and not "i <= lastIndex".
 					for (int i = 0; i < lastIndex; i++)
 					{
-						TagElement current = tags.get(i);
-						TagElement next = tags.get(i + 1);
-						TagElement emptyRow = createaEmptyJavadocRow(javadoc);
+						final TagElement current = tags.get(i);
+						final TagElement next = tags.get(i + 1);
+						final TagElement emptyRow = createaEmptyJavadocRow(javadoc);
 
 						resultTags.add(current);
 
@@ -728,27 +726,27 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return null;
 	}
 
-	private boolean isEmptyElement(TagElement tagElement)
+	private boolean isEmptyElement(final TagElement tagElement)
 	{
 		@SuppressWarnings("unchecked")
-		String text = JavadocUtils.readFragments(tagElement.fragments(), 0);
-		String tagName = tagElement.getTagName();
+		final String text = JavadocUtils.readFragments(tagElement.fragments(), 0);
+		final String tagName = tagElement.getTagName();
 
-		boolean textEmpty = (text == null) || text.trim().isEmpty();
-		boolean nameEmpty = (tagName == null) || (tagName.trim().isEmpty());
+		final boolean textEmpty = (text == null) || text.trim().isEmpty();
+		final boolean nameEmpty = (tagName == null) || (tagName.trim().isEmpty());
 
 		return textEmpty && nameEmpty;
 	}
 
-	private String readFragments(TagElement element)
+	private String readFragments(final TagElement element)
 	{
 		@SuppressWarnings("unchecked")
-		String text = JavadocUtils.readFragments(element.fragments(), 0);
+		final String text = JavadocUtils.readFragments(element.fragments(), 0);
 		return text.replaceAll(Pattern.quote(HTML_BR), JavadocUtils.NEW_LINE);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<TagElement> mergeTagElements(List<TagElement> unmergedTagElements)
+	private List<TagElement> mergeTagElements(final List<TagElement> unmergedTagElements)
 	{
 		final List<TagElement> mergedTagElements = new ArrayList<TagElement>();
 
@@ -817,7 +815,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		return mergedTagElements;
 	}
 
-	private void insertEmptyRows(Javadoc javadoc)
+	private void insertEmptyRows(final Javadoc javadoc)
 	{
 		@SuppressWarnings("unchecked")
 		final List<TagElement> tags = javadoc.tags();
@@ -866,10 +864,10 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * @thematicgrid Putting Operations
 	 */
 	@Override
-	public void appendDocsToJavadoc(List<Documentation> documentations, String tagName,
-			String paramName, String thematicGridName, Javadoc javadoc,
-			List<TagElement> additionalTagElements, JavaMethod method)
-			throws ParsingException
+	public void appendDocsToJavadoc(final List<Documentation> documentations,
+			final String tagName, final String paramName, final String thematicGridName,
+			final Javadoc javadoc, final List<TagElement> additionalTagElements,
+			final JavaMethod method) throws ParsingException
 	{
 		checkInvariant(documentations);
 
@@ -936,8 +934,8 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		}
 	}
 
-	private String[] appendBRTag(String[] lines) throws ParserConfigurationException,
-			SAXException, IOException
+	private String[] appendBRTag(final String[] lines)
+			throws ParserConfigurationException, SAXException, IOException
 	{
 		// A <br/>-tag at the end of a single line is not necessary, because there
 		// couldn't be any formatting with linebreaks, which should be kept.
@@ -955,12 +953,12 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<TagElement> splitTextInToFragments(List<TagElement> tagElements, AST ast)
-			throws ParserConfigurationException, SAXException, IOException
+	private List<TagElement> splitTextInToFragments(final List<TagElement> tagElements,
+			final AST ast) throws ParserConfigurationException, SAXException, IOException
 	{
 		final List<TagElement> result = new ArrayList<TagElement>();
 
-		for (TagElement tagElement : tagElements)
+		for (final TagElement tagElement : tagElements)
 		{
 			final String unescapedDocText = JavadocUtils.readFragments(
 					tagElement.fragments(), 0);
@@ -1027,7 +1025,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @thematicgrid Creating Operations
 	 */
-	public String generateJavadocOptions(List<ThematicRole> roles)
+	public String generateJavadocOptions(final List<ThematicRole> roles)
 	{
 		final StringBuilder sb = new StringBuilder(1000);
 
