@@ -27,8 +27,8 @@ public enum CustomTaglets
 	SUB_THROWS_INFO("subthrowsinfo", "Subthrow-Info"),
 	THEMATIC_GRID("thematicgrid", "Thematic Grid");
 
-	private String name;
-	private String header;
+	private final String name;
+	private final String header;
 
 	CustomTaglets(final String name, final String header)
 	{

@@ -105,7 +105,7 @@ public class JavaParser implements Parser
 		logger.log(Level.INFO, "parse file: "
 				+ iFile.getFullPath().toFile().getAbsolutePath());
 
-		ICompilationUnit iCompilationUnit = JavaCore.createCompilationUnitFrom(iFile);
+		final ICompilationUnit iCompilationUnit = JavaCore.createCompilationUnitFrom(iFile);
 
 		if (iCompilationUnit == null)
 		{
@@ -114,12 +114,12 @@ public class JavaParser implements Parser
 			return InterfaceArtifact.NOT_SUPPORTED_ARTIFACT;
 		}
 
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		final ASTParser parser = ASTParser.newParser(AST.JLS3);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(iCompilationUnit.getWorkingCopy(null));
 		parser.setResolveBindings(true); // bindings are needed for object reflection
 		parser.setBindingsRecovery(true);
-		CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(Job
+		final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(Job
 				.getJobManager().createProgressGroup());
 		compilationUnit.recordModifications();
 
@@ -127,10 +127,9 @@ public class JavaParser implements Parser
 				compilationUnit, compilationUnit.getJavaElement().getElementName(),
 				delimiters);
 
-		AbsJavadocParser javadocParser = isSimpleModeConfigured() ? SimpleJavadocParser.INSTANCE
+		final AbsJavadocParser javadocParser = isSimpleModeConfigured() ? SimpleJavadocParser.INSTANCE
 				: JavadocParser.INSTANCE;
-		InterfaceArtifact artifact = jInterfaceParser.parse(javadocParser);
-
+		final InterfaceArtifact artifact = jInterfaceParser.parse(javadocParser);
 		return artifact;
 	}
 
