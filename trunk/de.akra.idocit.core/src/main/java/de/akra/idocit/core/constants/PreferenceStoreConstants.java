@@ -30,5 +30,8 @@ public final class PreferenceStoreConstants
 	public static final String THEMATIC_ROLES = "de.akra.idocit.ui.ThematicRoles";
 
 	public static final String VERBCLASS_ROLE_MAPPING = "de.akra.idocit.ui.VerbclassRoleMapping";
-
+	
+	public static final String ORIGINAL_EDITOR_ID = "de.akra.idocit.ui.originalEditor";
+	
+	public static final String DEFAULT_EDITOR_PREFERENCE = "de.akra.idocit.ui.defaultFieldEditor";
 }

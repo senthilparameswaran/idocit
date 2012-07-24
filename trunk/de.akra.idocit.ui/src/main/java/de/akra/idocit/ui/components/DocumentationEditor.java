@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Font;
@@ -32,9 +33,12 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.pocui.core.actions.EmptyActionConfiguration;
@@ -49,6 +53,7 @@ import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.IDocItActivator;
+import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.impl.ServiceManager;
@@ -245,6 +250,19 @@ public class DocumentationEditor
 				// Get the interface as file ...
 				IFile interfaceIFile = ((FileEditorInput) input).getFile();
 				File interfaceFile = interfaceIFile.getLocation().toFile();
+
+				// Store the original default editor for the opened file.
+				IPreferenceStore store = PlatformUI.getPreferenceStore();
+				boolean dontUseIdocItAsDefaultEditor = store
+						.getBoolean(PreferenceStoreConstants.DEFAULT_EDITOR_PREFERENCE);
+
+				if (dontUseIdocItAsDefaultEditor)
+				{
+					IEditorDescriptor originalEditor = IDE
+							.getDefaultEditor(interfaceIFile);
+					store.setValue(PreferenceStoreConstants.ORIGINAL_EDITOR_ID,
+							originalEditor.getId());
+				}
 
 				setSelection(null);
 
@@ -454,7 +472,18 @@ public class DocumentationEditor
 			initializationFont.dispose();
 		}
 
+		IPreferenceStore store = PlatformUI.getPreferenceStore();
+		boolean dontUseIdocItAsDefaultEditor = store
+				.getBoolean(PreferenceStoreConstants.DEFAULT_EDITOR_PREFERENCE);
+
+		if (dontUseIdocItAsDefaultEditor)
+		{
+			String originalEditorId = store
+					.getString(PreferenceStoreConstants.ORIGINAL_EDITOR_ID);
+			EditArtifactDocumentationCompositeSelection selection = getSelection();
+			IDE.setDefaultEditor(selection.getArtifactFile(), originalEditorId);
+		}
+		
 		IDocItActivator.removeConfigurationListener(listener);
 	}
-
 }
