@@ -27,8 +27,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -38,6 +40,7 @@ import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.PersistenceService;
@@ -185,6 +188,11 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 					ServiceManager.getInstance().getPersistenceService().init();
 					initRoleBasedRules();
 					initGridBasedRules();
+
+					// Initialize preference
+					IPreferenceStore store = PlatformUI.getPreferenceStore();
+					store.setDefault(PreferenceStoreConstants.DEFAULT_EDITOR_PREFERENCE,
+							false);
 				}
 				catch (UnitializedIDocItException e)
 				{
@@ -301,7 +309,8 @@ public class IDocItActivator extends AbstractUIPlugin implements IStartup
 	 */
 	private PropertyResourceBundle getResourceBundle(String resourceBundleFile)
 	{
-		InputStream resourceInputStream = ResourceUtils.getResourceInputStream(resourceBundleFile);
+		InputStream resourceInputStream = ResourceUtils
+				.getResourceInputStream(resourceBundleFile);
 		try
 		{
 			return new PropertyResourceBundle(resourceInputStream);

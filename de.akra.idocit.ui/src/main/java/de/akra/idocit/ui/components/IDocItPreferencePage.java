@@ -15,6 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.ui.components;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.PreferencePage;
@@ -28,6 +29,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
 import de.akra.idocit.core.IDocItActivator;
+import de.akra.idocit.core.constants.PreferenceStoreConstants;
 
 /**
  * A {@link PreferencePage} for the iDocIt! settings.
@@ -69,6 +71,12 @@ public class IDocItPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors()
 	{
+		BooleanFieldEditor defaultEditorFieldEditor = new BooleanFieldEditor(
+				PreferenceStoreConstants.DEFAULT_EDITOR_PREFERENCE,
+				"Don't use iDocIt! as default editor after opening a file (deactivates Eclipse standard behaviour).",
+				getFieldEditorParent());
+		
+		addField(defaultEditorFieldEditor);
 	}
 
 	/**
