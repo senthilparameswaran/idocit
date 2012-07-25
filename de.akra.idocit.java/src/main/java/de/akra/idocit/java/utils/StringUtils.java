@@ -25,11 +25,19 @@ public class StringUtils
 	public static final String XML_TAG_TAB = '<' + HTMLTableParser.XML_TAG_TAB + "/>";
 	public static final String XML_TAG_BR = '<' + HTMLTableParser.XML_TAG_BR + "/>";
 
+	/**
+	 * Escapes the special characters in the given string with HTML entities. Tabs and
+	 * line breaks are replaced with their corresponding HTML entities as well.
+	 * 
+	 * @param unescapedText
+	 *            [SOURCE] The text to escape
+	 * 
+	 * @return [OBJECT] The escaped text
+	 */
 	public static String escapeHtml(String unescapedText)
 	{
-		String escapedText = StringEscapeUtils.escapeHtml4(unescapedText);
-
-		StringBuilder tmpText = new StringBuilder();
+		final String escapedText = StringEscapeUtils.escapeHtml4(unescapedText);
+		final StringBuilder tmpText = new StringBuilder();
 
 		for (int i = 0; i < escapedText.length(); ++i)
 		{
