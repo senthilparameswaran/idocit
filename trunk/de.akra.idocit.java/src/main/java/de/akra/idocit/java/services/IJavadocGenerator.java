@@ -34,16 +34,32 @@ import de.akra.idocit.java.structure.JavaMethod;
 public interface IJavadocGenerator
 {
 	/**
-	 * Creates Javadoc-representation for all {@link Documentation}s in
-	 * <code>signatureElement</code> and it's children.
+	 * Append the information out of <code>documentations</code> to the {@link Javadoc}
+	 * block comment. If <code>tagName != null</code> the documentations are added to a
+	 * new {@link TagElement} with that name. Add first the general description text with
+	 * <code>tagName == null</code>. After that all other wished tags.
 	 * 
-	 * @param javadocTags
-	 *            [SOURCE]
-	 * @param referenceGridName
-	 *            [ATTRIBUTE] Added to the generated Javadoc
+	 * @param documentations
+	 *            [SOURCE] The list of {@link Documentation}s which should be converted to
+	 *            {@link Javadoc}.
+	 * @param tagName
+	 *            [ATTRIBUTE] The name of the tag element, or <code>null</code> (see
+	 *            {@link TagElement#setTagName(String)}).
+	 * @param paramName
+	 *            [ATTRIBUTE] The name of the described parameter, or <code>null</code> if
+	 *            no name is needed.
+	 * @param thematicGridName
+	 *            [ATTRIBUTE] Reference-grid of the given Java method. This parameter is
+	 *            nullable.
 	 * @param javadoc
 	 *            [DESTINATION] This object is modified.
-	 * 
+	 * @param additionalTagElements
+	 *            [ATTRIBUTE] Existing Javadoc tags which are kept and not changed by
+	 *            iDocIt!.
+	 * @param method
+	 *            [DESTINATION] The given Javadoc belongs to this method.
+	 * @throws ParsingException
+	 *             [NONE]
 	 * @format The format of the generated Javadoc depends on the implementation.
 	 * 
 	 * @thematicgrid Putting Operations

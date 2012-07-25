@@ -839,7 +839,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 * 
 	 * @param tagName
 	 *            [ATTRIBUTE] The of the Javadoc-tag of the given documentations (e.g.
-	 * @param). This parameter is nullable.
+	 *            '@param'). This parameter is nullable.
 	 * 
 	 * @param paramName
 	 *            [ATTRIBUTE] Name of the corresponding Java-element. This parameter is

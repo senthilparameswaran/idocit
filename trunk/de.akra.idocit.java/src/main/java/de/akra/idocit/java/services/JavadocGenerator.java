@@ -59,7 +59,6 @@ public class JavadocGenerator implements IJavadocGenerator
 	 */
 	private JavadocGenerator()
 	{
-
 	}
 
 	public static String quoteGenericsInIdentifier(String identifier)
@@ -68,19 +67,10 @@ public class JavadocGenerator implements IJavadocGenerator
 	}
 
 	/**
-	 * Escapes the special characters in the given string with HTML entities. Tabs and
-	 * Linebreaks are replaced with their corresponding HTML entities as well.
-	 * 
-	 * @param unescapedText
-	 *            The text to escape
-	 * @return The escaped text
-	 */
-
-	/**
 	 * Append the information out of <code>documentations</code> to the {@link Javadoc}
 	 * block comment. If <code>tagName != null</code> the documentations are added to a
 	 * new {@link TagElement} with that name. Add first the general description text with
-	 * <code>tagName == null</code>. After the wished tags.
+	 * <code>tagName == null</code>. After that all other wished tags.
 	 * 
 	 * @param documentations
 	 *            The list of {@link Documentation}s which should be converted to
