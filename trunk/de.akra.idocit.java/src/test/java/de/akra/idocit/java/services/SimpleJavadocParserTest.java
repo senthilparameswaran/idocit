@@ -64,14 +64,14 @@ public class SimpleJavadocParserTest
 			// # like @source).
 			// #########################################################################
 			{
-				List<Documentation> referenceDocs = new ArrayList<Documentation>();
+				final List<Documentation> referenceDocs = new ArrayList<Documentation>();
 
 				// Ordering
 				{
-					Documentation orderingDoc = new Documentation();
+					final Documentation orderingDoc = new Documentation();
 					orderingDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
 
-					Map<Addressee, String> docOrdering = new HashMap<Addressee, String>();
+					final Map<Addressee, String> docOrdering = new HashMap<Addressee, String>();
 					docOrdering.put(TestUtils.createDeveloper(),
 							"Alphabetically by lastname");
 					orderingDoc.setDocumentation(docOrdering);
@@ -84,10 +84,10 @@ public class SimpleJavadocParserTest
 
 				// Source
 				{
-					Documentation sourceDoc = new Documentation();
+					final Documentation sourceDoc = new Documentation();
 					sourceDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
 
-					Map<Addressee, String> docSource = new HashMap<Addressee, String>();
+					final Map<Addressee, String> docSource = new HashMap<Addressee, String>();
 					docSource.put(TestUtils.createDeveloper(), "CRM System");
 					sourceDoc.setDocumentation(docSource);
 
@@ -99,11 +99,11 @@ public class SimpleJavadocParserTest
 
 				// Parameter parameters > COMPARISON
 				{
-					Documentation paramParametersDoc = new Documentation();
+					final Documentation paramParametersDoc = new Documentation();
 					paramParametersDoc.setAddresseeSequence(TestUtils
 							.createDeveloperSequence());
 
-					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
+					final Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
 					docSubParamFirstname.put(TestUtils.createDeveloper(),
 							"This is the customer.");
 					paramParametersDoc.setDocumentation(docSubParamFirstname);
@@ -116,11 +116,11 @@ public class SimpleJavadocParserTest
 
 				// Parameter parameters > SOURCE
 				{
-					Documentation paramParametersDoc = new Documentation();
+					final Documentation paramParametersDoc = new Documentation();
 					paramParametersDoc.setAddresseeSequence(TestUtils
 							.createDeveloperSequence());
 
-					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
+					final Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
 					docSubParamFirstname.put(TestUtils.createDeveloper(),
 							"This is the source.");
 					paramParametersDoc.setDocumentation(docSubParamFirstname);
@@ -133,12 +133,13 @@ public class SimpleJavadocParserTest
 
 				// Subparameter firstname
 				{
-					Documentation subparamFirstnameDoc = new Documentation();
+					final Documentation subparamFirstnameDoc = new Documentation();
 					subparamFirstnameDoc.setAddresseeSequence(TestUtils
 							.createDeveloperSequence());
 
-					Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
-					docSubParamFirstname.put(TestUtils.createDeveloper(), StringUtils.EMPTY);
+					final Map<Addressee, String> docSubParamFirstname = new HashMap<Addressee, String>();
+					docSubParamFirstname.put(TestUtils.createDeveloper(),
+							StringUtils.EMPTY);
 					subparamFirstnameDoc.setDocumentation(docSubParamFirstname);
 
 					subparamFirstnameDoc
@@ -149,12 +150,13 @@ public class SimpleJavadocParserTest
 
 				// Subparameter lastname
 				{
-					Documentation subparamLastnameDoc = new Documentation();
+					final Documentation subparamLastnameDoc = new Documentation();
 					subparamLastnameDoc.setAddresseeSequence(TestUtils
 							.createDeveloperSequence());
 
-					Map<Addressee, String> docSubparamLastname = new HashMap<Addressee, String>();
-					docSubparamLastname.put(TestUtils.createDeveloper(), StringUtils.EMPTY);
+					final Map<Addressee, String> docSubparamLastname = new HashMap<Addressee, String>();
+					docSubparamLastname.put(TestUtils.createDeveloper(),
+							StringUtils.EMPTY);
 					subparamLastnameDoc.setDocumentation(docSubparamLastname);
 
 					subparamLastnameDoc
@@ -165,10 +167,10 @@ public class SimpleJavadocParserTest
 
 				// Return Object
 				{
-					Documentation returnDoc = new Documentation();
+					final Documentation returnDoc = new Documentation();
 					returnDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
 
-					Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
+					final Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
 					docReturn.put(TestUtils.createDeveloper(), "This is the object.");
 					returnDoc.setDocumentation(docReturn);
 
@@ -180,10 +182,10 @@ public class SimpleJavadocParserTest
 
 				// Return Info Source
 				{
-					Documentation returnDoc = new Documentation();
+					final Documentation returnDoc = new Documentation();
 					returnDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
 
-					Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
+					final Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
 					docReturn.put(TestUtils.createDeveloper(), "This is the source.");
 					returnDoc.setDocumentation(docReturn);
 
@@ -193,28 +195,60 @@ public class SimpleJavadocParserTest
 					referenceDocs.add(returnDoc);
 				}
 
-				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
-				CompilationUnit cu = output.getCompilationUnit();
-				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
-						"Developer", true, cu);
-				JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
+				// Throws IOException
+				{
+					final Documentation throwsDoc = new Documentation();
+					throwsDoc.setAddresseeSequence(TestUtils.createDeveloperSequence());
+
+					final Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
+					docReturn.put(TestUtils.createDeveloper(), "In case of an error");
+					throwsDoc.setDocumentation(docReturn);
+
+					throwsDoc
+							.setSignatureElementIdentifier("java.io.IOException:java.io.IOException");
+					throwsDoc.setThematicRole(null);
+					referenceDocs.add(throwsDoc);
+				}
+
+				// Throws Info IOException > ATTRIBUTE
+				{
+					final Documentation throwsInfoDoc = new Documentation();
+					throwsInfoDoc.setAddresseeSequence(TestUtils
+							.createDeveloperSequence());
+					final Map<Addressee, String> docReturn = new HashMap<Addressee, String>();
+					docReturn.put(TestUtils.createDeveloper(),
+							"This is also an attribute.");
+					throwsInfoDoc.setDocumentation(docReturn);
+
+					throwsInfoDoc
+							.setSignatureElementIdentifier("java.io.IOException:java.io.IOException");
+					throwsInfoDoc.setThematicRole(TestUtils.createAttribute());
+					referenceDocs.add(throwsInfoDoc);
+				}
+
+				final ParserOutput output = JavadocTestUtils
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
+				final CompilationUnit cu = output.getCompilationUnit();
+				final JavaInterfaceArtifact artifact = TestDataFactory
+						.createCustomerService("Developer", true, cu);
+				final JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
 						.getOperations().get(0);
 
-				AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu
+				final AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu
 						.types().get(0);
-				List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
+				final List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
 						.bodyDeclarations();
 
 				// The intention of this assertion is to ensure that the
 				// CustomerService-code, which is part of this test, is not extended by
 				// further methods without refactoring this test-case.
-				assertTrue(bodyDeclarations.size() == 3);
+				assertTrue(bodyDeclarations.size() == 4);
 
-				List<Addressee> addressees = TestUtils.createDeveloperSequence();
-				List<ThematicRole> thematicRoles = TestUtils
+				final List<Addressee> addressees = TestUtils.createDeveloperSequence();
+				final List<ThematicRole> thematicRoles = TestUtils
 						.createReferenceThematicRoles();
-				List<Documentation> actualDocs = SimpleJavadocParser.INSTANCE
+				final List<Documentation> actualDocs = SimpleJavadocParser.INSTANCE
 						.parseIDocItJavadoc(bodyDeclarations.get(1).getJavadoc(),
 								addressees, thematicRoles, method);
 
@@ -227,7 +261,8 @@ public class SimpleJavadocParserTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "EmptyService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "EmptyService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
 				AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu
@@ -260,7 +295,8 @@ public class SimpleJavadocParserTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "ExampleService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "ExampleService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
 				AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu
@@ -297,7 +333,8 @@ public class SimpleJavadocParserTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "ExampleService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "ExampleService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 
 				AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu

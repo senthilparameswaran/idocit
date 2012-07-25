@@ -15,19 +15,13 @@
  *******************************************************************************/
 package source;
 
-public interface ExampleService
+public class InconsistentService2
 {
 	/**
-	 * 
-	 * @param customer
-	 * @subparam notexistingattribute [ATTRIBUTE]
+	 * @return nothing
 	 */
-	public void foo(Customer customer);
-	
-	/**
-	 * Rule: Check the beat.
-	 * 
-	 * @thematicgrid Checking Operations
-	 */
-	public void checkSomething();
+	public void foo()
+	{
+
+	}
 }

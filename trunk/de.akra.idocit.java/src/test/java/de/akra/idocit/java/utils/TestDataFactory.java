@@ -20,8 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import source.CustomerService;
@@ -263,7 +267,10 @@ public class TestDataFactory
 		ioException.setSignatureElementPath("java.io.IOException:java.io.IOException");
 		ioException.setIdentifier("IOException");
 		ioException.setQualifiedIdentifier("java.io.IOException");
-		// TODO
+		
+		addDocumentation(ioException, addresseeName, null,
+				"In case of an error", ioException.getSignatureElementPath());
+		
 		addDocumentation(ioException, addresseeName, "ATTRIBUTE",
 				"This is also an attribute.", ioException.getSignatureElementPath());
 		// TagElement exception = customerServiceIntf.getAST().newTagElement();
@@ -407,12 +414,189 @@ public class TestDataFactory
 		specialException
 				.setSignatureElementPath("source.SpecialException:source.SpecialException");
 		specialException.setHasPublicAccessibleAttributes(true);
+		
+		addDocumentation(specialException, addresseeName, null, "In case of an error",
+				specialException.getSignatureElementPath());
 
 		ioExceptions.addParameter(specialException);
 		exceptions.add(ioExceptions);
 		methodFindCustomerById.setExceptions(exceptions);
 
 		return methodFindCustomerById;
+	}
+	
+	public static JavaMethod createDocumentedAnyTestMethod(final String addresseeName,
+			final TypeDeclaration customerServiceIntf, final boolean documentationChanged)
+	{
+		// Method
+		final JavaMethod methodAnyTestMethod = new JavaMethod(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Method", "None",
+				Numerus.SINGULAR);
+		final MethodDeclaration anyTestMethod = (MethodDeclaration) customerServiceIntf
+				.bodyDeclarations().get(3);
+		methodAnyTestMethod.setRefToASTNode(anyTestMethod);
+		methodAnyTestMethod.setIdentifier("anyTestMethod");
+		methodAnyTestMethod.setQualifiedIdentifier("anyTestMethod");
+		methodAnyTestMethod.setDocumentationChanged(documentationChanged);
+
+		addDocumentation(methodAnyTestMethod, addresseeName, "ACTION",
+				"Test if a mixed Javadoc is correctly converted. And "
+						+ StringUtils.NEW_LINE
+						+ "if documentations are correct converted.", null);
+		
+		// Method's additional tags
+		final TagElement tag = createTagElement(customerServiceIntf.getAST(),
+				TagElement.TAG_THROWS, IllegalArgumentException.class.getSimpleName(),
+				"In case of wrong parameter.");
+
+		final List<TagElement> additionalTags = new ArrayList<TagElement>(1);
+		additionalTags.add(tag);
+		methodAnyTestMethod.setAdditionalTags(additionalTags);
+
+		// Parameters
+		JavaParameters inputParameters = new JavaParameters(methodAnyTestMethod,
+				"Parameters", Numerus.SINGULAR, false);
+		inputParameters.setIdentifier(StringUtils.EMPTY);
+		inputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
+		methodAnyTestMethod.setInputParameters(inputParameters);
+
+		final JavaParameter param1 = new JavaParameter(inputParameters, Numerus.SINGULAR,
+				false);
+		param1.setDataTypeName("String");
+		param1.setIdentifier("param1");
+		param1.setQualifiedIdentifier("param1");
+		param1.setQualifiedDataTypeName("java.lang.String");
+		param1.setDocumentationChanged(documentationChanged);
+		param1.setSignatureElementPath("param1:java.lang.String");
+		inputParameters.addParameter(param1);
+
+		final JavaParameter param2 = new JavaParameter(inputParameters, Numerus.SINGULAR,
+				false);
+		param2.setDataTypeName("int");
+		param2.setIdentifier("param2");
+		param2.setQualifiedIdentifier("param2");
+		param2.setQualifiedDataTypeName("int");
+		param2.setDocumentationChanged(documentationChanged);
+		param2.setSignatureElementPath("param2:int");
+		inputParameters.addParameter(param2);
+
+		addDocumentation(param2, addresseeName, "OBJECT", "a number.",
+				param2.getSignatureElementPath());
+
+		final JavaParameter param3 = new JavaParameter(inputParameters, Numerus.SINGULAR,
+				false);
+		param3.setDataTypeName("long");
+		param3.setIdentifier("param3");
+		param3.setQualifiedIdentifier("param3");
+		param3.setQualifiedDataTypeName("long");
+		param3.setDocumentationChanged(documentationChanged);
+		param3.setSignatureElementPath("param3:long");
+		inputParameters.addParameter(param3);
+
+		addDocumentation(param3, addresseeName, null, "a long number.",
+				param3.getSignatureElementPath());
+
+		final JavaParameter param4 = new JavaParameter(inputParameters, Numerus.SINGULAR,
+				false);
+		param4.setDataTypeName("float");
+		param4.setIdentifier("param4");
+		param4.setQualifiedIdentifier("param4");
+		param4.setQualifiedDataTypeName("float");
+		param4.setDocumentationChanged(documentationChanged);
+		param4.setSignatureElementPath("param4:float");
+		inputParameters.addParameter(param4);
+
+		addDocumentation(
+				param4,
+				addresseeName,
+				"ATTRIBUTE",
+				"a float ({@link Float}) number. It is a floating point number; a number with a dot.",
+				param4.getSignatureElementPath());
+
+		final JavaParameter param5 = new JavaParameter(inputParameters, Numerus.SINGULAR,
+				false);
+		param5.setDataTypeName("double");
+		param5.setIdentifier("param5");
+		param5.setQualifiedIdentifier("param5");
+		param5.setQualifiedDataTypeName("double");
+		param5.setDocumentationChanged(documentationChanged);
+		param5.setSignatureElementPath("param5:double");
+		inputParameters.addParameter(param5);
+
+		addDocumentation(param5, addresseeName, null, "a double number.",
+				param5.getSignatureElementPath());
+
+		final JavaParameter param6 = new JavaParameter(inputParameters, Numerus.SINGULAR,
+				false);
+		param6.setDataTypeName("String");
+		param6.setIdentifier("param6");
+		param6.setQualifiedIdentifier("param6");
+		param6.setQualifiedDataTypeName("java.lang.String");
+		param6.setDocumentationChanged(documentationChanged);
+		param6.setSignatureElementPath("param6:java.lang.String");
+		inputParameters.addParameter(param6);
+
+		addDocumentation(param6, addresseeName, "ATTRIBUTE", "a very very long string.",
+				param6.getSignatureElementPath());
+
+		// Return value
+		final JavaParameters outputParameters = new JavaParameters(methodAnyTestMethod,
+				"ReturnType", Numerus.SINGULAR, false);
+		outputParameters.setIdentifier(StringUtils.EMPTY);
+		outputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
+		methodAnyTestMethod.setOutputParameters(outputParameters);
+
+		JavaParameter returnType = new JavaParameter(outputParameters, Numerus.PLURAL,
+				false);
+		returnType.setDataTypeName("List<Customer>");
+		returnType.setQualifiedDataTypeName("java.util.List<source.Customer>");
+		returnType.setIdentifier("List<Customer>");
+		returnType.setQualifiedIdentifier("java.util.List<source.Customer>");
+		returnType.setDocumentationChanged(documentationChanged);
+		returnType
+				.setSignatureElementPath("java.util.List<source.Customer>:java.util.List<source.Customer>");
+		outputParameters.addParameter(returnType);
+
+		addDocumentation(returnType, addresseeName, null, "a list.",
+				returnType.getSignatureElementPath());
+
+		return methodAnyTestMethod;
+	}
+
+	/**
+	 * 
+	 * @param ast
+	 * @param tagName
+	 * @param qualifiedParamName
+	 * @param docText
+	 * @return
+	 */
+	private static TagElement createTagElement(final AST ast, final String tagName,
+			final String qualifiedParamName, final String docText)
+	{
+		final TagElement tag = ast.newTagElement();
+
+		if (!StringUtils.isBlank(tagName))
+		{
+			tag.setTagName(tagName);
+		}
+
+		@SuppressWarnings("unchecked")
+		final List<ASTNode> fragments = tag.fragments();
+
+		if (!StringUtils.isBlank(qualifiedParamName))
+		{
+			fragments.add(ast.newName(qualifiedParamName));
+		}
+
+		if (!StringUtils.isBlank(docText))
+		{
+			final TextElement text = ast.newTextElement();
+			text.setText("In case of wrong parameter.");
+			fragments.add(text);
+		}
+
+		return tag;
 	}
 
 	private static JavaParameter createJavaParameterCustomer(String addresseeName,
@@ -754,8 +938,8 @@ public class TestDataFactory
 	 * 
 	 * @thematicgrid Putting Operations
 	 */
-	public static void addDocumentation(SignatureElement element, String addresseeName,
-			String thematicRole, String docText, String signatureElementPath)
+	public static void addDocumentation(final SignatureElement element, final String addresseeName,
+			final String thematicRole, final String docText, final String signatureElementPath)
 	{
 		List<Addressee> addressees = createReferenceAddresseeList(addresseeName);
 
@@ -969,6 +1153,8 @@ public class TestDataFactory
 		methods.add(createDocumentedFindCustomerByName(addresseeName,
 				documentationChanged, customerServiceIntf));
 		methods.add(createDocumentedFindCustomerByNameWithCustomerNames(addresseeName,
+				customerServiceIntf, documentationChanged));
+		methods.add(createDocumentedAnyTestMethod(addresseeName,
 				customerServiceIntf, documentationChanged));
 
 		customerService.setOperations(methods);

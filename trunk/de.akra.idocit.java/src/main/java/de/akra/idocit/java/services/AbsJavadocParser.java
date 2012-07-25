@@ -161,11 +161,11 @@ public abstract class AbsJavadocParser
 		{
 			foundDocs = new ArrayList<Documentation>(javadoc.tags().size());
 			// TODO make the used addressee adjustable via the Preference Pages
-			Addressee developer = DescribedItemUtils.findAddressee("Developer");
+			final Addressee developer = DescribedItemUtils.findAddressee("Developer");
 
-			for (TagElement tag : (List<TagElement>) javadoc.tags())
+			for (final TagElement tag : (List<TagElement>) javadoc.tags())
 			{
-				Documentation doc = new Documentation();
+				final Documentation doc = new Documentation();
 				String comment = null;
 				if (tag.getTagName() == null)
 				{
@@ -183,10 +183,10 @@ public abstract class AbsJavadocParser
 				{
 					comment = JavadocUtils.readFragments((List<ASTNode>) tag.fragments(),
 							1);
-					ASTNode paramName = (ASTNode) tag.fragments().get(0);
+					final ASTNode paramName = (ASTNode) tag.fragments().get(0);
 					if (ASTNode.SIMPLE_NAME == paramName.getNodeType())
 					{
-						SimpleName name = (SimpleName) paramName;
+						final SimpleName name = (SimpleName) paramName;
 						String identifier = null;
 						if (tag.getTagName().matches(JAVADOC_TAG_PARAM))
 						{
@@ -233,8 +233,8 @@ public abstract class AbsJavadocParser
 	 *         {@link Collections#EMPTY_LIST} is returned.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<TagElement> findAdditionalTags(Javadoc javadoc,
-			List<ThematicRole> knownRoles)
+	public List<TagElement> findAdditionalTags(final Javadoc javadoc,
+			final List<ThematicRole> knownRoles)
 	{
 		List<TagElement> tags = Collections.emptyList();
 		if (javadoc != null)

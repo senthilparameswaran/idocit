@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
@@ -42,6 +43,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
 
 /**
@@ -52,7 +54,7 @@ import de.akra.idocit.core.constants.ThematicRoleConstants;
  */
 public class TestUtils
 {
-	
+
 	/**
 	 * Creates an Eclipse project "External Files" and links the file
 	 * <code>fileName</code> to the project. Then the file can be used as {@link IFile}.
@@ -343,8 +345,7 @@ public class TestUtils
 		Addressee addresseeTester = new Addressee("Tester");
 		addresseeTester.setDefault(false);
 		// "The tester tests the implemented systems and gives feedback on their functional- and not-functional quality."
-		addresseeTester
-				.setDescription("");
+		addresseeTester.setDescription(StringUtils.EMPTY);
 
 		return addresseeTester;
 	}
@@ -354,7 +355,7 @@ public class TestUtils
 		Addressee addresseeArchitect = new Addressee("Architect");
 		addresseeArchitect.setDefault(false);
 		// "The architect designs software-systems"
-		addresseeArchitect.setDescription("");
+		addresseeArchitect.setDescription(StringUtils.EMPTY);
 
 		return addresseeArchitect;
 	}
@@ -363,7 +364,7 @@ public class TestUtils
 	{
 		ThematicRole action = new ThematicRole("OBJECT");
 		// "What the operation does."
-		action.setDescription("");
+		action.setDescription(StringUtils.EMPTY);
 
 		return action;
 	}
@@ -372,17 +373,26 @@ public class TestUtils
 	{
 		ThematicRole action = new ThematicRole(ThematicRoleConstants.MANDATORY_ROLE_RULE);
 		// "What the operation does."
-		action.setDescription("");
+		action.setDescription(StringUtils.EMPTY);
 
 		return action;
 	}
-	
+
 	public static ThematicRole createAction()
 	{
-		ThematicRole action = new ThematicRole(ThematicRoleConstants.MANDATORY_ROLE_ACTION);
+		ThematicRole action = new ThematicRole(
+				ThematicRoleConstants.MANDATORY_ROLE_ACTION);
 		// "What the operation does."
-		action.setDescription("");
+		action.setDescription(StringUtils.EMPTY);
 
+		return action;
+	}
+
+	public static ThematicRole createAttribute()
+	{
+		final ThematicRole action = new ThematicRole("ATTRIBUTE");
+		// "What the operation does."
+		action.setDescription(StringUtils.EMPTY);
 		return action;
 	}
 
@@ -390,7 +400,7 @@ public class TestUtils
 	{
 		ThematicRole comparison = new ThematicRole("COMPARISON");
 		// "What identifies the OBJECT(s)."
-		comparison.setDescription("");
+		comparison.setDescription(StringUtils.EMPTY);
 
 		return comparison;
 	}
@@ -399,7 +409,7 @@ public class TestUtils
 	{
 		ThematicRole source = new ThematicRole("SOURCE");
 		// "Where the OBJECT(s) come from"
-		source.setDescription("");
+		source.setDescription(StringUtils.EMPTY);
 
 		return source;
 	}
@@ -408,7 +418,7 @@ public class TestUtils
 	{
 		ThematicRole ordering = new ThematicRole("ORDERING");
 		// "Defines the sequence of OBJECTs"
-		ordering.setDescription("");
+		ordering.setDescription(StringUtils.EMPTY);
 
 		return ordering;
 	}
@@ -444,7 +454,7 @@ public class TestUtils
 	 */
 	public static List<ThematicRole> createReferenceThematicRoles()
 	{
-		List<ThematicRole> result = new ArrayList<ThematicRole>();
+		final List<ThematicRole> result = new ArrayList<ThematicRole>();
 
 		result.add(createAction());
 		result.add(createComparison());
@@ -452,16 +462,72 @@ public class TestUtils
 		result.add(createOrdering());
 		result.add(createObject());
 		result.add(createRule());
+		result.add(createAttribute());
 
 		return result;
 	}
 
 	public static List<Addressee> createDeveloperSequence()
 	{
-		List<Addressee> result = new ArrayList<Addressee>();
-
+		final List<Addressee> result = new ArrayList<Addressee>();
 		result.add(createDeveloper());
-
 		return result;
+	}
+
+	/**
+	 * Collect all {@link Documentation}s in the {@link Operation} structure.
+	 * 
+	 * @param operation
+	 *            [SOURCE]
+	 * @return [OBJECT] all found {@link Documentation}s for the {@code operation}.
+	 */
+	public static List<Documentation> collectAllDocumentations(final Operation operation)
+	{
+		final List<Documentation> documentations = new ArrayList<Documentation>();
+		documentations.addAll(operation.getDocumentations());
+
+		final Parameters inputParams = operation.getInputParameters();
+		if (inputParams != null)
+		{
+			collectParameterDocumentations(inputParams.getParameters(), documentations);
+		}
+
+		final Parameters returnType = operation.getOutputParameters();
+		if (returnType != null)
+		{
+			collectParameterDocumentations(returnType.getParameters(), documentations);
+		}
+
+		for (final Parameters exception : operation.getExceptions())
+		{
+			if (exception != null)
+			{
+				collectParameterDocumentations(exception.getParameters(), documentations);
+			}
+		}
+
+		return documentations;
+	}
+
+	/**
+	 * Collect all {@link Documentation}s in the {@link Parameter} structure and adds it
+	 * to the result list <code>documentations</code>.
+	 * 
+	 * @param parameters
+	 *            [SOURCE] The {@link Parameter} that should be processed.
+	 * @param documentations
+	 *            [DESINTATION] the result list of found {@link Documentation}s.
+	 */
+	private static void collectParameterDocumentations(final List<Parameter> parameters,
+			final List<Documentation> documentations)
+	{
+		if (parameters != null && !parameters.isEmpty())
+		{
+			for (final Parameter param : parameters)
+			{
+				documentations.addAll(param.getDocumentations());
+				collectParameterDocumentations(param.getComplexType(), documentations);
+			}
+		}
 	}
 }

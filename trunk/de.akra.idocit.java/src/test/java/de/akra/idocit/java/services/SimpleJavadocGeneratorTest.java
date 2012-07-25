@@ -73,7 +73,8 @@ public class SimpleJavadocGeneratorTest
 								+ " * @return[OBJECT] This is the object.%1$s"
 								+ " * @returninfo[SOURCE] This is the source.%1$s"
 								+ " * %1$s"
-								+ " * @throwsIOException [ATTRIBUTE] This is also an attribute.%1$s"
+								+ " * @throwsIOException In case of an error%1$s"
+								+ " * @throwsinfoIOException [ATTRIBUTE] This is also an attribute.%1$s"
 								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
 								JAVADOC_NEW_LINE);
 
@@ -113,22 +114,22 @@ public class SimpleJavadocGeneratorTest
 								+ " * @thematicgridChecking Operations%1$s" + " */%1$s",
 								JAVADOC_NEW_LINE);
 
-				ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "InvariantService.java");
-				CompilationUnit cu = output.getCompilationUnit();
+				final CompilationUnit cu = output.getCompilationUnit();
 
-				JavaInterfaceArtifact artifact = TestDataFactory.createInvariantService(
+				final JavaInterfaceArtifact artifact = TestDataFactory.createInvariantService(
 						"Developer", cu, true);
 
 				JavaInterfaceGenerator.updateJavadocInAST(artifact,
 						SimpleJavadocGenerator.INSTANCE);
 
-				JavaInterface invariantServiceIntf = (JavaInterface) artifact
+				final JavaInterface invariantServiceIntf = (JavaInterface) artifact
 						.getInterfaces().get(0);
-				JavaMethod checkInvariantMeth = (JavaMethod) invariantServiceIntf
+				final JavaMethod checkInvariantMeth = (JavaMethod) invariantServiceIntf
 						.getOperations().get(0);
-				Javadoc javadoc = checkInvariantMeth.getRefToASTNode().getJavadoc();
+				final Javadoc javadoc = checkInvariantMeth.getRefToASTNode().getJavadoc();
 
 				assertEquals(referenceJavadoc, javadoc.toString());
 			}
@@ -140,17 +141,17 @@ public class SimpleJavadocGeneratorTest
 			{
 				// This Java file is parsed to get a valid abstract syntax tree. We won't
 				// use its Javadoc!
-				ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
-				CompilationUnit cu = output.getCompilationUnit();
-				JavaInterfaceArtifact customerService = TestDataFactory
+				final CompilationUnit cu = output.getCompilationUnit();
+				final JavaInterfaceArtifact customerService = TestDataFactory
 						.createEmptyCustomerService(cu, true);
 
 				JavaInterfaceGenerator.updateJavadocInAST(customerService,
 						SimpleJavadocGenerator.INSTANCE);
 
-				JavaMethod methodFindCustById = (JavaMethod) customerService
+				final JavaMethod methodFindCustById = (JavaMethod) customerService
 						.getInterfaces().get(0).getOperations().get(0);
 
 				assertEquals(createEmptyReferenceJDForCustomerService(),
@@ -165,17 +166,17 @@ public class SimpleJavadocGeneratorTest
 			{
 				// This Java file is parsed to get a valid abstract syntax tree. We won't
 				// use its Javadoc!
-				ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
-				CompilationUnit cu = output.getCompilationUnit();
-				JavaInterfaceArtifact customerService = TestDataFactory
+				final CompilationUnit cu = output.getCompilationUnit();
+				final JavaInterfaceArtifact customerService = TestDataFactory
 						.createNullCustomerService(cu, true);
 
 				JavaInterfaceGenerator.updateJavadocInAST(customerService,
 						SimpleJavadocGenerator.INSTANCE);
 
-				JavaMethod methodFindCustById = (JavaMethod) customerService
+				final JavaMethod methodFindCustById = (JavaMethod) customerService
 						.getInterfaces().get(0).getOperations().get(0);
 
 				assertEquals(createEmptyReferenceJDForCustomerService(),
@@ -201,7 +202,7 @@ public class SimpleJavadocGeneratorTest
 								+ " * @return[OBJECT]%1$s"
 								+ " * @subreturnfirstName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
 								+ " * @subreturnlastName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
-								+ " * %1$s" + " * @throwsSpecialException%1$s"
+								+ " * %1$s" + " * @throwsSpecialException In case of an error%1$s"
 								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
 								JAVADOC_NEW_LINE);
 				final ParserOutput output = JavadocTestUtils

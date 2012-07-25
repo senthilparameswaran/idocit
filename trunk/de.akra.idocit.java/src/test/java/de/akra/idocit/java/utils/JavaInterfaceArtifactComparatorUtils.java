@@ -28,8 +28,8 @@ import de.akra.idocit.java.structure.JavaMethod;
 
 public final class JavaInterfaceArtifactComparatorUtils
 {
-	public static boolean equalsDocumentations(List<Documentation> documentations1,
-			List<Documentation> documentations2)
+	public static boolean equalsDocumentations(final List<Documentation> documentations1,
+			final List<Documentation> documentations2)
 	{
 		if (documentations1 == documentations2)
 		{
@@ -50,8 +50,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 
 		for (int i = 0; i < documentations1.size(); i++)
 		{
-			Documentation doc1 = documentations1.get(i);
-			Documentation doc2 = documentations2.get(i);
+			final Documentation doc1 = documentations1.get(i);
+			final Documentation doc2 = documentations2.get(i);
 
 			if ((doc1 != null) && (doc2 == null))
 			{
@@ -70,8 +70,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsSignatureElement(SignatureElement element1,
-			SignatureElement element2)
+	public static boolean equalsSignatureElement(final SignatureElement element1,
+			final SignatureElement element2)
 	{
 		if (element1 == element2)
 			return true;
@@ -114,7 +114,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsParameter(Parameter parameter1, Parameter parameter2)
+	public static boolean equalsParameter(final Parameter parameter1,
+			final Parameter parameter2)
 	{
 		if (parameter1 == parameter2)
 		{
@@ -170,8 +171,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsParameters(List<? extends Parameter> parameters1,
-			List<? extends Parameter> parameters2)
+	public static boolean equalsParameters(final List<? extends Parameter> parameters1,
+			final List<? extends Parameter> parameters2)
 	{
 		if (parameters1 == parameters2)
 		{
@@ -192,8 +193,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 
 		for (int i = 0; i < parameters1.size(); i++)
 		{
-			Parameter param1 = parameters1.get(i);
-			Parameter param2 = parameters2.get(i);
+			final Parameter param1 = parameters1.get(i);
+			final Parameter param2 = parameters2.get(i);
 
 			if ((param1 != null) && (param2 == null))
 			{
@@ -218,7 +219,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsParameters(Parameters parameters1, Parameters parameters2)
+	public static boolean equalsParameters(final Parameters parameters1,
+			final Parameters parameters2)
 	{
 		if (parameters1 == parameters2)
 		{
@@ -247,8 +249,9 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsExceptions(List<? extends Parameters> parameterList1,
-			List<? extends Parameters> parameterList2)
+	public static boolean equalsExceptions(
+			final List<? extends Parameters> parameterList1,
+			final List<? extends Parameters> parameterList2)
 	{
 		if (parameterList1 == parameterList2)
 		{
@@ -270,8 +273,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 
 		for (int i = 0; i < parameterList1.size(); i++)
 		{
-			Parameters param1 = parameterList1.get(i);
-			Parameters param2 = parameterList2.get(i);
+			final Parameters param1 = parameterList1.get(i);
+			final Parameters param2 = parameterList2.get(i);
 
 			if ((param1 != null) && (param2 == null))
 			{
@@ -290,7 +293,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsMethods(JavaMethod method1, JavaMethod method2)
+	public static boolean equalsMethods(final JavaMethod method1, final JavaMethod method2)
 	{
 		if (method1 == method2)
 		{
@@ -344,8 +347,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsInterfaces(List<? extends Interface> interfaces1,
-			List<? extends Interface> interfaces2)
+	public static boolean equalsInterfaces(final List<? extends Interface> interfaces1,
+			final List<? extends Interface> interfaces2)
 	{
 		if (interfaces1 == interfaces2)
 		{
@@ -368,8 +371,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 
 		for (int i = 0; i < interfaces1.size(); i++)
 		{
-			JavaInterface interface1 = (JavaInterface) interfaces1.get(i);
-			JavaInterface interface2 = (JavaInterface) interfaces2.get(i);
+			final JavaInterface interface1 = (JavaInterface) interfaces1.get(i);
+			final JavaInterface interface2 = (JavaInterface) interfaces2.get(i);
 
 			if ((interface1 != null) && (interface2 == null))
 			{
@@ -388,8 +391,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	public static boolean equalsInterfaces(JavaInterface interface1,
-			JavaInterface interface2)
+	public static boolean equalsInterfaces(final JavaInterface interface1,
+			final JavaInterface interface2)
 	{
 		if (interface1 == interface2)
 		{
@@ -440,8 +443,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 
 		for (int i = 0; i < interface1.getOperations().size(); i++)
 		{
-			JavaMethod operation1 = (JavaMethod) interface1.getOperations().get(i);
-			JavaMethod operation2 = (JavaMethod) interface2.getOperations().get(i);
+			final JavaMethod operation1 = (JavaMethod) interface1.getOperations().get(i);
+			final JavaMethod operation2 = (JavaMethod) interface2.getOperations().get(i);
 
 			if (!equalsMethods(operation1, operation2))
 			{
@@ -453,7 +456,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
-	private static boolean equalsReference(Object obj1, Object obj2)
+	private static boolean equalsReference(final Object obj1, final Object obj2)
 	{
 		if (obj1 == obj2)
 		{
@@ -467,12 +470,12 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return false;
 		}
-
 		return true;
 	}
 
-	public static boolean equalsInterfaceArtifacts(JavaInterfaceArtifact artifact1,
-			JavaInterfaceArtifact artifact2)
+	@SuppressWarnings("unchecked")
+	public static boolean equalsInterfaceArtifacts(final JavaInterfaceArtifact artifact1,
+			final JavaInterfaceArtifact artifact2)
 	{
 		if (!equalsReference(artifact1, artifact2))
 		{
@@ -489,8 +492,10 @@ public final class JavaInterfaceArtifactComparatorUtils
 			return false;
 		}
 
-		List<JavaInterface> interfaces1 = (List<JavaInterface>) artifact1.getInterfaces();
-		List<JavaInterface> interfaces2 = (List<JavaInterface>) artifact2.getInterfaces();
+		final List<JavaInterface> interfaces1 = (List<JavaInterface>) artifact1
+				.getInterfaces();
+		final List<JavaInterface> interfaces2 = (List<JavaInterface>) artifact2
+				.getInterfaces();
 
 		if (interfaces1.size() != interfaces2.size())
 		{
@@ -499,8 +504,8 @@ public final class JavaInterfaceArtifactComparatorUtils
 
 		for (int i = 0; i < interfaces1.size(); i++)
 		{
-			JavaInterface interface1 = interfaces1.get(i);
-			JavaInterface interface2 = interfaces2.get(i);
+			final JavaInterface interface1 = interfaces1.get(i);
+			final JavaInterface interface2 = interfaces2.get(i);
 
 			if (!equalsInterfaces(interface1, interface2))
 			{

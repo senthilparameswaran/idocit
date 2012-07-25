@@ -96,45 +96,45 @@ public class JavadocUtils
 		}
 	}
 
-	public static boolean isParamInfo(String tagName)
+	public static boolean isParamInfo(final String tagName)
 	{
 		return CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
 	}
 
-	public static boolean isThrowsInfo(String tagName)
+	public static boolean isThrowsInfo(final String tagName)
 	{
 		return CustomTaglets.THROWS_INFO.getTagName().equals(tagName);
 	}
 
-	public static boolean isReturnInfo(String tagName)
+	public static boolean isReturnInfo(final String tagName)
 	{
 		return CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
 	}
 
-	public static boolean isSubParam(String tagName)
+	public static boolean isSubParam(final String tagName)
 	{
 		return CustomTaglets.SUB_PARAM.getTagName().equals(tagName);
 	}
 
-	public static boolean isParam(String tagName)
+	public static boolean isParam(final String tagName)
 	{
 		return TagElement.TAG_PARAM.equals(tagName)
 				|| CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
 	}
 
-	public static boolean isThrows(String tagName)
+	public static boolean isThrows(final String tagName)
 	{
 		return TagElement.TAG_THROWS.equals(tagName)
 				|| CustomTaglets.THROWS_INFO.getTagName().equals(tagName);
 	}
 
-	public static boolean isReturn(String tagName)
+	public static boolean isReturn(final String tagName)
 	{
 		return TagElement.TAG_RETURN.equals(tagName)
 				|| CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
 	}
 
-	public static boolean isStandardJavadocTaglet(String tagName)
+	public static boolean isStandardJavadocTaglet(final String tagName)
 	{
 		boolean isReturn = isReturn(tagName);
 		boolean isThrows = TagElement.TAG_THROWS.equals(tagName);
@@ -142,12 +142,12 @@ public class JavadocUtils
 		return isParam(tagName) || isReturn || isThrows;
 	}
 
-	public static boolean isSubReturn(String tagName)
+	public static boolean isSubReturn(final String tagName)
 	{
 		return CustomTaglets.SUB_RETURN.getTagName().equals(tagName);
 	}
 
-	public static boolean isIdocitJavadocTaglet(String tagName)
+	public static boolean isIdocitJavadocTaglet(final String tagName)
 	{
 		boolean isSubParam = isSubParam(tagName);
 		boolean isSubReturn = isSubReturn(tagName);
@@ -156,7 +156,7 @@ public class JavadocUtils
 		return isSubParam || isSubReturn || isInfoTag;
 	}
 
-	public static boolean isIdocItInfoTag(String tagName)
+	public static boolean isIdocItInfoTag(final String tagName)
 	{
 		boolean paramInfo = CustomTaglets.PARAM_INFO.getTagName().equals(tagName);
 		boolean returnInfo = CustomTaglets.RETURN_INFO.getTagName().equals(tagName);
@@ -165,18 +165,17 @@ public class JavadocUtils
 		return paramInfo || returnInfo || throwsInfo;
 	}
 
-	public static String readIdentifier(TagElement tag)
+	public static String readIdentifier(final TagElement tag)
 	{
 		String identifier = null;
-		ASTNode paramName = (ASTNode) tag.fragments().get(0);
 
-		if (JavadocUtils.isParam(tag.getTagName())
-				|| JavadocUtils.isThrows(tag.getTagName())
-				|| JavadocUtils.isReturn(tag.getTagName()))
+		if ((JavadocUtils.isParam(tag.getTagName()) || JavadocUtils.isThrows(tag
+				.getTagName())) && tag.fragments() != null)
 		{
+			final ASTNode paramName = (ASTNode) tag.fragments().get(0);
 			if (ASTNode.SIMPLE_NAME == paramName.getNodeType())
 			{
-				SimpleName name = (SimpleName) paramName;
+				final SimpleName name = (SimpleName) paramName;
 				identifier = name.getIdentifier();
 			}
 		}
@@ -196,100 +195,170 @@ public class JavadocUtils
 	 * @return The text from the <code>fragments</code>.
 	 */
 	@SuppressWarnings("unchecked")
-	public static String readFragments(List<ASTNode> fragments, int offset)
+	public static String readFragments(final List<ASTNode> fragments, final int offset)
 	{
-		StringBuffer html = new StringBuffer();
+		final StringBuffer html = new StringBuffer();
 
-		for (ASTNode fragment : fragments.subList(offset, fragments.size()))
+		if (fragments != null && fragments.size() >= offset)
 		{
-			switch (fragment.getNodeType())
+			for (final ASTNode fragment : fragments.subList(offset, fragments.size()))
 			{
-			case ASTNode.TEXT_ELEMENT:
-			{
-				TextElement textElem = (TextElement) fragment;
-				html.append(textElem.getText());
-				break;
-			}
-			case ASTNode.SIMPLE_NAME:
-			case ASTNode.QUALIFIED_NAME:
-			{
-				Name name = (Name) fragment;
-				html.append(name.getFullyQualifiedName());
-				break;
-			}
-			case ASTNode.METHOD_REF:
-			{
-				MethodRef mRef = (MethodRef) fragment;
-				if (mRef.getQualifier() != null)
+				final StringBuffer tempText = new StringBuffer(fragment.getLength());
+
+				switch (fragment.getNodeType())
 				{
-					Name qualifier = mRef.getQualifier();
-					html.append(qualifier.getFullyQualifiedName());
+				case ASTNode.TEXT_ELEMENT:
+				{
+					final TextElement textElem = (TextElement) fragment;
+					tempText.append(textElem.getText());
+					break;
 				}
-
-				html.append('#');
-				html.append(mRef.getName().getIdentifier());
-				html.append('(');
-
-				// write parameter list
-				List<MethodRefParameter> mRefParameters = (List<MethodRefParameter>) mRef
-						.parameters();
-				for (MethodRefParameter mRefParam : mRefParameters)
+				case ASTNode.SIMPLE_NAME:
+				case ASTNode.QUALIFIED_NAME:
 				{
-					html.append(ReflectionHelper.extractIdentifierFrom(mRefParam
-							.getType()));
-					if (mRefParam.isVarargs())
+					final Name name = (Name) fragment;
+					tempText.append(name.getFullyQualifiedName());
+					break;
+				}
+				case ASTNode.METHOD_REF:
+				{
+					final MethodRef mRef = (MethodRef) fragment;
+					if (mRef.getQualifier() != null)
 					{
-						html.append("...");
+						final Name qualifier = mRef.getQualifier();
+						tempText.append(qualifier.getFullyQualifiedName());
 					}
-					if (mRefParam.getName() != null)
+
+					tempText.append('#');
+					tempText.append(mRef.getName().getIdentifier());
+					tempText.append('(');
+
+					// write parameter list
+					final List<MethodRefParameter> mRefParameters = (List<MethodRefParameter>) mRef
+							.parameters();
+					for (final MethodRefParameter mRefParam : mRefParameters)
 					{
-						html.append(' ');
-						html.append(mRefParam.getName().getFullyQualifiedName());
+						tempText.append(ReflectionHelper.extractIdentifierFrom(mRefParam
+								.getType()));
+						if (mRefParam.isVarargs())
+						{
+							tempText.append("...");
+						}
+						if (mRefParam.getName() != null)
+						{
+							tempText.append(' ');
+							tempText.append(mRefParam.getName().getFullyQualifiedName());
+						}
+						tempText.append(',');
 					}
-					html.append(',');
-				}
-				if (!mRefParameters.isEmpty())
-				{
-					// remove last comma
-					html.deleteCharAt(html.length() - 1);
-				}
+					if (!mRefParameters.isEmpty())
+					{
+						// remove last comma
+						tempText.deleteCharAt(tempText.length() - 1);
+					}
 
-				html.append(')');
-				break;
+					tempText.append(')');
+					break;
+				}
+				case ASTNode.MEMBER_REF:
+				{
+					final MemberRef mRef = (MemberRef) fragment;
+					if (mRef.getQualifier() != null)
+					{
+						final Name qualifier = mRef.getQualifier();
+						tempText.append(qualifier.getFullyQualifiedName());
+					}
+					tempText.append('#');
+					tempText.append(mRef.getName().getIdentifier());
+					break;
+				}
+				case ASTNode.TAG_ELEMENT:
+				{
+					final TagElement tagElem = (TagElement) fragment;
+					if (tagElem.isNested())
+					{
+						tempText.append('{');
+					}
+
+					tempText.append(tagElem.getTagName());
+					tempText.append(' ');
+					tempText.append(readFragments((List<ASTNode>) tagElem.fragments(), 0));
+
+					if (tagElem.isNested())
+					{
+						tempText.append('}');
+					}
+					break;
+				}
+				}
+				appendWithSpace(html, tempText);
 			}
-			case ASTNode.MEMBER_REF:
+			// delete leading space, that was added by Javadoc to separate a tag
+			// from the following text (e.g. '@param My documentation').
+			if (html.length() > 0 && html.charAt(0) == ' ')
 			{
-				MemberRef mRef = (MemberRef) fragment;
-				if (mRef.getQualifier() != null)
-				{
-					Name qualifier = mRef.getQualifier();
-					html.append(qualifier.getFullyQualifiedName());
-				}
-				html.append('#');
-				html.append(mRef.getName().getIdentifier());
-				break;
-			}
-			case ASTNode.TAG_ELEMENT:
-			{
-				TagElement tagElem = (TagElement) fragment;
-				if (tagElem.isNested())
-				{
-					html.append('{');
-				}
-
-				html.append(tagElem.getTagName());
-				html.append(' ');
-				html.append(readFragments((List<ASTNode>) tagElem.fragments(), 0));
-
-				if (tagElem.isNested())
-				{
-					html.append('}');
-				}
-				break;
-			}
+				html.deleteCharAt(0);
 			}
 		}
 		return html.toString();
+	}
+
+	/**
+	 * Append the {@code appendage} string to the {@code text} string and be sure that a
+	 * space ' ' is between the strings if {@code text} is not empty and does not end with
+	 * a special character and {@code appendage} is not empty and does not start with a
+	 * special character, then there will be added a space before the strings are
+	 * concatenated.
+	 * <p>
+	 * This is needed because if there are line breaks in the documentation text of a tag
+	 * it can happen that two fragments are concatenated without space.
+	 * </p>
+	 * 
+	 * @param text
+	 *            [DESTINATION] The {@code appendage} is added to this object.
+	 * @param appendage
+	 *            [OBJECT] The text to append.
+	 * @see #needEndCharSpace(char)
+	 * @see #needStartCharSpace(char)
+	 */
+	private static void appendWithSpace(final StringBuffer text,
+			final StringBuffer appendage)
+	{
+		if (text.length() > 0 && appendage.length() > 0)
+		{
+			final char textLastChar = text.charAt(text.length() - 1);
+			final char appendageFirstChar = appendage.charAt(0);
+			if (needEndCharSpace(textLastChar) && needStartCharSpace(appendageFirstChar))
+			{
+				text.append(' ');
+			}
+		}
+		text.append(appendage);
+	}
+
+	/**
+	 * Check if the character {@code c} needs a space as following character. For some
+	 * characters a space is not necessary.
+	 * 
+	 * @param c [OBJECT]
+	 * @return [REPORT] {@code true} if the character needs following a space.
+	 */
+	private static boolean needEndCharSpace(final char c)
+	{
+		return c != ' ' && c != '\t' && c != '>' && c != '(' && c != '[' && c != '{';
+	}
+
+	/**
+	 * Check if the character {@code c} needs a leading space. For some characters a space
+	 * is not necessary.
+	 * 
+	 * @param c [OBJECT]
+	 * @return [REPORT] {@code true} if the character needs a space in front of it.
+	 */
+	private static boolean needStartCharSpace(final char c)
+	{
+		return c != ' ' && c != '\t' && c != '<' && c != ')' && c != ']' && c != '}'
+				&& c != '.' && c != ';' && c != ',' && c != ':' && c != '!' && c != '?';
 	}
 
 	private static InputSource readDTDs()

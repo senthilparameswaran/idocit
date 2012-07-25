@@ -15,19 +15,41 @@
  *******************************************************************************/
 package source;
 
-public interface ExampleService
+import java.io.IOException;
+
+public class JavadocRawComment
 {
 	/**
 	 * 
-	 * @param customer
-	 * @subparam notexistingattribute [ATTRIBUTE]
+	 * @param s
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 * @see {@link StringBuffer}
+	 * @author diei
+	 * @since now
 	 */
-	public void foo(Customer customer);
-	
+	public String foo(String s) throws IOException
+	{
+		return s;
+	}
+
 	/**
-	 * Rule: Check the beat.
+	 * My method
 	 * 
-	 * @thematicgrid Checking Operations
+	 * @param s
+	 *            my param
+	 * @return a string
+	 * @throws IOException
+	 *             maybe thrown
+	 * @throws IllegalArgumentException
+	 *             maybe if illegal arg is inserted
+	 * @see {@link StringBuffer}
+	 * @author diei
+	 * @since now
 	 */
-	public void checkSomething();
+	public String foo2(String s) throws IOException
+	{
+		return s;
+	}
 }
