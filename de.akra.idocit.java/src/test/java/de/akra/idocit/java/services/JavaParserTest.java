@@ -15,8 +15,10 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
-import static org.junit.Assert.assertTrue;
 import static de.akra.idocit.java.JavadocTestUtils.NEW_LINE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +51,9 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -59,6 +65,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.ThematicRole;
@@ -180,11 +187,24 @@ public class JavaParserTest
 		srcJavaParserWorkspaceFile.create(new FileInputStream(srcJavaParserFile), true,
 				progressMonitor);
 
+		File rawJavadocFile = new File(AllIDocItJavaTests.SOURCE_DIR
+				+ "JavadocRawComment.java");
+		IFile rawJavadocWorkspaceFile = packageFolder.getFile("JavadocRawComment.java");
+		rawJavadocWorkspaceFile.create(new FileInputStream(rawJavadocFile), true,
+				progressMonitor);
+
 		File inconsistentFile = new File(AllIDocItJavaTests.SOURCE_DIR
 				+ "InconsistentService.java");
 		IFile inconsistentWorkspaceFile = packageFolder
 				.getFile("InconsistentService.java");
 		inconsistentWorkspaceFile.create(new FileInputStream(inconsistentFile), true,
+				progressMonitor);
+
+		File inconsistentFile2 = new File(AllIDocItJavaTests.SOURCE_DIR
+				+ "InconsistentService2.java");
+		IFile inconsistentWorkspaceFile2 = packageFolder
+				.getFile("InconsistentService2.java");
+		inconsistentWorkspaceFile2.create(new FileInputStream(inconsistentFile2), true,
 				progressMonitor);
 
 		File veryInconsistentFile = new File(AllIDocItJavaTests.SOURCE_DIR
@@ -213,7 +233,8 @@ public class JavaParserTest
 
 		// Deactivate Simple Parser
 		IPreferenceStore store = PlatformUI.getPreferenceStore();
-		store.setValue(PreferenceStoreConstants.JAVADOC_GENERATION_MODE, StringUtils.EMPTY);
+		store.setValue(PreferenceStoreConstants.JAVADOC_GENERATION_MODE,
+				StringUtils.EMPTY);
 	}
 
 	/**
@@ -233,38 +254,40 @@ public class JavaParserTest
 			// # parse it again. Both objects must be equal.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
-				CompilationUnit cu = output.getCompilationUnit();
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				IProject project = root.getProject(PROJECT_NAME);
-				IFile testSourceFolder = project
+				final CompilationUnit cu = output.getCompilationUnit();
+				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				final IProject project = root.getProject(PROJECT_NAME);
+				final IFile testSourceFolder = project
 						.getFile("src/source/CustomerService.java");
 
-				JavaInterfaceArtifact refInterfaceArtifact = TestDataFactory
+				final JavaInterfaceArtifact refInterfaceArtifact = TestDataFactory
 						.createCustomerService("Developer", false, cu);
 
 				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
 						.getInstance().getPersistenceService()
 						.loadInterface(testSourceFolder);
 
-				JavaInterface refInterface = (JavaInterface) refInterfaceArtifact
+				final JavaInterface refInterface = (JavaInterface) refInterfaceArtifact
 						.getInterfaces().get(0);
-				JavaInterface actInterface = (JavaInterface) actInterfaceArtifact
+				final JavaInterface actInterface = (JavaInterface) actInterfaceArtifact
 						.getInterfaces().get(0);
 
-				JavaMethod refMethod = (JavaMethod) refInterface.getOperations().get(0);
-				JavaMethod actMethod = (JavaMethod) actInterface.getOperations().get(0);
+				final JavaMethod refMethod = (JavaMethod) refInterface.getOperations()
+						.get(0);
+				final JavaMethod actMethod = (JavaMethod) actInterface.getOperations()
+						.get(0);
 
-				List<? extends Parameter> refInputParameters = refMethod
+				final List<? extends Parameter> refInputParameters = refMethod
 						.getInputParameters().getParameters();
-				List<? extends Parameter> actInputParameters = actMethod
+				final List<? extends Parameter> actInputParameters = actMethod
 						.getInputParameters().getParameters();
 
-				List<? extends Parameter> refOutputParameters = refMethod
+				final List<? extends Parameter> refOutputParameters = refMethod
 						.getOutputParameters().getParameters();
-				List<? extends Parameter> actOutputParameters = actMethod
+				final List<? extends Parameter> actOutputParameters = actMethod
 						.getOutputParameters().getParameters();
 
 				Assert.assertTrue(JavaInterfaceArtifactComparatorUtils.equalsParameters(
@@ -302,29 +325,31 @@ public class JavaParserTest
 			// # because of void-methods (input or output-parameters == null).
 			// #########################################################################
 			{
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				IProject project = root.getProject(PROJECT_NAME);
-				IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
+				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				final IProject project = root.getProject(PROJECT_NAME);
+				final IFile testSourceFolder = project
+						.getFile("src/source/JavaParser.java");
 
-				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+				final JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
 						.getInstance().getPersistenceService()
 						.loadInterface(testSourceFolder);
-				Operation javaMethod = actInterfaceArtifact.getInterfaces().get(0)
+				final Operation javaMethod = actInterfaceArtifact.getInterfaces().get(0)
 						.getOperations().get(0);
-				Documentation documentation = javaMethod.getDocumentations().get(0);
+				final Documentation documentation = javaMethod.getDocumentations().get(0);
 
-				List<ThematicRole> roles = ServiceManager.getInstance()
+				final List<ThematicRole> roles = ServiceManager.getInstance()
 						.getPersistenceService().loadThematicRoles();
-				ThematicRole roleNone = ThematicRoleUtils.findRoleByName("NONE", roles);
+				final ThematicRole roleNone = ThematicRoleUtils.findRoleByName("NONE",
+						roles);
 				documentation.setThematicRole(roleNone);
 
-				for (Operation operation : actInterfaceArtifact.getInterfaces().get(0)
-						.getOperations())
+				for (final Operation operation : actInterfaceArtifact.getInterfaces()
+						.get(0).getOperations())
 				{
 					operation.setDocumentationChanged(true);
 				}
 
-				ValidationReport report = ServiceManager
+				final ValidationReport report = ServiceManager
 						.getInstance()
 						.getPersistenceService()
 						.validateInterfaceArtifact(actInterfaceArtifact, testSourceFolder);
@@ -345,24 +370,26 @@ public class JavaParserTest
 			// # Javadoc-structure (see reference Javadoc).
 			// #########################################################################
 			{
-				String refJavadoc = String.format("/**%1$s"
+				final String refJavadoc = String.format("/**%1$s"
 						+ " * Parser implementation for Java.%1$s" + " * %1$s"
 						+ " * @author Dirk Meier-Eickhoff%1$s" + " * @since 0.0.1%1$s"
 						+ " * @version 0.0.1%1$s" + " * %1$s" + " */%1$s", NEW_LINE);
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				IProject project = root.getProject(PROJECT_NAME);
-				IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
+				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				final IProject project = root.getProject(PROJECT_NAME);
+				final IFile testSourceFolder = project
+						.getFile("src/source/JavaParser.java");
 
-				JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+				final JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
 						.getInstance().getPersistenceService()
 						.loadInterface(testSourceFolder);
 
-				Documentation documentation = actInterfaceArtifact.getInterfaces().get(0)
-						.getDocumentations().get(0);
+				final Documentation documentation = actInterfaceArtifact.getInterfaces()
+						.get(0).getDocumentations().get(0);
 
-				List<ThematicRole> roles = ServiceManager.getInstance()
+				final List<ThematicRole> roles = ServiceManager.getInstance()
 						.getPersistenceService().loadThematicRoles();
-				ThematicRole roleNone = ThematicRoleUtils.findRoleByName("NONE", roles);
+				final ThematicRole roleNone = ThematicRoleUtils.findRoleByName("NONE",
+						roles);
 
 				Assert.assertEquals(roleNone, documentation.getThematicRole());
 
@@ -375,8 +402,9 @@ public class JavaParserTest
 				ServiceManager.getInstance().getPersistenceService()
 						.writeInterface(actInterfaceArtifact, testSourceFolder);
 
-				File javaFile = testSourceFolder.getRawLocation().makeAbsolute().toFile();
-				String actJavadoc = readLinesFromFile(javaFile, 51, 59);
+				final File javaFile = testSourceFolder.getRawLocation().makeAbsolute()
+						.toFile();
+				final String actJavadoc = readLinesFromFile(javaFile, 51, 59);
 
 				Assert.assertEquals(refJavadoc, actJavadoc);
 			}
@@ -407,7 +435,7 @@ public class JavaParserTest
 
 				parseMethod.getDocumentations().clear();
 
-				for (Documentation documentation : refDocumentations)
+				for (final Documentation documentation : refDocumentations)
 				{
 					parseMethod.addDocpart(documentation);
 				}
@@ -467,6 +495,9 @@ public class JavaParserTest
 						actDocumentations.toString());
 			}
 
+			clearWorkspace();
+			setupWorkspace();
+
 			// #########################################################################
 			// # Test case #5: the void- and parameterless method "foo" could be parsed
 			// # without a NullPointerException
@@ -479,6 +510,72 @@ public class JavaParserTest
 
 				ServiceManager.getInstance().getPersistenceService()
 						.loadInterface(testSourceFolder);
+			}
+
+			clearWorkspace();
+			setupWorkspace();
+
+			// #########################################################################
+			// # Test case #6: Methods that are documented with raw Javadoc must be read
+			// # without any exception. The '@throws IllegalArgumentException' tag must
+			// # be added to the additionalTags of the method.
+			// #########################################################################
+			{
+				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				final IProject project = root.getProject(PROJECT_NAME);
+				final IFile testSourceFolder = project
+						.getFile("src/source/JavadocRawComment.java");
+
+				final InterfaceArtifact artifact = ServiceManager.getInstance()
+						.getPersistenceService().loadInterface(testSourceFolder);
+
+				final JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
+						.getOperations().get(0);
+				assertNotNull(method);
+				assertNotNull(method.getAdditionalTags());
+				assertEquals(4, method.getAdditionalTags().size());
+				assertEquals(
+						"There must be 0 documentations, because nothing is documented.",
+						0, method.getDocumentations().size());
+
+				final List<TagElement> additionalTags = method.getAdditionalTags();
+				assertEquals(4, additionalTags.size());
+				final List<TagElement> foundThrowsTags = findTagByName(additionalTags,
+						TagElement.TAG_THROWS);
+				assertEquals(1, foundThrowsTags.size());
+
+				final SimpleName name = (SimpleName) foundThrowsTags.get(0).fragments()
+						.get(0);
+				assertEquals("IllegalArgumentException", name.getIdentifier());
+				assertEquals(1, findTagByName(additionalTags, TagElement.TAG_SEE).size());
+				assertEquals(1, findTagByName(additionalTags, TagElement.TAG_AUTHOR)
+						.size());
+
+				final JavaMethod method2 = (JavaMethod) artifact.getInterfaces().get(0)
+						.getOperations().get(1);
+				assertNotNull(method2);
+				assertNotNull(method2.getAdditionalTags());
+				assertEquals(4, method2.getAdditionalTags().size());
+
+				final List<Documentation> docs2 = TestUtils
+						.collectAllDocumentations(method2);
+				assertEquals("There must be 4 documentations.", 4, docs2.size());
+
+				final List<TagElement> additionalTags2 = method2.getAdditionalTags();
+				assertEquals(4, additionalTags2.size());
+				final List<TagElement> foundThrowsTags2 = findTagByName(additionalTags2,
+						TagElement.TAG_THROWS);
+				assertEquals(1, foundThrowsTags2.size());
+
+				final SimpleName name2 = (SimpleName) foundThrowsTags2.get(0).fragments()
+						.get(0);
+				assertEquals("IllegalArgumentException", name2.getIdentifier());
+				assertEquals("maybe if illegal arg is inserted",
+						((TextElement) foundThrowsTags2.get(0).fragments().get(1))
+								.getText());
+				assertEquals(1, findTagByName(additionalTags2, TagElement.TAG_SEE).size());
+				assertEquals(1, findTagByName(additionalTags2, TagElement.TAG_AUTHOR)
+						.size());
 			}
 		}
 
@@ -509,7 +606,59 @@ public class JavaParserTest
 
 				assertTrue(parsingExceptionOccured);
 			}
+
+			// #########################################################################
+			// # Test case #2: If a method has no return type, but the Javadoc contains a
+			// # '@return ...' a ParsingException must be thrown.
+			// #########################################################################
+			{
+				final String expectedErrorMsg = "de.akra.idocit.java.exceptions.ParsingException: For method 'foo' there is documented a return type although it does not exist. Please delete the '@return ...' tag from Javadoc comment and open the file again.";
+				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				final IProject project = root.getProject(PROJECT_NAME);
+				final IFile testSourceFolder = project
+						.getFile("src/source/InconsistentService2.java");
+
+				boolean err = false;
+				try
+				{
+					ServiceManager.getInstance().getPersistenceService()
+							.loadInterface(testSourceFolder);
+				}
+				catch (final ParsingException e)
+				{
+					err = expectedErrorMsg.equals(e.toString());
+				}
+				Assert.assertTrue("ParsingException is expected.", err);
+			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param tags
+	 *            [SOURCE]
+	 * @param tagName
+	 *            [COMPARISON]
+	 * @return a sublist of {@code tags} that contains only {@link TagElement}s whose tag
+	 *         name equals to {@code tagName}.
+	 */
+	private List<TagElement> findTagByName(final List<TagElement> tags,
+			final String tagName)
+	{
+		if (tags == null || tags.isEmpty() || StringUtils.isBlank(tagName))
+		{
+			return Collections.emptyList();
+		}
+
+		final List<TagElement> foundTags = new ArrayList<TagElement>(tags.size());
+		for (final TagElement tag : tags)
+		{
+			if (tagName.equals(tag.getTagName()))
+			{
+				foundTags.add(tag);
+			}
+		}
+		return foundTags;
 	}
 
 	private String readLinesFromFile(File javaFile, int startLine, int endLine)

@@ -38,7 +38,7 @@ public interface CustomerService
 	 * @return [OBJECT] This is the object.
 	 * @returninfo [SOURCE] This is the source.
 	 * 
-	 * @throws IOException  In case of an error
+	 * @throws IOException In case of an error
 	 * @throwsinfo IOException [ATTRIBUTE] This is also an attribute.
 	 * @thematicgrid Searching Operations
 	 */
@@ -59,9 +59,33 @@ public interface CustomerService
 	 * @subreturn firstName [ATTRIBUTE] Won't be null, but could be an empty String
 	 * @subreturn lastName [ATTRIBUTE] Won't be null, but could be an empty String
 	 * 
-	 * @throws SpecialException  In case of an error
+	 * @throws SpecialException In case of an error
 	 * @thematicgrid Searching Operations
 	 */
 	public Customer findCustomerByName(CustomerNameParameters parameters)
 			throws SpecialException;
+	
+	/**
+	 * Test if a mixed Javadoc is correctly converted. And 
+	 * <br/>if documentations are correct converted.
+	 * 
+	 * @param param1
+	 * @param param2 [OBJECT] a number.
+	 * @param param3 a long number.
+	 * @param param4
+	 *            [ATTRIBUTE] a float ({@link Float}) number.
+	 *            It is a floating point number; a number with a dot.
+	 * @param param5
+	 *            a double number.
+	 * @param param6
+	 *           [ATTRIBUTE] a very
+	 *           very long string.
+	 * 
+	 * @return a list.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             In case of wrong parameter.
+	 */
+	public List<Customer> anyTestMethod(String param1, int param2, long param3,
+			float param4, double param5, String param6);
 }

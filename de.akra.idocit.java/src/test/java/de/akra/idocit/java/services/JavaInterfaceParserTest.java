@@ -306,7 +306,7 @@ public class JavaInterfaceParserTest
 				.addDocpart(makeDocumentation(
 						developer,
 						null,
-						"<p><b>This is a test class used in JUnit test!!</b></p>The parser parses Java Interfaces, Classes and Enumerations and maps the structure tothe iDocIt structure."));
+						"<p><b>This is a test class used in JUnit test!!</b></p>The parser parses Java Interfaces, Classes and Enumerations and maps the structure to the iDocIt structure."));
 		artifact.addInterface(jInterface);
 
 		List<TagElement> tags = new ArrayList<TagElement>();
@@ -395,7 +395,7 @@ public class JavaInterfaceParserTest
 		method.addDocpart(makeDocumentation(
 				developer,
 				null,
-				"Parses the {@link CompilationUnit} <code>compilationUnit</code> (Java source file)and converts it to a {@link JavaInterfaceArtifact}. (Read{@link JavaInterfaceArtifact#copy(de.akra.idocit.common.structure.SignatureElement)})"));
+				"Parses the {@link CompilationUnit} <code>compilationUnit</code> (Java source file) and converts it to a {@link JavaInterfaceArtifact}. (Read {@link JavaInterfaceArtifact#copy(de.akra.idocit.common.structure.SignatureElement)})"));
 
 		tags = new ArrayList<TagElement>();
 		tag = ast.newTagElement();
@@ -470,7 +470,7 @@ public class JavaInterfaceParserTest
 		param.setQualifiedDataTypeName("String");
 		param.setSignatureElementPath("anyString:String");
 		param.addDocpart(makeDocumentation(developer, "anyString:String",
-				"This is only any simple String. {@literal  This Is A Literal}."));
+				"This is only any simple String. {@literal This Is A Literal}."));
 		inputParams.addParameter(param);
 
 		param = new JavaParameter(inputParams, Numerus.PLURAL, false);

@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.services.impl.ServiceManager;
 
 /**
@@ -29,7 +30,7 @@ import de.akra.idocit.core.services.impl.ServiceManager;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.2
+ * @version 0.0.3
  * 
  */
 public class DescribedItemUtils
@@ -56,12 +57,18 @@ public class DescribedItemUtils
 	 * one is created and returned.
 	 * 
 	 * @param name
-	 *            The name of the searched {@link ThematicRole}.
-	 * @return a {@link ThematicRole} with the name <code>name</code>.
+	 *            [COMPARISON] The name of the searched {@link ThematicRole}.
+	 * @return [OBJECT] a {@link ThematicRole} with the name {@code name}. If {@code name}
+	 *         is empty or {@code null} then {@code null} is returned.
 	 */
-	public static ThematicRole findThematicRole(String name)
+	public static ThematicRole findThematicRole(final String name)
 	{
-		for (ThematicRole role : supportedThematicRoles)
+		if (StringUtils.isBlank(name))
+		{
+			logger.log(Level.INFO, "Thematic role name is empty or null!");
+			return null;
+		}
+		for (final ThematicRole role : supportedThematicRoles)
 		{
 			if (role.getName().equalsIgnoreCase(name))
 			{
@@ -78,8 +85,8 @@ public class DescribedItemUtils
 	 * returned.
 	 * 
 	 * @param name
-	 *            The name of the searched {@link Addressee}.
-	 * @return a {@link Addressee} with the name <code>name</code>.
+	 *            [COMPARISON] The name of the searched {@link Addressee}.
+	 * @return [OBJECT] a {@link Addressee} with the name <code>name</code>.
 	 */
 	public static Addressee findAddressee(String name)
 	{
@@ -93,5 +100,4 @@ public class DescribedItemUtils
 		logger.log(Level.INFO, "Unknown addressee: " + name);
 		return new Addressee(name);
 	}
-
 }

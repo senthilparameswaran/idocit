@@ -37,6 +37,7 @@ import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
@@ -50,8 +51,9 @@ import de.akra.idocit.java.utils.JavadocUtils;
 
 public final class SimpleJavadocParser extends AbsJavadocParser
 {
-	private static final String SUB_RETURN_PATTERN = CustomTaglets.SUB_RETURN.getTagName()
-			+ "\\s*";
+	private static final String ERR_MSG_NOT_EXISTING_RETURN_TYPE_IS_DOCUMENTED = "For method '%s' there is documented a return type although it does not exist. Please delete the '@return ...' tag from Javadoc comment and open the file again.";
+	private static final String SUB_RETURN_PATTERN = CustomTaglets.SUB_RETURN
+			.getTagName() + "\\s*";
 	private static final String SUB_PARAM_PATTERN = CustomTaglets.SUB_PARAM.getTagName()
 			+ "\\s*";
 	private static final String THEMATIC_GRID_PATTERN = CustomTaglets.THEMATIC_GRID
@@ -288,9 +290,10 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	private StructuredJavaDoc splitJavadocText(String tagName, String docText,
 			String referenceGridName)
 	{
-		Matcher matcher = SPLIT_JAVADOC_REGEXP.matcher(docText);
-		StructuredJavaDoc structuredJavaDoc = new StructuredJavaDoc();
+		docText = docText.trim();
+		final StructuredJavaDoc structuredJavaDoc = new StructuredJavaDoc();
 
+		final Matcher matcher = SPLIT_JAVADOC_REGEXP.matcher(docText);
 		if (matcher.find())
 		{
 			structuredJavaDoc.setParamName(matcher.group(1).trim());
@@ -305,13 +308,10 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 			if (JavadocUtils.isParam(tagName))
 			{
-				structuredJavaDoc.setParamName(docText.trim());
-				structuredJavaDoc.setDocText(StringUtils.EMPTY);
+				structuredJavaDoc.setDocText(docText);
 			}
 			else
 			{
-				docText = docText.trim();
-
 				if (ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
 						.equals(referenceGridName))
 				{
@@ -323,7 +323,8 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 						// jakr: + 1 is needed because of the ':'
 						startIndex += ThematicRoleConstants.MANDATORY_ROLE_RULE.length() + 1;
 						docText = docText.substring(startIndex).trim();
-						structuredJavaDoc.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_RULE);
+						structuredJavaDoc
+								.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_RULE);
 					}
 					else
 					{
@@ -335,7 +336,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 					structuredJavaDoc.setRoleName(null);
 				}
 
-				structuredJavaDoc.setDocText(docText.trim());
+				structuredJavaDoc.setDocText(docText);
 				structuredJavaDoc.setParamName(null);
 			}
 		}
@@ -343,23 +344,30 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		return structuredJavaDoc;
 	}
 
-	private StructuredJavaDoc readRoleName(TagElement tagElement,
-			String referenceGridName, String tagText, JavaMethod method)
+	private StructuredJavaDoc readRoleName(final TagElement tagElement,
+			final String referenceGridName, final String tagText, final JavaMethod method)
 	{
-		String tagName = tagElement.getTagName();
-		StructuredJavaDoc structuredJavaDoc = splitJavadocText(tagName, tagText,
+		final String tagName = tagElement.getTagName();
+		final StructuredJavaDoc structuredJavaDoc = splitJavadocText(tagName, tagText,
 				referenceGridName);
 
-		if ((tagName != null) && !JavadocUtils.isStandardJavadocTaglet(tagName)
+		if (tagName != null && !JavadocUtils.isStandardJavadocTaglet(tagName)
 				&& !JavadocUtils.isIdocitJavadocTaglet(tagName))
 		{
 			// When using tag names, remove the '@' at the beginning.
 			structuredJavaDoc.setRoleName(tagName.substring(1));
 		}
-		// TODO: Could this condition be removed?
-		else if (!JavadocUtils.isStandardJavadocTaglet(tagName)
-				&& !JavadocUtils.isIdocitJavadocTaglet(tagName))
-		{ // Must be ACTION or RULE (depends on the reference grid)
+		else if (structuredJavaDoc.getRoleName() == null
+				&& (JavadocUtils.isStandardJavadocTaglet(tagName) || JavadocUtils
+						.isIdocitJavadocTaglet(tagName)))
+		{
+			// thematic role was not found and the taglet is also no thematic role
+			// structuredJavaDoc.setRoleName(ThematicRoleConstants.MANDATORY_ROLE_NONE);
+		}
+		else if (tagName == null)
+		{
+			// Seems to be the general description about the method.
+			// Must be ACTION or RULE (depends on the reference grid)
 			if (ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
 					.equals(referenceGridName))
 			{
@@ -393,16 +401,16 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	 * @return [OBJECT]
 	 */
 	private AnnotatedDocumentation readDocumentationAndThematicRole(
-			TagElement tagElement, List<ThematicRole> thematicRoles,
-			String referenceGridName, JavaMethod method)
+			final TagElement tagElement, final List<ThematicRole> thematicRoles,
+			final String referenceGridName, final JavaMethod method)
 	{
 		@SuppressWarnings("unchecked")
-		String origTagText = JavadocUtils.readFragments(tagElement.fragments(), 0);
-		StructuredJavaDoc structuredJavaDoc = readRoleName(tagElement, referenceGridName,
-				origTagText, method);
-		String roleName = structuredJavaDoc.getRoleName();
-		String tagText = structuredJavaDoc.getDocText();
-		ThematicRole role = ThematicRoleUtils.findRoleByName(roleName, thematicRoles);
+		final String origTagText = JavadocUtils.readFragments(tagElement.fragments(), 0);
+		final StructuredJavaDoc structuredJavaDoc = readRoleName(tagElement,
+				referenceGridName, origTagText, method);
+		final String roleName = structuredJavaDoc.getRoleName();
+		final ThematicRole role = ThematicRoleUtils.findRoleByName(roleName,
+				thematicRoles);
 
 		if (role == null)
 		{
@@ -410,9 +418,9 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 					+ String.valueOf(tagElement));
 		}
 
-		AnnotatedDocumentation result = new AnnotatedDocumentation();
+		final AnnotatedDocumentation result = new AnnotatedDocumentation();
 		result.setThematicRole(role);
-		result.setDocText(tagText);
+		result.setDocText(structuredJavaDoc.getDocText());
 		result.setIdentifier(structuredJavaDoc.getParamName());
 
 		return result;
@@ -614,8 +622,8 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		return StringUtils.EMPTY;
 	}
 
-	private JavaParameter findParameterByName(JavaMethod method, String identifier,
-			String tagName)
+	private JavaParameter findParameterByName(final JavaMethod method,
+			final String identifier, final String tagName)
 	{
 		if (JavadocUtils.isParam(tagName))
 		{
@@ -635,7 +643,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		}
 		else if (JavadocUtils.isThrows(tagName))
 		{
-			if ((method.getExceptions() != null)
+			if ((method.getExceptions() != null) && (!method.getExceptions().isEmpty())
 					&& (method.getExceptions().get(0) != null))
 			{
 				return findParameterByName(method.getExceptions().get(0).getParameters(),
@@ -651,12 +659,11 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		return null;
 	}
 
-	private String extractDocumenationText(String identifier, String allTexts)
+	private String extractDocumenationText(final String identifier, final String allTexts)
 	{
 		if ((identifier != null) && allTexts.trim().startsWith(identifier))
 		{
-			int startIndex = allTexts.indexOf(identifier) + identifier.length();
-
+			final int startIndex = allTexts.indexOf(identifier) + identifier.length();
 			return allTexts.substring(startIndex).trim();
 		}
 		else if (identifier == null)
@@ -675,11 +682,10 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		return allTexts;
 	}
 
-	private String formatText(String text)
+	private String formatText(final String text)
 	{
-		String newLine = System.getProperty("line.separator");
-		return StringEscapeUtils.unescapeHtml4(text.replaceAll("<br/>", newLine)
-				.replaceAll("<tab/>", "\t"));
+		return StringEscapeUtils.unescapeHtml4(text.replaceAll("<br/>",
+				StringUtils.NEW_LINE).replaceAll("<tab/>", "\t"));
 	}
 
 	/**
@@ -694,30 +700,40 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	 *            [ATTRIBUTE] Used to read the thematic roles and their descriptions
 	 * @param referenceGridName
 	 *            [ATTRIBUTE] Used to derive the thematic role name
-	 * @return [OBJECT]
+	 * @return [OBJECT] <code>null</code> if the {@link Documentation} shall not be added
+	 *         to the SignatureElement.
 	 * @throws ParsingException
 	 */
 	private Documentation createDocumentation(TagElement tagElement,
 			List<Addressee> addressees, List<ThematicRole> thematicRoles,
 			String referenceGridName, JavaMethod method) throws ParsingException
 	{
-		AnnotatedDocumentation annotatedDoc = readDocumentationAndThematicRole(
+		final AnnotatedDocumentation annotatedDoc = readDocumentationAndThematicRole(
 				tagElement, thematicRoles, referenceGridName, method);
+
 		Documentation documentation = new Documentation();
 
-		Addressee developer = AddresseeUtils.findByName(
+		final Addressee developer = AddresseeUtils.findByName(
 				AddresseeConstants.MOST_IMPORTANT_ADDRESSEE, addressees);
 
-		List<Addressee> addresseeOrdering = new ArrayList<Addressee>();
+		final List<Addressee> addresseeOrdering = new ArrayList<Addressee>();
 		addresseeOrdering.add(developer);
 		documentation.setAddresseeSequence(addresseeOrdering);
 
-		Map<Addressee, String> documentations = new HashMap<Addressee, String>();
+		final Map<Addressee, String> documentations = new HashMap<Addressee, String>();
 
 		String identifier = JavadocUtils.readIdentifier(tagElement);
-		String unformattedDocText = extractDocumenationText(identifier,
+		final String unformattedDocText = extractDocumenationText(identifier,
 				annotatedDoc.getDocText());
-		String docText = formatText(unformattedDocText);
+
+		if (annotatedDoc.getThematicRole() == null
+				&& StringUtils.isBlank(unformattedDocText))
+		{
+			// no useful documentation found
+			return null;
+		}
+
+		final String docText = formatText(unformattedDocText);
 		documentations.put(developer, docText);
 		documentation.setDocumentation(documentations);
 
@@ -727,86 +743,107 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 					&& (method.getInputParameters() != null)
 					&& (annotatedDoc.getIdentifier() != null))
 			{
-				documentation.setSignatureElementIdentifier(extractIdentifierPath(
-						annotatedDoc.getIdentifier(), tagElement, method
-								.getInputParameters().getParameters(), method));
+				identifier = extractIdentifierPath(annotatedDoc.getIdentifier(),
+						tagElement, method.getInputParameters().getParameters(), method);
 			}
 			else if (JavadocUtils.isSubReturn(tagElement.getTagName())
 					&& (method != null) && (method.getOutputParameters() != null)
 					&& (annotatedDoc.getIdentifier() != null))
 			{
-				documentation.setSignatureElementIdentifier(extractIdentifierPath(
-						annotatedDoc.getIdentifier(), tagElement, method
-								.getOutputParameters().getParameters(), method));
+				identifier = extractIdentifierPath(annotatedDoc.getIdentifier(),
+						tagElement, method.getOutputParameters().getParameters(), method);
 			}
 			else if (JavadocUtils.isReturn(tagElement.getTagName()))
 			{
+				if (method.getOutputParameters() == null)
+				{
+					throw new ParsingException(String.format(
+							ERR_MSG_NOT_EXISTING_RETURN_TYPE_IS_DOCUMENTED,
+							method.getIdentifier()));
+				}
 				// In Java a method can have only one return type (with several
 				// attributes).This is why we reference the first element here.
-				JavaParameter returnType = (JavaParameter) method.getOutputParameters()
-						.getParameters().get(0);
+				final JavaParameter returnType = (JavaParameter) method
+						.getOutputParameters().getParameters().get(0);
 
 				identifier = returnType.getSignatureElementPath();
-				documentation.setSignatureElementIdentifier(identifier);
 			}
 			else if (JavadocUtils.isParamInfo(tagElement.getTagName())
 					&& (method != null) && (method.getInputParameters() != null)
 					&& (annotatedDoc.getIdentifier() != null))
 			{
-				documentation.setSignatureElementIdentifier(extractParentIdentifierPath(
-						annotatedDoc.getIdentifier(), tagElement, method
-								.getInputParameters().getParameters(), method));
+				identifier = extractParentIdentifierPath(annotatedDoc.getIdentifier(),
+						tagElement, method.getInputParameters().getParameters(), method);
 			}
 			else if (JavadocUtils.isReturnInfo(tagElement.getTagName())
 					&& (method != null) && (method.getOutputParameters() != null)
 					&& (annotatedDoc.getIdentifier() != null))
 			{
-				documentation.setSignatureElementIdentifier(extractParentIdentifierPath(
-						annotatedDoc.getIdentifier(), tagElement, method
-								.getOutputParameters().getParameters(), method));
+				identifier = extractParentIdentifierPath(annotatedDoc.getIdentifier(),
+						tagElement, method.getOutputParameters().getParameters(), method);
 			}
 			else if (JavadocUtils.isThrowsInfo(tagElement.getTagName())
 					&& (method != null) && (method.getExceptions() != null)
 					&& (method.getExceptions().get(0) != null)
 					&& (annotatedDoc.getIdentifier() != null))
 			{
-				documentation.setSignatureElementIdentifier(extractParentIdentifierPath(
-						annotatedDoc.getIdentifier(), tagElement, method.getExceptions()
-								.get(0).getParameters(), method));
+				identifier = extractParentIdentifierPath(annotatedDoc.getIdentifier(),
+						tagElement, method.getExceptions().get(0).getParameters(), method);
 			}
-			else if (tagElement.getTagName() == null)
+			else if (tagElement.getTagName() != null)
 			{
-				documentation.setSignatureElementIdentifier(null);
+				identifier = annotatedDoc.getIdentifier();
 			}
 			else
 			{
-				identifier = annotatedDoc.getIdentifier();
-				documentation.setSignatureElementIdentifier(identifier);
+				// identifier remains null
 			}
 		}
 		else
 		{
-			JavaParameter parentParam = findParameterByName(method, identifier,
+			final JavaParameter parentParam = findParameterByName(method, identifier,
 					tagElement.getTagName());
 
 			if (parentParam != null)
 			{
-				documentation.setSignatureElementIdentifier(parentParam
-						.getSignatureElementPath());
+				identifier = parentParam.getSignatureElementPath();
+			}
+			else if (JavadocUtils.isThrows(tagElement.getTagName()))
+			{
+				// add throws tag, that can not be assigned to an SignatureElement to
+				// the additionalTags of the method.
+				List<TagElement> additionalTags = method.getAdditionalTags();
+				if (additionalTags == null || additionalTags == Collections.EMPTY_LIST)
+				{
+					additionalTags = new ArrayList<TagElement>(
+							SignatureElement.DEFAULT_ARRAY_SIZE);
+					method.setAdditionalTags(additionalTags);
+				}
+				// set it at the beginning, so it will be written in front of the other
+				// additional tags
+				additionalTags.add(0, tagElement);
+
+				// Because the tag can not be assigned to a SignatureElement, it can not
+				// be documented with iDocIt! UI.
+				documentation = null;
 			}
 			else
 			{
-				StringBuffer buffer = new StringBuffer("The Javadoc of method ");
+				final StringBuffer buffer = new StringBuffer("The Javadoc of method \"");
 				buffer.append(method.getIdentifier());
-				buffer.append(" could not be parsed:\n\nThe documented parameter ");
+				buffer.append("\" could not be parsed:\n\nThe documented parameter \"");
 				buffer.append(identifier);
-				buffer.append(" could not be found in the method's signature.");
+				buffer.append("\" could not be found in the method's signature.");
 
 				throw new ParsingException(buffer.toString());
 			}
 		}
 
-		documentation.setThematicRole(annotatedDoc.getThematicRole());
+		if (documentation != null)
+		{
+			documentation.setSignatureElementIdentifier(identifier);
+			documentation.setThematicRole(annotatedDoc.getThematicRole());
+		}
 
 		return documentation;
 	}
@@ -817,24 +854,24 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			JavaMethod method) throws SAXException, IOException,
 			ParserConfigurationException, ParsingException
 	{
-		List<Documentation> documentations = new ArrayList<Documentation>();
+		final List<Documentation> documentations = new ArrayList<Documentation>();
 
 		if (javadoc != null)
 		{
 			@SuppressWarnings("unchecked")
-			List<TagElement> tags = (List<TagElement>) javadoc.tags();
-			String referenceGridName = parseIDocItReferenceGrid(javadoc);
+			final List<TagElement> tags = (List<TagElement>) javadoc.tags();
+			final String referenceGridName = parseIDocItReferenceGrid(javadoc);
 
 			// Parse Rule (Checking Operations) or Action (else)
-			for (TagElement tag : tags)
+			for (final TagElement tag : tags)
 			{
-				if (!CustomTaglets.THEMATIC_GRID.getTagName().equals(tag.getTagName()))
+				if (!CustomTaglets.THEMATIC_GRID.getTagName().equals(tag.getTagName())
+						&& !isAdditionalTag(tag.getTagName(), thematicRoles))
 				{
-					Documentation documentation = createDocumentation(tag, addressees,
-							thematicRoles, referenceGridName, method);
-					ThematicRole role = documentation.getThematicRole();
+					final Documentation documentation = createDocumentation(tag,
+							addressees, thematicRoles, referenceGridName, method);
 
-					if (role != null)
+					if (documentation != null)
 					{
 						documentations.add(documentation);
 					}
@@ -845,31 +882,37 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		return documentations;
 	}
 
-	private boolean isKnownThematicRole(String rolename, List<ThematicRole> knownRoles)
+	private boolean isKnownThematicRole(final String rolename,
+			final List<ThematicRole> knownRoles)
 	{
-		for (ThematicRole role : knownRoles)
+		for (final ThematicRole role : knownRoles)
 		{
 			if (rolename.toLowerCase().equals(role.getName().toLowerCase()))
 			{
 				return true;
 			}
 		}
-
 		return false;
 	}
 
-	private boolean isAdditionalTag(String tagName, List<ThematicRole> knownThematicRoles)
+	private boolean isAdditionalTag(final String tagName,
+			final List<ThematicRole> knownThematicRoles)
 	{
-		boolean isParam = tagName.matches(JAVADOC_TAG_PARAM);
-		boolean isSubParam = tagName.matches(SUB_PARAM_PATTERN);
-		boolean isThrows = tagName.matches(JAVADOC_TAG_THROWS);
-		boolean isReturn = tagName.matches(JAVADOC_TAG_RETURN);
-		boolean isSubReturn = tagName.matches(SUB_RETURN_PATTERN);
-		boolean isThematicGrid = tagName.matches(THEMATIC_GRID_PATTERN);
+		if (StringUtils.isBlank(tagName))
+		{
+			return false;
+		}
+
+		final boolean isParam = tagName.matches(JAVADOC_TAG_PARAM);
+		final boolean isSubParam = tagName.matches(SUB_PARAM_PATTERN);
+		final boolean isThrows = tagName.matches(JAVADOC_TAG_THROWS);
+		final boolean isReturn = tagName.matches(JAVADOC_TAG_RETURN);
+		final boolean isSubReturn = tagName.matches(SUB_RETURN_PATTERN);
+		final boolean isThematicGrid = tagName.matches(THEMATIC_GRID_PATTERN);
 		// When passing the rolename, remove the '@' at the beginning of the tagname!
-		boolean isKnownThematicRole = isKnownThematicRole(tagName.substring(1),
+		final boolean isKnownThematicRole = isKnownThematicRole(tagName.substring(1),
 				knownThematicRoles);
-		boolean isInfoParam = JavadocUtils.isIdocItInfoTag(tagName);
+		final boolean isInfoParam = JavadocUtils.isIdocItInfoTag(tagName);
 
 		return !(isParam || isSubParam || isThrows || isReturn || isSubReturn
 				|| isThematicGrid || isKnownThematicRole || isInfoParam);
@@ -877,8 +920,8 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TagElement> findAdditionalTags(Javadoc javadoc,
-			List<ThematicRole> knownRoles)
+	public List<TagElement> findAdditionalTags(final Javadoc javadoc,
+			final List<ThematicRole> knownRoles)
 	{
 		List<TagElement> tags = Collections.emptyList();
 		if (javadoc != null)
