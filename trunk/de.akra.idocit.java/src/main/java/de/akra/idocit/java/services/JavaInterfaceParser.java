@@ -654,10 +654,10 @@ public class JavaInterfaceParser
 	 *         to the {@code additionalTags}. Then the invoking method can forget the
 	 *         {@code doc}.
 	 */
+	@SuppressWarnings("unchecked")
 	private boolean addDocumentationToAdditionalTags(final Documentation doc,
 			final JavaMethod method)
 	{
-		final Javadoc javadoc = method.getRefToASTNode().getJavadoc();
 		boolean found = false;
 		final String identifier = doc.getSignatureElementIdentifier();
 
@@ -669,7 +669,7 @@ public class JavaInterfaceParser
 					.substring(identifier.indexOf(delimiters.pathDelimiter) + 1,
 							identifier.length());
 
-			@SuppressWarnings("unchecked")
+			final Javadoc javadoc = method.getRefToASTNode().getJavadoc();
 			final Iterator<TagElement> iter = javadoc.tags().iterator();
 			while (iter.hasNext() && !found)
 			{
