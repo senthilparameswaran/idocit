@@ -34,7 +34,6 @@ Bundle-Activator: de.akra.idocit.core.IDocItActivator
 Bundle-Vendor: AKRA GmbH
 Bundle-ClassPath: .,
  junit.jar,
- lib/idocit.wsdl.wsdl4j.jar,
  lib/xpp3_min-1.1.4c.jar,
  lib/xstream-1.3.jar,
  lib/annotations.jar,
