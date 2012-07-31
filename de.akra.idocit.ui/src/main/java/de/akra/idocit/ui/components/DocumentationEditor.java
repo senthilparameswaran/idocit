@@ -478,12 +478,15 @@ public class DocumentationEditor
 
 		if (dontUseIdocItAsDefaultEditor)
 		{
-			String originalEditorId = store
+			final String originalEditorId = store
 					.getString(PreferenceStoreConstants.ORIGINAL_EDITOR_ID);
-			EditArtifactDocumentationCompositeSelection selection = getSelection();
-			IDE.setDefaultEditor(selection.getArtifactFile(), originalEditorId);
+			final EditArtifactDocumentationCompositeSelection selection = getSelection();
+			if (selection.getArtifactFile() != null && originalEditorId != null)
+			{
+				IDE.setDefaultEditor(selection.getArtifactFile(), originalEditorId);
+			}
 		}
-		
+
 		IDocItActivator.removeConfigurationListener(listener);
 	}
 }
