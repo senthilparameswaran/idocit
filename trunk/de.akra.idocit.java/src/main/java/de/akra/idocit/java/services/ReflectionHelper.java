@@ -20,14 +20,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
@@ -38,6 +41,7 @@ import org.eclipse.jdt.core.dom.WildcardType;
 
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.java.structure.JavaAttribute;
 import de.akra.idocit.java.structure.JavaParameter;
 
 /**
@@ -45,7 +49,7 @@ import de.akra.idocit.java.structure.JavaParameter;
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  * 
  */
 public class ReflectionHelper
@@ -63,6 +67,8 @@ public class ReflectionHelper
 	private static final String GETTER_PREFIX = "get";
 	private static final String BOOLEAN_GETTER_PREFIX = "is";
 	private static final String SETTER_PREFIX = "set";
+
+	private static final String RETURN_TYPE_VOID = "void";
 
 	/**
 	 * Set of already reflected types. If a type is already in the set, stop reflection to
@@ -85,47 +91,57 @@ public class ReflectionHelper
 	}
 
 	/**
-	 * Creates a {@link JavaParameter} with attributes read from the given <code>typeBinding</code>.
+	 * Creates a {@link JavaParameter} with attributes read from the given
+	 * <code>typeBinding</code>.
 	 * 
-	 * @param  parent [DESTINATION] Parent of the newly created Java-Parameter
+	 * @param parent
+	 *            [DESTINATION] Parent of the newly created Java-Parameter
 	 * 
-	 * @param  typeBinding [SOURCE] The {@link ITypeBinding} belonging to the parameter that should be analysed with Java Reflection.
+	 * @param typeBinding
+	 *            [SOURCE] The {@link ITypeBinding} belonging to the parameter that should
+	 *            be analysed with Java Reflection.
 	 * 
-	 * @param  identifier [ATTRIBUTE]
+	 * @param identifier
+	 *            [ATTRIBUTE]
 	 * 
-	 * @param  qualifiedIdentifier [ATTRIBUTE]
+	 * @param qualifiedIdentifier
+	 *            [ATTRIBUTE]
 	 * 
-	 * @return  [OBJECT] Never <code>null</code>
-	 * @thematicgrid  Creating Operations
+	 * @return [OBJECT] Never <code>null</code>
+	 * @thematicgrid Creating Operations
 	 */
-	JavaParameter createParameter(SignatureElement parent,
-			ITypeBinding typeBinding, String identifier, String qualifiedIdentifier)
+	JavaParameter createParameter(final SignatureElement parent,
+			final ITypeBinding typeBinding, final String identifier,
+			final String qualifiedIdentifier)
 	{
 		resetReflectedTypes();
 		return doReflectParameter(parent, typeBinding, identifier, qualifiedIdentifier);
 	}
 
 	/**
-	 * Rule: Returns <code>true</code> with the Java Type represented by the given binding implements the interface "java.util.Collection".
+	 * Rule: Returns <code>true</code> with the Java Type represented by the given binding
+	 * implements the interface "java.util.Collection".
 	 * 
-	 * @param  type [OBJECT]
+	 * @param type
+	 *            [OBJECT]
 	 * 
-	 * @return  [REPORT]
-	 * @thematicgrid  Checking Operations
+	 * @return [REPORT]
+	 * @thematicgrid Checking Operations
 	 */
-	private boolean isCollection(ITypeBinding type)
+	private boolean isCollection(final ITypeBinding type)
 	{
 		if (type != null)
 		{
-			ITypeBinding[] implementedTypes = type.getInterfaces();
+			final ITypeBinding[] implementedTypes = type.getInterfaces();
 
 			if (implementedTypes != null)
 			{
 				for (ITypeBinding implementedType : implementedTypes)
 				{
-					String qualifiedName = implementedType.getQualifiedName();
-					
-					if ((qualifiedName != null) && qualifiedName.startsWith("java.util.Collection"))
+					final String qualifiedName = implementedType.getQualifiedName();
+
+					if ((qualifiedName != null)
+							&& qualifiedName.startsWith("java.util.Collection"))
 					{
 						return true;
 					}
@@ -137,29 +153,34 @@ public class ReflectionHelper
 	}
 
 	/**
-	 * Rule: Returns <code>true</code> if the Java-Class represented by the given binding has member variables which are accessible via a getter and a setter. The getter and setter must follow the naming conventions defined by the Java Beans Specification:<br/>
-	 *   <br/>
-	 *   http://www.oracle.com/technetwork/java/javase/documentation/spec-136004.html
+	 * Rule: Returns <code>true</code> if the Java-Class represented by the given binding
+	 * has member variables which are accessible via a getter and a setter. The getter and
+	 * setter must follow the naming conventions defined by the Java Beans Specification:<br/>
+	 * <br/>
+	 * http://www.oracle.com/technetwork/java/javase/documentation/spec-136004.html
 	 * 
-	 * @param  type [OBJECT]
+	 * @param type
+	 *            [OBJECT]
 	 * 
-	 * @return  [REPORT]
-	 * @thematicgrid  Checking Operations
+	 * @return [REPORT]
+	 * @thematicgrid Checking Operations
 	 */
-	boolean hasPublicAccessableAttributes(ITypeBinding type)
+	boolean hasPublicAccessableAttributes(final ITypeBinding type)
 	{
 		return (type != null)
-				&& !findAttributesWithPublicGetterOrSetter(type.getDeclaredFields(),
-						type.getDeclaredMethods()).isEmpty();
+				&& !findAttributesWithPublicGetterOrSetter(type.getDeclaredMethods())
+						.isEmpty();
 	}
 
 	/**
-	 * @rule Rule: Returns {@link Numerus.PLURAL} if the given binding represents a Java Collection.
+	 * @rule Rule: Returns {@link Numerus.PLURAL} if the given binding represents a Java
+	 *       Collection.
 	 * 
-	 * @param  type [ATTRIBUTE]
+	 * @param type
+	 *            [ATTRIBUTE]
 	 * 
-	 * @return  [OBJECT]
-	 * @thematicgrid  Concluding Operations
+	 * @return [OBJECT]
+	 * @thematicgrid Concluding Operations
 	 */
 	Numerus deriveNumerus(ITypeBinding type)
 	{
@@ -169,29 +190,30 @@ public class ReflectionHelper
 	/**
 	 * @see #createParameter(SignatureElement, ITypeBinding, String, String)
 	 */
-	private JavaParameter doReflectParameter(SignatureElement parent,
-			ITypeBinding typeBinding, String identifier, String qualifiedIdentifier)
+	private JavaParameter doReflectParameter(final SignatureElement parent,
+			final ITypeBinding typeBinding, final String identifier,
+			final String qualifiedIdentifier)
 	{
-		JavaParameter returnParameter = new JavaParameter(parent,
+		final JavaParameter newParameter = new JavaParameter(parent,
 				deriveNumerus(typeBinding), hasPublicAccessableAttributes(typeBinding));
-		returnParameter.setIdentifier(identifier);
-		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
-		returnParameter.setDataTypeName(typeBinding.getName());
+		newParameter.setIdentifier(identifier);
+		newParameter.setQualifiedIdentifier(qualifiedIdentifier);
+		newParameter.setDataTypeName(typeBinding.getName());
 
 		String qTypeName = typeBinding.getQualifiedName();
 		qTypeName = qTypeName != null ? qTypeName : typeBinding.getName();
-		returnParameter.setQualifiedDataTypeName(qTypeName);
+		newParameter.setQualifiedDataTypeName(qTypeName);
 
 		if (!reflectedTypes.contains(qTypeName))
 		{
 			reflectedTypes.add(qTypeName);
-			List<IVariableBinding> accessableAttributes = findAttributesWithPublicGetterOrSetter(
-					typeBinding.getDeclaredFields(), typeBinding.getDeclaredMethods());
+			final List<JavaAttribute> accessableAttributes = findAttributesWithPublicGetterOrSetter(typeBinding
+					.getDeclaredMethods());
 
-			for (IVariableBinding attribute : accessableAttributes)
+			for (final JavaAttribute attribute : accessableAttributes)
 			{
-				returnParameter.addParameter(doReflectParameter(
-						returnParameter,
+				newParameter.addParameter(doReflectParameter(
+						newParameter,
 						attribute.getType(),
 						attribute.getName(),
 						qTypeName + JavaParser.delimiters.namespaceDelimiter
@@ -199,13 +221,13 @@ public class ReflectionHelper
 			}
 
 			// check super classes for attributes with public getter or setter
-			ITypeBinding superType = typeBinding.getSuperclass();
+			final ITypeBinding superType = typeBinding.getSuperclass();
 
 			if (superType != null
 					&& !superType.getQualifiedName().equals(Object.class.getName()))
 			{
-				returnParameter.addParameter(doReflectParameter(returnParameter,
-						superType, SUPER_CLASS_IDENTIFIER, SUPER_CLASS_IDENTIFIER));
+				newParameter.addParameter(doReflectParameter(newParameter, superType,
+						SUPER_CLASS_IDENTIFIER, SUPER_CLASS_IDENTIFIER));
 			}
 
 			// remove type again, because reflecting this type ends
@@ -216,25 +238,31 @@ public class ReflectionHelper
 			logger.fine("Recursion terminated for type \"" + qTypeName + "\"");
 		}
 
-		return returnParameter;
+		return newParameter;
 	}
 
 	/**
-	 * Creates a {@link JavaParameter} with attributes read from the given <code>typeBinding</code>.
+	 * Creates a {@link JavaParameter} with attributes read from the given
+	 * <code>typeBinding</code>.
 	 * 
-	 * @param  parent [DESTINATION] Parent of the newly created Java-Parameter
+	 * @param parent
+	 *            [DESTINATION] Parent of the newly created Java-Parameter
 	 * 
-	 * @param  type [SOURCE] The {@link ITypeBinding} belonging to the parameter that should be analysed with Java Reflection.
+	 * @param type
+	 *            [SOURCE] The {@link ITypeBinding} belonging to the parameter that should
+	 *            be analysed with Java Reflection.
 	 * 
-	 * @param  identifier [ATTRIBUTE]
+	 * @param identifier
+	 *            [ATTRIBUTE]
 	 * 
-	 * @param  qualifiedIdentifier [ATTRIBUTE]
+	 * @param qualifiedIdentifier
+	 *            [ATTRIBUTE]
 	 * 
-	 * @return  [OBJECT] Never <code>null</code>
-	 * @thematicgrid  Creating Operations
+	 * @return [OBJECT] Never <code>null</code>
+	 * @thematicgrid Creating Operations
 	 */
-	JavaParameter createParameter(SignatureElement parent, Type type,
-			String identifier, String qualifiedIdentifier)
+	JavaParameter createParameter(final SignatureElement parent, final Type type,
+			final String identifier, final String qualifiedIdentifier)
 	{
 		resetReflectedTypes();
 		return doReflectParameter(parent, type, identifier, qualifiedIdentifier);
@@ -243,140 +271,166 @@ public class ReflectionHelper
 	/**
 	 * @see #createParameter(SignatureElement, Type, String, String)
 	 */
-	private JavaParameter doReflectParameter(SignatureElement parent, Type type,
-			String identifier, String qualifiedIdentifier)
+	private JavaParameter doReflectParameter(final SignatureElement parent,
+			final Type type, final String identifier, final String qualifiedIdentifier)
 	{
 		// try to resolve binding on Type
-		ITypeBinding typeBinding = type.resolveBinding();
+		final ITypeBinding typeBinding = type.resolveBinding();
 		if (typeBinding != null)
 		{
 			return doReflectParameter(parent, typeBinding, identifier,
 					qualifiedIdentifier);
 		}
 
-		JavaParameter returnParameter = new JavaParameter(parent,
+		final JavaParameter returnParameter = new JavaParameter(parent,
 				deriveNumerus(typeBinding), hasPublicAccessableAttributes(typeBinding));
 		returnParameter.setIdentifier(identifier);
 		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
-		String typeName = extractIdentifierFrom(type);
+		final String typeName = extractIdentifierFrom(type);
 		returnParameter.setDataTypeName(typeName);
 		returnParameter.setQualifiedDataTypeName(typeName);
 		return returnParameter;
 	}
 
 	/**
-	 * Searches for all attributes <code>variableBindings</code> a public getter or setter
-	 * method accordingly to the Java Bean convention, that the prefix is "get", "is" or
-	 * "set" plus the identifier, whose first character is swapped to upper case. If a
-	 * getter or setter is found, the attribute is added to the result list.
+	 * Searches for all accessible attributes according to the Java Beans Standard. There
+	 * must be a getter with the method name prefix "get" or "is" and a setter with the
+	 * method name prefix "set" for an attribute.
 	 * 
-	 * @param variableBindings [COMPARISON] The attributes to look for public getter or setters.
-	 * @param methodBindings [SOURCE] The methods declared in the class.
+	 * @param methodBindings
+	 *            [SOURCE] The methods declared in the class.
 	 * 
-	 * @return [OBJECT] List with attributes ({@link IVariableBinding}) that have a public getter or setter.
-	 * 
+	 * @return [OBJECT] List with attributes ({@link JavaAttribute}) that have a public
+	 *         getter and setter.
+	 * @since 0.0.2
 	 * @thematicgrid Searching Operations
 	 */
-	private static List<IVariableBinding> findAttributesWithPublicGetterOrSetter(
-			IVariableBinding[] variableBindings, IMethodBinding[] methodBindings)
+	private static List<JavaAttribute> findAttributesWithPublicGetterOrSetter(
+			final IMethodBinding[] methodBindings)
 	{
-		List<IVariableBinding> foundGetterAndSetter = new ArrayList<IVariableBinding>(
-				variableBindings.length);
+		final Set<JavaAttribute> foundGetterAndSetter = new TreeSet<JavaAttribute>();
+		final Set<JavaAttribute> foundGetter = new TreeSet<JavaAttribute>();
+		final Set<JavaAttribute> foundSetter = new TreeSet<JavaAttribute>();
 
-		for (IVariableBinding variableBinding : variableBindings)
+		for (final IMethodBinding methodBinding : methodBindings)
 		{
-			String name = variableBinding.getName();
-			String preparedMethodName = name.substring(0, 1).toUpperCase()
-					+ name.substring(1, name.length());
-
-			try
+			if (isPublic(methodBinding.getModifiers()) || isInInterface(methodBinding))
 			{
-				findMethod(methodBindings, GETTER_PREFIX + preparedMethodName,
-						variableBinding.getType(), (ITypeBinding[]) null);
-				// method was found, because no exception is thrown,
-				// so variableBinding can be added
-				foundGetterAndSetter.add(variableBinding);
-			}
-			catch (NoSuchMethodException e)
-			{
-				logger.log(Level.FINEST, e.getMessage());
+				final ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
+				final String methodName = methodBinding.getName();
 
-				try
+				if (methodName.startsWith(GETTER_PREFIX)
+						|| methodName.startsWith(BOOLEAN_GETTER_PREFIX))
 				{
-					findMethod(methodBindings, SETTER_PREFIX + preparedMethodName, null,
-							variableBinding.getType());
-					// method was found, because no exception is thrown,
-					// so variableBinding can be added
-					foundGetterAndSetter.add(variableBinding);
-				}
-				catch (NoSuchMethodException ex)
-				{
-					logger.log(Level.FINEST, ex.getMessage());
-
-					try
+					// consider only getter with a return type and 0 parameters
+					if (!RETURN_TYPE_VOID.equals(methodBinding.getReturnType().getName())
+							&& (parameterTypes == null || parameterTypes.length == 0))
 					{
-						findMethod(methodBindings, BOOLEAN_GETTER_PREFIX
-								+ preparedMethodName, variableBinding.getType(),
-								(ITypeBinding[]) null);
-						// method was found, because no exception is thrown,
-						// so variableBinding can be added
-						foundGetterAndSetter.add(variableBinding);
+						final String prefix = methodName.startsWith(GETTER_PREFIX) ? GETTER_PREFIX
+								: BOOLEAN_GETTER_PREFIX;
+						final JavaAttribute javaAttribute = new JavaAttribute(
+								extractAttibuteName(methodName, prefix),
+								methodBinding.getReturnType());
+						if (foundSetter.contains(javaAttribute))
+						{
+							foundSetter.remove(javaAttribute);
+							foundGetterAndSetter.add(javaAttribute);
+						}
+						else
+						{
+							foundGetter.add(javaAttribute);
+						}
 					}
-					catch (NoSuchMethodException exc)
+				}
+				else if (methodName.startsWith(SETTER_PREFIX))
+				{
+					// consider only setter with one parameter
+					if (parameterTypes != null && parameterTypes.length == 1)
 					{
-						logger.log(Level.FINEST, exc.getMessage());
+						final JavaAttribute javaAttribute = new JavaAttribute(
+								extractAttibuteName(methodName, SETTER_PREFIX),
+								parameterTypes[0]);
+						if (foundGetter.contains(javaAttribute))
+						{
+							foundGetter.remove(javaAttribute);
+							foundGetterAndSetter.add(javaAttribute);
+						}
+						else
+						{
+							foundSetter.add(javaAttribute);
+						}
+					}
+					else
+					{
+						logger.log(
+								Level.WARNING,
+								"Setter \"{0}\" has {1} parameters. Allowed is only 1 parameter for a setter.",
+								new Object[] {
+										methodName,
+										(parameterTypes != null ? parameterTypes.length
+												: 0) });
 					}
 				}
 			}
 		}
-		return foundGetterAndSetter;
+
+		return new ArrayList<JavaAttribute>(foundGetterAndSetter);
 	}
 
 	/**
-	 * Seek in <code>methods</code> for a method with the identifier
-	 * <code>searchedMethodName</code>, the <code>returnType</code> and the
-	 * <code>parameters</code> (array of types).
+	 * Check if the method is declared in a Java interface.
 	 * 
-	 * @param methods [SOURCE] The array of methods in which the searched method should be sought.
-	 * @param searchedMethodName [COMPARISON] Identifier of the searched method.
-	 * @param returnType [COMPARISON] The return type of the searched method. <code>null</code> is handled as <code>void</code>.
-	 * @param parameters [COMPARISON] Array of parameter types. <code>null</code> is handled as zero parameters.
-	 * @return [OBJECT] The found {@link IMethodBinding}, otherwise the exception is thrown.
-	 * 
-	 * @throws NoSuchMethodException If the method was not found.
-	 * 
-	 * @thematicgrid Searching Operations
+	 * @param methodBinding
+	 *            [OBJECT]
+	 * @return [REPORT] {@code true} if the method is in a Java interface.
 	 */
-	private static IMethodBinding findMethod(IMethodBinding[] methods,
-			String searchedMethodName, ITypeBinding returnType,
-			ITypeBinding... parameters) throws NoSuchMethodException
+	private static boolean isInInterface(final IMethodBinding methodBinding)
 	{
-		IMethodBinding foundMethod = null;
-		for (int i = 0; i < methods.length && foundMethod == null; ++i)
+		boolean isInterface = false;
+		final IJavaElement parent = methodBinding.getJavaElement().getParent();
+
+		if (parent.getElementType() == IJavaElement.TYPE)
 		{
-			IMethodBinding method = methods[i];
-			if (searchedMethodName.equals(method.getName())
-					&& isPublic(method.getModifiers()))
+			final IType type = (IType) parent;
+			try
 			{
-				foundMethod = method;
+				isInterface = type.isInterface() && !type.isAnnotation();
+			}
+			catch (JavaModelException e)
+			{
+				logger.log(Level.SEVERE, "Failed to check if method is in an interface.",
+						e);
 			}
 		}
-		if (foundMethod == null)
-		{
-			throw new NoSuchMethodException("Method could not be found: "
-					+ searchedMethodName);
-		}
-		return foundMethod;
+		return isInterface;
+	}
+
+	/**
+	 * Convert the {@code methodName} to the corresponding attribute name. The
+	 * {@code prefix} is cut and the first character followed by the prefix is swapped to
+	 * lower case.
+	 * 
+	 * @param methodName
+	 *            [SOURCE]
+	 * @param prefix
+	 *            [OBJECT] is removed from method name.
+	 * @return [DESTINATION] the extracted attribute name.
+	 */
+	private static String extractAttibuteName(final String methodName, final String prefix)
+	{
+		return methodName.substring(prefix.length(), prefix.length() + 1).toLowerCase()
+				+ methodName.substring(prefix.length() + 1);
 	}
 
 	/**
 	 * Returns the identifier from the {@link Type} depending on the containing type.
 	 * 
-	 * @param  type [SOURCE]
+	 * @param type
+	 *            [SOURCE]
 	 * 
-	 * @return  [OBJECT]
+	 * @return [OBJECT]
 	 * @see Type
-	 * @thematicgrid  Extracting Operations
+	 * @thematicgrid Extracting Operations
 	 */
 	public static String extractIdentifierFrom(Type type)
 	{
@@ -450,11 +504,12 @@ public class ReflectionHelper
 	/**
 	 * Checks if the modifier {@link Modifier#PUBLIC} is in <code>modifiers</code>.
 	 * 
-	 * @param  modifiers [OBJECT]
+	 * @param modifiers
+	 *            [OBJECT]
 	 * 
-	 * @return  [REPORT]
+	 * @return [REPORT]
 	 * @see Modifier
-	 * @thematicgrid  Checking Operations
+	 * @thematicgrid Checking Operations
 	 */
 	static boolean isPublic(int modifiers)
 	{
