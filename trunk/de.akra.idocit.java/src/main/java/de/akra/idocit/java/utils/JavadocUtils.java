@@ -170,7 +170,7 @@ public class JavadocUtils
 		String identifier = null;
 
 		if ((JavadocUtils.isParam(tag.getTagName()) || JavadocUtils.isThrows(tag
-				.getTagName())) && tag.fragments() != null)
+				.getTagName())) && tag.fragments() != null && !tag.fragments().isEmpty())
 		{
 			final ASTNode paramName = (ASTNode) tag.fragments().get(0);
 			if (ASTNode.SIMPLE_NAME == paramName.getNodeType())
@@ -340,7 +340,8 @@ public class JavadocUtils
 	 * Check if the character {@code c} needs a space as following character. For some
 	 * characters a space is not necessary.
 	 * 
-	 * @param c [OBJECT]
+	 * @param c
+	 *            [OBJECT]
 	 * @return [REPORT] {@code true} if the character needs following a space.
 	 */
 	private static boolean needEndCharSpace(final char c)
@@ -352,7 +353,8 @@ public class JavadocUtils
 	 * Check if the character {@code c} needs a leading space. For some characters a space
 	 * is not necessary.
 	 * 
-	 * @param c [OBJECT]
+	 * @param c
+	 *            [OBJECT]
 	 * @return [REPORT] {@code true} if the character needs a space in front of it.
 	 */
 	private static boolean needStartCharSpace(final char c)

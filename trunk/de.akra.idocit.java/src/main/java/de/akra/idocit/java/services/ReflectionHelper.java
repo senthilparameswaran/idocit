@@ -41,6 +41,7 @@ import org.eclipse.jdt.core.dom.WildcardType;
 
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
+import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.structure.JavaAttribute;
 import de.akra.idocit.java.structure.JavaParameter;
 
@@ -67,8 +68,6 @@ public class ReflectionHelper
 	private static final String GETTER_PREFIX = "get";
 	private static final String BOOLEAN_GETTER_PREFIX = "is";
 	private static final String SETTER_PREFIX = "set";
-
-	private static final String RETURN_TYPE_VOID = "void";
 
 	/**
 	 * Set of already reflected types. If a type is already in the set, stop reflection to
@@ -110,7 +109,7 @@ public class ReflectionHelper
 	 * @return [OBJECT] Never <code>null</code>
 	 * @thematicgrid Creating Operations
 	 */
-	JavaParameter createParameter(final SignatureElement parent,
+	public JavaParameter createParameter(final SignatureElement parent,
 			final ITypeBinding typeBinding, final String identifier,
 			final String qualifiedIdentifier)
 	{
@@ -128,7 +127,7 @@ public class ReflectionHelper
 	 * @return [REPORT]
 	 * @thematicgrid Checking Operations
 	 */
-	private boolean isCollection(final ITypeBinding type)
+	private static boolean isCollection(final ITypeBinding type)
 	{
 		if (type != null)
 		{
@@ -136,10 +135,9 @@ public class ReflectionHelper
 
 			if (implementedTypes != null)
 			{
-				for (ITypeBinding implementedType : implementedTypes)
+				for (final ITypeBinding implementedType : implementedTypes)
 				{
 					final String qualifiedName = implementedType.getQualifiedName();
-
 					if ((qualifiedName != null)
 							&& qualifiedName.startsWith("java.util.Collection"))
 					{
@@ -165,7 +163,7 @@ public class ReflectionHelper
 	 * @return [REPORT]
 	 * @thematicgrid Checking Operations
 	 */
-	boolean hasPublicAccessableAttributes(final ITypeBinding type)
+	public boolean hasPublicAccessableAttributes(final ITypeBinding type)
 	{
 		return (type != null)
 				&& !findAttributesWithPublicGetterOrSetter(type.getDeclaredMethods())
@@ -182,7 +180,7 @@ public class ReflectionHelper
 	 * @return [OBJECT]
 	 * @thematicgrid Concluding Operations
 	 */
-	Numerus deriveNumerus(ITypeBinding type)
+	public static Numerus deriveNumerus(ITypeBinding type)
 	{
 		return isCollection(type) ? Numerus.PLURAL : Numerus.SINGULAR;
 	}
@@ -261,7 +259,7 @@ public class ReflectionHelper
 	 * @return [OBJECT] Never <code>null</code>
 	 * @thematicgrid Creating Operations
 	 */
-	JavaParameter createParameter(final SignatureElement parent, final Type type,
+	public JavaParameter createParameter(final SignatureElement parent, final Type type,
 			final String identifier, final String qualifiedIdentifier)
 	{
 		resetReflectedTypes();
@@ -323,7 +321,7 @@ public class ReflectionHelper
 						|| methodName.startsWith(BOOLEAN_GETTER_PREFIX))
 				{
 					// consider only getter with a return type and 0 parameters
-					if (!RETURN_TYPE_VOID.equals(methodBinding.getReturnType().getName())
+					if (!Constants.RETURN_TYPE_VOID.equals(methodBinding.getReturnType().getName())
 							&& (parameterTypes == null || parameterTypes.length == 0))
 					{
 						final String prefix = methodName.startsWith(GETTER_PREFIX) ? GETTER_PREFIX
@@ -511,7 +509,7 @@ public class ReflectionHelper
 	 * @see Modifier
 	 * @thematicgrid Checking Operations
 	 */
-	static boolean isPublic(int modifiers)
+	public static boolean isPublic(int modifiers)
 	{
 		return (modifiers & Modifier.PUBLIC) == Modifier.PUBLIC;
 	}

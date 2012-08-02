@@ -1,11 +1,25 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 AKRA GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.Set;
 
 import org.pocui.core.composites.ISelection;
 
-import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 
 /**
  * Selection for {@link RecommendRolesComposite}.
@@ -15,19 +29,27 @@ import de.akra.idocit.common.structure.ThematicGrid;
  */
 public class RecommendRolesCompositeSelection implements ISelection
 {
-	private Map<String, ThematicGrid> recommendedThematicGrids = Collections.emptyMap();
-
 	private String operationIdentifier;
 
-	public Map<String, ThematicGrid> getRecommendedThematicGrids()
+	private Set<ThematicRole> assignedThematicRoles;
+
+	private String referenceThematicGridName;
+
+	public RecommendRolesCompositeSelection()
+	{}
+
+	public RecommendRolesCompositeSelection(final String operationIdentifier)
 	{
-		return recommendedThematicGrids;
+		this(operationIdentifier, null, null);
 	}
 
-	public void setRecommendedThematicGrids(
-			Map<String, ThematicGrid> recommendedThematicGrids)
+	public RecommendRolesCompositeSelection(final String operationIdentifier,
+			final Set<ThematicRole> assignedThematicRoles,
+			final String referenceThematicGridName)
 	{
-		this.recommendedThematicGrids = recommendedThematicGrids;
+		this.operationIdentifier = operationIdentifier;
+		this.assignedThematicRoles = assignedThematicRoles;
+		this.referenceThematicGridName = referenceThematicGridName;
 	}
 
 	public String getOperationIdentifier()
@@ -40,16 +62,53 @@ public class RecommendRolesCompositeSelection implements ISelection
 		this.operationIdentifier = operationIdentifier;
 	}
 
+	/**
+	 * @return the assignedThematicRoles
+	 */
+	public Set<ThematicRole> getAssignedThematicRoles()
+	{
+		return assignedThematicRoles;
+	}
+
+	/**
+	 * @param assignedThematicRoles
+	 *            the assignedThematicRoles to set
+	 */
+	public void setAssignedThematicRoles(Set<ThematicRole> assignedThematicRoles)
+	{
+		this.assignedThematicRoles = assignedThematicRoles;
+	}
+
+	/**
+	 * @return the referenceThematicGridName
+	 */
+	public String getReferenceThematicGridName()
+	{
+		return referenceThematicGridName;
+	}
+
+	/**
+	 * @param referenceThematicGridName
+	 *            the referenceThematicGridName to set
+	 */
+	public void setReferenceThematicGridName(String referenceThematicGridName)
+	{
+		this.referenceThematicGridName = referenceThematicGridName;
+	}
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
+		result = prime
+				* result
+				+ ((assignedThematicRoles == null) ? 0 : assignedThematicRoles.hashCode());
 		result = prime * result
 				+ ((operationIdentifier == null) ? 0 : operationIdentifier.hashCode());
 		result = prime
 				* result
-				+ ((recommendedThematicGrids == null) ? 0 : recommendedThematicGrids
+				+ ((referenceThematicGridName == null) ? 0 : referenceThematicGridName
 						.hashCode());
 		return result;
 	}
@@ -64,6 +123,13 @@ public class RecommendRolesCompositeSelection implements ISelection
 		if (getClass() != obj.getClass())
 			return false;
 		RecommendRolesCompositeSelection other = (RecommendRolesCompositeSelection) obj;
+		if (assignedThematicRoles == null)
+		{
+			if (other.assignedThematicRoles != null)
+				return false;
+		}
+		else if (!assignedThematicRoles.equals(other.assignedThematicRoles))
+			return false;
 		if (operationIdentifier == null)
 		{
 			if (other.operationIdentifier != null)
@@ -71,12 +137,12 @@ public class RecommendRolesCompositeSelection implements ISelection
 		}
 		else if (!operationIdentifier.equals(other.operationIdentifier))
 			return false;
-		if (recommendedThematicGrids == null)
+		if (referenceThematicGridName == null)
 		{
-			if (other.recommendedThematicGrids != null)
+			if (other.referenceThematicGridName != null)
 				return false;
 		}
-		else if (!recommendedThematicGrids.equals(other.recommendedThematicGrids))
+		else if (!referenceThematicGridName.equals(other.referenceThematicGridName))
 			return false;
 		return true;
 	}
@@ -84,8 +150,9 @@ public class RecommendRolesCompositeSelection implements ISelection
 	@Override
 	public String toString()
 	{
-		return "RecommendRolesCompositeSelection [recommendedThematicGrids="
-				+ recommendedThematicGrids + ", operationIdentifier="
-				+ operationIdentifier + "]";
+		return "RecommendRolesCompositeSelection [operationIdentifier="
+				+ operationIdentifier + ", assignedThematicRoles="
+				+ assignedThematicRoles + ", referenceThematicGridName="
+				+ referenceThematicGridName + "]";
 	}
 }

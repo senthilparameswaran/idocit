@@ -625,35 +625,39 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	private JavaParameter findParameterByName(final JavaMethod method,
 			final String identifier, final String tagName)
 	{
-		if (JavadocUtils.isParam(tagName))
+		if (method != null)
 		{
-			if (method.getInputParameters() != null)
+			if (JavadocUtils.isParam(tagName))
 			{
-				return findParameterByName(method.getInputParameters().getParameters(),
-						identifier);
+				if (method.getInputParameters() != null)
+				{
+					return findParameterByName(method.getInputParameters()
+							.getParameters(), identifier);
+				}
 			}
-		}
-		else if (JavadocUtils.isReturn(tagName))
-		{
-			if (method.getOutputParameters() != null)
+			else if (JavadocUtils.isReturn(tagName))
 			{
-				return findParameterByName(method.getOutputParameters().getParameters(),
-						identifier);
+				if (method.getOutputParameters() != null)
+				{
+					return findParameterByName(method.getOutputParameters()
+							.getParameters(), identifier);
+				}
 			}
-		}
-		else if (JavadocUtils.isThrows(tagName))
-		{
-			if ((method.getExceptions() != null) && (!method.getExceptions().isEmpty())
-					&& (method.getExceptions().get(0) != null))
+			else if (JavadocUtils.isThrows(tagName))
 			{
-				return findParameterByName(method.getExceptions().get(0).getParameters(),
-						identifier);
+				if ((method.getExceptions() != null)
+						&& (!method.getExceptions().isEmpty())
+						&& (method.getExceptions().get(0) != null))
+				{
+					return findParameterByName(method.getExceptions().get(0)
+							.getParameters(), identifier);
+				}
 			}
-		}
-		else
-		{
-			throw new RuntimeException("The tagname " + String.valueOf(tagName)
-					+ " is unexpected.");
+			else
+			{
+				throw new RuntimeException("The tagname " + String.valueOf(tagName)
+						+ " is unexpected.");
+			}
 		}
 
 		return null;
@@ -700,13 +704,19 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 	 *            [ATTRIBUTE] Used to read the thematic roles and their descriptions
 	 * @param referenceGridName
 	 *            [ATTRIBUTE] Used to derive the thematic role name
+	 * @param method
+	 *            [DESINITATION] '@throws' tags can be added to the
+	 *            {@link JavaMethod#getAdditionalTags()}. {@code method} may be
+	 *            {@code null} if not a whole CompilationUnit were parsed.
+	 * @paraminfo method [ATTRIBUTE]
 	 * @return [OBJECT] <code>null</code> if the {@link Documentation} shall not be added
 	 *         to the SignatureElement.
 	 * @throws ParsingException
 	 */
-	private Documentation createDocumentation(TagElement tagElement,
-			List<Addressee> addressees, List<ThematicRole> thematicRoles,
-			String referenceGridName, JavaMethod method) throws ParsingException
+	private Documentation createDocumentation(final TagElement tagElement,
+			final List<Addressee> addressees, final List<ThematicRole> thematicRoles,
+			final String referenceGridName, final JavaMethod method)
+			throws ParsingException
 	{
 		final AnnotatedDocumentation annotatedDoc = readDocumentationAndThematicRole(
 				tagElement, thematicRoles, referenceGridName, method);
@@ -753,7 +763,7 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 				identifier = extractIdentifierPath(annotatedDoc.getIdentifier(),
 						tagElement, method.getOutputParameters().getParameters(), method);
 			}
-			else if (JavadocUtils.isReturn(tagElement.getTagName()))
+			else if (JavadocUtils.isReturn(tagElement.getTagName()) && (method != null))
 			{
 				if (method.getOutputParameters() == null)
 				{
@@ -810,24 +820,29 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			}
 			else if (JavadocUtils.isThrows(tagElement.getTagName()))
 			{
-				// add throws tag, that can not be assigned to an SignatureElement to
-				// the additionalTags of the method.
-				List<TagElement> additionalTags = method.getAdditionalTags();
-				if (additionalTags == null || additionalTags == Collections.EMPTY_LIST)
+				if (method != null)
 				{
-					additionalTags = new ArrayList<TagElement>(
-							SignatureElement.DEFAULT_ARRAY_SIZE);
-					method.setAdditionalTags(additionalTags);
+					// add throws tag, that can not be assigned to an SignatureElement to
+					// the additionalTags of the method.
+					List<TagElement> additionalTags = method.getAdditionalTags();
+					if (additionalTags == null
+							|| additionalTags == Collections.EMPTY_LIST)
+					{
+						additionalTags = new ArrayList<TagElement>(
+								SignatureElement.DEFAULT_ARRAY_SIZE);
+						method.setAdditionalTags(additionalTags);
+					}
+					// set it at the beginning, so it will be written in front of the
+					// other
+					// additional tags
+					additionalTags.add(0, tagElement);
 				}
-				// set it at the beginning, so it will be written in front of the other
-				// additional tags
-				additionalTags.add(0, tagElement);
 
 				// Because the tag can not be assigned to a SignatureElement, it can not
 				// be documented with iDocIt! UI.
 				documentation = null;
 			}
-			else
+			else if (method != null)
 			{
 				final StringBuffer buffer = new StringBuffer("The Javadoc of method \"");
 				buffer.append(method.getIdentifier());

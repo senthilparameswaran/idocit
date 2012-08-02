@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 AKRA GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
 import java.util.Collections;
@@ -37,8 +52,11 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.ui.views.RecommendedGridsView;
 
 /**
+ * Composite for {@link RecommendedGridsView} to show the recommendet thematic grids with
+ * its' thematic roles.
  * 
  * @author Dirk Meier-Eickhoff
  * 
@@ -174,10 +192,61 @@ public class RecommendRolesComposite
 	{
 		if (newInSelection != null && !newInSelection.equals(oldInSelection))
 		{
-			final DisplayRecommendedRolesCompositeSelection dispRolesCompSelection = new DisplayRecommendedRolesCompositeSelection(
-					newInSelection.getRecommendedThematicGrids(),
-					Collections.<ThematicRole> emptySet(), null,
-					Collections.<String> emptySet());
+			DisplayRecommendedRolesCompositeSelection dispRolesCompSelection = displayRecommendedRolesComposite
+					.getSelection();
+			if (dispRolesCompSelection == null)
+			{
+				dispRolesCompSelection = new DisplayRecommendedRolesCompositeSelection();
+			}
+
+			final String identifier = newInSelection.getOperationIdentifier();
+			if (StringUtils.isBlank(identifier))
+			{
+				dispRolesCompSelection = dispRolesCompSelection
+						.setRecommendedThematicGrids(Collections
+								.<String, ThematicGrid> emptyMap());
+				txtOperationIdentifier.setText(StringUtils.EMPTY);
+				onFocusLost(txtOperationIdentifier);
+			}
+			else if (!TXT_LABEL_TEXT.equals(identifier))
+			{
+				if (!txtOperationIdentifier.getText().equals(identifier))
+				{
+					txtOperationIdentifier.setText(identifier);
+					onFocusLost(txtOperationIdentifier);
+				}
+				try
+				{
+					if (ServiceManager.getInstance().getPersistenceService() != null)
+					{
+						final List<ThematicGrid> allThematicGrids = ServiceManager
+								.getInstance().getPersistenceService()
+								.loadThematicGrids();
+						Map<String, ThematicGrid> deriveThematicGrid = ThematicGridService
+								.deriveThematicGrid(identifier, allThematicGrids);
+
+						if (deriveThematicGrid.isEmpty())
+						{
+							deriveThematicGrid = NO_RECOMMANDATIONS_FOUND;
+						}
+						dispRolesCompSelection = new DisplayRecommendedRolesCompositeSelection(
+								deriveThematicGrid,
+								newInSelection.getAssignedThematicRoles(),
+								newInSelection.getReferenceThematicGridName(),
+								dispRolesCompSelection.getCollapsedThematicGridNames());
+
+						contentCompositeLayout.topControl = displayRecommendedRolesComposite;
+						displayRecommendedRolesComposite.getParent().layout();
+					}
+				}
+				catch (UnitializedIDocItException e1)
+				{
+					logger.log(Level.SEVERE, e1.toString());
+					contentCompositeLayout.topControl = intializationMessageComposite;
+					intializationMessageComposite.getParent().layout();
+				}
+			}
+
 			displayRecommendedRolesComposite.setSelection(dispRolesCompSelection);
 		}
 	}
@@ -190,44 +259,8 @@ public class RecommendRolesComposite
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				RecommendRolesCompositeSelection selection = copySelection(getSelection());
-				final String identifier = txtOperationIdentifier.getText();
-				selection.setOperationIdentifier(identifier);
-
-				if (!StringUtils.isBlank(identifier)
-						&& !TXT_LABEL_TEXT.equals(identifier))
-				{
-					try
-					{
-						final List<ThematicGrid> allThematicGrids = ServiceManager
-								.getInstance().getPersistenceService()
-								.loadThematicGrids();
-						Map<String, ThematicGrid> deriveThematicGrid = ThematicGridService
-								.deriveThematicGrid(identifier, allThematicGrids);
-
-						if (deriveThematicGrid.isEmpty())
-						{
-							deriveThematicGrid = NO_RECOMMANDATIONS_FOUND;
-						}
-						selection.setRecommendedThematicGrids(deriveThematicGrid);
-
-						contentCompositeLayout.topControl = displayRecommendedRolesComposite;
-						displayRecommendedRolesComposite.getParent().layout();
-					}
-					catch (UnitializedIDocItException e1)
-					{
-						logger.log(Level.SEVERE, e1.toString());
-						contentCompositeLayout.topControl = intializationMessageComposite;
-						intializationMessageComposite.getParent().layout();
-					}
-				}
-				else
-				{
-					selection.setRecommendedThematicGrids(Collections
-							.<String, ThematicGrid> emptyMap());
-				}
-
-				setSelection(selection);
+				setSelection(new RecommendRolesCompositeSelection(
+						txtOperationIdentifier.getText()));
 			}
 
 			@Override
@@ -240,12 +273,7 @@ public class RecommendRolesComposite
 			@Override
 			public void focusLost(final FocusEvent e)
 			{
-				final Text txt = (Text) e.widget;
-				if (txt.getText() == null || txt.getText().length() == 0)
-				{
-					txt.setText(TXT_LABEL_TEXT);
-					txt.setForeground(grayedForeground);
-				}
+				onFocusLost((Text) e.widget);
 			}
 
 			@Override
@@ -280,13 +308,17 @@ public class RecommendRolesComposite
 		};
 	}
 
-	private RecommendRolesCompositeSelection copySelection(
-			final RecommendRolesCompositeSelection selection)
+	private void onFocusLost(final Text txt)
 	{
-		final RecommendRolesCompositeSelection newSelection = new RecommendRolesCompositeSelection();
-		newSelection.setOperationIdentifier(selection.getOperationIdentifier());
-		newSelection.setRecommendedThematicGrids(selection.getRecommendedThematicGrids());
-		return newSelection;
+		if (txt.getText() == null || txt.getText().length() == 0)
+		{
+			txt.setText(TXT_LABEL_TEXT);
+			txt.setForeground(grayedForeground);
+		}
+		else
+		{
+			txt.setForeground(defaultForeground);
+		}
 	}
 
 	@Override

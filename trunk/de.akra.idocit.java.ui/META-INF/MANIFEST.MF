@@ -12,7 +12,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.6.0",
  de.akra.idocit.java;bundle-version="0.0.5",
  de.akra.idocit.core;bundle-version="0.0.9",
- de.akra.idocit.ui;bundle-version="0.0.7"
+ de.akra.idocit.ui;bundle-version="0.0.7",
+ org.eclipse.jdt.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.jdt.core,
+ org.eclipse.jface.text
 Bundle-Activator: de.akra.idocit.java.ui.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
