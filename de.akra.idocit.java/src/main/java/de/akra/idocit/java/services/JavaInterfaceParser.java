@@ -60,6 +60,7 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.SignatureElementUtils;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.services.impl.ServiceManager;
+import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
@@ -83,17 +84,6 @@ public class JavaInterfaceParser
 	 * Logger.
 	 */
 	private static Logger logger = Logger.getLogger(JavaInterfaceParser.class.getName());
-
-	private static final String CATEGORY_ARTIFACT = "Artifact";
-	private static final String CATEGORY_INTERFACE = "Interface";
-	private static final String CATEGORY_CLASS = "Class";
-	private static final String CATEGORY_ENUM = "Enum";
-	private static final String CATEGORY_METHOD = "Method";
-	private static final String CATEGORY_CONSTRUCTOR = "Constructor";
-	private static final String CATEGORY_PARAMETERS = "Parameters";
-	private static final String CATEGORY_RETURN_TYPE = "ReturnType";
-	private static final String CATEGORY_THROWS = "Throws";
-	private static final String RETURN_TYPE_VOID = "void";
 
 	/**
 	 * Copy of the abstract syntax tree (AST) of the artifact.
@@ -177,7 +167,7 @@ public class JavaInterfaceParser
 			ParsingException
 	{
 		final JavaInterfaceArtifact artifact = new JavaInterfaceArtifact(parent,
-				CATEGORY_ARTIFACT, compilationUnit, Numerus.SINGULAR);
+				Constants.CATEGORY_ARTIFACT, compilationUnit, Numerus.SINGULAR);
 		artifact.setIdentifier(artifactName);
 
 		@SuppressWarnings("unchecked")
@@ -235,8 +225,8 @@ public class JavaInterfaceParser
 			ParsingException
 	{
 		return processAbstractTypeDeclaration(parent, typeDeclaration,
-				typeDeclaration.isInterface() ? CATEGORY_INTERFACE : CATEGORY_CLASS,
-				parser);
+				typeDeclaration.isInterface() ? Constants.CATEGORY_INTERFACE
+						: Constants.CATEGORY_CLASS, parser);
 	}
 
 	/**
@@ -256,8 +246,8 @@ public class JavaInterfaceParser
 			throws SAXException, IOException, ParserConfigurationException,
 			ParsingException
 	{
-		return processAbstractTypeDeclaration(parent, enumDeclaration, CATEGORY_ENUM,
-				parser);
+		return processAbstractTypeDeclaration(parent, enumDeclaration,
+				Constants.CATEGORY_ENUM, parser);
 	}
 
 	/**
@@ -319,7 +309,7 @@ public class JavaInterfaceParser
 			// only public elements are processed. In Java interfaces everything is
 			// public.
 			if (ReflectionHelper.isPublic(bodyDec.getModifiers())
-					|| CATEGORY_INTERFACE.equals(category))
+					|| Constants.CATEGORY_INTERFACE.equals(category))
 			{
 				switch (bodyDec.getNodeType())
 				{
@@ -387,10 +377,10 @@ public class JavaInterfaceParser
 			final List<ThematicRole> knownRoles) throws SAXException, IOException,
 			ParserConfigurationException, ParsingException
 	{
-		String category = CATEGORY_METHOD;
+		String category = Constants.CATEGORY_METHOD;
 		if (methodDeclaration.isConstructor())
 		{
-			category = CATEGORY_CONSTRUCTOR;
+			category = Constants.CATEGORY_CONSTRUCTOR;
 		}
 
 		final Javadoc javadoc = methodDeclaration.getJavadoc();
@@ -417,7 +407,7 @@ public class JavaInterfaceParser
 		if (methodDeclaration.parameters().size() > 0)
 		{
 			final JavaParameters inputParameters = new JavaParameters(method,
-					CATEGORY_PARAMETERS, Numerus.SINGULAR, false);
+					Constants.CATEGORY_PARAMETERS, Numerus.SINGULAR, false);
 			inputParameters.setDocumentationAllowed(false);
 			inputParameters.setIdentifier(StringUtils.EMPTY);
 			inputParameters.setQualifiedIdentifier(StringUtils.EMPTY);
@@ -440,7 +430,7 @@ public class JavaInterfaceParser
 		 * Add return type (always existing), void is ignored
 		 */
 		final JavaParameters outputParameters = new JavaParameters(method,
-				CATEGORY_RETURN_TYPE, Numerus.SINGULAR, false);
+				Constants.CATEGORY_RETURN_TYPE, Numerus.SINGULAR, false);
 		final Type retType = methodDeclaration.getReturnType2();
 		final JavaParameter returnType = processReturnType(outputParameters, retType);
 
@@ -754,7 +744,8 @@ public class JavaInterfaceParser
 			{
 				final Parameter param = iterParams.next();
 				if (param.getIdentifier().equals(searchName)
-						|| (CATEGORY_RETURN_TYPE.equals(parameters.getCategory())))
+						|| (Constants.CATEGORY_RETURN_TYPE.equals(parameters
+								.getCategory())))
 				{
 					param.addDocpart(doc);
 					doc.setSignatureElementIdentifier(param.getSignatureElementPath());
@@ -815,8 +806,8 @@ public class JavaInterfaceParser
 	private JavaParameters processThrownExceptions(final SignatureElement parent,
 			final List<Name> thrownExceptions)
 	{
-		final JavaParameters exceptions = new JavaParameters(parent, CATEGORY_THROWS,
-				Numerus.SINGULAR, false);
+		final JavaParameters exceptions = new JavaParameters(parent,
+				Constants.CATEGORY_THROWS, Numerus.SINGULAR, false);
 		exceptions.setDocumentationAllowed(false);
 		exceptions.setIdentifier(StringUtils.EMPTY);
 		exceptions.setQualifiedIdentifier(StringUtils.EMPTY);
@@ -888,7 +879,7 @@ public class JavaInterfaceParser
 			if (typeBinding != null)
 			{
 				final String identifier = typeBinding.getName();
-				if (!identifier.equals(RETURN_TYPE_VOID))
+				if (!identifier.equals(Constants.RETURN_TYPE_VOID))
 				{
 					returnType = reflectionHelper.createParameter(parent, typeBinding,
 							identifier, typeBinding.getQualifiedName());
@@ -897,7 +888,7 @@ public class JavaInterfaceParser
 			else
 			{
 				final String identifier = ReflectionHelper.extractIdentifierFrom(type);
-				if (!identifier.equals(RETURN_TYPE_VOID))
+				if (!identifier.equals(Constants.RETURN_TYPE_VOID))
 				{
 					returnType = reflectionHelper.createParameter(parent, type,
 							identifier, identifier);

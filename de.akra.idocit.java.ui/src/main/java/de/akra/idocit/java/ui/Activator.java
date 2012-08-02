@@ -17,13 +17,16 @@ package de.akra.idocit.java.ui;
 
 import java.util.logging.Logger;
 
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 public class Activator extends AbstractUIPlugin implements IStartup
 {
-
 	/**
 	 * Logger.
 	 */
@@ -37,6 +40,8 @@ public class Activator extends AbstractUIPlugin implements IStartup
 	// The shared instance
 	private static Activator plugin;
 
+	private ISelectionListener editorSelectionListener;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -46,6 +51,47 @@ public class Activator extends AbstractUIPlugin implements IStartup
 	{
 		super.start(context);
 		plugin = this;
+		registerListeners();
+	}
+
+	private void registerListeners()
+	{
+		this.editorSelectionListener = new JavaEditorSelectionListener();
+
+		// add listener to existing windows, because if there is only one window, the
+		// "windowActivated" event will not fire if the window gets the focus.
+		for (final IWorkbenchWindow window : PlatformUI.getWorkbench()
+				.getWorkbenchWindows())
+		{
+			window.getSelectionService()
+					.addPostSelectionListener(editorSelectionListener);
+		}
+
+		// add listener to notice also new windows
+		PlatformUI.getWorkbench().addWindowListener(new IWindowListener() {
+
+			@Override
+			public void windowOpened(IWorkbenchWindow window)
+			{}
+
+			@Override
+			public void windowDeactivated(IWorkbenchWindow window)
+			{
+				window.getSelectionService().removePostSelectionListener(
+						editorSelectionListener);
+			}
+
+			@Override
+			public void windowClosed(IWorkbenchWindow window)
+			{}
+
+			@Override
+			public void windowActivated(IWorkbenchWindow window)
+			{
+				window.getSelectionService().addPostSelectionListener(
+						editorSelectionListener);
+			}
+		});
 	}
 
 	/*

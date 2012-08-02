@@ -10,5 +10,11 @@
             name="Javadoc Settings">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="de.akra.idocit.java.ui.Activator">
+      </startup>
+   </extension>
 
 </plugin>
