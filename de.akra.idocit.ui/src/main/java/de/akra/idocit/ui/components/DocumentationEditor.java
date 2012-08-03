@@ -303,7 +303,7 @@ public class DocumentationEditor
 								+ "'.";
 						logger.log(Level.SEVERE, msg, ex);
 						MessageBoxUtils.openErrorBox(site.getShell(), msg
-								+ "\n\nError:\n" + ex.toString());
+								+ "\n\nError:\n" + ex.toString(), ex);
 					}
 				}
 				else
