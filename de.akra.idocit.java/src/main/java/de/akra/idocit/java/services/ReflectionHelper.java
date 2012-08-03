@@ -321,7 +321,8 @@ public class ReflectionHelper
 						|| methodName.startsWith(BOOLEAN_GETTER_PREFIX))
 				{
 					// consider only getter with a return type and 0 parameters
-					if (!Constants.RETURN_TYPE_VOID.equals(methodBinding.getReturnType().getName())
+					if (!Constants.RETURN_TYPE_VOID.equals(methodBinding.getReturnType()
+							.getName())
 							&& (parameterTypes == null || parameterTypes.length == 0))
 					{
 						final String prefix = methodName.startsWith(GETTER_PREFIX) ? GETTER_PREFIX
@@ -385,20 +386,29 @@ public class ReflectionHelper
 	private static boolean isInInterface(final IMethodBinding methodBinding)
 	{
 		boolean isInterface = false;
-		final IJavaElement parent = methodBinding.getJavaElement().getParent();
-
-		if (parent.getElementType() == IJavaElement.TYPE)
+		final IJavaElement method = methodBinding.getJavaElement();
+		if (method != null)
 		{
-			final IType type = (IType) parent;
-			try
+			final IJavaElement parent = method.getParent();
+
+			if (parent.getElementType() == IJavaElement.TYPE)
 			{
-				isInterface = type.isInterface() && !type.isAnnotation();
+				final IType type = (IType) parent;
+				try
+				{
+					isInterface = type.isInterface() && !type.isAnnotation();
+				}
+				catch (JavaModelException e)
+				{
+					logger.log(Level.SEVERE,
+							"Failed to check if the method is in an interface.", e);
+				}
 			}
-			catch (JavaModelException e)
-			{
-				logger.log(Level.SEVERE, "Failed to check if method is in an interface.",
-						e);
-			}
+		}
+		else
+		{
+			logger.log(Level.INFO, "Method \"" + methodBinding.getName()
+					+ "\" has no parent element.");
 		}
 		return isInterface;
 	}
