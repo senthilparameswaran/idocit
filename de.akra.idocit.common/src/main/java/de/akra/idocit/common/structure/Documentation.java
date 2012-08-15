@@ -64,6 +64,13 @@ public class Documentation
 	private String signatureElementIdentifier;
 
 	/**
+	 * If this flag is set to true, this documentation is interpreted as error case
+	 * description. In this case, this documentation has to give an answer to the
+	 * following question: what happens if the thematic role is not available?
+	 */
+	private boolean errorCase;
+
+	/**
 	 * Constructor. Initializes <code>documentation</code> and
 	 * <code>addresseeSequence</code>.
 	 */
@@ -99,7 +106,19 @@ public class Documentation
 		}
 		newDoc.setAddresseeSequence(newAddresseeSequence);
 
+		newDoc.setErrorCase(errorCase);
+
 		return newDoc;
+	}
+
+	public boolean isErrorCase()
+	{
+		return errorCase;
+	}
+
+	public void setErrorCase(boolean errorCase)
+	{
+		this.errorCase = errorCase;
 	}
 
 	/**
@@ -170,10 +189,8 @@ public class Documentation
 		return signatureElementIdentifier;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode()
@@ -184,6 +201,7 @@ public class Documentation
 				+ ((addresseeSequence == null) ? 0 : addresseeSequence.hashCode());
 		result = prime * result
 				+ ((documentation == null) ? 0 : documentation.hashCode());
+		result = prime * result + (errorCase ? 1231 : 1237);
 		result = prime
 				* result
 				+ ((signatureElementIdentifier == null) ? 0 : signatureElementIdentifier
@@ -192,78 +210,54 @@ public class Documentation
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
 		if (obj == null)
-		{
 			return false;
-		}
-		if (!(obj instanceof Documentation))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		Documentation other = (Documentation) obj;
 		if (addresseeSequence == null)
 		{
 			if (other.addresseeSequence != null)
-			{
 				return false;
-			}
 		}
 		else if (!addresseeSequence.equals(other.addresseeSequence))
-		{
 			return false;
-		}
 		if (documentation == null)
 		{
 			if (other.documentation != null)
-			{
 				return false;
-			}
 		}
 		else if (!documentation.equals(other.documentation))
-		{
 			return false;
-		}
+		if (errorCase != other.errorCase)
+			return false;
 		if (signatureElementIdentifier == null)
 		{
 			if (other.signatureElementIdentifier != null)
-			{
 				return false;
-			}
 		}
 		else if (!signatureElementIdentifier.equals(other.signatureElementIdentifier))
-		{
 			return false;
-		}
 		if (thematicRole == null)
 		{
 			if (other.thematicRole != null)
-			{
 				return false;
-			}
 		}
 		else if (!thematicRole.equals(other.thematicRole))
-		{
 			return false;
-		}
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString()
@@ -275,8 +269,10 @@ public class Documentation
 		builder.append(addresseeSequence);
 		builder.append(", thematicRole=");
 		builder.append(thematicRole);
-		builder.append(", signatureElementName=");
+		builder.append(", signatureElementIdentifier=");
 		builder.append(signatureElementIdentifier);
+		builder.append(", errorCase=");
+		builder.append(errorCase);
 		builder.append("]");
 		return builder.toString();
 	}
