@@ -75,6 +75,8 @@ public class DocumentationEditor
 		extends
 		AbsEditorPart<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection>
 {
+	public static final String ID = "de.akra.idocit.ui.components.DocumentationEditor";
+	
 	private static final String ERR_FILE_CAN_NOT_BE_SAVED = "File can not be saved";
 
 	private static final String ERR_FILE_NOT_SUPPORTED = "File is not supported.";
