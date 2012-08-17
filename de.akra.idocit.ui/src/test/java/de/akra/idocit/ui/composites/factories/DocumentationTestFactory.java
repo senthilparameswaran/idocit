@@ -92,6 +92,9 @@ public class DocumentationTestFactory
 		Addressee tester = new Addressee("Tester");
 		docs.put(tester, "Doku f�r " + tester.getName());
 		addresseeSequence.add(tester);
+		
+		doc.setErrorCase(true);
+		
 		return doc;
 	}
 

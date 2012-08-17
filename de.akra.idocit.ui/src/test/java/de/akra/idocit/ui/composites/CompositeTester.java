@@ -88,7 +88,7 @@ public class CompositeTester
 						viewer.open();
 						break;
 					case 3:
-						viewer = new CompositeViewer<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection>(
+						viewer = new CompositeViewer<EmptyActionConfiguration, EditArtifactDocumentationCompositeRC, EditArtifactDocumentationCompositeSelection>(
 								shell, new EditArtifactDocumentationCompositeFactory());
 						viewer.setBlockOnOpen(true);
 						viewer.open();
@@ -103,7 +103,7 @@ public class CompositeTester
 					}
 					case 5:
 					{
-						viewer = new CompositeViewer<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection>(
+						viewer = new CompositeViewer<EmptyActionConfiguration, DisplayRecommendedRolesCompositeRC, DisplayRecommendedRolesCompositeSelection>(
 								shell, new DisplayRecommendedRolesCompositeFactory());
 						viewer.setBlockOnOpen(true);
 						viewer.open();
@@ -151,7 +151,7 @@ public class CompositeTester
 					}
 					case 11:
 					{
-						viewer = new CompositeViewer<EmptyActionConfiguration, EmptyResourceConfiguration, RecommendRolesCompositeSelection>(
+						viewer = new CompositeViewer<EmptyActionConfiguration, RecommendRolesCompositeRC, RecommendRolesCompositeSelection>(
 								shell, new RecommendRolesCompositeFactory());
 						viewer.setBlockOnOpen(true);
 						viewer.open();
