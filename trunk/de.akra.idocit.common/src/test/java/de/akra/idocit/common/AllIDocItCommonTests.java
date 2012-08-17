@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package de.akra.idocit.common.structure;
+package de.akra.idocit.common;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import de.akra.idocit.common.services.RuleServiceTest;
 import de.akra.idocit.common.services.ThematicGridServiceTest;
+import de.akra.idocit.common.structure.DocumentationTest;
+import de.akra.idocit.common.structure.InterfaceArtifactTest;
+import de.akra.idocit.common.structure.InterfaceTest;
+import de.akra.idocit.common.structure.OperationTest;
+import de.akra.idocit.common.structure.ParameterTest;
 import de.akra.idocit.common.utils.SignaturElementUtilsTest;
 import de.akra.idocit.common.utils.StringUtilsTest;
 
