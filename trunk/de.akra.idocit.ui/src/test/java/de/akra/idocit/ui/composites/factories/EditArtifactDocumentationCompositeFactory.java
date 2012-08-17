@@ -20,11 +20,12 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.ISelectionListener;
 import org.pocui.core.composites.PocUIComposite;
-import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
 
@@ -45,6 +46,7 @@ import de.akra.idocit.common.structure.impl.TestParameters;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
+import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeRC;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeSelection;
 import de.akra.idocit.ui.services.CompositeTestPersistenceService;
 
@@ -56,21 +58,21 @@ import de.akra.idocit.ui.services.CompositeTestPersistenceService;
  */
 public class EditArtifactDocumentationCompositeFactory
 		implements
-		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection>
+		ICompositeFactory<EmptyActionConfiguration, EditArtifactDocumentationCompositeRC, EditArtifactDocumentationCompositeSelection>
 {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection> createComposite(
+	public AbsComposite<EmptyActionConfiguration, EditArtifactDocumentationCompositeRC, EditArtifactDocumentationCompositeSelection> createComposite(
 			Composite pvParent, int style)
 	{
 		ServiceManager.getInstance().setPersistenceService(
 				new CompositeTestPersistenceService());
-
+		
 		EditArtifactDocumentationComposite editArtifactComp = new EditArtifactDocumentationComposite(
-				pvParent, SWT.NONE);
+				pvParent, SWT.NONE, getResourceConfiguration());
 		EditArtifactDocumentationCompositeSelection editArtifactCompSelection = new EditArtifactDocumentationCompositeSelection();
 
 		InterfaceArtifact artifact = createInterfaceArtifact();
@@ -216,8 +218,12 @@ public class EditArtifactDocumentationCompositeFactory
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EmptyResourceConfiguration getResourceConfiguration()
+	public EditArtifactDocumentationCompositeRC getResourceConfiguration()
 	{
-		return EmptyResourceConfiguration.getInstance();
+		EditArtifactDocumentationCompositeRC resConf = new EditArtifactDocumentationCompositeRC();
+		resConf.setRoleWithoutErrorDocsWarningIcon(new Image(Display.getDefault(),
+				"src/test/resources/de/akra/idocit/ui/composites/factories/int_obj.gif"));
+
+		return resConf;
 	}
 }

@@ -23,17 +23,19 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.ISelectionListener;
 import org.pocui.core.composites.PocUIComposite;
-import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.composites.ICompositeFactory;
 
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.DisplayRecommendedRolesComposite;
+import de.akra.idocit.ui.composites.DisplayRecommendedRolesCompositeRC;
 import de.akra.idocit.ui.composites.DisplayRecommendedRolesCompositeSelection;
 
 /**
@@ -44,18 +46,18 @@ import de.akra.idocit.ui.composites.DisplayRecommendedRolesCompositeSelection;
  */
 public class DisplayRecommendedRolesCompositeFactory
 		implements
-		ICompositeFactory<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection>
+		ICompositeFactory<EmptyActionConfiguration, DisplayRecommendedRolesCompositeRC, DisplayRecommendedRolesCompositeSelection>
 {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection> createComposite(
+	public AbsComposite<EmptyActionConfiguration, DisplayRecommendedRolesCompositeRC, DisplayRecommendedRolesCompositeSelection> createComposite(
 			Composite pvParent, int style)
 	{
 		DisplayRecommendedRolesComposite recRolesComp = new DisplayRecommendedRolesComposite(
-				pvParent, SWT.NONE);
+				pvParent, SWT.NONE, getResourceConfiguration());
 		DisplayRecommendedRolesCompositeSelection selection = new DisplayRecommendedRolesCompositeSelection();
 
 		List<ThematicRole> thematicRoles = new ArrayList<ThematicRole>();
@@ -65,14 +67,17 @@ public class DisplayRecommendedRolesCompositeFactory
 		thematicRoles.add(roleAction);
 
 		Set<ThematicRole> assignedThematicRoles = new TreeSet<ThematicRole>();
-		assignedThematicRoles.add((ThematicRole) (thematicRoles.toArray()[0]));
+		assignedThematicRoles.add(thematicRoles.get(0));
+
+		final Set<ThematicRole> assignedThematicRolesDocumentingErrors = new TreeSet<ThematicRole>();
+		assignedThematicRolesDocumentingErrors.add(roleAction);
 
 		final Map<String, ThematicGrid> recommendedGrids = new HashMap<String, ThematicGrid>();
 		final Map<ThematicRole, Boolean> recRoles = new HashMap<ThematicRole, Boolean>();
 
 		recRoles.put(thematicRoles.get(0), Boolean.TRUE);
 		recRoles.put(thematicRoles.get(1), Boolean.FALSE);
-		
+
 		final ThematicGrid grid1 = new ThematicGrid();
 		grid1.setName("Class 1");
 		grid1.setRoles(recRoles);
@@ -82,9 +87,11 @@ public class DisplayRecommendedRolesCompositeFactory
 		grid2.setName("Class 2");
 		grid2.setRoles(recRoles);
 		recommendedGrids.put(grid2.getName(), grid2);
-		
+
 		selection = selection.setRecommendedThematicGrids(recommendedGrids);
 		selection = selection.setAssignedThematicRoles(assignedThematicRoles);
+		selection = selection
+				.setAssignedThematicRolesWithErrorDocumentation(assignedThematicRolesDocumentingErrors);
 
 		recRolesComp.setSelection(selection);
 
@@ -110,8 +117,12 @@ public class DisplayRecommendedRolesCompositeFactory
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EmptyResourceConfiguration getResourceConfiguration()
+	public DisplayRecommendedRolesCompositeRC getResourceConfiguration()
 	{
-		return EmptyResourceConfiguration.getInstance();
+		DisplayRecommendedRolesCompositeRC resConf = new DisplayRecommendedRolesCompositeRC();
+		resConf.setRoleWithoutErrorDocsWarningIcon(new Image(Display.getDefault(),
+				"src/test/resources/de/akra/idocit/ui/composites/factories/int_obj.gif"));
+
+		return resConf;
 	}
 }
