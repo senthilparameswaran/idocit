@@ -19,6 +19,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import de.akra.idocit.common.services.RuleServiceTest;
+import de.akra.idocit.common.services.ThematicGridServiceTest;
+import de.akra.idocit.common.utils.SignaturElementUtilsTest;
 import de.akra.idocit.common.utils.StringUtilsTest;
 
 /**
@@ -30,7 +32,8 @@ import de.akra.idocit.common.utils.StringUtilsTest;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ DocumentationTest.class, InterfaceArtifactTest.class,
 		InterfaceTest.class, OperationTest.class, ParameterTest.class,
-		RuleServiceTest.class, StringUtilsTest.class })
+		RuleServiceTest.class, StringUtilsTest.class, SignaturElementUtilsTest.class,
+		ThematicGridServiceTest.class })
 public class AllIDocItCommonTests
 {
 
