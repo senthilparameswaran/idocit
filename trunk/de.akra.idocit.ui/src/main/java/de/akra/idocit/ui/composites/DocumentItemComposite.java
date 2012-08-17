@@ -94,6 +94,8 @@ public class DocumentItemComposite
 	private TabItem removeAddresseeTab;
 
 	private Menu rolePopUpMenu;
+	
+	private Button checkBoxErrorCase;
 
 	private MenuItem[] roleFirstLevelItems;
 
@@ -112,9 +114,14 @@ public class DocumentItemComposite
 	private FocusListener textFocusListener;
 
 	/**
-	 * {@link SelectionListener} for <code>comboThematicRole</code>.
+	 * {@link SelectionListener} for <code>btnThematicRole</code>.
 	 */
 	private SelectionListener btnThematicRoleSelectionListener;
+	
+	/**
+	 * {@link SelectionListener} for <code>checkBoxErrorCase</code>.
+	 */
+	private SelectionListener checkBoxErrorCaseSelectionListener;
 
 	/**
 	 * {@link MenuListener} for the menu to add addressee-tabs.
@@ -181,11 +188,14 @@ public class DocumentItemComposite
 
 		// create container for thematic role information
 		Composite themRoleContainer = new Composite(container, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(themRoleContainer);
+		GridLayoutFactory.fillDefaults().numColumns(3).applyTo(themRoleContainer);
 
 		Label labelThematicRole = new Label(themRoleContainer, SWT.NONE);
 		labelThematicRole.setText("Thematic Role:");
 		btnThematicRole = new Button(themRoleContainer, SWT.PUSH);
+		
+		checkBoxErrorCase = new Button(themRoleContainer, SWT.CHECK);
+		checkBoxErrorCase.setText("Documents an Error Case");
 
 		// create tab folder
 		addresseeTabFolder = new TabFolder(pvParent, SWT.NONE | SWT.RESIZE);
@@ -459,6 +469,27 @@ public class DocumentItemComposite
 			public void widgetDefaultSelected(SelectionEvent e)
 			{}
 		};
+		
+		checkBoxErrorCaseSelectionListener = new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				DocumentItemCompositeSelection selection = getSelection();
+				Documentation doc = selection.getDocumentation();
+				doc.setErrorCase(checkBoxErrorCase.getSelection());
+				selection.setDocumentation(doc);
+				
+				setSelection(selection);
+				
+				fireChangeEvent(e.widget);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e)
+			{
+			}
+		};
 	}
 
 	/**
@@ -571,6 +602,8 @@ public class DocumentItemComposite
 			{
 				btnThematicRole.setText("No role selected");
 			}
+			
+			checkBoxErrorCase.setSelection(doc.isErrorCase());
 
 			/*
 			 * set the documentation text for addressees
@@ -810,6 +843,8 @@ public class DocumentItemComposite
 				roleFirstLevelItems);
 		addSelectionListenerToMenuItems(roleMenuItemSelectionListener,
 				roleSecondLevelItems);
+		
+		checkBoxErrorCase.addSelectionListener(checkBoxErrorCaseSelectionListener);
 	}
 
 	@Override
@@ -828,6 +863,8 @@ public class DocumentItemComposite
 				roleFirstLevelItems);
 		removeSelectionListenerToMenuItems(roleMenuItemSelectionListener,
 				roleSecondLevelItems);
+		
+		checkBoxErrorCase.removeSelectionListener(checkBoxErrorCaseSelectionListener);
 	}
 
 	@Override

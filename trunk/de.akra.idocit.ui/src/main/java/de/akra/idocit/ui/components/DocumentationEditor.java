@@ -45,7 +45,6 @@ import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.composites.ISelectionListener;
 import org.pocui.core.composites.PocUIComposite;
-import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.containers.workbench.AbsEditorPart;
 
 import de.akra.idocit.common.structure.Addressee;
@@ -58,8 +57,10 @@ import de.akra.idocit.core.extensions.ValidationReport;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
+import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeRC;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationCompositeSelection;
 import de.akra.idocit.ui.constants.DialogConstants;
+import de.akra.idocit.ui.constants.ImageConstants;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
@@ -73,10 +74,10 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  */
 public class DocumentationEditor
 		extends
-		AbsEditorPart<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection>
+		AbsEditorPart<EmptyActionConfiguration, EditArtifactDocumentationCompositeRC, EditArtifactDocumentationCompositeSelection>
 {
 	public static final String ID = "de.akra.idocit.ui.components.DocumentationEditor";
-	
+
 	private static final String ERR_FILE_CAN_NOT_BE_SAVED = "File can not be saved";
 
 	private static final String ERR_FILE_NOT_SUPPORTED = "File is not supported.";
@@ -391,7 +392,10 @@ public class DocumentationEditor
 	@Override
 	protected EditArtifactDocumentationComposite instanciateMask(Composite parent)
 	{
-		rootComposite = new EditArtifactDocumentationComposite(parent, SWT.NONE);
+		EditArtifactDocumentationCompositeRC resConf = new EditArtifactDocumentationCompositeRC();
+		resConf.setRoleWithoutErrorDocsWarningIcon(ImageConstants.WARNING_ICON);
+
+		rootComposite = new EditArtifactDocumentationComposite(parent, SWT.NONE, resConf);
 		rootComposite.setVisible(false);
 
 		return rootComposite;
