@@ -33,6 +33,8 @@ public class RecommendRolesCompositeSelection implements ISelection
 
 	private Set<ThematicRole> assignedThematicRoles;
 
+	private Set<ThematicRole> assignedThematicRolesWithErrorDocs;
+
 	private String referenceThematicGridName;
 
 	public RecommendRolesCompositeSelection()
@@ -40,16 +42,18 @@ public class RecommendRolesCompositeSelection implements ISelection
 
 	public RecommendRolesCompositeSelection(final String operationIdentifier)
 	{
-		this(operationIdentifier, null, null);
+		this(operationIdentifier, null, null, null);
 	}
 
 	public RecommendRolesCompositeSelection(final String operationIdentifier,
 			final Set<ThematicRole> assignedThematicRoles,
-			final String referenceThematicGridName)
+			final String referenceThematicGridName,
+			final Set<ThematicRole> assignedThematicRolesWithErrorDocs)
 	{
 		this.operationIdentifier = operationIdentifier;
 		this.assignedThematicRoles = assignedThematicRoles;
 		this.referenceThematicGridName = referenceThematicGridName;
+		this.assignedThematicRolesWithErrorDocs = assignedThematicRolesWithErrorDocs;
 	}
 
 	public String getOperationIdentifier()
@@ -96,6 +100,17 @@ public class RecommendRolesCompositeSelection implements ISelection
 		this.referenceThematicGridName = referenceThematicGridName;
 	}
 
+	public Set<ThematicRole> getAssignedThematicRolesWithErrorDocs()
+	{
+		return assignedThematicRolesWithErrorDocs;
+	}
+
+	public void setAssignedThematicRolesWithErrorDocs(
+			Set<ThematicRole> assignedThematicRolesWithErrorDocs)
+	{
+		this.assignedThematicRolesWithErrorDocs = assignedThematicRolesWithErrorDocs;
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -104,6 +119,10 @@ public class RecommendRolesCompositeSelection implements ISelection
 		result = prime
 				* result
 				+ ((assignedThematicRoles == null) ? 0 : assignedThematicRoles.hashCode());
+		result = prime
+				* result
+				+ ((assignedThematicRolesWithErrorDocs == null) ? 0
+						: assignedThematicRolesWithErrorDocs.hashCode());
 		result = prime * result
 				+ ((operationIdentifier == null) ? 0 : operationIdentifier.hashCode());
 		result = prime
@@ -130,6 +149,14 @@ public class RecommendRolesCompositeSelection implements ISelection
 		}
 		else if (!assignedThematicRoles.equals(other.assignedThematicRoles))
 			return false;
+		if (assignedThematicRolesWithErrorDocs == null)
+		{
+			if (other.assignedThematicRolesWithErrorDocs != null)
+				return false;
+		}
+		else if (!assignedThematicRolesWithErrorDocs
+				.equals(other.assignedThematicRolesWithErrorDocs))
+			return false;
 		if (operationIdentifier == null)
 		{
 			if (other.operationIdentifier != null)
@@ -150,9 +177,16 @@ public class RecommendRolesCompositeSelection implements ISelection
 	@Override
 	public String toString()
 	{
-		return "RecommendRolesCompositeSelection [operationIdentifier="
-				+ operationIdentifier + ", assignedThematicRoles="
-				+ assignedThematicRoles + ", referenceThematicGridName="
-				+ referenceThematicGridName + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("RecommendRolesCompositeSelection [operationIdentifier=");
+		builder.append(operationIdentifier);
+		builder.append(", assignedThematicRoles=");
+		builder.append(assignedThematicRoles);
+		builder.append(", assignedThematicRolesWithErrorDocs=");
+		builder.append(assignedThematicRolesWithErrorDocs);
+		builder.append(", referenceThematicGridName=");
+		builder.append(referenceThematicGridName);
+		builder.append("]");
+		return builder.toString();
 	}
 }

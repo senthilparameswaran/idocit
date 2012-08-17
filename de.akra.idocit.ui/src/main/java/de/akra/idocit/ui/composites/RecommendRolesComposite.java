@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
-import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.services.ThematicGridService;
@@ -63,7 +62,7 @@ import de.akra.idocit.ui.views.RecommendedGridsView;
  */
 public class RecommendRolesComposite
 		extends
-		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, RecommendRolesCompositeSelection>
+		AbsComposite<EmptyActionConfiguration, RecommendRolesCompositeRC, RecommendRolesCompositeSelection>
 {
 	private static Logger logger = Logger.getLogger(RecommendRolesComposite.class
 			.getName());
@@ -104,11 +103,10 @@ public class RecommendRolesComposite
 	private FocusListener txtOperationIdentifierListener;
 	private KeyListener txtOperationIdentifierKeyListener;
 
-	public RecommendRolesComposite(Composite pvParent, int pvStyle)
-			throws CompositeInitializationException
+	public RecommendRolesComposite(Composite pvParent, int pvStyle,
+			RecommendRolesCompositeRC resConf) throws CompositeInitializationException
 	{
-		super(pvParent, pvStyle, EmptyActionConfiguration.getInstance(),
-				EmptyResourceConfiguration.getInstance());
+		super(pvParent, pvStyle, EmptyActionConfiguration.getInstance(), resConf);
 	}
 
 	@Override
@@ -147,8 +145,12 @@ public class RecommendRolesComposite
 
 	private void createDisplayRecommendedRolesComposite(final Composite parent)
 	{
+		DisplayRecommendedRolesCompositeRC resConf = new DisplayRecommendedRolesCompositeRC();
+		resConf.setRoleWithoutErrorDocsWarningIcon(getResourceConfiguration()
+				.getRoleWithoutErrorDocsWarningIcon());
+
 		this.displayRecommendedRolesComposite = new DisplayRecommendedRolesComposite(
-				parent, SWT.NONE);
+				parent, SWT.NONE, resConf);
 		GridDataFactory.fillDefaults().grab(true, true).span(2, 1)
 				.applyTo(this.displayRecommendedRolesComposite);
 	}
@@ -233,7 +235,8 @@ public class RecommendRolesComposite
 								deriveThematicGrid,
 								newInSelection.getAssignedThematicRoles(),
 								newInSelection.getReferenceThematicGridName(),
-								dispRolesCompSelection.getCollapsedThematicGridNames());
+								dispRolesCompSelection.getCollapsedThematicGridNames(),
+								newInSelection.getAssignedThematicRolesWithErrorDocs());
 
 						contentCompositeLayout.topControl = displayRecommendedRolesComposite;
 						displayRecommendedRolesComposite.getParent().layout();

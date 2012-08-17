@@ -15,6 +15,8 @@
  *******************************************************************************/
 package de.akra.idocit.ui.views;
 
+import java.util.HashSet;
+
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
@@ -25,8 +27,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import de.akra.idocit.common.structure.ThematicGrid;
+import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.ui.composites.RecommendRolesComposite;
+import de.akra.idocit.ui.composites.RecommendRolesCompositeRC;
 import de.akra.idocit.ui.composites.RecommendRolesCompositeSelection;
+import de.akra.idocit.ui.constants.ImageConstants;
 
 /**
  * Eclipse {@link ViewPart} to show recommended {@link ThematicGrid}s for an identifier (
@@ -83,10 +88,12 @@ public class RecommendedGridsView extends ViewPart
 		RecommendRolesCompositeSelection selection = null;
 		if (viewSelection != null)
 		{
+			// FIXME Do not init with new set here!
 			selection = new RecommendRolesCompositeSelection(
 					viewSelection.getOperationIdentifier(),
 					viewSelection.getAssignedThematicRoles(),
-					viewSelection.getReferenceThematicGridName());
+					viewSelection.getReferenceThematicGridName(),
+					new HashSet<ThematicRole>());
 		}
 		else
 		{
@@ -101,7 +108,11 @@ public class RecommendedGridsView extends ViewPart
 	 */
 	public void createPartControl(Composite parent)
 	{
-		this.recommendRolesComposite = new RecommendRolesComposite(parent, SWT.NONE);
+		
+		RecommendRolesCompositeRC resConf = new RecommendRolesCompositeRC();
+		resConf.setRoleWithoutErrorDocsWarningIcon(ImageConstants.WARNING_ICON);
+		
+		this.recommendRolesComposite = new RecommendRolesComposite(parent, SWT.NONE, resConf);
 		this.recommendRolesComposite.setSelection(new RecommendRolesCompositeSelection());
 	}
 

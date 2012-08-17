@@ -18,6 +18,7 @@ package de.akra.idocit.ui.composites;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,6 @@ import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.composites.ISelectionListener;
 import org.pocui.core.composites.PocUIComposite;
-import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.constants.ThematicGridConstants;
@@ -68,7 +68,7 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  */
 public class EditArtifactDocumentationComposite
 		extends
-		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditArtifactDocumentationCompositeSelection>
+		AbsComposite<EmptyActionConfiguration, EditArtifactDocumentationCompositeRC, EditArtifactDocumentationCompositeSelection>
 {
 	private static final String GROUP_TITLE_SELECT_SIGNATURE_ELEMENT = "Select Signature Element:";
 
@@ -116,11 +116,11 @@ public class EditArtifactDocumentationComposite
 	 * @param pvStyle
 	 * @throws CompositeInitializationException
 	 */
-	public EditArtifactDocumentationComposite(Composite pvParent, int pvStyle)
+	public EditArtifactDocumentationComposite(Composite pvParent, int pvStyle,
+			EditArtifactDocumentationCompositeRC resConf)
 			throws CompositeInitializationException
 	{
-		super(pvParent, pvStyle, EmptyActionConfiguration.getInstance(),
-				EmptyResourceConfiguration.getInstance());
+		super(pvParent, pvStyle, EmptyActionConfiguration.getInstance(), resConf);
 	}
 
 	/**
@@ -182,8 +182,12 @@ public class EditArtifactDocumentationComposite
 		GridDataFactory.fillDefaults().grab(true, true)
 				.applyTo(groupDisplayRecommendedRolesComposite);
 
+		DisplayRecommendedRolesCompositeRC displayRecRolesRC = new DisplayRecommendedRolesCompositeRC();
+		displayRecRolesRC.setRoleWithoutErrorDocsWarningIcon(getResourceConfiguration()
+				.getRoleWithoutErrorDocsWarningIcon());
+
 		displayRecommendedRolesComposite = new DisplayRecommendedRolesComposite(
-				groupDisplayRecommendedRolesComposite, SWT.NONE);
+				groupDisplayRecommendedRolesComposite, SWT.NONE, displayRecRolesRC);
 		GridDataFactory.fillDefaults().grab(true, true)
 				.applyTo(displayRecommendedRolesComposite);
 
@@ -423,10 +427,10 @@ public class EditArtifactDocumentationComposite
 	 */
 	private void updateDocumentItemListComposite(
 			EditArtifactDocumentationCompositeSelection newInSelection,
-			Map<String, ThematicGrid> thematicGrids)
-			throws UnitializedIDocItException
+			Map<String, ThematicGrid> thematicGrids) throws UnitializedIDocItException
 	{
-		final SignatureElement selectedSigElem = newInSelection.getSelectedSignatureElement();
+		final SignatureElement selectedSigElem = newInSelection
+				.getSelectedSignatureElement();
 		final List<ThematicGrid> grids = convertToList(thematicGrids.keySet());
 
 		final RolesRecommendations rolesRecommendations = RuleService
@@ -515,6 +519,7 @@ public class EditArtifactDocumentationComposite
 	{
 		DisplayRecommendedRolesCompositeSelection recRolesCompSelection = new DisplayRecommendedRolesCompositeSelection();
 		Set<ThematicRole> associatedThematicRoles = Collections.emptySet();
+		Set<ThematicRole> associatedThematicRolesWithErrorDocs = Collections.emptySet();
 
 		// recommended roles are only provided for operations
 		if (operation != SignatureElement.EMPTY_SIGNATURE_ELEMENT)
@@ -528,7 +533,11 @@ public class EditArtifactDocumentationComposite
 
 			associatedThematicRoles = new TreeSet<ThematicRole>();
 			SignatureElementUtils.collectAssociatedThematicRoles(associatedThematicRoles,
-					selectedSigElem);
+					selectedSigElem, false);
+			
+			associatedThematicRolesWithErrorDocs = new TreeSet<ThematicRole>();
+			SignatureElementUtils.collectAssociatedThematicRoles(
+					associatedThematicRolesWithErrorDocs, selectedSigElem, true);
 		}
 		else
 		{
@@ -540,6 +549,8 @@ public class EditArtifactDocumentationComposite
 		recRolesCompSelection = recRolesCompSelection.setRecommendedThematicGrids(grids);
 		recRolesCompSelection = recRolesCompSelection
 				.setAssignedThematicRoles(associatedThematicRoles);
+		recRolesCompSelection = recRolesCompSelection
+				.setAssignedThematicRolesWithErrorDocumentation(associatedThematicRolesWithErrorDocs);
 
 		// Set the thematic grid name of the active operation to the recommended
 		// roles composite! If no operation is active, pass the empty String.

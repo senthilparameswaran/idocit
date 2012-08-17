@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.pocui.core.actions.EmptyActionConfiguration;
 import org.pocui.core.composites.CompositeInitializationException;
-import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.constants.ThematicGridConstants;
@@ -60,7 +59,7 @@ import de.akra.idocit.common.structure.ThematicRole;
  */
 public class DisplayRecommendedRolesComposite
 		extends
-		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, DisplayRecommendedRolesCompositeSelection>
+		AbsComposite<EmptyActionConfiguration, DisplayRecommendedRolesCompositeRC, DisplayRecommendedRolesCompositeSelection>
 {
 	private static final String ASSOCIATED_ROLE = " (Associated)";
 	private static final String REFERENCE_GRID = " (Reference Grid)";
@@ -90,14 +89,17 @@ public class DisplayRecommendedRolesComposite
 	 * Constructor.
 	 * 
 	 * @param pvParent
+	 *            Must not be null
 	 * @param pvStyle
+	 * @param pvResourceConf
+	 *            Must not be null
 	 * @throws CompositeInitializationException
 	 */
-	public DisplayRecommendedRolesComposite(Composite pvParent, int pvStyle)
+	public DisplayRecommendedRolesComposite(Composite pvParent, int pvStyle,
+			DisplayRecommendedRolesCompositeRC pvResourceConf)
 			throws CompositeInitializationException
 	{
-		super(pvParent, pvStyle, EmptyActionConfiguration.getInstance(),
-				EmptyResourceConfiguration.getInstance());
+		super(pvParent, pvStyle, EmptyActionConfiguration.getInstance(), pvResourceConf);
 	}
 
 	@Override
@@ -140,6 +142,8 @@ public class DisplayRecommendedRolesComposite
 					.getRecommendedThematicGrids();
 			final Set<ThematicRole> allAssignedThematicRoles = newInSelection
 					.getAssignedThematicRoles();
+			final Set<ThematicRole> errorDocumentingRoles = newInSelection
+					.getAssignedThematicRolesWithErrorDocumentation();
 
 			// Sort verb classes alphabetically
 			final TreeMap<String, ThematicGrid> sortedVerbClasses = new TreeMap<String, ThematicGrid>(
@@ -194,6 +198,9 @@ public class DisplayRecommendedRolesComposite
 							// role is mandatory and associated
 							roleItem.setFont(boldFont);
 						}
+
+						setMissingErrorDocumentationWarning(roleItem, role,
+								errorDocumentingRoles);
 					}
 					for (ThematicRole role : displayNotAssignedRoles)
 					{
@@ -211,6 +218,9 @@ public class DisplayRecommendedRolesComposite
 							// role is optional and not associated
 							roleItem.setForeground(ORANGE);
 						}
+
+						setMissingErrorDocumentationWarning(roleItem, role,
+								errorDocumentingRoles);
 					}
 				}
 
@@ -218,6 +228,29 @@ public class DisplayRecommendedRolesComposite
 				verbClassRoot.setExpanded(!newInSelection.getCollapsedThematicGridNames()
 						.contains(roleClass.getKey()));
 			}
+		}
+	}
+
+	/**
+	 * Sets the Standard-Eclipse Warning icon as image of the given TreeItem.
+	 * 
+	 * @object Image org.eclipse.jface.fieldassist.IMG_DEC_FIELD_WARNING
+	 * @param thematicRoleItem
+	 *            [DESTINATION]
+	 * @param role
+	 *            [COMPARISON] This role is represented by the TreeItem.
+	 * @param rolesWithErrorDocumentation
+	 *            [COMPARISON] These role have the activated error-flag.
+	 * 
+	 * @thematicgrid Setting Operation / Setter
+	 */
+	private void setMissingErrorDocumentationWarning(TreeItem thematicRoleItem,
+			ThematicRole role, Set<ThematicRole> rolesWithErrorDocumentation)
+	{
+		if (!rolesWithErrorDocumentation.contains(role))
+		{
+			thematicRoleItem.setImage(getResourceConfiguration()
+					.getRoleWithoutErrorDocsWarningIcon());
 		}
 	}
 

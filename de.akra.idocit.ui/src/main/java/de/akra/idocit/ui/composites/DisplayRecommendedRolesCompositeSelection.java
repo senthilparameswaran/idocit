@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.pocui.core.composites.ISelection;
 
+import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
@@ -40,6 +41,12 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 	private Map<String, ThematicGrid> recommendedThematicGrids;
 
 	private Set<ThematicRole> assignedThematicRoles;
+
+	/**
+	 * This set contains all thematic roles with an error documentation. An error
+	 * documentation could be identified by checking{@link Documentation#isErrorCase()}.
+	 */
+	private Set<ThematicRole> assignedThematicRolesWithErrorDocumentation;
 
 	private String referenceThematicGridName;
 
@@ -74,11 +81,15 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 	 *            The name of the reference thematic grid
 	 * @param collapsedThematicGridNames
 	 *            The set of names of collapsed thematic grids
+	 * @param assignedThematicRolesWithErrorDocumentation
+	 *            The set of assigned thematic roles which have the error-flag (
+	 *            {@link Documentation#isErrorCase()})
 	 */
 	public DisplayRecommendedRolesCompositeSelection(
 			Map<String, ThematicGrid> recommendedThematicGrids,
 			Set<ThematicRole> assignedThematicRoles, String referenceThematicGridName,
-			Set<String> collapsedThematicGridNames)
+			Set<String> collapsedThematicGridNames,
+			Set<ThematicRole> assignedThematicRolesWithErrorDocumentation)
 	{
 		if (recommendedThematicGrids != null)
 		{
@@ -110,6 +121,16 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 		{
 			this.collapsedThematicGridNames = new HashSet<String>();
 		}
+
+		if (assignedThematicRolesWithErrorDocumentation != null)
+		{
+			this.assignedThematicRolesWithErrorDocumentation = new HashSet<ThematicRole>(
+					assignedThematicRolesWithErrorDocumentation);
+		}
+		else
+		{
+			this.assignedThematicRolesWithErrorDocumentation = new HashSet<ThematicRole>();
+		}
 	}
 
 	/**
@@ -121,7 +142,7 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 	{
 		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
 				assignedThematicRoles, referenceThematicGridName,
-				collapsedThematicGridNames);
+				collapsedThematicGridNames, assignedThematicRolesWithErrorDocumentation);
 	}
 
 	/**
@@ -133,7 +154,7 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 	{
 		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
 				assignedThematicRoles, referenceThematicGridName,
-				collapsedThematicGridNames);
+				collapsedThematicGridNames, assignedThematicRolesWithErrorDocumentation);
 	}
 
 	/**
@@ -161,7 +182,7 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 	{
 		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
 				assignedThematicRoles, referenceThematicGridName,
-				collapsedThematicGridNames);
+				collapsedThematicGridNames, assignedThematicRolesWithErrorDocumentation);
 	}
 
 	/**
@@ -182,12 +203,22 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 	{
 		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
 				assignedThematicRoles, referenceThematicGridName,
-				collapsedThematicGridNames);
+				collapsedThematicGridNames, assignedThematicRolesWithErrorDocumentation);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	public Set<ThematicRole> getAssignedThematicRolesWithErrorDocumentation()
+	{
+		return assignedThematicRolesWithErrorDocumentation;
+	}
+
+	public DisplayRecommendedRolesCompositeSelection setAssignedThematicRolesWithErrorDocumentation(
+			Set<ThematicRole> assignedThematicRolesWithErrorDocumentation)
+	{
+		return new DisplayRecommendedRolesCompositeSelection(recommendedThematicGrids,
+				assignedThematicRoles, referenceThematicGridName,
+				collapsedThematicGridNames, assignedThematicRolesWithErrorDocumentation);
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -196,6 +227,10 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 		result = prime
 				* result
 				+ ((assignedThematicRoles == null) ? 0 : assignedThematicRoles.hashCode());
+		result = prime
+				* result
+				+ ((assignedThematicRolesWithErrorDocumentation == null) ? 0
+						: assignedThematicRolesWithErrorDocumentation.hashCode());
 		result = prime
 				* result
 				+ ((collapsedThematicGridNames == null) ? 0 : collapsedThematicGridNames
@@ -211,9 +246,6 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -230,6 +262,14 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 				return false;
 		}
 		else if (!assignedThematicRoles.equals(other.assignedThematicRoles))
+			return false;
+		if (assignedThematicRolesWithErrorDocumentation == null)
+		{
+			if (other.assignedThematicRolesWithErrorDocumentation != null)
+				return false;
+		}
+		else if (!assignedThematicRolesWithErrorDocumentation
+				.equals(other.assignedThematicRolesWithErrorDocumentation))
 			return false;
 		if (collapsedThematicGridNames == null)
 		{
@@ -255,16 +295,21 @@ public class DisplayRecommendedRolesCompositeSelection implements ISelection
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString()
 	{
-		return "DisplayRecommendedRolesCompositeSelection [recommendedThematicRoles="
-				+ recommendedThematicGrids + ", assignedThematicRoles="
-				+ assignedThematicRoles + ", referenceThematicGridName="
-				+ referenceThematicGridName + ", collapsedThematicGridNames="
-				+ collapsedThematicGridNames + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("DisplayRecommendedRolesCompositeSelection [recommendedThematicGrids=");
+		builder.append(recommendedThematicGrids);
+		builder.append(", assignedThematicRoles=");
+		builder.append(assignedThematicRoles);
+		builder.append(", assignedThematicRolesWithErrorDocumentation=");
+		builder.append(assignedThematicRolesWithErrorDocumentation);
+		builder.append(", referenceThematicGridName=");
+		builder.append(referenceThematicGridName);
+		builder.append(", collapsedThematicGridNames=");
+		builder.append(collapsedThematicGridNames);
+		builder.append("]");
+		return builder.toString();
 	}
 }
