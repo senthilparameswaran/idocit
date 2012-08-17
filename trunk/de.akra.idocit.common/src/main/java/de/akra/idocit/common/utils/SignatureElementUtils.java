@@ -35,12 +35,13 @@ import de.akra.idocit.common.structure.ThematicRole;
 
 public class SignatureElementUtils
 {
-	
+
 	/**
 	 * Logger.
 	 */
-	private static Logger logger = Logger.getLogger(SignatureElementUtils.class.getName());
-	
+	private static Logger logger = Logger
+			.getLogger(SignatureElementUtils.class.getName());
+
 	/**
 	 * Finds the {@link ParameterType} for <code>searchFor</code>.<br>
 	 * From the <code>currentElem</code> we went up to the corresponding {@link Operation}
@@ -187,9 +188,13 @@ public class SignatureElementUtils
 	 *            roles are added to the set.
 	 * @param sigElem
 	 *            The {@link SignatureElement} for which the roles are collected.
+	 * @param collectErrorDocumentations
+	 *            If this flag is true, each found role is only added to the given set if
+	 *            its {@link Documentation#isErrorCase()} returns true
 	 */
 	public static void collectAssociatedThematicRoles(
-			Set<ThematicRole> associatedThematicRoles, SignatureElement sigElem)
+			Set<ThematicRole> associatedThematicRoles, SignatureElement sigElem,
+			boolean collectErrorDocumentations)
 	{
 		SignatureElement operation = findOperationForParameter(sigElem);
 
@@ -199,8 +204,9 @@ public class SignatureElementUtils
 			// collectAssociatedThematicRolesDownwards. I have done it this way, because
 			// so it is easier to traverse the structure
 			collectAssociatedThematicRolesUpwards(associatedThematicRoles,
-					operation.getParent());
-			collectAssociatedThematicRolesDownwards(associatedThematicRoles, operation);
+					operation.getParent(), collectErrorDocumentations);
+			collectAssociatedThematicRolesDownwards(associatedThematicRoles, operation,
+					collectErrorDocumentations);
 		}
 	}
 
@@ -213,16 +219,20 @@ public class SignatureElementUtils
 	 *            roles are added to the set.
 	 * @param currentSigElem
 	 *            The current {@link SignatureElement} used as iterator.
+	 * @param collectErrorDocumentations
+	 *            If this flag is true, each found role is only added to the given set if
+	 *            its {@link Documentation#isErrorCase()} returns true
 	 */
 	private static void collectAssociatedThematicRolesUpwards(
-			Set<ThematicRole> associatedThematicRoles, SignatureElement currentSigElem)
+			Set<ThematicRole> associatedThematicRoles, SignatureElement currentSigElem,
+			boolean collectErrorDocumentations)
 	{
 		if (currentSigElem != null && !(currentSigElem instanceof InterfaceArtifact))
 		{
 			collectThematicRolesFromDocs(associatedThematicRoles,
-					currentSigElem.getDocumentations());
+					currentSigElem.getDocumentations(), collectErrorDocumentations);
 			collectAssociatedThematicRolesUpwards(associatedThematicRoles,
-					currentSigElem.getParent());
+					currentSigElem.getParent(), collectErrorDocumentations);
 		}
 	}
 
@@ -235,28 +245,32 @@ public class SignatureElementUtils
 	 *            roles are added to the set.
 	 * @param currentSigElem
 	 *            The current {@link SignatureElement} used as iterator.
+	 * @param collectErrorDocumentations
+	 *            If this flag is true, each found role is only added to the given set if
+	 *            its {@link Documentation#isErrorCase()} returns true
 	 */
 	private static void collectAssociatedThematicRolesDownwards(
-			Set<ThematicRole> associatedThematicRoles, SignatureElement currentSigElem)
+			Set<ThematicRole> associatedThematicRoles, SignatureElement currentSigElem,
+			boolean collectErrorDocumentations)
 	{
 		if (currentSigElem != null)
 		{
 			collectThematicRolesFromDocs(associatedThematicRoles,
-					currentSigElem.getDocumentations());
+					currentSigElem.getDocumentations(), collectErrorDocumentations);
 
 			if (currentSigElem instanceof Operation)
 			{
 				Operation op = (Operation) currentSigElem;
 				collectAssociatedThematicRolesDownwards(associatedThematicRoles,
-						op.getInputParameters());
+						op.getInputParameters(), collectErrorDocumentations);
 				collectAssociatedThematicRolesDownwards(associatedThematicRoles,
-						op.getOutputParameters());
+						op.getOutputParameters(), collectErrorDocumentations);
 
 				List<? extends Parameters> exceptions = op.getExceptions();
 				for (Parameters exception : exceptions)
 				{
 					collectAssociatedThematicRolesDownwards(associatedThematicRoles,
-							exception);
+							exception, collectErrorDocumentations);
 				}
 			}
 			else
@@ -281,7 +295,7 @@ public class SignatureElementUtils
 				{
 					Parameter param = itParam.next();
 					collectAssociatedThematicRolesDownwards(associatedThematicRoles,
-							param);
+							param, collectErrorDocumentations);
 				}
 			}
 		}
@@ -295,15 +309,32 @@ public class SignatureElementUtils
 	 *            {@link Set} of {@link ThematicRole}s to which the found roles are added.
 	 * @param documentations
 	 *            The {@link Documentation}s from which the roles are get.
+	 * @param collectErrorDocumentations
+	 *            If this flag is true, each found role is only added to the given set if
+	 *            its {@link Documentation#isErrorCase()} returns true
 	 */
 	private static void collectThematicRolesFromDocs(Set<ThematicRole> thematicRoles,
-			List<Documentation> documentations)
+			List<Documentation> documentations, boolean collectErrorDocumentations)
 	{
 		for (Documentation doc : documentations)
 		{
 			if (doc.getThematicRole() != null)
 			{
-				thematicRoles.add(doc.getThematicRole());
+				if (collectErrorDocumentations)
+				{
+					if (doc.isErrorCase())
+					{
+						thematicRoles.add(doc.getThematicRole());
+					}
+					else
+					{
+						// Do nothing!
+					}
+				}
+				else
+				{
+					thematicRoles.add(doc.getThematicRole());
+				}
 			}
 		}
 	}
@@ -411,7 +442,6 @@ public class SignatureElementUtils
 		}
 		return qualifiedIdentifier;
 	}
-	
 
 	/**
 	 * Checks if the operation's or at least one of it's sub-elements'

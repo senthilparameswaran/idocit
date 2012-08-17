@@ -312,7 +312,7 @@ public final class RuleService
 
 		final Set<ThematicRole> associatedThematicRoles = new HashSet<ThematicRole>();
 		SignatureElementUtils.collectAssociatedThematicRoles(associatedThematicRoles,
-				selectedSignatureElement);
+				selectedSignatureElement, false);
 
 		firstLevel.removeAll(associatedThematicRoles);
 		secondLevel.addAll(associatedThematicRoles);
