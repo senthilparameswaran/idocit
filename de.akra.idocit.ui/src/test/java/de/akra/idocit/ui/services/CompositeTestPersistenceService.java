@@ -132,11 +132,17 @@ public class CompositeTestPersistenceService implements PersistenceService
 		ThematicRole role1 = new ThematicRole("AGENT");
 		ThematicRole role2 = new ThematicRole("DESTINATION");
 
+		Map<String, String> gridBasedRules = new HashMap<String, String>();
+		gridBasedRules.put("ACTION", "always();");
+		gridBasedRules.put("AGENT", "always();");
+		gridBasedRules.put("DESTINATION", "always();");
+		
 		List<ThematicGrid> grids = new ArrayList<ThematicGrid>();
 		{
 			ThematicGrid grid0 = new ThematicGrid();
 			grid0.setName("Searching Operations");
 			grid0.setRefernceVerb("find");
+			grid0.setGridBasedRules(gridBasedRules);
 
 			Set<String> grid0Verbs = new HashSet<String>();
 			grid0Verbs.add("find");
@@ -169,7 +175,8 @@ public class CompositeTestPersistenceService implements PersistenceService
 			grid0Roles.put(role1, Boolean.TRUE);
 			grid0Roles.put(role2, Boolean.FALSE);
 			grid1.setRoles(grid0Roles);
-
+			grid1.setGridBasedRules(gridBasedRules);
+			
 			grids.add(grid1);
 		}
 
