@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.dom.TextElement;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.java.structure.JavaMethod;
+import de.akra.idocit.java.utils.JavadocUtils;
 import de.akra.idocit.java.utils.StringUtils;
 
 /**
@@ -58,8 +59,7 @@ public class JavadocGenerator implements IJavadocGenerator
 	 * Declare default constructor as private due to Singleton-Pattern.
 	 */
 	private JavadocGenerator()
-	{
-	}
+	{}
 
 	public static String quoteGenericsInIdentifier(String identifier)
 	{
@@ -111,7 +111,8 @@ public class JavadocGenerator implements IJavadocGenerator
 		{
 			tagChanged = true;
 			TextElement paramNameElement = jdocAST.newTextElement();
-			paramNameElement.setText(paramName + de.akra.idocit.common.utils.StringUtils.EMPTY);
+			paramNameElement.setText(paramName
+					+ de.akra.idocit.common.utils.StringUtils.EMPTY);
 			fragments.add(paramNameElement);
 		}
 
@@ -141,8 +142,17 @@ public class JavadocGenerator implements IJavadocGenerator
 
 				if (doc.getThematicRole() != null)
 				{
+					StringBuffer thematicRoleBuffer = new StringBuffer();
+					thematicRoleBuffer.append(doc.getThematicRole().getName());
+
+					if (doc.isErrorCase())
+					{
+						thematicRoleBuffer.append(JavadocUtils
+								.getComplexErrorFlagPostfix());
+					}
+
 					textElem.append("<tr><td>Role:</td><td>");
-					textElem.append(doc.getThematicRole().getName());
+					textElem.append(thematicRoleBuffer.toString());
 					textElem.append("</td></tr>\n");
 				}
 

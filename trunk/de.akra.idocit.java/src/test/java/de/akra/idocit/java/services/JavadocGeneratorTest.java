@@ -64,6 +64,7 @@ import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavadocTagElement;
 import de.akra.idocit.java.structure.ParserOutput;
+import de.akra.idocit.java.utils.JavadocUtils;
 
 /**
  * Tests for {@link JavadocGenerator}.
@@ -88,7 +89,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
-			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ "<tr><td>Role:</td><td>OBJECT"
+			+ JavadocUtils.getComplexErrorFlagPostfix()
+			+ "</td></tr>"
 			+ lineSeparator
 			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
 			+ lineSeparator
@@ -102,7 +105,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
-			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ "<tr><td>Role:</td><td>OBJECT"
+			+ JavadocUtils.getComplexErrorFlagPostfix()
+			+ "</td></tr>"
 			+ lineSeparator
 			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
 			+ lineSeparator
@@ -118,7 +123,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
-			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ "<tr><td>Role:</td><td>OBJECT"
+			+ JavadocUtils.getComplexErrorFlagPostfix()
+			+ "</td></tr>"
 			+ lineSeparator
 			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
 			+ lineSeparator
@@ -132,7 +139,9 @@ public class JavadocGeneratorTest
 			+ lineSeparator
 			+ "<tr><td>Element:</td><td>person:Person/name:java.lang.String</td></tr>"
 			+ lineSeparator
-			+ "<tr><td>Role:</td><td>OBJECT</td></tr>"
+			+ "<tr><td>Role:</td><td>OBJECT"
+			+ JavadocUtils.getComplexErrorFlagPostfix()
+			+ "</td></tr>"
 			+ lineSeparator
 			+ "<tr><td><b>Developer</b>:</td><td>Documenation for developers.</td></tr>"
 			+ lineSeparator
@@ -230,8 +239,6 @@ public class JavadocGeneratorTest
 		List<TagElement> tags = javadoc.tags();
 		tags.add(tagElement);
 
-		// logger.info(javadoc.toString());
-
 		Assert.assertEquals(EXPECTED_JAVADOC, javadoc.toString());
 	}
 
@@ -278,9 +285,6 @@ public class JavadocGeneratorTest
 		cu.rewrite(document, null);
 
 		TypeDeclaration newTypeDecl = (TypeDeclaration) cu.types().get(0);
-
-		// logger.log(Level.INFO, javadoc.toString());
-		// logger.log(Level.INFO, cu.toString());
 
 		Assert.assertEquals(
 				"The written Javadoc in the CompilationUnit is not the same as the created Javadoc.",
@@ -350,14 +354,8 @@ public class JavadocGeneratorTest
 				logger.log(Level.INFO, document.toString());
 
 				// ... edit the document ...
-
 				TextEdit edit = rewriter.rewriteAST(document, null);
 				edit.apply(document);
-
-				// iCompUnit.getBuffer().setContents(document.get());
-				// unit =
-				// iCompUnit.reconcile(ICompilationUnit.ENABLE_BINDINGS_RECOVERY,
-				// false, null, null);
 
 				// commit changes to underlying file
 				textFileBuffer.commit(null /* ProgressMonitor */, false /* Overwrite */);
@@ -429,6 +427,8 @@ public class JavadocGeneratorTest
 
 		newDoc.setDocumentation(docMap);
 		newDoc.setAddresseeSequence(addresseeSequence);
+
+		newDoc.setErrorCase(true);
 
 		return newDoc;
 	}

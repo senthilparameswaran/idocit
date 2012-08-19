@@ -209,6 +209,13 @@ public class HTMLTableParser
 				currentDoc.setSignatureElementIdentifier(identifier);
 				break;
 			case ROLE:
+				if (value.endsWith(JavadocUtils.getComplexErrorFlagPostfix()))
+				{
+					currentDoc.setErrorCase(true);
+					value = value.substring(0, value.length()
+							- JavadocUtils.getComplexErrorFlagPostfix().length());
+				}
+
 				ThematicRole thematicRole = DescribedItemUtils.findThematicRole(value);
 				currentDoc.setThematicRole(thematicRole);
 				lastValue = LAST_VALUE.NONE;
