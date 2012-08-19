@@ -47,4 +47,12 @@ public class StringUtilsTest
 		Assert.assertFalse(StringUtils.isBlank("asd"));
 		Assert.assertFalse(StringUtils.isBlank(" 12 "));
 	}
+	
+	@Test
+	public void testMergeSpaces(){
+		Assert.assertEquals(" hello world ", StringUtils.mergeSpaces("  hello  world  "));
+		Assert.assertEquals(" hello world ", StringUtils.mergeSpaces("   hello   world   "));
+		Assert.assertEquals("hello world", StringUtils.mergeSpaces("hello world"));
+		Assert.assertEquals("helloworld", StringUtils.mergeSpaces("helloworld"));
+	}
 }
