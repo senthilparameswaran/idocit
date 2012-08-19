@@ -406,4 +406,38 @@ public class StringUtils
 		}
 	}
 
+	public static String mergeSpaces(String stringWithSpaces)
+	{
+		if (stringWithSpaces != null)
+		{
+			StringBuffer mergedSpaces = new StringBuffer();
+			char[] unmergedSpaces = stringWithSpaces.toCharArray();
+			boolean lastCharacterWasSpace = false;
+
+			for (int i = 0; i < unmergedSpaces.length; i++)
+			{
+				if (unmergedSpaces[i] == SPACE.charAt(0))
+				{
+					if (!lastCharacterWasSpace)
+					{
+						mergedSpaces.append(unmergedSpaces[i]);
+						lastCharacterWasSpace = true;
+
+					}
+				}
+				else
+				{
+					mergedSpaces.append(unmergedSpaces[i]);
+					lastCharacterWasSpace = false;
+				}
+			}
+
+			return mergedSpaces.toString();
+		}
+		else
+		{
+			return EMPTY;
+		}
+	}
+
 }
