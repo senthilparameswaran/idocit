@@ -41,7 +41,8 @@ import de.akra.idocit.common.structure.Documentation;
  * @version 0.0.2
  * 
  */
-public class DocumentationGenerator {
+public class DocumentationGenerator
+{
 	/*
 	 * Name of the attribute for an element name.
 	 */
@@ -51,6 +52,7 @@ public class DocumentationGenerator {
 	private static final String ADDRESSEE_GROUP_ATTRIBUTE_NAME = "group";
 	private static final String ADDRESSEE_ELEMENT_NAME = "addressee";
 	private static final String THEMATIC_ROLE_ATTRIBUTE_NAME = "role";
+	private static final String ERROR_DOCUMENTATION_ATTRIBUTE_NAME = "errordoc";
 
 	private static final String XML_TAG_TAB = "tab";
 	private static final String XML_TAG_BR = "br";
@@ -58,47 +60,49 @@ public class DocumentationGenerator {
 	/**
 	 * Logger.
 	 */
-	private static Logger logger = Logger.getLogger(DocumentationParser.class
-			.getName());
+	private static Logger logger = Logger.getLogger(DocumentationParser.class.getName());
 
 	/**
-	 * A DOM Document object. It is needed to create new nodes for documentation
-	 * elements.
+	 * A DOM Document object. It is needed to create new nodes for documentation elements.
 	 */
 	private static Document domDocument;
 
 	/**
-	 * Creates a documentation {@link Element} out of <code>docparts</code>. It
-	 * sets the attributes and adds the addressee elements.
+	 * Creates a documentation {@link Element} out of <code>docparts</code>. It sets the
+	 * attributes and adds the addressee elements.
 	 * 
-	 * Please note: if the parameter <code>thematicGridName</code> is
-	 * <code>null</code>, no thematicgrid-element will be added to the
-	 * documentation-element. In this case only the docparts will appear.
+	 * Please note: if the parameter <code>thematicGridName</code> is <code>null</code>,
+	 * no thematicgrid-element will be added to the documentation-element. In this case
+	 * only the docparts will appear.
 	 * 
 	 * @param tagName
 	 *            Qualified tag name for the documentation element.
 	 * @param docparts
-	 *            The documentation parts that should be written into a
-	 *            documentation element.
-	 * @return The generated documentation {@link Element} or <code>null</code>
-	 *         if <code>docparts != null && !docparts.isEmpty()</code>.
+	 *            The documentation parts that should be written into a documentation
+	 *            element.
+	 * @return The generated documentation {@link Element} or <code>null</code> if
+	 *         <code>docparts != null && !docparts.isEmpty()</code>.
 	 */
 	public static Element generateDocumentationElement(String tagName,
-			List<Documentation> docparts, String thematicGridName) {
+			List<Documentation> docparts, String thematicGridName)
+	{
 		Element docElem = null;
-		if (docparts != null && !docparts.isEmpty()) {
-			try {
-				if (domDocument == null) {
+		if (docparts != null && !docparts.isEmpty())
+		{
+			try
+			{
+				if (domDocument == null)
+				{
 					// must be initialized here, because of error handling
-					DocumentBuilderFactory factory = DocumentBuilderFactory
-							.newInstance();
+					DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 					DocumentBuilder builder;
 					builder = factory.newDocumentBuilder();
 					domDocument = builder.newDocument();
 				}
 				docElem = domDocument.createElement(tagName);
 
-				if (thematicGridName != null) {
+				if (thematicGridName != null)
+				{
 					// Create Thematic Grid Element
 					Element thematicGrid = domDocument
 							.createElement(DocumentationParser.THEMATIC_GRID_TAG_NAME);
@@ -107,15 +111,21 @@ public class DocumentationGenerator {
 							thematicGridName);
 					docElem.appendChild(thematicGrid);
 
-					for (Documentation doc : docparts) {
+					for (Documentation doc : docparts)
+					{
 						thematicGrid.appendChild(generateDocpartElement(doc));
 					}
-				} else {
-					for (Documentation doc : docparts) {
+				}
+				else
+				{
+					for (Documentation doc : docparts)
+					{
 						docElem.appendChild(generateDocpartElement(doc));
 					}
 				}
-			} catch (ParserConfigurationException e) {
+			}
+			catch (ParserConfigurationException e)
+			{
 				logger.log(Level.SEVERE, "This error should not occur.", e);
 			}
 		}
@@ -125,86 +135,95 @@ public class DocumentationGenerator {
 
 	/**
 	 * Wraps the addressees with their individual documentation into a docpart
-	 * {@link Element}, sets the attributes of the {@link Element} and returns
-	 * it.
+	 * {@link Element}, sets the attributes of the {@link Element} and returns it.
 	 * 
 	 * @param documentation
-	 *            {@link Documentation} whose addressees should be generated to
-	 *            Elements.
-	 * @return The generated docpart {@link Element}, null if
-	 *         <code>domDocument</code> is not initialized.
+	 *            {@link Documentation} whose addressees should be generated to Elements.
+	 * @return The generated docpart {@link Element}, null if <code>domDocument</code> is
+	 *         not initialized.
 	 */
-	private static Element generateDocpartElement(Documentation documentation) {
+	private static Element generateDocpartElement(Documentation documentation)
+	{
 		Element docpart = null;
 		// Without DOM Document you can not create new elements. It should be
 		// initialized in generateDocElement().
-		if (domDocument != null) {
-			docpart = domDocument
-					.createElement(DocumentationParser.DOCPART_TAG_NAME);
+		if (domDocument != null)
+		{
+			docpart = domDocument.createElement(DocumentationParser.DOCPART_TAG_NAME);
 
 			// set attributes
-			if (documentation.getThematicRole() != null) {
-				docpart.setAttribute(THEMATIC_ROLE_ATTRIBUTE_NAME,
-						documentation.getThematicRole().getName());
+			if (documentation.getThematicRole() != null)
+			{
+				docpart.setAttribute(THEMATIC_ROLE_ATTRIBUTE_NAME, documentation
+						.getThematicRole().getName());
 			}
 
-			if (documentation.getSignatureElementIdentifier() != null) {
+			// set error documentation flag
+			if (documentation.getThematicRole() != null)
+			{
+				docpart.setAttribute(ERROR_DOCUMENTATION_ATTRIBUTE_NAME,
+						String.valueOf(documentation.isErrorCase()));
+			}
+
+			if (documentation.getSignatureElementIdentifier() != null)
+			{
 				docpart.setAttribute(SIGNATURE_ELEMENT_ATTRIBUTE_NAME,
 						documentation.getSignatureElementIdentifier());
 			}
 
 			// insert addressee elements
-			Map<Addressee, String> addresseeDocs = documentation
-					.getDocumentation();
-			List<Addressee> addresseeSequence = documentation
-					.getAddresseeSequence();
-			for (Addressee addressee : addresseeSequence) {
-				Element addrElem = domDocument
-						.createElement(ADDRESSEE_ELEMENT_NAME);
-				addrElem.setAttribute(ADDRESSEE_GROUP_ATTRIBUTE_NAME,
-						addressee.getName());
+			Map<Addressee, String> addresseeDocs = documentation.getDocumentation();
+			List<Addressee> addresseeSequence = documentation.getAddresseeSequence();
+			for (Addressee addressee : addresseeSequence)
+			{
+				Element addrElem = domDocument.createElement(ADDRESSEE_ELEMENT_NAME);
+				addrElem.setAttribute(ADDRESSEE_GROUP_ATTRIBUTE_NAME, addressee.getName());
 
 				addTextAsNodes(addrElem, addresseeDocs.get(addressee));
 				docpart.appendChild(addrElem);
 			}
-		} else {
+		}
+		else
+		{
 			logger.log(Level.SEVERE, "domDocument is no initialized.");
 		}
 		return docpart;
 	}
 
 	/**
-	 * Adds the <code>text</code> as {@link Node#TEXT_NODE}s to the
-	 * <code>element</code>. Newline and tabulator characters are replaced with
-	 * &lt;br/&gt; and &lt;tab/&gt; elements.
+	 * Adds the <code>text</code> as {@link Node#TEXT_NODE}s to the <code>element</code>.
+	 * Newline and tabulator characters are replaced with &lt;br/&gt; and &lt;tab/&gt;
+	 * elements.
 	 * 
 	 * @param element
-	 *            The {@link Element} to which the <code>text</code> should be
-	 *            added.
+	 *            The {@link Element} to which the <code>text</code> should be added.
 	 * @param text
 	 *            The text to convert and add to the <code>element</code>.
 	 * @return The <code>element</code>.
 	 */
-	private static Element addTextAsNodes(Element element, String text) {
+	private static Element addTextAsNodes(Element element, String text)
+	{
 		String escapedText = StringEscapeUtils.escapeHtml4(text);
-		
+
 		StringBuilder tmpText = new StringBuilder();
 
-		for (int i = 0; i < escapedText.length(); ++i) {
-			switch (escapedText.charAt(i)) {
+		for (int i = 0; i < escapedText.length(); ++i)
+		{
+			switch (escapedText.charAt(i))
+			{
 			case '\t':
-				if (tmpText.length() > 0) {
-					element.appendChild(domDocument.createTextNode(tmpText
-							.toString()));
+				if (tmpText.length() > 0)
+				{
+					element.appendChild(domDocument.createTextNode(tmpText.toString()));
 					tmpText = new StringBuilder();
 				}
 				element.appendChild(domDocument.createElement(XML_TAG_TAB));
 				break;
 
 			case '\r':
-				if (tmpText.length() > 0) {
-					element.appendChild(domDocument.createTextNode(tmpText
-							.toString()));
+				if (tmpText.length() > 0)
+				{
+					element.appendChild(domDocument.createTextNode(tmpText.toString()));
 					tmpText = new StringBuilder();
 				}
 				element.appendChild(domDocument.createElement(XML_TAG_BR));
@@ -219,9 +238,9 @@ public class DocumentationGenerator {
 				break;
 
 			case '\n':
-				if (tmpText.length() > 0) {
-					element.appendChild(domDocument.createTextNode(tmpText
-							.toString()));
+				if (tmpText.length() > 0)
+				{
+					element.appendChild(domDocument.createTextNode(tmpText.toString()));
 					tmpText = new StringBuilder();
 				}
 				element.appendChild(domDocument.createElement(XML_TAG_BR));
@@ -242,7 +261,8 @@ public class DocumentationGenerator {
 		}
 
 		// append pending text
-		if (tmpText.length() > 0) {
+		if (tmpText.length() > 0)
+		{
 			element.appendChild(domDocument.createTextNode(tmpText.toString()));
 		}
 

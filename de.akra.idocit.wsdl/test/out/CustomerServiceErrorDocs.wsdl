@@ -54,7 +54,7 @@
 	<wsdl:portType name="CustomerService">
 		<wsdl:documentation><thematicgrid name="global"><docpart errordoc="false" role="AGENT"><addressee group="Developer">This service provides operations offered by the customer-care department.</addressee></docpart><docpart errordoc="false" role="LOCATION"><addressee group="Developer">This service provides operations offered by the customer-care department.</addressee></docpart></thematicgrid></wsdl:documentation>
 		<wsdl:operation name="find">
-			<wsdl:documentation><thematicgrid name="None"><docpart errordoc="false" role="ACTION"><addressee group="System Builder">Returns the customer for the given id. If the id is unknown, the result will be null.</addressee></docpart><docpart errordoc="false" role="LOCATION"><addressee group="Builder">The configured SAP CRM is used as database where to search the customer.</addressee></docpart></thematicgrid></wsdl:documentation>
+			<wsdl:documentation><thematicgrid name="None"><docpart errordoc="true" role="ACTION"><addressee group="System Builder">Returns the customer for the given id. If the id is unknown, the result will be null.</addressee></docpart><docpart errordoc="false" role="LOCATION"><addressee group="Builder">The configured SAP CRM is used as database where to search the customer.</addressee></docpart></thematicgrid></wsdl:documentation>
 			<wsdl:input message="comp:findCustomerByIdRequest">
 				<wsdl:documentation><docpart errordoc="false" role="ACTION" signatureElement="findCustomerByIdRequest"><addressee group="Manager">Manager</addressee></docpart></wsdl:documentation>
 			</wsdl:input>
