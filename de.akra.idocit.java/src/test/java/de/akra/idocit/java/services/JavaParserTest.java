@@ -19,6 +19,7 @@ import static de.akra.idocit.java.JavadocTestUtils.NEW_LINE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -76,6 +77,7 @@ import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.AllIDocItJavaTests;
 import de.akra.idocit.java.JavadocTestUtils;
+import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.constants.PreferenceStoreConstants;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
@@ -460,24 +462,26 @@ public class JavaParserTest
 								+ "\t * creates</b> the returned {@link JavaInterfaceArtifact} from it.<br/>%1$s"
 								+ "\t * Escape Test: &Ouml;%1$s"
 								+ "\t * %1$s"
-								+ "\t * @source_format Java and Javadoc according to their current specifications:<br/>%1$s"
+								+ "\t * @source_format  Java and Javadoc according to their current specifications:<br/>%1$s"
 								+ "\t * <br/>%1$s"
 								+ "\t * <a href=\"http://docs.oracle.com/javase/specs/\">Java</a><br/>%1$s"
 								+ "\t * Javadoc%1$s"
 								+ "\t * %1$s"
-								+ "\t * @instrument To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used.%1$s"
-								+ "\t * @instrument iDocIt! supports two different representations of thematicgrids in Javadoc:<br/>%1$s"
+								+ "\t * @instrument  To parse the Java and Javadoc code, the parser provided by the Eclipse Java Development Tools is used.%1$s"
+								+ "\t * @instrument  iDocIt! supports two different representations of thematicgrids in Javadoc:<br/>%1$s"
 								+ "\t * <br/>%1$s"
 								+ "\t * The simplified version is very compact, but supports only the addressee &quot;Developer&quot;.<br/>%1$s"
 								+ "\t * The complex version supports all addressees, but uses a lot of HTML-code.%1$s"
 								+ "\t * %1$s"
-								+ "\t * @param iFile [SOURCE]%1$s"
+								+ "\t * @param  iFile [SOURCE] ("
+								+ Constants.ERROR_CASE_DOCUMENTATION_TEXT
+								+ ")%1$s"
 								+ "\t * %1$s"
-								+ "\t * @return [OBJECT]%1$s"
+								+ "\t * @return  [OBJECT]%1$s"
 								+ "\t * %1$s"
-								+ "\t * @throws Exception%1$s"
+								+ "\t * @throws  Exception%1$s"
 								+ "\t * @see de.akra.idocit.core.extensions.Parser#parse(IFile)%1$s"
-								+ "\t * @thematicgrid Parsing Operations%1$s"
+								+ "\t * @thematicgrid  Parsing Operations%1$s"
 								+ "\t */%1$s", NEW_LINE);
 
 				Assert.assertEquals(refJavadoc, actJavadoc);
@@ -725,4 +729,43 @@ public class JavaParserTest
 		}
 	}
 
+	/**
+	 * Parses the test-file JavaParser.java and should set the error-documentation flag
+	 * for the SOURCE-documentation to true.
+	 * 
+	 * @throws Exception
+	 *             Should never happen
+	 */
+	@Test
+	public void testParseErrorDocumentationFlag() throws Exception
+	{
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		final IProject project = root.getProject(PROJECT_NAME);
+		final IFile testSourceFolder = project.getFile("src/source/JavaParser.java");
+
+		final JavaInterfaceArtifact actInterfaceArtifact = (JavaInterfaceArtifact) ServiceManager
+				.getInstance().getPersistenceService().loadInterface(testSourceFolder);
+
+		assertEquals("SOURCE", actInterfaceArtifact.getInterfaces().get(0)
+				.getOperations().get(0).getInputParameters().getParameters().get(0)
+				.getDocumentations().get(0).getThematicRole().getName());
+
+		assertTrue(actInterfaceArtifact.getInterfaces().get(0).getOperations().get(0)
+				.getInputParameters().getParameters().get(0).getDocumentations().get(0)
+				.isErrorCase());
+
+		assertEquals("INSTRUMENT", actInterfaceArtifact.getInterfaces().get(0)
+				.getOperations().get(0).getDocumentations().get(2).getThematicRole()
+				.getName());
+
+		assertFalse(actInterfaceArtifact.getInterfaces().get(0).getOperations().get(0)
+				.getDocumentations().get(2).isErrorCase());
+
+		assertEquals("INSTRUMENT", actInterfaceArtifact.getInterfaces().get(0)
+				.getOperations().get(0).getDocumentations().get(3).getThematicRole()
+				.getName());
+
+		assertTrue(actInterfaceArtifact.getInterfaces().get(0).getOperations().get(0)
+				.getDocumentations().get(3).isErrorCase());
+	}
 }

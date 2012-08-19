@@ -30,6 +30,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.utils.SignatureElementUtils;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
@@ -374,7 +375,7 @@ public class JavaInterfaceGenerator
 				fragments.add(textElement);
 			}
 
-			textElement.setText(thematicGridName);
+			textElement.setText(StringUtils.SPACE + thematicGridName);
 		}
 		else
 		{

@@ -111,7 +111,9 @@ public class TestDataFactory
 
 		addDocumentation(methodCheckInvariant, addresseeName, "RULE",
 				"Maximum length of an address are 40 chars.",
-				methodCheckInvariant.getIdentifier());
+				methodCheckInvariant.getIdentifier(), false);
+		addDocumentation(methodCheckInvariant, addresseeName, "ORDERING", "",
+				methodCheckInvariant.getIdentifier(), true);
 
 		// Parameters
 		JavaParameters inputParameters = new JavaParameters(methodCheckInvariant,
@@ -128,7 +130,7 @@ public class TestDataFactory
 		inputParameters.addParameter(parameterParameters);
 
 		addDocumentation(parameterParameters, addresseeName, "OBJECT", StringUtils.EMPTY,
-				parameterParameters.getSignatureElementPath());
+				parameterParameters.getSignatureElementPath(), false);
 
 		// Return value
 		JavaParameters outputParameters = new JavaParameters(methodCheckInvariant,
@@ -143,7 +145,7 @@ public class TestDataFactory
 
 		addDocumentation(report, addresseeName, "REPORT",
 				"<code>false</code> if the rule is violated",
-				report.getSignatureElementPath());
+				report.getSignatureElementPath(), false);
 
 		return methodCheckInvariant;
 	}
@@ -175,9 +177,9 @@ public class TestDataFactory
 		methodFindCustomerById.setDocumentationChanged(documentationChanged);
 
 		addDocumentation(methodFindCustomerById, addresseeName, "ORDERING",
-				"Alphabetically by lastname", null);
+				"Alphabetically by lastname", null, false);
 		addDocumentation(methodFindCustomerById, addresseeName, "SOURCE", "CRM System",
-				null);
+				null, false);
 
 		// Parameters
 		JavaParameters inputParameters = new JavaParameters(methodFindCustomerById,
@@ -196,9 +198,11 @@ public class TestDataFactory
 		parameterParameters.setSignatureElementPath("parameters:source.NameParameters");
 		inputParameters.addParameter(parameterParameters);
 		addDocumentation(parameterParameters, addresseeName, "COMPARISON",
-				"This is the customer.", parameterParameters.getSignatureElementPath());
+				"This is the customer.", parameterParameters.getSignatureElementPath(),
+				false);
 		addDocumentation(parameterParameters, addresseeName, "SOURCE",
-				"This is the source.", parameterParameters.getSignatureElementPath());
+				"This is the source.", parameterParameters.getSignatureElementPath(),
+				false);
 
 		// Attributes of NameParameters
 		JavaParameter attrFirstName = new JavaParameter(parameterParameters,
@@ -213,7 +217,7 @@ public class TestDataFactory
 		parameterParameters.addParameter(attrFirstName);
 
 		addDocumentation(attrFirstName, addresseeName, "COMPARISON", StringUtils.EMPTY,
-				attrFirstName.getSignatureElementPath());
+				attrFirstName.getSignatureElementPath(), false);
 
 		JavaParameter attrLastName = new JavaParameter(parameterParameters,
 				Numerus.SINGULAR, false);
@@ -227,7 +231,7 @@ public class TestDataFactory
 		parameterParameters.addParameter(attrLastName);
 
 		addDocumentation(attrLastName, addresseeName, "COMPARISON", StringUtils.EMPTY,
-				attrLastName.getSignatureElementPath());
+				attrLastName.getSignatureElementPath(), false);
 
 		// Return value
 		JavaParameters outputParameters = new JavaParameters(methodFindCustomerById,
@@ -248,9 +252,11 @@ public class TestDataFactory
 		outputParameters.addParameter(returnCustomerList);
 
 		addDocumentation(returnCustomerList, addresseeName, "OBJECT",
-				"This is the object.", returnCustomerList.getSignatureElementPath());
+				"This is the object.", returnCustomerList.getSignatureElementPath(),
+				false);
 		addDocumentation(returnCustomerList, addresseeName, "SOURCE",
-				"This is the source.", returnCustomerList.getSignatureElementPath());
+				"This is the source.", returnCustomerList.getSignatureElementPath(),
+				false);
 
 		// Exception
 		List<JavaParameters> exceptions = new ArrayList<JavaParameters>();
@@ -267,22 +273,13 @@ public class TestDataFactory
 		ioException.setSignatureElementPath("java.io.IOException:java.io.IOException");
 		ioException.setIdentifier("IOException");
 		ioException.setQualifiedIdentifier("java.io.IOException");
-		
-		addDocumentation(ioException, addresseeName, null,
-				"In case of an error", ioException.getSignatureElementPath());
-		
-		addDocumentation(ioException, addresseeName, "ATTRIBUTE",
-				"This is also an attribute.", ioException.getSignatureElementPath());
-		// TagElement exception = customerServiceIntf.getAST().newTagElement();
-		// exception.setTagName(TagElement.TAG_THROWS);
-		// List fragments = exception.fragments();
-		// TextElement exceptionTextElem = customerServiceIntf.getAST().newTextElement();
-		// exceptionTextElem.setText(" IOException  In case of an error");
-		// fragments.add(exceptionTextElem);
 
-		// List<TagElement> additionalElements = new ArrayList<TagElement>();
-		// additionalElements.add(exception);
-		// methodFindCustomerById.setAdditionalTags(additionalElements);
+		addDocumentation(ioException, addresseeName, null, "In case of an error",
+				ioException.getSignatureElementPath(), false);
+
+		addDocumentation(ioException, addresseeName, "ATTRIBUTE",
+				"This is also an attribute.", ioException.getSignatureElementPath(),
+				false);
 
 		ioExceptions.addParameter(ioException);
 		exceptions.add(ioExceptions);
@@ -311,11 +308,11 @@ public class TestDataFactory
 				addresseeName,
 				"ACTION",
 				"Only customers who placed an order within the last year are considered.",
-				null);
+				null, false);
 		addDocumentation(methodFindCustomerById, addresseeName, "ORDERING",
-				"Alphabetically by lastname", null);
+				"Alphabetically by lastname", null, false);
 		addDocumentation(methodFindCustomerById, addresseeName, "SOURCE", "CRM System",
-				null);
+				null, false);
 
 		// Parameters
 		JavaParameters inputParameters = new JavaParameters(methodFindCustomerById,
@@ -360,7 +357,7 @@ public class TestDataFactory
 		customerParameters.addParameter(attrFirstName);
 
 		addDocumentation(attrFirstName, addresseeName, "COMPARISON", StringUtils.EMPTY,
-				attrFirstName.getSignatureElementPath());
+				attrFirstName.getSignatureElementPath(), false);
 
 		JavaParameter attrLastName = new JavaParameter(parameterParameters,
 				Numerus.SINGULAR, false);
@@ -374,7 +371,7 @@ public class TestDataFactory
 		customerParameters.addParameter(attrLastName);
 
 		addDocumentation(attrLastName, addresseeName, "COMPARISON", StringUtils.EMPTY,
-				attrLastName.getSignatureElementPath());
+				attrLastName.getSignatureElementPath(), false);
 
 		// Return value
 		JavaParameters outputParameters = new JavaParameters(methodFindCustomerById,
@@ -387,15 +384,15 @@ public class TestDataFactory
 				documentationChanged, outputParameters, "Customer");
 
 		addDocumentation(returnCustomer, addresseeName, "OBJECT", StringUtils.EMPTY,
-				returnCustomer.getSignatureElementPath());
+				returnCustomer.getSignatureElementPath(), false);
 
 		addDocumentation(returnCustomer.getComplexType().get(0), addresseeName,
 				"ATTRIBUTE", "Won't be null, but could be an empty String",
-				returnCustomer.getComplexType().get(0).getSignatureElementPath());
+				returnCustomer.getComplexType().get(0).getSignatureElementPath(), false);
 
 		addDocumentation(returnCustomer.getComplexType().get(1), addresseeName,
 				"ATTRIBUTE", "Won't be null, but could be an empty String",
-				returnCustomer.getComplexType().get(1).getSignatureElementPath());
+				returnCustomer.getComplexType().get(1).getSignatureElementPath(), false);
 
 		// Exception
 		List<JavaParameters> exceptions = new ArrayList<JavaParameters>();
@@ -414,9 +411,9 @@ public class TestDataFactory
 		specialException
 				.setSignatureElementPath("source.SpecialException:source.SpecialException");
 		specialException.setHasPublicAccessibleAttributes(true);
-		
+
 		addDocumentation(specialException, addresseeName, null, "In case of an error",
-				specialException.getSignatureElementPath());
+				specialException.getSignatureElementPath(), false);
 
 		ioExceptions.addParameter(specialException);
 		exceptions.add(ioExceptions);
@@ -424,7 +421,7 @@ public class TestDataFactory
 
 		return methodFindCustomerById;
 	}
-	
+
 	public static JavaMethod createDocumentedAnyTestMethod(final String addresseeName,
 			final TypeDeclaration customerServiceIntf, final boolean documentationChanged)
 	{
@@ -442,8 +439,8 @@ public class TestDataFactory
 		addDocumentation(methodAnyTestMethod, addresseeName, "ACTION",
 				"Test if a mixed Javadoc is correctly converted. And "
 						+ StringUtils.NEW_LINE
-						+ "if documentations are correct converted.", null);
-		
+						+ "if documentations are correct converted.", null, false);
+
 		// Method's additional tags
 		final TagElement tag = createTagElement(customerServiceIntf.getAST(),
 				TagElement.TAG_THROWS, IllegalArgumentException.class.getSimpleName(),
@@ -481,7 +478,7 @@ public class TestDataFactory
 		inputParameters.addParameter(param2);
 
 		addDocumentation(param2, addresseeName, "OBJECT", "a number.",
-				param2.getSignatureElementPath());
+				param2.getSignatureElementPath(), false);
 
 		final JavaParameter param3 = new JavaParameter(inputParameters, Numerus.SINGULAR,
 				false);
@@ -494,7 +491,7 @@ public class TestDataFactory
 		inputParameters.addParameter(param3);
 
 		addDocumentation(param3, addresseeName, null, "a long number.",
-				param3.getSignatureElementPath());
+				param3.getSignatureElementPath(), false);
 
 		final JavaParameter param4 = new JavaParameter(inputParameters, Numerus.SINGULAR,
 				false);
@@ -511,7 +508,7 @@ public class TestDataFactory
 				addresseeName,
 				"ATTRIBUTE",
 				"a float ({@link Float}) number. It is a floating point number; a number with a dot.",
-				param4.getSignatureElementPath());
+				param4.getSignatureElementPath(), false);
 
 		final JavaParameter param5 = new JavaParameter(inputParameters, Numerus.SINGULAR,
 				false);
@@ -524,7 +521,7 @@ public class TestDataFactory
 		inputParameters.addParameter(param5);
 
 		addDocumentation(param5, addresseeName, null, "a double number.",
-				param5.getSignatureElementPath());
+				param5.getSignatureElementPath(), false);
 
 		final JavaParameter param6 = new JavaParameter(inputParameters, Numerus.SINGULAR,
 				false);
@@ -537,7 +534,7 @@ public class TestDataFactory
 		inputParameters.addParameter(param6);
 
 		addDocumentation(param6, addresseeName, "ATTRIBUTE", "a very very long string.",
-				param6.getSignatureElementPath());
+				param6.getSignatureElementPath(), false);
 
 		// Return value
 		final JavaParameters outputParameters = new JavaParameters(methodAnyTestMethod,
@@ -558,7 +555,7 @@ public class TestDataFactory
 		outputParameters.addParameter(returnType);
 
 		addDocumentation(returnType, addresseeName, null, "a list.",
-				returnType.getSignatureElementPath());
+				returnType.getSignatureElementPath(), false);
 
 		return methodAnyTestMethod;
 	}
@@ -920,7 +917,7 @@ public class TestDataFactory
 		parameter.addParameter(newParam);
 
 		addDocumentation(newParam, addresseeName, thematicRoleName, docText,
-				parameter.getSignatureElementPath());
+				parameter.getSignatureElementPath(), false);
 	}
 
 	/**
@@ -935,11 +932,14 @@ public class TestDataFactory
 	 *            [ATTRIBUTE] Used in the new documentation
 	 * @param docText
 	 *            [ATTRIBUTE] Used in the new documentation
+	 * @param describesErrorCase
+	 *            [ATTRIBUTE] Used in the new documentation
 	 * 
 	 * @thematicgrid Putting Operations
 	 */
-	public static void addDocumentation(final SignatureElement element, final String addresseeName,
-			final String thematicRole, final String docText, final String signatureElementPath)
+	public static void addDocumentation(final SignatureElement element,
+			final String addresseeName, final String thematicRole, final String docText,
+			final String signatureElementPath, final boolean describesErrorCase)
 	{
 		List<Addressee> addressees = createReferenceAddresseeList(addresseeName);
 
@@ -952,6 +952,7 @@ public class TestDataFactory
 		documentation.setThematicRole(DescribedItemUtils.findThematicRole(thematicRole));
 		documentation.setSignatureElementIdentifier(signatureElementPath);
 		documentation.setDocumentation(docs);
+		documentation.setErrorCase(describesErrorCase);
 
 		element.addDocpart(documentation);
 	}
@@ -985,7 +986,7 @@ public class TestDataFactory
 		parameters.addParameter(newParam);
 
 		addDocumentation(newParam, addresseeName, thematicRoleName, docText,
-				newParam.getSignatureElementPath());
+				newParam.getSignatureElementPath(), false);
 	}
 
 	public static JavaMethod createFooMethod(MethodDeclaration getIdDecl,
@@ -1025,7 +1026,7 @@ public class TestDataFactory
 		methodCheck.setIdentifier("checkSomething");
 		methodCheck.setDocumentationChanged(documentationChanged);
 
-		addDocumentation(methodCheck, "Developer", "RULE", "Check the beat.", null);
+		addDocumentation(methodCheck, "Developer", "RULE", "Check the beat.", null, false);
 
 		return methodCheck;
 	}
@@ -1075,7 +1076,8 @@ public class TestDataFactory
 			boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, cu, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, cu,
+				Numerus.SINGULAR);
 		result.setIdentifier("EmptyService.java");
 		result.setQualifiedIdentifier(null);
 
@@ -1099,7 +1101,8 @@ public class TestDataFactory
 			boolean documentationChanged, String addressee)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, cu, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, cu,
+				Numerus.SINGULAR);
 		result.setIdentifier("ExampleService.java");
 		result.setQualifiedIdentifier(null);
 
@@ -1154,8 +1157,8 @@ public class TestDataFactory
 				documentationChanged, customerServiceIntf));
 		methods.add(createDocumentedFindCustomerByNameWithCustomerNames(addresseeName,
 				customerServiceIntf, documentationChanged));
-		methods.add(createDocumentedAnyTestMethod(addresseeName,
-				customerServiceIntf, documentationChanged));
+		methods.add(createDocumentedAnyTestMethod(addresseeName, customerServiceIntf,
+				documentationChanged));
 
 		customerService.setOperations(methods);
 
@@ -1197,7 +1200,8 @@ public class TestDataFactory
 			CompilationUnit cuInvariantService, boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null,
+				Numerus.SINGULAR);
 		result.setIdentifier("InvariantService.java");
 		result.setQualifiedIdentifier(null);
 		result.setDocumentationChanged(documentationChanged);
@@ -1249,7 +1253,8 @@ public class TestDataFactory
 			boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null,
+				Numerus.SINGULAR);
 		result.setIdentifier("EmptyService.java");
 		result.setQualifiedIdentifier(null);
 
@@ -1305,7 +1310,8 @@ public class TestDataFactory
 			boolean documentationChanged)
 	{
 		JavaInterfaceArtifact result = new JavaInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null, Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null,
+				Numerus.SINGULAR);
 		result.setIdentifier("CustomerService.java");
 		result.setQualifiedIdentifier(null);
 

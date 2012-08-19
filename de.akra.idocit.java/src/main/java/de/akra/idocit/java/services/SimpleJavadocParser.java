@@ -43,6 +43,7 @@ import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
 import de.akra.idocit.core.constants.ThematicRoleConstants;
+import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
@@ -743,7 +744,17 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 			return null;
 		}
 
-		final String docText = formatText(unformattedDocText);
+		String docText = formatText(unformattedDocText);
+
+		if (docText.toUpperCase().startsWith(
+				"(" + Constants.ERROR_CASE_DOCUMENTATION_TEXT + ")"))
+		{
+			documentation.setErrorCase(true);
+			docText = docText.substring(
+					2 + Constants.ERROR_CASE_DOCUMENTATION_TEXT.length(),
+					docText.length());
+		}
+
 		documentations.put(developer, docText);
 		documentation.setDocumentation(documentations);
 

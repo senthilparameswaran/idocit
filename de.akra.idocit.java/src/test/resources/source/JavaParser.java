@@ -94,7 +94,7 @@ public class JavaParser implements Parser
 	 *                <a href="http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html">Javadoc</a>
 	 * @instrument To parse the Java and Javadoc code, the parser provided by
 	 *             the <a href="http://www.eclipse.org/jdt/">Eclipse Java Development Tools</a> is used.
-	 * @instrument iDocIt! supports two different representations of thematic
+	 * @instrument (ERROR DOC) iDocIt! supports two different representations of thematic
 	 *             grids in Javadoc: 
 	 *             
 	 *             The simplified version is very compact, but
@@ -104,7 +104,7 @@ public class JavaParser implements Parser
 	 *             supports all addressees, but uses a lot of HTML-code.
 	 * 
 	 * @param iFile
-	 *            [SOURCE]
+	 *            [SOURCE] (ERROR DOC)
 	 * 
 	 * @return [OBJECT]
 	 * 
