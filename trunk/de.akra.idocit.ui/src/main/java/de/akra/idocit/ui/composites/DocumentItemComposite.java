@@ -57,6 +57,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.DescribedItemNameComparator;
+import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
@@ -94,7 +95,7 @@ public class DocumentItemComposite
 	private TabItem removeAddresseeTab;
 
 	private Menu rolePopUpMenu;
-	
+
 	private Button checkBoxErrorCase;
 
 	private MenuItem[] roleFirstLevelItems;
@@ -117,7 +118,7 @@ public class DocumentItemComposite
 	 * {@link SelectionListener} for <code>btnThematicRole</code>.
 	 */
 	private SelectionListener btnThematicRoleSelectionListener;
-	
+
 	/**
 	 * {@link SelectionListener} for <code>checkBoxErrorCase</code>.
 	 */
@@ -193,7 +194,7 @@ public class DocumentItemComposite
 		Label labelThematicRole = new Label(themRoleContainer, SWT.NONE);
 		labelThematicRole.setText("Thematic Role:");
 		btnThematicRole = new Button(themRoleContainer, SWT.PUSH);
-		
+
 		checkBoxErrorCase = new Button(themRoleContainer, SWT.CHECK);
 		checkBoxErrorCase.setText("Documents an Error Case");
 
@@ -307,6 +308,11 @@ public class DocumentItemComposite
 
 				Documentation documentation = selection.getDocumentation();
 				documentation.setThematicRole(role);
+
+				if (!isRoleFailable(role))
+				{
+					documentation.setErrorCase(false);
+				}
 
 				selection.setDocumentation(documentation);
 
@@ -469,9 +475,9 @@ public class DocumentItemComposite
 			public void widgetDefaultSelected(SelectionEvent e)
 			{}
 		};
-		
+
 		checkBoxErrorCaseSelectionListener = new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
@@ -479,16 +485,15 @@ public class DocumentItemComposite
 				Documentation doc = selection.getDocumentation();
 				doc.setErrorCase(checkBoxErrorCase.getSelection());
 				selection.setDocumentation(doc);
-				
+
 				setSelection(selection);
-				
+
 				fireChangeEvent(e.widget);
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e)
-			{
-			}
+			{}
 		};
 	}
 
@@ -558,6 +563,26 @@ public class DocumentItemComposite
 		return changed;
 	}
 
+	private boolean isRoleFailable(ThematicRole role)
+	{
+		if (role != null)
+		{
+			for (String mandatoryRole : ThematicRoleConstants.MANDARTORY_ROLES)
+			{
+				if (mandatoryRole.equals(role.getName()))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	@Override
 	protected void doSetSelection(DocumentItemCompositeSelection oldInSelection,
 			DocumentItemCompositeSelection newInSelection, Object sourceControl)
@@ -602,8 +627,10 @@ public class DocumentItemComposite
 			{
 				btnThematicRole.setText("No role selected");
 			}
-			
-			checkBoxErrorCase.setSelection(doc.isErrorCase());
+
+			boolean isRoleFailable = isRoleFailable(doc.getThematicRole());
+			checkBoxErrorCase.setEnabled(isRoleFailable);
+			checkBoxErrorCase.setSelection(isRoleFailable && doc.isErrorCase());
 
 			/*
 			 * set the documentation text for addressees
@@ -843,7 +870,7 @@ public class DocumentItemComposite
 				roleFirstLevelItems);
 		addSelectionListenerToMenuItems(roleMenuItemSelectionListener,
 				roleSecondLevelItems);
-		
+
 		checkBoxErrorCase.addSelectionListener(checkBoxErrorCaseSelectionListener);
 	}
 
@@ -863,7 +890,7 @@ public class DocumentItemComposite
 				roleFirstLevelItems);
 		removeSelectionListenerToMenuItems(roleMenuItemSelectionListener,
 				roleSecondLevelItems);
-		
+
 		checkBoxErrorCase.removeSelectionListener(checkBoxErrorCaseSelectionListener);
 	}
 
