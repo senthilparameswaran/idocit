@@ -34,6 +34,7 @@ import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.java.AllIDocItJavaTests;
 import de.akra.idocit.java.JavadocTestUtils;
+import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
@@ -62,20 +63,21 @@ public class SimpleJavadocGeneratorTest
 			{
 				final String referenceJavadoc = String
 						.format("/** %1$s"
-								+ " * @orderingAlphabetically by lastname%1$s"
-								+ " * @sourceCRM System%1$s"
+								+ " * @ordering Alphabetically by lastname%1$s"
+								+ " * @source CRM System%1$s"
 								+ " * %1$s"
-								+ " * @paramparameters [COMPARISON] This is the customer.%1$s"
-								+ " * @paraminfoparameters [SOURCE] This is the source.%1$s"
-								+ " * @subparamfirstName [COMPARISON]%1$s"
-								+ " * @subparamlastName [COMPARISON]%1$s"
+								+ " * @param parameters [COMPARISON] This is the customer.%1$s"
+								+ " * @paraminfo parameters [SOURCE] This is the source.%1$s"
+								+ " * @subparam firstName [COMPARISON]%1$s"
+								+ " * @subparam lastName [COMPARISON]%1$s"
 								+ " * %1$s"
-								+ " * @return[OBJECT] This is the object.%1$s"
-								+ " * @returninfo[SOURCE] This is the source.%1$s"
+								+ " * @return [OBJECT] This is the object.%1$s"
+								+ " * @returninfo [SOURCE] This is the source.%1$s"
 								+ " * %1$s"
-								+ " * @throwsIOException In case of an error%1$s"
-								+ " * @throwsinfoIOException [ATTRIBUTE] This is also an attribute.%1$s"
-								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
+								+ " * @throws IOException  In case of an error%1$s"
+								+ " * @throwsinfo IOException [ATTRIBUTE] This is also an attribute.%1$s"
+								+ " * @thematicgrid Searching Operations%1$s" 
+								+ " */%1$s",
 								JAVADOC_NEW_LINE);
 
 				final ParserOutput output = JavadocTestUtils
@@ -106,12 +108,14 @@ public class SimpleJavadocGeneratorTest
 			{
 				final String referenceJavadoc = String
 						.format("/** %1$s"
-								+ " * Rule: Maximum length of an address are 40 chars.%1$s"
+								+ " *  Rule: Maximum length of an address are 40 chars.%1$s"
 								+ " * %1$s"
-								+ " * @parammailAddress [OBJECT]%1$s"
+								+ " * @ordering (" + Constants.ERROR_CASE_DOCUMENTATION_TEXT + ")%1$s"
 								+ " * %1$s"
-								+ " * @return[REPORT] <code>false</code> if the rule is violated%1$s"
-								+ " * @thematicgridChecking Operations%1$s" + " */%1$s",
+								+ " * @param mailAddress [OBJECT]%1$s"
+								+ " * %1$s"
+								+ " * @return [REPORT] <code>false</code> if the rule is violated%1$s"
+								+ " * @thematicgrid Checking Operations%1$s" + " */%1$s",
 								JAVADOC_NEW_LINE);
 
 				final ParserOutput output = JavadocTestUtils
@@ -190,20 +194,22 @@ public class SimpleJavadocGeneratorTest
 			{
 				final String referenceJavadoc = String
 						.format("/** %1$s"
-								+ " * Only customers who placed an order within the last year are considered.%1$s"
+								+ " *  Only customers who placed an order within the last year are considered.%1$s"
 								+ " * %1$s"
-								+ " * @orderingAlphabetically by lastname%1$s"
-								+ " * @sourceCRM System%1$s"
+								+ " * @ordering Alphabetically by lastname%1$s"
+								+ " * @source CRM System%1$s"
 								+ " * %1$s"
-								+ " * @paramparameters%1$s"
-								+ " * @subparamcustomer.firstName [COMPARISON]%1$s"
-								+ " * @subparamcustomer.lastName [COMPARISON]%1$s"
+								+ " * @param parameters%1$s"
+								+ " * @subparam customer.firstName [COMPARISON]%1$s"
+								+ " * @subparam customer.lastName [COMPARISON]%1$s"
 								+ " * %1$s"
-								+ " * @return[OBJECT]%1$s"
-								+ " * @subreturnfirstName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
-								+ " * @subreturnlastName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
-								+ " * %1$s" + " * @throwsSpecialException In case of an error%1$s"
-								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
+								+ " * @return [OBJECT]%1$s"
+								+ " * @subreturn firstName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
+								+ " * @subreturn lastName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
+								+ " * %1$s" 
+								+ " * @throws SpecialException  In case of an error%1$s"
+								+ " * @thematicgrid Searching Operations%1$s" 
+								+ " */%1$s",
 								JAVADOC_NEW_LINE);
 				final ParserOutput output = JavadocTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
@@ -266,9 +272,15 @@ public class SimpleJavadocGeneratorTest
 
 	private String createEmptyReferenceJDForCustomerService()
 	{
-		return String.format("/** %1$s" + " * @paramparameters%1$s"
-				+ " * @subparamfirstName%1$s" + " * @subparamlastName%1$s" + " * %1$s"
-				+ " * @return%1$s" + " * %1$s" + " * @throwsIOException%1$s" + " */%1$s",
+		return String.format("/** %1$s" 
+				+ " * @param parameters%1$s"
+				+ " * @subparam firstName%1$s" 
+				+ " * @subparam lastName%1$s" 
+				+ " * %1$s"
+				+ " * @return %1$s" 
+				+ " * %1$s" 
+				+ " * @throws IOException%1$s" 
+				+ " */%1$s",
 				JAVADOC_NEW_LINE);
 	}
 

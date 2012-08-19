@@ -21,16 +21,18 @@ package de.akra.idocit.java.constants;
  * @author Dirk Meier-Eickhoff
  * 
  */
-public interface Constants
+public final class Constants
 {
-	final String CATEGORY_ARTIFACT = "Artifact";
-	final String CATEGORY_INTERFACE = "Interface";
-	final String CATEGORY_CLASS = "Class";
-	final String CATEGORY_ENUM = "Enum";
-	final String CATEGORY_METHOD = "Method";
-	final String CATEGORY_CONSTRUCTOR = "Constructor";
-	final String CATEGORY_PARAMETERS = "Parameters";
-	final String CATEGORY_RETURN_TYPE = "ReturnType";
-	final String CATEGORY_THROWS = "Throws";
-	final String RETURN_TYPE_VOID = "void";
+	public static final String CATEGORY_ARTIFACT = "Artifact";
+	public static final String CATEGORY_INTERFACE = "Interface";
+	public static final String CATEGORY_CLASS = "Class";
+	public static final String CATEGORY_ENUM = "Enum";
+	public static final String CATEGORY_METHOD = "Method";
+	public static final String CATEGORY_CONSTRUCTOR = "Constructor";
+	public static final String CATEGORY_PARAMETERS = "Parameters";
+	public static final String CATEGORY_RETURN_TYPE = "ReturnType";
+	public static final String CATEGORY_THROWS = "Throws";
+	public static final String RETURN_TYPE_VOID = "void";
+
+	public static final String ERROR_CASE_DOCUMENTATION_TEXT = "ERROR DOC";
 }

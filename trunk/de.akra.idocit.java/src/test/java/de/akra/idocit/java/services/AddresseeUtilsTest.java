@@ -67,7 +67,8 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
 						"Developer", true, cu);
@@ -79,7 +80,8 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
 						"Tester", true, cu);
@@ -95,7 +97,8 @@ public class AddresseeUtilsTest
 				// The first test is made on the first parameter level.
 				{
 					ParserOutput output = JavadocTestUtils
-							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
 					JavaInterfaceArtifact artifact = TestDataFactory
 							.createCustomerService("Developer", true, cu);
@@ -113,7 +116,8 @@ public class AddresseeUtilsTest
 				// Now, let's check if nested attributes of parameters are also tested.
 				{
 					ParserOutput output = JavadocTestUtils
-							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
 					JavaInterfaceArtifact artifact = TestDataFactory
 							.createCustomerService("Developer", true, cu);
@@ -141,7 +145,8 @@ public class AddresseeUtilsTest
 				// The first test is made on the return value level.
 				{
 					ParserOutput output = JavadocTestUtils
-							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
 					JavaInterfaceArtifact artifact = TestDataFactory
 							.createCustomerService("Developer", true, cu);
@@ -159,7 +164,8 @@ public class AddresseeUtilsTest
 				// Now, let's check if nested attributes of return values are also tested.
 				{
 					ParserOutput output = JavadocTestUtils
-							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
 					JavaInterfaceArtifact artifact = TestDataFactory
 							.createCustomerService("Developer", true, cu);
@@ -187,7 +193,8 @@ public class AddresseeUtilsTest
 				// The first test is made on the return value level.
 				{
 					ParserOutput output = JavadocTestUtils
-							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
 					JavaInterfaceArtifact artifact = TestDataFactory
 							.createCustomerService("Developer", true, cu);
@@ -206,7 +213,8 @@ public class AddresseeUtilsTest
 				// Now, let's check if nested attributes of exceptions are also tested.
 				{
 					ParserOutput output = JavadocTestUtils
-							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
 					JavaInterfaceArtifact artifact = TestDataFactory
 							.createCustomerService("Developer", true, cu);
@@ -233,7 +241,8 @@ public class AddresseeUtilsTest
 				// The first test is made on the operation level.
 				{
 					ParserOutput output = JavadocTestUtils
-							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
 					JavaInterfaceArtifact artifact = TestDataFactory
 							.createCustomerService("Developer", true, cu);
@@ -241,7 +250,7 @@ public class AddresseeUtilsTest
 							.getOperations().get(0);
 
 					TestDataFactory.addDocumentation(method, "Tester", "NONE",
-							"This is documenation.", method.getIdentifier());
+							"This is documenation.", method.getIdentifier(), false);
 
 					assertFalse(AddresseeUtils.containsOnlyOneAddressee(artifact,
 							"Developer"));
@@ -254,14 +263,15 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
 						"Developer", true, cu);
 				JavaInterface iface = (JavaInterface) artifact.getInterfaces().get(0);
 
 				TestDataFactory.addDocumentation(iface, "Tester", "NONE",
-						"This is documenation.", iface.getIdentifier());
+						"This is documenation.", iface.getIdentifier(), false);
 
 				assertFalse(AddresseeUtils
 						.containsOnlyOneAddressee(artifact, "Developer"));
@@ -273,13 +283,14 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
 						"Developer", true, cu);
 
 				TestDataFactory.addDocumentation(artifact, "Tester", "NONE",
-						"This is documenation.", artifact.getIdentifier());
+						"This is documenation.", artifact.getIdentifier(), false);
 
 				assertFalse(AddresseeUtils
 						.containsOnlyOneAddressee(artifact, "Developer"));
@@ -291,7 +302,8 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
 						"Developer", true, cu);
@@ -302,7 +314,7 @@ public class AddresseeUtilsTest
 				artifact.addInterface(emptyInterface);
 
 				TestDataFactory.addDocumentation(emptyInterface, "Tester", "NONE",
-						"This is documenation.", emptyInterface.getIdentifier());
+						"This is documenation.", emptyInterface.getIdentifier(), false);
 
 				assertFalse(AddresseeUtils
 						.containsOnlyOneAddressee(artifact, "Developer"));
@@ -314,7 +326,8 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory
 						.createNullCustomerService(cu, true);
@@ -328,7 +341,8 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory
 						.createEmptyCustomerService(cu, true);
@@ -343,7 +357,8 @@ public class AddresseeUtilsTest
 			// #########################################################################
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
 						"Developer", true, cu);
@@ -352,7 +367,7 @@ public class AddresseeUtilsTest
 						"Interface", Numerus.SINGULAR);
 				TestDataFactory.addDocumentation(innerCustomerService, "Tester", "AGENT",
 						"This inner service does a lot of important tasks.",
-						innerCustomerService.getIdentifier());
+						innerCustomerService.getIdentifier(), false);
 				List<JavaInterface> innerInterfaces = new ArrayList<JavaInterface>();
 				innerInterfaces.add(innerCustomerService);
 
@@ -398,7 +413,8 @@ public class AddresseeUtilsTest
 			try
 			{
 				ParserOutput output = JavadocTestUtils
-						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR + "CustomerService.java");
+						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
 				JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
 						"Developer", true, cu);
