@@ -24,8 +24,12 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.wsdl.WSDLException;
+
+import org.junit.Assert;
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
@@ -37,9 +41,9 @@ import de.akra.idocit.core.utils.TestUtils;
  * @author Dirk Meier-Eickhoff
  * 
  */
-public class WSDLParserTest {
-	private static Logger logger = Logger.getLogger(WSDLParserTest.class
-			.getName());
+public class WSDLParserTest
+{
+	private static Logger logger = Logger.getLogger(WSDLParserTest.class.getName());
 
 	/**
 	 * Tests {@link WSDLParser#parse(org.eclipse.core.resources.IFile)}
@@ -47,20 +51,20 @@ public class WSDLParserTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testParseWSDL() throws Exception {
+	public void testParseWSDL() throws Exception
+	{
 		/*
 		 * Positive tests
 		 * ******************************************************************************
-		 * Test case #1: Parse the PortType of the WSDL
-		 * file test/source/CustomerService.xml". One PortType is expected.
+		 * Test case #1: Parse the PortType of the WSDL file
+		 * test/source/CustomerService.xml". One PortType is expected.
 		 * ******************************************************************************
 		 */
 		{
 			InterfaceArtifact iStruct = null;
 			WSDLParserMock parser = new WSDLParserMock();
 
-			iStruct = parser
-					.parse(new File("test/source/CustomerService.wsdl"));
+			iStruct = parser.parse(new File("test/source/CustomerService.wsdl"));
 			// iStruct = parser.parse(new File("test/source/wsdl_46001"));
 
 			assertEquals(1, iStruct.getInterfaces().size());
@@ -73,17 +77,15 @@ public class WSDLParserTest {
 			/*
 			 * write the result to a file
 			 */
-			PrintWriter writer = new PrintWriter(
-					new BufferedWriter(
-							new FileWriter(
-									"test/out/testParseWSDL_with_CustomerService.wsdl.out")));
+			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
+					"test/out/testParseWSDL_with_CustomerService.wsdl.out")));
 			writer.write(parseResult.toString());
 			writer.close();
 			/*
 			 * ***************************************************************************
-			 * Test case #1.1: The generated structure of the prior parsed
-			 * PortType of the WSDL file test/source/CustomerService.xml" is
-			 * compared against an expected structure.
+			 * Test case #1.1: The generated structure of the prior parsed PortType of the
+			 * WSDL file test/source/CustomerService.xml" is compared against an expected
+			 * structure.
 			 * ***************************************************************************
 			 */
 
@@ -93,12 +95,12 @@ public class WSDLParserTest {
 
 			assertEquals(expectedFileContent.toString(), parseResult.toString());
 		}
-		
+
 		/*
 		 * ***************************************************************************
-		 * Test case #1.2: The two operations in file wsdl_46001.wsdl are
-		 * exspected to have thematic grids. The names of the grids are
-		 * ascending integer numbers starting with 1.
+		 * Test case #1.2: The two operations in file wsdl_46001.wsdl are exspected to
+		 * have thematic grids. The names of the grids are ascending integer numbers
+		 * starting with 1.
 		 * ***************************************************************************
 		 */
 		{
@@ -106,14 +108,17 @@ public class WSDLParserTest {
 			InterfaceArtifact iStruct = parser.parse(new File(
 					"test/source/wsdl_46001.wsdl"));
 			int opNumber = 0;
-			
+
 			assertEquals(1, iStruct.getInterfaces().size());
-			
-			for(Interface interfac : iStruct.getInterfaces()) {
+
+			for (Interface interfac : iStruct.getInterfaces())
+			{
 				assertEquals(2, interfac.getOperations().size());
-				
-				for(Operation operation : interfac.getOperations()){
-					assertEquals(String.valueOf(opNumber), operation.getThematicGridName());
+
+				for (Operation operation : interfac.getOperations())
+				{
+					assertEquals(String.valueOf(opNumber),
+							operation.getThematicGridName());
 					opNumber++;
 				}
 			}
@@ -121,30 +126,28 @@ public class WSDLParserTest {
 
 		/*
 		 * Negative tests
-		 * *******************************************************
-		 * ******************** Test case #1: three WSDL-operations should be
-		 * classified correctly
-		 * *************************************************
-		 * *************************** None
+		 * ***************************************************************************
+		 * Test case #1: three WSDL-operations should be classified correctly
+		 * ****************************************************************************
+		 * None
 		 */
 	}
 
 	/**
-	 * Tests {@link WSDLParser#parse(org.eclipse.core.resources.IFile)} with
-	 * file "wsdl_100001.wsdl".
+	 * Tests {@link WSDLParser#parse(org.eclipse.core.resources.IFile)} with file
+	 * "wsdl_100001.wsdl".
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testParseWsdl_100001WSDL() throws Exception {
+	public void testParseWsdl_100001WSDL() throws Exception
+	{
 		/*
 		 * Positive tests
-		 * *******************************************************
-		 * *********************** Test case #1: Parse the PortType of the WSDL
-		 * file test/source/CustomerService.xml". One PortType is expected.
-		 * *****
-		 * *****************************************************************
-		 * ********
+		 * ******************************************************************************
+		 * Test case #1: Parse the PortType of the WSDL file
+		 * test/source/CustomerService.xml". One PortType is expected.
+		 * ******************************************************************************
 		 */
 		{
 			InterfaceArtifact iStruct = null;
@@ -163,38 +166,35 @@ public class WSDLParserTest {
 			/*
 			 * write the result to a file
 			 */
-			PrintWriter writer = new PrintWriter(new BufferedWriter(
-					new FileWriter("test/out/wsdl_100001.wsdl.out")));
+			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
+					"test/out/wsdl_100001.wsdl.out")));
 			writer.write(parseResult.toString());
 			writer.close();
 		}
 
 		/*
 		 * Negative tests
-		 * *******************************************************
-		 * ******************** Test case #1: three WSDL-operations should be
-		 * classified correctly
-		 * *************************************************
-		 * *************************** None
+		 * ***************************************************************************
+		 * Test case #1: three WSDL-operations should be classified correctly
+		 * ****************************************************************************
+		 * None
 		 */
 	}
 
 	/**
-	 * Tests
-	 * {@link WSDLParser#write(InterfaceArtifact, org.eclipse.core.resources.IFile)}
+	 * Tests {@link WSDLParser#write(InterfaceArtifact, org.eclipse.core.resources.IFile)}
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testWriteWSDL() throws Exception {
+	public void testWriteWSDL() throws Exception
+	{
 		/*
 		 * Positive tests
-		 * *******************************************************
-		 * *********************** Test case #1.1: Parse the WSDL file
-		 * test/source/CustomerService.xml, write it back to
-		 * test/out/CustomerService.xml and compare the files.
-		 * ******************
-		 * ************************************************************
+		 * ******************************************************************************
+		 * Test case #1.1: Parse the WSDL file test/source/CustomerService.xml, write it
+		 * back to test/out/CustomerService.xml and compare the files.
+		 * ******************************************************************************
 		 */
 		{
 			final String srcFile = "test/source/CustomerService.wsdl";
@@ -215,10 +215,9 @@ public class WSDLParserTest {
 
 			/*
 			 * **************************************************************************
-			 * Test case #1.2: Parse the written test/out/CustomerService.xml
-			 * and compare the size() (element cound).
-			 * **************************
-			 * ************************************************
+			 * Test case #1.2: Parse the written test/out/CustomerService.xml and compare
+			 * the size() (element cound).
+			 * **************************************************************************
 			 */
 
 			InterfaceArtifact destArtifact = null;
@@ -234,10 +233,36 @@ public class WSDLParserTest {
 
 		/*
 		 * Negative tests
-		 * *******************************************************
-		 * ******************** Test case #1:
-		 * ***********************************
-		 * ***************************************** None
 		 */
+
+		/*
+		 * ***************************************************************************
+		 * Test case #1: None
+		 * ***************************************************************************
+		 */
+	}
+
+	/**
+	 * Parses the WSDL-file test/source/CustomerServiceErrorDocs.wsdl and tests if the
+	 * documentation of the ACTION of the operation "find" contains error documentation.
+	 * This is done by checking the flag {@link Documentation#isErrorCase()}.
+	 * 
+	 * @throws WSDLException
+	 *             If the parsed WSDL-file contains a syntactical error
+	 */
+	@Test
+	public void testParseDocumentationWithErrorFlag() throws WSDLException
+	{
+		WSDLParserMock parser = new WSDLParserMock();
+		InterfaceArtifact customerServiceWsdl = parser.parse(new File(
+				"test/source/CustomerServiceErrorDocs.wsdl"));
+
+		Interface customerServiceIntf = customerServiceWsdl.getInterfaces().get(0);
+		Operation findOperation = customerServiceIntf.getOperations().get(0);
+
+		Documentation actionDocs = findOperation.getDocumentations().get(0);
+
+		Assert.assertEquals("ACTION", actionDocs.getThematicRole().getName());
+		Assert.assertTrue(actionDocs.isErrorCase());
 	}
 }

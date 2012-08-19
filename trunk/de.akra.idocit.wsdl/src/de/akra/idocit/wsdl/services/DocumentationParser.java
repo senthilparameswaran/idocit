@@ -69,6 +69,7 @@ public class DocumentationParser {
 	private static final String ADDRESSEE_GROUP_ATTRIBUTE_NAME = "group";
 	private static final String ADDRESSEE_ELEMENT_NAME = "addressee";
 	private static final String THEMATIC_ROLE_ATTRIBUTE_NAME = "role";
+	private static final String ERROR_DOCUMENTATION_ATTRIBUTE_NAME = "errordoc";
 
 	/**
 	 * Logger.
@@ -262,6 +263,14 @@ public class DocumentationParser {
 					DocumentationParser.SIGNATURE_ELEMENT_ATTRIBUTE_NAME
 							+ "=\"" + attr.getNodeValue() + "\"");
 			doc.setSignatureElementIdentifier(attr.getNodeValue());
+		}
+		
+		if ((attr = attributes
+				.getNamedItem(DocumentationParser.ERROR_DOCUMENTATION_ATTRIBUTE_NAME)) != null) {
+			logger.log(Level.FINE,
+					DocumentationParser.ERROR_DOCUMENTATION_ATTRIBUTE_NAME
+							+ "=\"" + attr.getNodeValue() + "\"");
+			doc.setErrorCase(Boolean.parseBoolean(attr.getNodeValue()));
 		}
 
 		return doc;
