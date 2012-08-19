@@ -42,6 +42,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
+import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.services.HTMLTableParser;
 import de.akra.idocit.java.services.ReflectionHelper;
@@ -423,5 +424,10 @@ public class JavadocUtils
 		}
 
 		return javadocText;
+	}
+
+	public static String getComplexErrorFlagPostfix()
+	{
+		return "-(" + Constants.ERROR_CASE_DOCUMENTATION_TEXT + ")";
 	}
 }
