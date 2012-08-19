@@ -54,5 +54,6 @@ public class StringUtilsTest
 		Assert.assertEquals(" hello world ", StringUtils.mergeSpaces("   hello   world   "));
 		Assert.assertEquals("hello world", StringUtils.mergeSpaces("hello world"));
 		Assert.assertEquals("helloworld", StringUtils.mergeSpaces("helloworld"));
+		Assert.assertEquals("hello\nworld", StringUtils.mergeSpaces("hello\nworld"));
 	}
 }
