@@ -52,7 +52,6 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
-import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.RolesRecommendations;
