@@ -29,6 +29,7 @@ import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import source.CustomerService;
+import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Numerus;
@@ -38,7 +39,6 @@ import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
-import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 import de.akra.idocit.java.JavadocTestUtils;

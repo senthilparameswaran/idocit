@@ -38,6 +38,7 @@ import org.eclipse.jdt.core.dom.TextElement;
 import org.xml.sax.SAXException;
 
 import de.akra.idocit.common.constants.ThematicGridConstants;
+import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
@@ -46,7 +47,6 @@ import de.akra.idocit.common.utils.Preconditions;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
-import de.akra.idocit.core.constants.ThematicRoleConstants;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.constants.CustomTaglets;
