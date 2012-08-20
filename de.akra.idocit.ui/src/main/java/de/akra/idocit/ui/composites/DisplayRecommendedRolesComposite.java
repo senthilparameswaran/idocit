@@ -47,6 +47,7 @@ import org.pocui.swt.composites.AbsComposite;
 import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.ThematicRoleUtils;
 
 /**
  * Composite with the {@link List} of recommended {@link ThematicRole}s. The list is only
@@ -247,7 +248,8 @@ public class DisplayRecommendedRolesComposite
 	private void setMissingErrorDocumentationWarning(TreeItem thematicRoleItem,
 			ThematicRole role, Set<ThematicRole> rolesWithErrorDocumentation)
 	{
-		if (!rolesWithErrorDocumentation.contains(role))
+		if (ThematicRoleUtils.isRoleFailable(role)
+				&& !rolesWithErrorDocumentation.contains(role))
 		{
 			thematicRoleItem.setImage(getResourceConfiguration()
 					.getRoleWithoutErrorDocsWarningIcon());
