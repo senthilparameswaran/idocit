@@ -17,6 +17,7 @@ package de.akra.idocit.common.utils;
 
 import java.util.Collection;
 
+import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.ThematicRole;
 
 public final class ThematicRoleUtils
@@ -40,5 +41,37 @@ public final class ThematicRoleUtils
 		}
 
 		return null;
+	}
+
+	/**
+	 * Checks if it is recommended to document an error case for the given thematic role.
+	 * 
+	 * @rule Documenting an error case is recommended for every thematic role except those
+	 *       defined in {@link ThematicRoleConstants#MANDARTORY_ROLES}.
+	 * 
+	 * @param role
+	 *            Ê[OBJECT]
+	 * @return [REPORT] True: error case documenation is recommended
+	 * 
+	 * @thematicgrid Checking Operations
+	 */
+	public static boolean isRoleFailable(ThematicRole role)
+	{
+		if (role != null)
+		{
+			for (String mandatoryRole : ThematicRoleConstants.MANDARTORY_ROLES)
+			{
+				if (mandatoryRole.equals(role.getName()))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
