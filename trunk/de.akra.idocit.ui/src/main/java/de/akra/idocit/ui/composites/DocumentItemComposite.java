@@ -52,12 +52,13 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.RolesRecommendations;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.DescribedItemNameComparator;
-import de.akra.idocit.core.constants.ThematicRoleConstants;
+import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
@@ -309,7 +310,7 @@ public class DocumentItemComposite
 				Documentation documentation = selection.getDocumentation();
 				documentation.setThematicRole(role);
 
-				if (!isRoleFailable(role))
+				if (!ThematicRoleUtils.isRoleFailable(role))
 				{
 					documentation.setErrorCase(false);
 				}
@@ -563,26 +564,6 @@ public class DocumentItemComposite
 		return changed;
 	}
 
-	private boolean isRoleFailable(ThematicRole role)
-	{
-		if (role != null)
-		{
-			for (String mandatoryRole : ThematicRoleConstants.MANDARTORY_ROLES)
-			{
-				if (mandatoryRole.equals(role.getName()))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	@Override
 	protected void doSetSelection(DocumentItemCompositeSelection oldInSelection,
 			DocumentItemCompositeSelection newInSelection, Object sourceControl)
@@ -628,7 +609,8 @@ public class DocumentItemComposite
 				btnThematicRole.setText("No role selected");
 			}
 
-			boolean isRoleFailable = isRoleFailable(doc.getThematicRole());
+			boolean isRoleFailable = ThematicRoleUtils.isRoleFailable(doc
+					.getThematicRole());
 			checkBoxErrorCase.setEnabled(isRoleFailable);
 			checkBoxErrorCase.setSelection(isRoleFailable && doc.isErrorCase());
 
