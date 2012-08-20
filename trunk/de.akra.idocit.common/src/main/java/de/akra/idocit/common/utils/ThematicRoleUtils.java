@@ -50,7 +50,7 @@ public final class ThematicRoleUtils
 	 *       defined in {@link ThematicRoleConstants#MANDARTORY_ROLES}.
 	 * 
 	 * @param role
-	 *            Ê[OBJECT]
+	 *            [OBJECT]
 	 * @return [REPORT] True: error case documenation is recommended
 	 * 
 	 * @thematicgrid Checking Operations
