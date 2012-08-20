@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
+import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
@@ -44,7 +45,6 @@ import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
-import de.akra.idocit.core.constants.ThematicRoleConstants;
 
 /**
  * Some useful methods for tests.
