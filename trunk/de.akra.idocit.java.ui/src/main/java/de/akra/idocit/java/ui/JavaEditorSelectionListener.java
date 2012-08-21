@@ -48,8 +48,8 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.java.services.AbsJavadocParser;
 import de.akra.idocit.java.services.JavaParser;
-import de.akra.idocit.ui.views.RecommendedGridsView;
-import de.akra.idocit.ui.views.RecommendedGridsViewSelection;
+import de.akra.idocit.ui.components.RecommendedGridsView;
+import de.akra.idocit.ui.components.RecommendedGridsViewSelection;
 
 /**
  * Listener to notice selections in a JavaEditor. If a JavaMethod is selected, then the

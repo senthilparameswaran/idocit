@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package de.akra.idocit.ui.views;
+package de.akra.idocit.ui.components;
 
 import java.util.HashSet;
 
@@ -46,7 +46,7 @@ public class RecommendedGridsView extends ViewPart
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "de.akra.idocit.ui.views.RecommendedGridsView";
+	public static final String ID = RecommendedGridsView.class.getName();
 
 	private RecommendRolesComposite recommendRolesComposite;
 
