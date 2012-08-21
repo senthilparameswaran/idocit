@@ -51,7 +51,7 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.services.impl.ServiceManager;
-import de.akra.idocit.ui.views.RecommendedGridsView;
+import de.akra.idocit.ui.components.RecommendedGridsView;
 
 /**
  * Composite for {@link RecommendedGridsView} to show the recommendet thematic grids with

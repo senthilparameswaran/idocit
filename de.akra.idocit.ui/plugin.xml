@@ -116,9 +116,9 @@
       </category>
       <view
             category="de.akra.idocit.ui"
-            class="de.akra.idocit.ui.views.RecommendedGridsView"
+            class="de.akra.idocit.ui.components.RecommendedGridsView"
             icon="src/main/resources/images/idocit.ico"
-            id="de.akra.idocit.ui.views.RecommendedGridsView"
+            id="de.akra.idocit.ui.components.RecommendedGridsView"
             name="Recommended Roles">
       </view>
    </extension>
