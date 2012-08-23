@@ -93,6 +93,8 @@ public class JavaEditorSelectionListenerTest
 		PrintStream out = System.out;
 		File tmpFileOutput = File.createTempFile("test", "out");
 		System.setOut(new PrintStream(tmpFileOutput));
+		boolean npeOccured = false;
+
 		try
 		{
 
@@ -158,19 +160,26 @@ public class JavaEditorSelectionListenerTest
 		finally
 		{
 			System.setOut(out);
-		}
+			BufferedReader reader = new BufferedReader(new FileReader(tmpFileOutput));
+			String line = reader.readLine();
 
-		BufferedReader reader = new BufferedReader(new FileReader(tmpFileOutput));
-		String line = reader.readLine();
-
-		while (line != null)
-		{
-			if (line.toLowerCase().contains("nullpointerexception"))
+			while (line != null)
 			{
-				throw new NullPointerException(tmpFileOutput.toString());
+				if (line.toLowerCase().contains("nullpointerexception"))
+				{
+					npeOccured = true;
+				}
+
+				line = reader.readLine();
 			}
 
-			line = reader.readLine();
+			reader.close();
+			tmpFileOutput.delete();
+		}
+
+		if (npeOccured)
+		{
+			throw new NullPointerException(tmpFileOutput.toString());
 		}
 	}
 
