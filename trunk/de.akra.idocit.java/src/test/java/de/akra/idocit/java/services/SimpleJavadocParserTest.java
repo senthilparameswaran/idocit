@@ -39,11 +39,11 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.utils.TestUtils;
 import de.akra.idocit.java.AllIDocItJavaTests;
-import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.ParserOutput;
+import de.akra.idocit.java.utils.JavaTestUtils;
 import de.akra.idocit.java.utils.TestDataFactory;
 
 public class SimpleJavadocParserTest
@@ -226,7 +226,7 @@ public class SimpleJavadocParserTest
 					referenceDocs.add(throwsInfoDoc);
 				}
 
-				final ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				final CompilationUnit cu = output.getCompilationUnit();
@@ -260,7 +260,7 @@ public class SimpleJavadocParserTest
 			// # of documentations
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "EmptyService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -294,7 +294,7 @@ public class SimpleJavadocParserTest
 			// # removed from the introduction sentence.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "ExampleService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -332,7 +332,7 @@ public class SimpleJavadocParserTest
 			// # parameter-class causes a RuntimeException.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "ExampleService.java");
 				CompilationUnit cu = output.getCompilationUnit();

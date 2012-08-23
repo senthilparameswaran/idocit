@@ -15,7 +15,7 @@
  *******************************************************************************/
 package de.akra.idocit.java.services;
 
-import static de.akra.idocit.java.JavadocTestUtils.JAVADOC_NEW_LINE;
+import static de.akra.idocit.java.utils.JavaTestUtils.JAVADOC_NEW_LINE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,13 +33,13 @@ import org.junit.Test;
 import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.java.AllIDocItJavaTests;
-import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.ParserOutput;
+import de.akra.idocit.java.utils.JavaTestUtils;
 import de.akra.idocit.java.utils.TestDataFactory;
 
 public class SimpleJavadocGeneratorTest
@@ -76,11 +76,10 @@ public class SimpleJavadocGeneratorTest
 								+ " * %1$s"
 								+ " * @throwsIOException In case of an error%1$s"
 								+ " * @throwsinfoIOException [ATTRIBUTE] This is also an attribute.%1$s"
-								+ " * @thematicgridSearching Operations%1$s" 
-								+ " */%1$s",
+								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
 								JAVADOC_NEW_LINE);
 
-				final ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				final CompilationUnit cu = output.getCompilationUnit();
@@ -110,7 +109,9 @@ public class SimpleJavadocGeneratorTest
 						.format("/** %1$s"
 								+ " * Rule: Maximum length of an address are 40 chars.%1$s"
 								+ " * %1$s"
-								+ " * @ordering(" + Constants.ERROR_CASE_DOCUMENTATION_TEXT + ")%1$s"
+								+ " * @ordering("
+								+ Constants.ERROR_CASE_DOCUMENTATION_TEXT
+								+ ")%1$s"
 								+ " * %1$s"
 								+ " * @parammailAddress [OBJECT]%1$s"
 								+ " * %1$s"
@@ -118,13 +119,13 @@ public class SimpleJavadocGeneratorTest
 								+ " * @thematicgridChecking Operations%1$s" + " */%1$s",
 								JAVADOC_NEW_LINE);
 
-				final ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "InvariantService.java");
 				final CompilationUnit cu = output.getCompilationUnit();
 
-				final JavaInterfaceArtifact artifact = TestDataFactory.createInvariantService(
-						"Developer", cu, true);
+				final JavaInterfaceArtifact artifact = TestDataFactory
+						.createInvariantService("Developer", cu, true);
 
 				JavaInterfaceGenerator.updateJavadocInAST(artifact,
 						SimpleJavadocGenerator.INSTANCE);
@@ -145,7 +146,7 @@ public class SimpleJavadocGeneratorTest
 			{
 				// This Java file is parsed to get a valid abstract syntax tree. We won't
 				// use its Javadoc!
-				final ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				final CompilationUnit cu = output.getCompilationUnit();
@@ -170,7 +171,7 @@ public class SimpleJavadocGeneratorTest
 			{
 				// This Java file is parsed to get a valid abstract syntax tree. We won't
 				// use its Javadoc!
-				final ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				final CompilationUnit cu = output.getCompilationUnit();
@@ -206,12 +207,11 @@ public class SimpleJavadocGeneratorTest
 								+ " * @return[OBJECT]%1$s"
 								+ " * @subreturnfirstName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
 								+ " * @subreturnlastName [ATTRIBUTE] Won't be null, but could be an empty String%1$s"
-								+ " * %1$s" 
+								+ " * %1$s"
 								+ " * @throwsSpecialException In case of an error%1$s"
-								+ " * @thematicgridSearching Operations%1$s" 
-								+ " */%1$s",
+								+ " * @thematicgridSearching Operations%1$s" + " */%1$s",
 								JAVADOC_NEW_LINE);
-				final ParserOutput output = JavadocTestUtils
+				final ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				final CompilationUnit cu = output.getCompilationUnit();
@@ -244,7 +244,7 @@ public class SimpleJavadocGeneratorTest
 		// # IllegalArgumentException.
 		// #########################################################################
 		{
-			final ParserOutput output = JavadocTestUtils
+			final ParserOutput output = JavaTestUtils
 					.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 							+ "CustomerService.java");
 			final CompilationUnit cu = output.getCompilationUnit();
@@ -272,15 +272,9 @@ public class SimpleJavadocGeneratorTest
 
 	private String createEmptyReferenceJDForCustomerService()
 	{
-		return String.format("/** %1$s" 
-				+ " * @paramparameters%1$s"
-				+ " * @subparamfirstName%1$s" 
-				+ " * @subparamlastName%1$s" 
-				+ " * %1$s"
-				+ " * @return%1$s" 
-				+ " * %1$s" 
-				+ " * @throwsIOException%1$s" 
-				+ " */%1$s",
+		return String.format("/** %1$s" + " * @paramparameters%1$s"
+				+ " * @subparamfirstName%1$s" + " * @subparamlastName%1$s" + " * %1$s"
+				+ " * @return%1$s" + " * %1$s" + " * @throwsIOException%1$s" + " */%1$s",
 				JAVADOC_NEW_LINE);
 	}
 
