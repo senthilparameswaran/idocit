@@ -83,6 +83,7 @@ public class JavaEditorSelectionListener implements ISelectionListener
 			final JavaEditor javaEditor = (JavaEditor) part;
 			final ITypeRoot root = EditorUtility.getEditorInputJavaElement(javaEditor,
 					false);
+
 			final ISelection sel = javaEditor.getSelectionProvider().getSelection();
 
 			if (sel instanceof ITextSelection)
@@ -91,31 +92,35 @@ public class JavaEditorSelectionListener implements ISelectionListener
 				final RecommendedGridsView view = (RecommendedGridsView) part.getSite()
 						.getPage().findView(RecommendedGridsView.ID);
 
-				final ITextSelection textSel = (ITextSelection) sel;
-				IJavaElement elt = null;
-				try
+				if (view != null)
 				{
-					elt = root.getElementAt(textSel.getOffset());
-					if (elt != null && elt.getElementType() == IJavaElement.METHOD)
+					final ITextSelection textSel = (ITextSelection) sel;
+					IJavaElement elt = null;
+					try
 					{
-						view.setSelection(prepareViewSelection((IMethod) elt));
+						elt = root.getElementAt(textSel.getOffset());
+						if (elt != null && elt.getElementType() == IJavaElement.METHOD)
+						{
+							view.setSelection(prepareViewSelection((IMethod) elt));
+						}
+						else
+						{
+							view.setSelection(null);
+						}
 					}
-					else
+					catch (final JavaModelException e)
 					{
+						LOG.log(Level.WARNING,
+								"Java method not found for \"{0}\" (file offset={1}).",
+								new Object[] { textSel.getText(), textSel.getOffset() });
 						view.setSelection(null);
 					}
-				}
-				catch (final JavaModelException e)
-				{
-					LOG.log(Level.WARNING,
-							"Java method not found for \"{0}\" (file offset={1}).",
-							new Object[] { textSel.getText(), textSel.getOffset() });
-					view.setSelection(null);
-				}
-				catch (final Exception e)
-				{
-					LOG.log(Level.WARNING, "Failed to collect assigned ThematicRoles.", e);
-					view.setSelection(null);
+					catch (final Exception e)
+					{
+						LOG.log(Level.WARNING,
+								"Failed to collect assigned ThematicRoles.", e);
+						view.setSelection(null);
+					}
 				}
 			}
 		}
