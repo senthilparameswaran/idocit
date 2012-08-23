@@ -66,7 +66,7 @@ public class JavaParser implements Parser
 	/**
 	 * The type of supported files.
 	 */
-	private static final String SUPPORTED_TYPE = "java";
+	public static final String SUPPORTED_TYPE = "java";
 
 	/**
 	 * The delimiters for Java.
