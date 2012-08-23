@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
 
+import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
@@ -355,7 +356,10 @@ public class JavaInterfaceGenerator
 		TagElement thematicGridElement = findTagElementByName(
 				JavadocParser.JAVADOC_TAG_THEMATICGRID, newJavadoc.tags());
 
-		if (thematicGridName != null)
+		// don't write reference grid name "None"
+		if (thematicGridName != null
+				&& !ThematicGridConstants.THEMATIC_GRID_DEFAULT_NAME
+						.equals(thematicGridName))
 		{
 			if (thematicGridElement == null)
 			{
@@ -365,7 +369,8 @@ public class JavaInterfaceGenerator
 				newJavadoc.tags().add(thematicGridElement);
 			}
 
-			final List<ASTNode> fragments = (List<ASTNode>) thematicGridElement.fragments();
+			final List<ASTNode> fragments = (List<ASTNode>) thematicGridElement
+					.fragments();
 			TextElement textElement = findFirstTextElement(fragments);
 
 			if (textElement == null)

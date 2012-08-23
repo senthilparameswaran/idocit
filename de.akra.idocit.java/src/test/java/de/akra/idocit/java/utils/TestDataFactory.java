@@ -41,7 +41,6 @@ import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.DescribedItemUtils;
-import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.services.AddresseeUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
@@ -1379,9 +1378,9 @@ public class TestDataFactory
 		docTextAction
 				.put(addressee,
 						"Reads the java- and javadoc code from the given <b>file and"
-								+ JavadocTestUtils.NEW_LINE
+								+ JavaTestUtils.NEW_LINE
 								+ "creates</b> the returned {@link JavaInterfaceArtifact} from it."
-								+ JavadocTestUtils.NEW_LINE + "Escape Test: Ö");
+								+ JavaTestUtils.NEW_LINE + "Escape Test: Ö");
 		Documentation docAction = new Documentation();
 		docAction.setAddresseeSequence(addresseeSequence);
 		docAction.setDocumentation(docTextAction);
@@ -1392,9 +1391,9 @@ public class TestDataFactory
 		Map<Addressee, String> docTextSourceFormat = new HashMap<Addressee, String>();
 		docTextSourceFormat.put(addressee,
 				"Java and Javadoc according to their current specifications:"
-						+ JavadocTestUtils.NEW_LINE + JavadocTestUtils.NEW_LINE
+						+ JavaTestUtils.NEW_LINE + JavaTestUtils.NEW_LINE
 						+ "<a href=\"http://docs.oracle.com/javase/specs/\">Java</a>"
-						+ JavadocTestUtils.NEW_LINE + "Javadoc");
+						+ JavaTestUtils.NEW_LINE + "Javadoc");
 		Documentation docSourceFormat = new Documentation();
 		docSourceFormat.setAddresseeSequence(addresseeSequence);
 		docSourceFormat.setDocumentation(docTextSourceFormat);
@@ -1417,10 +1416,10 @@ public class TestDataFactory
 		docTextInstrument2
 				.put(addressee,
 						"iDocIt! supports two different representations of thematicgrids in Javadoc:"
-								+ JavadocTestUtils.NEW_LINE
-								+ JavadocTestUtils.NEW_LINE
+								+ JavaTestUtils.NEW_LINE
+								+ JavaTestUtils.NEW_LINE
 								+ "The simplified version is very compact, but supports only the addressee \"Developer\"."
-								+ JavadocTestUtils.NEW_LINE
+								+ JavaTestUtils.NEW_LINE
 								+ "The complex version supports all addressees, but uses a lot of HTML-code.");
 		Documentation docSourceInstrument2 = new Documentation();
 		docSourceInstrument2.setAddresseeSequence(addresseeSequence);

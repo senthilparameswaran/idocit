@@ -28,13 +28,13 @@ import org.junit.Test;
 
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.java.AllIDocItJavaTests;
-import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavaParameter;
 import de.akra.idocit.java.structure.JavaParameters;
 import de.akra.idocit.java.structure.ParserOutput;
+import de.akra.idocit.java.utils.JavaTestUtils;
 import de.akra.idocit.java.utils.TestDataFactory;
 
 /**
@@ -66,7 +66,7 @@ public class AddresseeUtilsTest
 			// # and is accepted.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -79,7 +79,7 @@ public class AddresseeUtilsTest
 			// # and is rejected.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -96,7 +96,7 @@ public class AddresseeUtilsTest
 			{
 				// The first test is made on the first parameter level.
 				{
-					ParserOutput output = JavadocTestUtils
+					ParserOutput output = JavaTestUtils
 							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
@@ -115,7 +115,7 @@ public class AddresseeUtilsTest
 				}
 				// Now, let's check if nested attributes of parameters are also tested.
 				{
-					ParserOutput output = JavadocTestUtils
+					ParserOutput output = JavaTestUtils
 							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
@@ -144,7 +144,7 @@ public class AddresseeUtilsTest
 			{
 				// The first test is made on the return value level.
 				{
-					ParserOutput output = JavadocTestUtils
+					ParserOutput output = JavaTestUtils
 							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
@@ -163,7 +163,7 @@ public class AddresseeUtilsTest
 				}
 				// Now, let's check if nested attributes of return values are also tested.
 				{
-					ParserOutput output = JavadocTestUtils
+					ParserOutput output = JavaTestUtils
 							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
@@ -192,7 +192,7 @@ public class AddresseeUtilsTest
 			{
 				// The first test is made on the return value level.
 				{
-					ParserOutput output = JavadocTestUtils
+					ParserOutput output = JavaTestUtils
 							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
@@ -212,7 +212,7 @@ public class AddresseeUtilsTest
 				}
 				// Now, let's check if nested attributes of exceptions are also tested.
 				{
-					ParserOutput output = JavadocTestUtils
+					ParserOutput output = JavaTestUtils
 							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
@@ -240,7 +240,7 @@ public class AddresseeUtilsTest
 			{
 				// The first test is made on the operation level.
 				{
-					ParserOutput output = JavadocTestUtils
+					ParserOutput output = JavaTestUtils
 							.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 									+ "CustomerService.java");
 					CompilationUnit cu = output.getCompilationUnit();
@@ -262,7 +262,7 @@ public class AddresseeUtilsTest
 			// # interface-level for developers and testers. It is also rejected.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -282,7 +282,7 @@ public class AddresseeUtilsTest
 			// # artifact-level for developers and testers. It is also rejected.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -301,7 +301,7 @@ public class AddresseeUtilsTest
 			// developers and testers at an inner interface. It is also rejected.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -325,7 +325,7 @@ public class AddresseeUtilsTest
 			// # on all levels and is accepted.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -340,7 +340,7 @@ public class AddresseeUtilsTest
 			// # on all levels and is accepted.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -356,7 +356,7 @@ public class AddresseeUtilsTest
 			// # "Tester". It should be rejected.
 			// #########################################################################
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();
@@ -412,7 +412,7 @@ public class AddresseeUtilsTest
 
 			try
 			{
-				ParserOutput output = JavadocTestUtils
+				ParserOutput output = JavaTestUtils
 						.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 								+ "CustomerService.java");
 				CompilationUnit cu = output.getCompilationUnit();

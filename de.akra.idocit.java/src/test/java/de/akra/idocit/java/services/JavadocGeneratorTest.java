@@ -59,11 +59,11 @@ import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.java.AllIDocItJavaTests;
-import de.akra.idocit.java.JavadocTestUtils;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.structure.JavadocTagElement;
 import de.akra.idocit.java.structure.ParserOutput;
+import de.akra.idocit.java.utils.JavaTestUtils;
 import de.akra.idocit.java.utils.JavadocUtils;
 
 /**
@@ -189,7 +189,7 @@ public class JavadocGeneratorTest
 	@Test
 	public void testGenerateJavadoc() throws FileNotFoundException, IOException
 	{
-		ParserOutput output = JavadocTestUtils
+		ParserOutput output = JavaTestUtils
 				.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 						+ "ParsingService.java");
 		CompilationUnit cu = output.getCompilationUnit();
@@ -255,7 +255,7 @@ public class JavadocGeneratorTest
 	public void testJavaInterfaceGenerator() throws FileNotFoundException, IOException,
 			ParsingException
 	{
-		ParserOutput output = JavadocTestUtils
+		ParserOutput output = JavaTestUtils
 				.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 						+ "ParsingService.java");
 		CompilationUnit cu = output.getCompilationUnit();
@@ -310,7 +310,7 @@ public class JavadocGeneratorTest
 			MalformedTreeException, BadLocationException, CoreException, ParsingException
 	{
 
-		ParserOutput output = JavadocTestUtils
+		ParserOutput output = JavaTestUtils
 				.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
 						+ "ParsingService2.java");
 		CompilationUnit unit = output.getCompilationUnit();
