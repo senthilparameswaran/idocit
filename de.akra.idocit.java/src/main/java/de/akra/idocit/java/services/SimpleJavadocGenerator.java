@@ -201,7 +201,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				docText.append(" (" + Constants.ERROR_CASE_DOCUMENTATION_TEXT + ") ");
 			}
 
-			return StringUtils.SPACE + StringUtils.toString(docText.toString()).trim();
+			return StringUtils.toString(docText.toString()).trim();
 		}
 
 		return StringUtils.EMPTY;
@@ -404,12 +404,12 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					docText = formattedRoleName + StringUtils.SPACE + docText.trim();
 				}
 
-				textElement.setText(StringUtils.SPACE + docText.trim());
+				textElement.setText(docText.trim());
 				hasIntroductionSentence = true;
 			}
 			else
 			{
-				textElement.setText(StringUtils.SPACE + getDocText(documentation).trim());
+				textElement.setText(getDocText(documentation).trim());
 			}
 
 			fragments.add(textElement);
@@ -570,12 +570,13 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				if (role != null)
 				{
 					docText.append(StringUtils.inBrackets(role.getName()));
+					docText.append(StringUtils.SPACE);
 				}
 
 				docText.append(getDocText(documentation));
 
 				final TextElement identifierElement = jdocAST.newTextElement();
-				identifierElement.setText(StringUtils.SPACE + docText.toString().trim());
+				identifierElement.setText(docText.toString().trim());
 
 				fragments.add(identifierElement);
 				tags.add(newTag);
@@ -592,8 +593,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			final List<ASTNode> fragments = newTag.fragments();
 
 			final TextElement identifierElement = jdocAST.newTextElement();
-			identifierElement.setText(StringUtils.SPACE
-					+ StringUtils.toString(identifier));
+			identifierElement.setText(StringUtils.toString(identifier));
 
 			fragments.add(identifierElement);
 			tags.add(newTag);
@@ -782,7 +782,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			{
 				TagElement lastElement = currentElement;
 				StringBuffer lastElementText = new StringBuffer();
-				lastElementText.append(StringUtils.SPACE);
 				lastElementText.append(readFragments(lastElement).trim());
 
 				for (int i = elementIndex + 1; i < unmergedTagElements.size(); i++)
@@ -812,8 +811,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 							lastElement.fragments().clear();
 							final TextElement newFragment = lastElement.getAST()
 									.newTextElement();
-							newFragment.setText(StringUtils.SPACE
-									+ lastElementText.toString().trim());
+							newFragment.setText(lastElementText.toString().trim());
 							lastElement.fragments().add(newFragment);
 
 							mergedTagElements.add(lastElement);
@@ -827,8 +825,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 				lastElement.fragments().clear();
 				final TextElement newFragment = lastElement.getAST().newTextElement();
-				newFragment
-						.setText(StringUtils.SPACE + lastElementText.toString().trim());
+				newFragment.setText(lastElementText.toString().trim());
 				lastElement.fragments().add(newFragment);
 				mergedTagElements.add(lastElement);
 			}
@@ -988,7 +985,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 			if ((unescapedDocText != null) && !unescapedDocText.isEmpty())
 			{
-				String escapedDocText = JavadocUtils.escapeHtml4(unescapedDocText);
+				final String escapedDocText = JavadocUtils.escapeHtml4(unescapedDocText);
 
 				TagElement newTagElement = ast.newTagElement();
 				newTagElement.setTagName(tagIdentifier);
@@ -1000,12 +997,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				{
 					String[] splittedText = escapedDocText.split(Pattern.quote(HTML_BR));
 					splittedText = appendBRTag(splittedText);
-
-					if (!splittedText[0].startsWith(StringUtils.SPACE))
-					{
-						splittedText[0] = StringUtils.SPACE + splittedText[0];
-					}
-
+					
 					identifierElement.setText(splittedText[0]);
 					fragments.add(identifierElement);
 					result.add(newTagElement);
@@ -1026,11 +1018,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				}
 				else
 				{
-					if (!escapedDocText.startsWith(StringUtils.SPACE))
-					{
-						escapedDocText = StringUtils.SPACE + escapedDocText;
-					}
-
 					identifierElement.setText(escapedDocText);
 					fragments.add(identifierElement);
 

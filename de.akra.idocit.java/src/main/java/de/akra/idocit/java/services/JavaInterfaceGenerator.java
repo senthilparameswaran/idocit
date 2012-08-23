@@ -30,7 +30,6 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.utils.SignatureElementUtils;
-import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterface;
@@ -350,8 +349,8 @@ public class JavaInterfaceGenerator
 	// End changes due to Issue #62
 
 	@SuppressWarnings("unchecked")
-	private static void addThematicGridTag(AST ast, String thematicGridName,
-			Javadoc newJavadoc)
+	private static void addThematicGridTag(final AST ast, final String thematicGridName,
+			final Javadoc newJavadoc)
 	{
 		TagElement thematicGridElement = findTagElementByName(
 				JavadocParser.JAVADOC_TAG_THEMATICGRID, newJavadoc.tags());
@@ -375,7 +374,7 @@ public class JavaInterfaceGenerator
 				fragments.add(textElement);
 			}
 
-			textElement.setText(StringUtils.SPACE + thematicGridName);
+			textElement.setText(thematicGridName);
 		}
 		else
 		{

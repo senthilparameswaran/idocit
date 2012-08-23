@@ -35,6 +35,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.utils.DescribedItemUtils;
+import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 import de.akra.idocit.java.utils.JavadocUtils;
@@ -49,7 +50,8 @@ public abstract class AbsJavadocParser
 	static final String JAVADOC_TAG_PARAM = TagElement.TAG_PARAM + "\\s*";
 	static final String JAVADOC_TAG_RETURN = TagElement.TAG_RETURN + "\\s*";
 	static final String JAVADOC_TAG_THROWS = TagElement.TAG_THROWS + "\\s*";
-	static final String JAVADOC_TAG_THEMATICGRID = "@thematicgrid";
+	static final String JAVADOC_TAG_THEMATICGRID = CustomTaglets.THEMATIC_GRID
+			.getTagName();
 	static final String JAVADOC_TAG_THEMATICGRID_PATTERN = JAVADOC_TAG_THEMATICGRID;
 
 	public static final String CONVERTED_JAVADOC_TAG_PARAM = "param";
