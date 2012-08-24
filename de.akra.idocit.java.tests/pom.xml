@@ -83,6 +83,10 @@
 					<argLine>${ui.test.vmargs}</argLine>
 					<skip>false</skip>
 					<skipTests>false</skipTests>
+					
+					<excludes>
+						<exclude>**/source/*.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
