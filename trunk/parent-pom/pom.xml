@@ -25,8 +25,8 @@
 	<name>iDocIt! Parent</name>
 
 	<properties>
-		<tycho-version>0.13.0</tycho-version>
-		<ui.test.vmargs>-Xmx1024m -XX:MaxPermSize=256m</ui.test.vmargs>
+		<tycho-version>0.13.1</tycho-version>
+		<ui.test.vmargs>-Xmx1024m -XX:MaxPermSize=256m -XstartOnFirstThread</ui.test.vmargs>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<platform-version-name>indigo</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
