@@ -73,6 +73,11 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+					<systemProperties>
+						<environmentVariables>
+							<DISPLAY>99</DISPLAY>
+						</environmentVariables>
+					</systemProperties>
 					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
 					<product>org.eclipse.sdk.ide</product>
 					<useUIHarness>true</useUIHarness>
