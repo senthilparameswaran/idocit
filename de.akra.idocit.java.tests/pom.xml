@@ -86,7 +86,7 @@
 					
 					<excludes>
 						<exclude>**/source/*.java</exclude>
-						<exclude>**/de.akra.idocit.java.utils/*.java</exclude>
+						<exclude>**/TestDataFactory.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
