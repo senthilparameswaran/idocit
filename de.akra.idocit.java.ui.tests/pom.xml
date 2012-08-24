@@ -72,10 +72,8 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
-				<!-- <configuration> <testSuite>de.akra.idocit.java.ui.AllTests</testSuite> 
-					<testClass>de.akra.idocit.java.ui.JavaEditorSelectionListenerTest</testClass> 
-					</configuration> -->
 				<configuration>
+					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
 					<product>org.eclipse.sdk.ide</product>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>true</useUIThread>
