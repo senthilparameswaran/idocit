@@ -75,7 +75,10 @@
 				<configuration>
 					<systemProperties>
 						<environmentVariables>
-							<DISPLAY>:99</DISPLAY>
+							<property>
+								<name>DISPLAY</name>
+								<value>:99</value>
+							</property>
 						</environmentVariables>
 					</systemProperties>
 					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
@@ -88,10 +91,7 @@
 					<argLine>${ui.test.vmargs}</argLine>
 					<skip>false</skip>
 					<skipTests>false</skipTests>
-					<!-- 
-					<testSuite>de.akra.idocit.java.ui</testSuite>
-					<testClass>de.akra.idocit.java.ui.JavaEditorSelectionListenerTest</testClass>
-					 -->
+					<!-- <testSuite>de.akra.idocit.java.ui</testSuite> <testClass>de.akra.idocit.java.ui.JavaEditorSelectionListenerTest</testClass> -->
 				</configuration>
 			</plugin>
 			<plugin>
