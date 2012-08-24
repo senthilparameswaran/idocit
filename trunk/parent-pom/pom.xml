@@ -39,6 +39,7 @@
 		<module>../de.akra.idocit.core</module>
 		<module>../de.akra.idocit.core.feature</module>
 		<module>../de.akra.idocit.java</module>
+		<module>../de.akra.idocit.java.tests</module>
 		<module>../de.akra.idocit.java.feature</module>
 		<module>../de.akra.idocit.java.ui</module>
 		<module>../de.akra.idocit.java.ui.tests</module>
