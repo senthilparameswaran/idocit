@@ -20,3 +20,8 @@ Require-Bundle: org.eclipse.ui,
 Bundle-Activator: de.akra.idocit.java.ui.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
+Export-Package: de.akra.idocit.java.ui,
+ de.akra.idocit.java.ui.components,
+ de.akra.idocit.java.ui.composites,
+ de.akra.idocit.java.ui.composites.factories,
+ de.akra.idocit.ui.services
