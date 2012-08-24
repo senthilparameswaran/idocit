@@ -86,6 +86,7 @@
 					
 					<excludes>
 						<exclude>**/source/*.java</exclude>
+						<exclude>**/de/akra/idocit/java/utils/*.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
