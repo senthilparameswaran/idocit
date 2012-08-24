@@ -74,7 +74,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<systemProperties>
-						<environmentVariables>
+						<environmentVariables> 
 							<property>
 								<name>DISPLAY</name>
 								<value>:99</value>
@@ -91,7 +91,6 @@
 					<argLine>${ui.test.vmargs}</argLine>
 					<skip>false</skip>
 					<skipTests>false</skipTests>
-					<!-- <testSuite>de.akra.idocit.java.ui</testSuite> <testClass>de.akra.idocit.java.ui.JavaEditorSelectionListenerTest</testClass> -->
 				</configuration>
 			</plugin>
 			<plugin>
