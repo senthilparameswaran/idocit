@@ -75,7 +75,7 @@
 				<configuration>
 					<systemProperties>
 						<environmentVariables>
-							<DISPLAY>99</DISPLAY>
+							<DISPLAY>:99</DISPLAY>
 						</environmentVariables>
 					</systemProperties>
 					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
