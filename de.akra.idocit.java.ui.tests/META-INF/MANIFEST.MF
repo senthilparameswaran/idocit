@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: iDocIt! Java UI Tests
+Bundle-SymbolicName: de.akra.idocit.java.ui.tests
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: AKRA GmbH
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit4,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ de.akra.idocit.java,
+ de.akra.idocit.core,
+ de.akra.idocit.ui,
+ org.eclipse.jdt.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.jdt.core,
+ org.eclipse.jface.text,
+ de.akra.idocit.java.ui;bundle-version="0.0.1"
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
