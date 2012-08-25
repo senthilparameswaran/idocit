@@ -318,7 +318,7 @@ public class JavaInterfaceGenerator
 	 */
 	// Changes due to Issue #62
 	@SuppressWarnings("unchecked")
-	static Javadoc createOrUpdateJavadoc(List<JavadocTagElement> javadocTagElements,
+	public static Javadoc createOrUpdateJavadoc(List<JavadocTagElement> javadocTagElements,
 			List<TagElement> additionalTags, Javadoc javadoc, AST ast,
 			String thematicGridName, IJavadocGenerator javadocGenerator, JavaMethod method)
 			throws ParsingException
