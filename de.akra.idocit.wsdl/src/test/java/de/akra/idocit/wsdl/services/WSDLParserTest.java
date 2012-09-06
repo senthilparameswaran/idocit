@@ -34,6 +34,7 @@ import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.core.utils.TestUtils;
+import de.akra.idocit.wsdl.Constants;
 
 /**
  * Tests for {@link WSDLParser}.
@@ -64,8 +65,8 @@ public class WSDLParserTest
 			InterfaceArtifact iStruct = null;
 			WSDLParserMock parser = new WSDLParserMock();
 
-			iStruct = parser.parse(new File("test/source/CustomerService.wsdl"));
-			// iStruct = parser.parse(new File("test/source/wsdl_46001"));
+			iStruct = parser.parse(new File(Constants.FOLDER_SOURCE + "CustomerService.wsdl"));
+			// iStruct = parser.parse(new File(Constants.FOLDER_SOURCE + "wsdl_46001"));
 
 			assertEquals(1, iStruct.getInterfaces().size());
 
@@ -78,7 +79,7 @@ public class WSDLParserTest
 			 * write the result to a file
 			 */
 			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-					"test/out/testParseWSDL_with_CustomerService.wsdl.out")));
+					Constants.FOLDER_OUT + "testParseWSDL_with_CustomerService.wsdl.out")));
 			writer.write(parseResult.toString());
 			writer.close();
 			/*
@@ -91,7 +92,7 @@ public class WSDLParserTest
 
 			// check result against an expectation
 			String expectedFileContent = TestUtils
-					.readFile("test/expected/testParseWSDL_with_CustomerService.xml");
+					.readFile(Constants.FOLDER_EXPECTED + "testParseWSDL_with_CustomerService.xml");
 
 			assertEquals(expectedFileContent.toString(), parseResult.toString());
 		}
@@ -106,7 +107,7 @@ public class WSDLParserTest
 		{
 			WSDLParserMock parser = new WSDLParserMock();
 			InterfaceArtifact iStruct = parser.parse(new File(
-					"test/source/wsdl_46001.wsdl"));
+					Constants.FOLDER_SOURCE + "wsdl_46001.wsdl"));
 			int opNumber = 0;
 
 			assertEquals(1, iStruct.getInterfaces().size());
@@ -153,8 +154,8 @@ public class WSDLParserTest
 			InterfaceArtifact iStruct = null;
 			WSDLParserMock parser = new WSDLParserMock();
 
-			iStruct = parser.parse(new File("test/source/wsdl_100001.wsdl"));
-			// iStruct = parser.parse(new File("test/source/wsdl_46001"));
+			iStruct = parser.parse(new File(Constants.FOLDER_SOURCE + "wsdl_100001.wsdl"));
+			// iStruct = parser.parse(new File(Constants.FOLDER_SOURCE + "wsdl_46001"));
 
 			assertEquals(1, iStruct.getInterfaces().size());
 
@@ -167,7 +168,7 @@ public class WSDLParserTest
 			 * write the result to a file
 			 */
 			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-					"test/out/wsdl_100001.wsdl.out")));
+					Constants.FOLDER_OUT + "wsdl_100001.wsdl.out")));
 			writer.write(parseResult.toString());
 			writer.close();
 		}
@@ -197,8 +198,8 @@ public class WSDLParserTest
 		 * ******************************************************************************
 		 */
 		{
-			final String srcFile = "test/source/CustomerService.wsdl";
-			final String destFile = "test/out/CustomerService.wsdl";
+			final String srcFile = Constants.FOLDER_SOURCE + "CustomerService.wsdl";
+			final String destFile = Constants.FOLDER_OUT + "CustomerService.wsdl";
 
 			InterfaceArtifact sourceArtifact = null;
 			WSDLParserMock parser = new WSDLParserMock();
@@ -255,7 +256,7 @@ public class WSDLParserTest
 	{
 		WSDLParserMock parser = new WSDLParserMock();
 		InterfaceArtifact customerServiceWsdl = parser.parse(new File(
-				"test/source/CustomerServiceErrorDocs.wsdl"));
+				Constants.FOLDER_SOURCE + "CustomerServiceErrorDocs.wsdl"));
 
 		Interface customerServiceIntf = customerServiceWsdl.getInterfaces().get(0);
 		Operation findOperation = customerServiceIntf.getOperations().get(0);

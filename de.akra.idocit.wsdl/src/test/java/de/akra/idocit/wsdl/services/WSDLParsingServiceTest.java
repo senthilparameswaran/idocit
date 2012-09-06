@@ -32,6 +32,7 @@ import javax.xml.namespace.QName;
 import org.junit.Test;
 
 import de.akra.idocit.common.structure.Delimiters;
+import de.akra.idocit.wsdl.Constants;
 
 /**
  * Tests for {@link WSDLParsingService}.
@@ -100,7 +101,7 @@ public class WSDLParsingServiceTest
 		// Test case #1: extract the composite-role of an input-message
 		// correctly.
 		WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
-		Definition def = reader.readWSDL("test/source/wsdl_46001.wsdl");
+		Definition def = reader.readWSDL(Constants.FOLDER_SOURCE + "wsdl_46001.wsdl");
 
 		Delimiters delimiters = new Delimiters();
 		delimiters.namespaceDelimiter = ":";
