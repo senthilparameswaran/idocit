@@ -29,16 +29,16 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
+import de.akra.idocit.wsdl.Constants;
 
 public class WSDLGeneratorTest
 {
-	private final String FILE_SEPERATOR = System.getProperty("file.separator");
-	private final String TMP_WSDL_FILE_NAME = "test" + FILE_SEPERATOR + "out"
-			+ FILE_SEPERATOR + "CustomerServiceErrorDocs.wsdl";
-	private final String XML_SCHEMA_FILE_NAME = "test" + FILE_SEPERATOR + "source"
-			+ FILE_SEPERATOR + "CompanySchema.xsd";
-	private final String TMP_XML_SCHEMA_FILE_NAME = "test" + FILE_SEPERATOR + "out"
-			+ FILE_SEPERATOR + "CompanySchema.xsd";
+	private final String TMP_WSDL_FILE_NAME = Constants.FOLDER_OUT
+			+ "CustomerServiceErrorDocs.wsdl";
+	private final String XML_SCHEMA_FILE_NAME = Constants.FOLDER_SOURCE
+			+ "CompanySchema.xsd";
+	private final String TMP_XML_SCHEMA_FILE_NAME = Constants.FOLDER_OUT
+			+ "CompanySchema.xsd";
 
 	/**
 	 * Tests the error documentation-flag is written to an WSDL-file correctly:
@@ -59,9 +59,8 @@ public class WSDLGeneratorTest
 	{
 		WSDLParserMock parser = new WSDLParserMock();
 
-		InterfaceArtifact customerServiceWsdl = parser.parse(new File("test"
-				+ FILE_SEPERATOR + "source" + FILE_SEPERATOR
-				+ "CustomerServiceErrorDocs.wsdl"));
+		InterfaceArtifact customerServiceWsdl = parser.parse(new File(
+				Constants.FOLDER_SOURCE + "CustomerServiceErrorDocs.wsdl"));
 
 		Documentation actionDocs = getFirstFindDocumentation(customerServiceWsdl);
 
