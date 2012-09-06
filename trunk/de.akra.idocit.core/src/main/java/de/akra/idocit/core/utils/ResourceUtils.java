@@ -50,7 +50,7 @@ public class ResourceUtils
 	 */
 	public static final String ADDRESSEE_RESOURCE_FILE = "addressees.properties";
 
-	public static final String THEMATIC_GRIDS_RESOURCE_FILE = "thematicgrids.xml";
+	public static final String THEMATIC_GRIDS_RESOURCE_FILE = "thematic_grids.xml";
 
 	public static InputStream getResourceInputStream(String resourceName)
 	{
