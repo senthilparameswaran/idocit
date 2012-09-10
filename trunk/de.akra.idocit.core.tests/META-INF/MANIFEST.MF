@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: iDocIt! Core Tests
+Bundle-SymbolicName: de.akra.idocit.core.tests;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: AKRA GmbH
+Fragment-Host: de.akra.idocit.core;bundle-version="0.0.10"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: de.akra.idocit.core.utils

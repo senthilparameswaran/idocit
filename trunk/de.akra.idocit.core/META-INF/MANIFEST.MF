@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
 Bundle-Name: iDocIt! Core
 Bundle-SymbolicName: de.akra.idocit.core;singleton:=true
