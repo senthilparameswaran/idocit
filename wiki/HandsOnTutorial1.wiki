@@ -4,7 +4,7 @@
 <wiki:toc max_depth="3" />
 
 =Prerequisites:=
- * You can install iDocIt! via our Update Site http://idocit.googlecode.com/svn/updatesite/ (see the [InstallationAndConfiguration installation guide] for further details).
+ * You can install iDocIt! via our Update Site https://idocit.akra.de/updatesite (nightly build: https://idocit.akra.de/updatesite-nb) (see the [InstallationAndConfiguration installation guide] for further details).
  * We assume that you have successfully installed iDocIt! and use it in its default configuration. 
 
 So, what are we going to learn in this session? 
