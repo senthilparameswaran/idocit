@@ -10,7 +10,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.6.0",
  org.eclipse.core.filebuffers;bundle-version="3.5.100",
  org.eclipse.jface.text;bundle-version="3.6.0",
- org.junit4;bundle-version="4.8.1",
  de.akra.idocit.core;bundle-version="0.0.10",
  org.eclipse.jdt.launching;bundle-version="3.6.1"
 Bundle-ActivationPolicy: lazy
@@ -19,7 +18,5 @@ Bundle-Vendor: AKRA GmbH
 Bundle-ClassPath: lib/commons-lang3-3.1.jar,
  .
 Export-Package: de.akra.idocit.java.constants,
- de.akra.idocit.java.exceptions,
  de.akra.idocit.java.services,
- de.akra.idocit.java.structure,
- de.akra.idocit.java.utils
+ de.akra.idocit.java.structure

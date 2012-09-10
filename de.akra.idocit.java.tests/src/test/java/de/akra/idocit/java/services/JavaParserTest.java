@@ -702,7 +702,7 @@ public class JavaParserTest
 				+ "\t * @return [OBJECT]%1$s"
 				+ "\t */%1$s\tpublic Object findCustomer(final int id);%1$s", NEW_LINE);
 		final String actJavadoc = readLinesFromFile(testSourceFile.getRawLocation().makeAbsolute()
-						.toFile(), 4, 12);
+						.toFile(), 19, 27);
 		assertEquals(refJavadoc, actJavadoc);
 	}
 }
