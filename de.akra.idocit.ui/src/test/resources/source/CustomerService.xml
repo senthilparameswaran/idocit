@@ -69,7 +69,7 @@
 	<!-- PORTTYPE -->
 
 	<wsdl:portType name="CustomerService">
-		<wsdl:documentation scope="explicit" role="agent">
+		<wsdl:documentation>
 			<docpart scope="explicit" role="agent">
 				<addressee group="builder"></addressee>
 				<addressee group="tester"></addressee>
