@@ -46,7 +46,7 @@
 		<module>../de.akra.idocit.ui</module>
 		<module>../de.akra.idocit.ui.feature</module>
 		<module>../de.akra.idocit.wsdl</module>
-		<!-- <module>../de.akra.idocit.wsdl.test</module> -->
+		<module>../de.akra.idocit.wsdl.tests</module>
 		<module>../de.akra.idocit.wsdl.feature</module>
 		<module>../updatesite</module>
 	</modules>
