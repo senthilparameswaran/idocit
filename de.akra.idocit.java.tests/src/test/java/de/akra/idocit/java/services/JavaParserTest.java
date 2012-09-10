@@ -343,7 +343,7 @@ public class JavaParserTest
 						.format("\t/**%1$s"
 								+ "\t * Reads the java- and javadoc code from the given <b>file and<br/>%1$s"
 								+ "\t * creates</b> the returned {@link JavaInterfaceArtifact} from it.<br/>%1$s"
-								+ "\t * Escape Test: &Atilde;&ndash;%1$s"
+								+ "\t * Escape Test: &Ouml;%1$s"
 								+ "\t * %1$s"
 								+ "\t * @source_format Java and Javadoc according to their current specifications:<br/>%1$s"
 								+ "\t * <br/>%1$s"
