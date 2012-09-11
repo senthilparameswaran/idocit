@@ -40,6 +40,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 import de.akra.idocit.common.structure.Addressee;
@@ -89,38 +90,47 @@ public class JavaEditorSelectionListener implements ISelectionListener
 			if (sel instanceof ITextSelection)
 			{
 				// get iDocIt! view for active window
-				final RecommendedGridsView view = (RecommendedGridsView) part.getSite()
-						.getPage().findView(RecommendedGridsView.ID);
-
-				if (view != null)
+				final IViewPart findView = part.getSite().getPage()
+						.findView(RecommendedGridsView.ID);
+				if (findView != null && findView instanceof RecommendedGridsView)
 				{
-					final ITextSelection textSel = (ITextSelection) sel;
-					IJavaElement elt = null;
-					try
+					final RecommendedGridsView view = (RecommendedGridsView) findView;
+
+					if (view != null)
 					{
-						elt = root.getElementAt(textSel.getOffset());
-						if (elt != null && elt.getElementType() == IJavaElement.METHOD)
+						final ITextSelection textSel = (ITextSelection) sel;
+						IJavaElement elt = null;
+						try
 						{
-							view.setSelection(prepareViewSelection((IMethod) elt));
+							elt = root.getElementAt(textSel.getOffset());
+							if (elt != null
+									&& elt.getElementType() == IJavaElement.METHOD)
+							{
+								view.setSelection(prepareViewSelection((IMethod) elt));
+							}
+							else
+							{
+								view.setSelection(null);
+							}
 						}
-						else
+						catch (final JavaModelException e)
 						{
+							LOG.log(Level.WARNING,
+									"Java method not found for \"{0}\" (file offset={1}).",
+									new Object[] { textSel.getText(), textSel.getOffset() });
+							view.setSelection(null);
+						}
+						catch (final Exception e)
+						{
+							LOG.log(Level.WARNING,
+									"Failed to collect assigned ThematicRoles.", e);
 							view.setSelection(null);
 						}
 					}
-					catch (final JavaModelException e)
-					{
-						LOG.log(Level.WARNING,
-								"Java method not found for \"{0}\" (file offset={1}).",
-								new Object[] { textSel.getText(), textSel.getOffset() });
-						view.setSelection(null);
-					}
-					catch (final Exception e)
-					{
-						LOG.log(Level.WARNING,
-								"Failed to collect assigned ThematicRoles.", e);
-						view.setSelection(null);
-					}
+				}
+				else
+				{
+					LOG.log(Level.WARNING, "RecommendedGridsView not found: " + String.valueOf(findView));
 				}
 			}
 		}
