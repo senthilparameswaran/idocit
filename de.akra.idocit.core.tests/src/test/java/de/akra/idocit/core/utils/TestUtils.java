@@ -33,6 +33,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.junit.Ignore;
 
 import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Addressee;
@@ -52,6 +53,7 @@ import de.akra.idocit.common.utils.StringUtils;
  * @author Dirk Meier-Eickhoff
  * @version 0.0.2
  */
+@Ignore
 public class TestUtils
 {
 
