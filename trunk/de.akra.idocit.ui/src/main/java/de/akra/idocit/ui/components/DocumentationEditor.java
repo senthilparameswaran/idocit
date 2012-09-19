@@ -261,10 +261,16 @@ public class DocumentationEditor
 
 				if (dontUseIdocItAsDefaultEditor)
 				{
-					IEditorDescriptor originalEditor = IDE
+					final IEditorDescriptor originalEditor = IDE
 							.getDefaultEditor(interfaceIFile);
-					store.setValue(PreferenceStoreConstants.ORIGINAL_EDITOR_ID,
-							originalEditor.getId());
+					// Changes due to Issue #123
+					if (originalEditor != null)
+					{
+						// if there is a default editor, then revert it
+						store.setValue(PreferenceStoreConstants.ORIGINAL_EDITOR_ID,
+								originalEditor.getId());
+					}
+					// End changes due to Issue #123
 				}
 
 				setSelection(null);
@@ -487,7 +493,8 @@ public class DocumentationEditor
 			final String originalEditorId = store
 					.getString(PreferenceStoreConstants.ORIGINAL_EDITOR_ID);
 			final EditArtifactDocumentationCompositeSelection selection = getSelection();
-			if (selection.getArtifactFile() != null && originalEditorId != null)
+			if (selection != null && selection.getArtifactFile() != null
+					&& originalEditorId != null)
 			{
 				IDE.setDefaultEditor(selection.getArtifactFile(), originalEditorId);
 			}
