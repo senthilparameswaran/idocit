@@ -178,21 +178,6 @@ public class JavadocParserTest
 		return documentations;
 	}
 
-	private static List<Documentation> createSimpleParamDocumentations()
-	{
-		List<Documentation> documentations = new ArrayList<Documentation>();
-		documentations.add(createSimpleParamDocumentation());
-		documentations.add(createSimpleParamDocumentation());
-		return documentations;
-	}
-
-	private static List<Documentation> createSimpleReturnDocumentations()
-	{
-		List<Documentation> documentations = new ArrayList<Documentation>();
-		documentations.add(createSimpleReturnDocumentation());
-		return documentations;
-	}
-
 	/**
 	 * Create a list with one {@link Documentation} for a method return value.
 	 * 
@@ -228,48 +213,6 @@ public class JavadocParserTest
 
 		docMap.put(manager, "Documenation for managers.");
 		addresseeSequence.add(manager);
-
-		newDoc.setDocumentation(docMap);
-		newDoc.setAddresseeSequence(addresseeSequence);
-
-		return newDoc;
-	}
-
-	private static Documentation createSimpleParamDocumentation()
-	{
-		Documentation newDoc = new Documentation();
-		newDoc.setThematicRole(DescribedItemUtils.findThematicRole("OBJECT"));
-
-		newDoc.setSignatureElementIdentifier("/person:Person/name:java.lang.String");
-
-		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
-		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
-
-		Addressee developer = DescribedItemUtils.findAddressee("Developer");
-
-		docMap.put(developer, "Documenation for developers.");
-		addresseeSequence.add(developer);
-
-		newDoc.setDocumentation(docMap);
-		newDoc.setAddresseeSequence(addresseeSequence);
-
-		return newDoc;
-	}
-
-	private static Documentation createSimpleReturnDocumentation()
-	{
-		Documentation newDoc = new Documentation();
-		newDoc.setThematicRole(DescribedItemUtils.findThematicRole("OBJECT"));
-
-		newDoc.setSignatureElementIdentifier("double:double");
-
-		Map<Addressee, String> docMap = new HashMap<Addressee, String>();
-		List<Addressee> addresseeSequence = new LinkedList<Addressee>();
-
-		Addressee developer = DescribedItemUtils.findAddressee("Developer");
-
-		docMap.put(developer, "Developer: Result as floating-point number.");
-		addresseeSequence.add(developer);
 
 		newDoc.setDocumentation(docMap);
 		newDoc.setAddresseeSequence(addresseeSequence);
