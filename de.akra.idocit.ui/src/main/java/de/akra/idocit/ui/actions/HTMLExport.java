@@ -122,12 +122,7 @@ public class HTMLExport implements IObjectActionDelegate {
 								logger.log(Level.INFO, "End parsing");
 								logger.log(Level.INFO, "Start converting");
 								HTMLDocGenerator docGen = new HTMLDocGenerator(
-										interfaceArtifact,
-										ServiceManager
-												.getInstance()
-												.getParsingService()
-												.getDelimiters(
-														file.getFileExtension()));								
+										interfaceArtifact);								
 								String html = docGen.generateHTML();
 								logger.log(Level.INFO, "End converting");
 
