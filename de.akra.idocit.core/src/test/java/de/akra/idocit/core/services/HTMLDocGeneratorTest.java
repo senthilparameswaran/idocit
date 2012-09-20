@@ -24,7 +24,6 @@ import java.util.Vector;
 import org.junit.Test;
 
 import de.akra.idocit.common.structure.Addressee;
-import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
@@ -49,29 +48,12 @@ import de.akra.idocit.core.services.impl.HTMLDocGenerator;
  */
 public class HTMLDocGeneratorTest
 {
-	/**
-	 * The delimiters for WSDL.
-	 */
-	private static final Delimiters delimiters;
-
-	/**
-	 * Initialize <code>delimiters</code>.
-	 */
-	static
-	{
-		// delimiters for WSDL
-		delimiters = new Delimiters();
-		delimiters.pathDelimiter = ";";
-		// TODO maybe '}' as namespace delimiter?
-		delimiters.namespaceDelimiter = "#";
-		delimiters.typeDelimiter = "+";
-	}
 	
 	@Test
 	public void testGenerateHTML()
 	{
 		InterfaceArtifact artifact= createInterfaceArtifact();
-		HTMLDocGenerator docGen = new HTMLDocGenerator(artifact, delimiters);
+		HTMLDocGenerator docGen = new HTMLDocGenerator(artifact);
 		System.out.println(docGen.generateHTML());
 	}
 
