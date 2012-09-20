@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.akra.idocit.common.structure.Addressee;
-import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
@@ -37,12 +36,10 @@ public class HTMLDocGenerator {
 	 * The artifact to convert to HTML.
 	 */
 	private InterfaceArtifact artifact;
-	private Delimiters delimiters;
 
-	public HTMLDocGenerator(InterfaceArtifact artifact, Delimiters delimiters)
+	public HTMLDocGenerator(InterfaceArtifact artifact)
 	{
 		this.artifact = artifact;
-		this.delimiters = delimiters;
 	}
 	
 	/**
