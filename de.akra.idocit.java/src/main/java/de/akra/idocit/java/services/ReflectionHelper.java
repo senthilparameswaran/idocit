@@ -180,7 +180,7 @@ public class ReflectionHelper
 	 * @return [OBJECT]
 	 * @thematicgrid Concluding Operations
 	 */
-	public static Numerus deriveNumerus(ITypeBinding type)
+	public Numerus deriveNumerus(ITypeBinding type)
 	{
 		return isCollection(type) ? Numerus.PLURAL : Numerus.SINGULAR;
 	}
