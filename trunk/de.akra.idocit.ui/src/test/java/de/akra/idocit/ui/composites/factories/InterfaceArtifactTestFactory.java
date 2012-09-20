@@ -40,7 +40,6 @@ import de.akra.idocit.common.utils.StringUtils;
  * @author Dirk Meier-Eickhoff
  * 
  */
-@Deprecated
 public class InterfaceArtifactTestFactory
 {
 	/**
