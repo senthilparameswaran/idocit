@@ -60,6 +60,7 @@ import de.akra.idocit.ui.components.RecommendedGridsViewSelection;
  * @author Dirk Meier-Eickhoff
  * 
  */
+@SuppressWarnings("restriction")
 public class JavaEditorSelectionListener implements ISelectionListener
 {
 	private static Logger LOG = Logger.getLogger(JavaEditorSelectionListener.class
@@ -76,7 +77,6 @@ public class JavaEditorSelectionListener implements ISelectionListener
 	 *            [ATTRIBUTE]
 	 */
 	@Override
-	@SuppressWarnings("restriction")
 	public void selectionChanged(final IWorkbenchPart part, final ISelection selection)
 	{
 		if (part instanceof JavaEditor)
