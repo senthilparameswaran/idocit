@@ -18,7 +18,8 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>de.akra.idocit.common</artifactId>
-	<packaging>jar</packaging>
+	<packaging>eclipse-plugin</packaging>
+	<version>0.0.1.qualifier</version>
 	<name>iDocIt! Common Sources</name>
 
 	<parent>
@@ -70,5 +71,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<version>0.0.3</version>
 </project>
