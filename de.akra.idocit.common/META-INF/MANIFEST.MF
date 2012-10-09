@@ -14,7 +14,6 @@ Export-Package: de.akra.idocit.common,
  de.akra.idocit.common.factories;uses:="com.thoughtworks.xstream",
  de.akra.idocit.common.services;uses:="de.akra.idocit.common.structure",
  de.akra.idocit.common.structure,
- de.akra.idocit.common.structure.impl;uses:="de.akra.idocit.common.structure",
  de.akra.idocit.common.utils;uses:="de.akra.idocit.common.structure"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: AKRA GmbH
