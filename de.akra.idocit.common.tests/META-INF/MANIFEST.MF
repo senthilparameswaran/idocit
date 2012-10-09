@@ -9,4 +9,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Require-Bundle: org.junit4;bundle-version="4.8.1",
  de.akra.idocit.common;bundle-version="0.0.1"
-Export-Package: de.akra.idocit.common.structure.impl
+Export-Package: de.akra.idocit.common.structure.impl,
+ de.akra.idocit.common.utils

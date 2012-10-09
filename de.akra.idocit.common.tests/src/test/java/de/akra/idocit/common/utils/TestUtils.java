@@ -33,6 +33,7 @@ import de.akra.idocit.common.structure.impl.TestParameters;
 
 public class TestUtils
 {
+	
 	/**
 	 * Create a test InterfaceArtifact.
 	 * 
@@ -105,4 +106,5 @@ public class TestUtils
 
 		return artifact;
 	}
+
 }
