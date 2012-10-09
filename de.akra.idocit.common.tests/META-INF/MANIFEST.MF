@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: iDocIt! Common Tests
+Bundle-SymbolicName: de.akra.idocit.common.tests
+Bundle-Version: 0.0.1.qualifier
+Fragment-Host: 
+ de.akra.idocit.common;bundle-version="0.0.1"
+Bundle-Vendor: AKRA GmbH
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Require-Bundle: org.junit4;bundle-version="4.8.1"
