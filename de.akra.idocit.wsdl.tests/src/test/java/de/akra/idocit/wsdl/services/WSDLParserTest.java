@@ -37,7 +37,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
-import de.akra.idocit.core.utils.TestUtils;
+import de.akra.idocit.common.utils.TestUtils;
 import de.akra.idocit.wsdl.Constants;
 
 /**

@@ -45,7 +45,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.LibraryLocation;
 import org.eclipse.jface.text.Document;
 
-import de.akra.idocit.core.utils.TestUtils;
+import de.akra.idocit.common.utils.TestUtils;
 import de.akra.idocit.java.structure.ParserOutput;
 
 public class JavaTestUtils

@@ -7,4 +7,5 @@ Bundle-Vendor: AKRA GmbH
 Fragment-Host: 
  de.akra.idocit.java;bundle-version="0.0.5"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit4;bundle-version="4.8.1"
+Require-Bundle: org.junit4;bundle-version="4.8.1",
+ de.akra.idocit.common.tests;bundle-version="0.0.1"

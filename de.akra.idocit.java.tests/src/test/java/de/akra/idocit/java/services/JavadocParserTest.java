@@ -44,7 +44,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Numerus;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.core.utils.DescribedItemUtils;
-import de.akra.idocit.core.utils.TestUtils;
+import de.akra.idocit.common.utils.TestUtils;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaMethod;
 
