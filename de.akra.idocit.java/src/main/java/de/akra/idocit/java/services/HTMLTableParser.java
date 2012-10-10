@@ -36,6 +36,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.ThematicRole;
@@ -93,7 +94,7 @@ public class HTMLTableParser
 		handler.setDtdInputSources(readDTDs());
 		saxParser.parse(
 				new ByteArrayInputStream(xml.toString()
-						.getBytes(Charset.forName("UTF-8"))), handler);
+						.getBytes(Charset.forName(Misc.DEFAULT_CHARSET))), handler);
 
 		List<Documentation> documentations = handler.getDocumentations();
 		handler.reset();
