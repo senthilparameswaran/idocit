@@ -189,7 +189,7 @@ public final class WSDLParsingService
 				}
 			}
 		}
-		else
+		else if ((wsdlMessage != null) && (wsdlMessage.getQName() != null))
 		{
 			String path = wsdlMessage.getQName().getLocalPart();
 			result.add(path);
