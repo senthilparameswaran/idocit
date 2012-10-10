@@ -20,10 +20,10 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ThematicRoleConstants {
-	public static String MANDATORY_ROLE_ACTION = "ACTION";
-	public static String MANDATORY_ROLE_RULE = "RULE";
-	public static String MANDATORY_ROLE_NONE = "NONE";
-	public static String MANDATORY_ROLE_AGENT = "AGENT";
+	public final static String MANDATORY_ROLE_ACTION = "ACTION";
+	public final static String MANDATORY_ROLE_RULE = "RULE";
+	public final static String MANDATORY_ROLE_NONE = "NONE";
+	public final static String MANDATORY_ROLE_AGENT = "AGENT";
 
 	public static List<String> MANDARTORY_ROLES = Collections
 			.unmodifiableList(Arrays.asList(new String[] {
