@@ -260,10 +260,10 @@ public class ManageThematicGridsComposite
 				mySelection.setNameExists(foundSameName);
 
 				ThematicGrid activeGrid = selection.getActiveThematicGrid();
-				ThematicGrid copiedGrid = activeGrid.clone();
 
 				if (activeGrid != null)
 				{
+					ThematicGrid copiedGrid = activeGrid.clone();
 					int gridIndex = mySelection.getIndexOfActiveThematicGrid();
 					grids.remove(gridIndex);
 					grids.add(copiedGrid);
