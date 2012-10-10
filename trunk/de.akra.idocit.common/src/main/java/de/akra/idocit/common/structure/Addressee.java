@@ -22,7 +22,7 @@ package de.akra.idocit.common.structure;
  * @since 0.0.1
  * @version 0.0.1
  */
-public class Addressee implements DescribedItem
+public class Addressee implements DescribedItem, Cloneable
 {
 	private String name = "";
 
