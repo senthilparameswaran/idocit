@@ -210,7 +210,7 @@ public class EditArtifactDocumentationComposite
 			{
 				// Changes due to Issue #58.
 				logger.log(Level.FINEST,
-						comp != null ? comp.toString() : String.valueOf(null));
+						comp != null ? comp.toString() : "null");
 				// End changes due to Issue #58.
 
 				EditArtifactDocumentationCompositeSelection editArtSelection = makeEditArtifactDocumentationCompositeSelectionFrom(getSelection());
@@ -254,7 +254,7 @@ public class EditArtifactDocumentationComposite
 			{
 				// Changes due to Issue #58.
 				logger.log(Level.FINEST,
-						comp != null ? comp.toString() : String.valueOf(null));
+						comp != null ? comp.toString() : "null");
 				// End changes due to Issue #58.
 
 				EditArtifactDocumentationCompositeSelection editArtSelection = makeEditArtifactDocumentationCompositeSelectionFrom(getSelection());
