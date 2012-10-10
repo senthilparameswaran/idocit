@@ -94,6 +94,11 @@
 			<layout>p2</layout>
 			<url>${eclipse-site}</url>
 		</repository>
+		<repository>
+			<id>AKRA-Artifactory</id>
+			<name>AKRA-internal Artifactory</name>
+			<url>https://artifactory.akra.de/artifactory/repo</url>
+		</repository>
 	</repositories>
 
 	<profiles>
