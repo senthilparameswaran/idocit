@@ -18,8 +18,10 @@ package de.akra.idocit.ui.actions;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.services.impl.HTMLDocGenerator;
 import de.akra.idocit.core.services.impl.ServiceManager;
@@ -126,9 +129,8 @@ public class HTMLExport implements IObjectActionDelegate {
 								String html = docGen.generateHTML();
 								logger.log(Level.INFO, "End converting");
 
-								BufferedWriter writer = new BufferedWriter(
-										new FileWriter(new File(
-												selectedFileName)));
+								BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(selectedFileName), 
+										Charset.forName(Misc.DEFAULT_CHARSET)));
 								writer.write(html);
 								writer.close();
 								
@@ -137,7 +139,8 @@ public class HTMLExport implements IObjectActionDelegate {
 										new InputStreamReader(ResourceUtils.getResourceInputStream("stylesheet.css")));
 								String cssFileName = selectedFileName.substring(
 										0, selectedFileName.lastIndexOf(System.getProperty("file.separator"))+1) + "stylesheet.css";
-								writer = new BufferedWriter(new FileWriter(new File(cssFileName)));
+								writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cssFileName), 
+										Charset.forName(Misc.DEFAULT_CHARSET)));
 								String line = reader.readLine();
 								while (line != null)
 								{
