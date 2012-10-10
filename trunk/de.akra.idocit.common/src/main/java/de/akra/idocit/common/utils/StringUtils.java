@@ -20,11 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
+import de.akra.idocit.common.constants.Misc;
 
 /**
  * Some useful methods for working with strings.
@@ -35,6 +40,8 @@ import java.util.regex.Pattern;
  */
 public class StringUtils
 {
+	private static final Logger LOGGER = Logger.getLogger(StringUtils.class.getName());
+	
 	/**
 	 * An empty String ({@code ""}).
 	 * 
@@ -350,11 +357,13 @@ public class StringUtils
 		InputStreamReader isr;
 		if (stream instanceof BufferedInputStream)
 		{
-			isr = new InputStreamReader(stream);
+			isr = new InputStreamReader(stream, 
+					Charset.forName(Misc.DEFAULT_CHARSET));
 		}
 		else
 		{
-			isr = new InputStreamReader(new BufferedInputStream(stream));
+			isr = new InputStreamReader(new BufferedInputStream(stream),
+					Charset.forName(Misc.DEFAULT_CHARSET));
 		}
 		final StringWriter sw = new StringWriter();
 
@@ -369,7 +378,7 @@ public class StringUtils
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 		}
 
 		return sw.toString();

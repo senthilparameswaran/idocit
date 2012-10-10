@@ -42,6 +42,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.constants.CustomTaglets;
 import de.akra.idocit.java.services.HTMLTableParser;
@@ -413,7 +414,7 @@ public class JavadocUtils
 		handler.setDtdInputSources(readDTDs());
 		saxParser.parse(
 				new ByteArrayInputStream(xml.toString()
-						.getBytes(Charset.forName("UTF-8"))), handler);
+						.getBytes(Charset.forName(Misc.DEFAULT_CHARSET))), handler);
 		final List<StringReplacement> replacements = handler.getReplacements();
 
 		for (StringReplacement replacement : replacements)
