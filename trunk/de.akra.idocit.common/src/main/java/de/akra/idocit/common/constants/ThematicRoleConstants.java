@@ -25,7 +25,7 @@ public final class ThematicRoleConstants {
 	public final static String MANDATORY_ROLE_NONE = "NONE";
 	public final static String MANDATORY_ROLE_AGENT = "AGENT";
 
-	public static List<String> MANDARTORY_ROLES = Collections
+	public final static List<String> MANDARTORY_ROLES = Collections
 			.unmodifiableList(Arrays.asList(new String[] {
 					MANDATORY_ROLE_ACTION, MANDATORY_ROLE_NONE,
 					MANDATORY_ROLE_RULE, MANDATORY_ROLE_AGENT }));
