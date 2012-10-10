@@ -19,10 +19,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -30,6 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.java.services.AddresseeUtilsTest;
 import de.akra.idocit.java.services.HTMLTableParserTest;
 import de.akra.idocit.java.services.JavaInterfaceParserTest;
@@ -119,8 +123,10 @@ public class AllIDocItJavaTests
 			Writer writer = null;
 			try
 			{
-				reader = new BufferedReader(new FileReader(file));
-				writer = new BufferedWriter(new FileWriter(dest));
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), 
+						Charset.forName(Misc.DEFAULT_CHARSET)));
+				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest), 
+						Charset.forName(Misc.DEFAULT_CHARSET)));
 
 				String line;
 				while ((line = reader.readLine()) != null)
