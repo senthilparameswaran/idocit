@@ -40,17 +40,15 @@ import de.akra.idocit.wsdl.Constants;
  * @author Dirk Meier-Eickhoff
  * 
  */
-public class WSDLParsingServiceTest
-{
+public class WSDLParsingServiceTest {
 
 	/**
 	 * Logger.
 	 */
-	private static Logger logger = Logger.getLogger(WSDLParsingServiceTest.class
-			.getName());
+	private static Logger logger = Logger
+			.getLogger(WSDLParsingServiceTest.class.getName());
 
-	private List<String> getReferenceRoles3()
-	{
+	private List<String> getReferenceRoles3() {
 		List<String> roles = new ArrayList<String>();
 
 		roles.add("GetCompletionListSoapInComplex.parameters.GetCompletionListComplex.GetCompletionListComplex.MyComplexType.prefixText.string");
@@ -59,8 +57,7 @@ public class WSDLParsingServiceTest
 		return roles;
 	}
 
-	private List<String> getReferenceRoles2()
-	{
+	private List<String> getReferenceRoles2() {
 		List<String> roles = new ArrayList<String>();
 
 		roles.add("GetCompletionListSoapInSimple.id.int");
@@ -68,8 +65,7 @@ public class WSDLParsingServiceTest
 		return roles;
 	}
 
-	private List<String> getReferenceRoles()
-	{
+	private List<String> getReferenceRoles() {
 		List<String> roles = new ArrayList<String>();
 
 		roles.add("GetCompletionListSoapIn.parameters.GetCompletionList.GetCompletionList.anonymous.prefixText.string");
@@ -78,10 +74,8 @@ public class WSDLParsingServiceTest
 		return roles;
 	}
 
-	private void logList(List<String> roles)
-	{
-		for (String role : roles)
-		{
+	private void logList(List<String> roles) {
+		for (String role : roles) {
 			logger.log(Level.INFO, role);
 		}
 	}
@@ -92,8 +86,7 @@ public class WSDLParsingServiceTest
 	 * @throws WSDLException
 	 */
 	@Test
-	public void testExtractRoles() throws WSDLException
-	{
+	public void testExtractRoles() throws WSDLException {
 		/**
 		 * Positive tests
 		 */
@@ -101,7 +94,8 @@ public class WSDLParsingServiceTest
 		// Test case #1: extract the composite-role of an input-message
 		// correctly.
 		WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
-		Definition def = reader.readWSDL(Constants.FOLDER_SOURCE + "wsdl_46001.wsdl");
+		Definition def = reader.readWSDL(Constants.FOLDER_SOURCE
+				+ "wsdl_46001.wsdl");
 
 		Delimiters delimiters = new Delimiters();
 		delimiters.namespaceDelimiter = ":";
@@ -111,29 +105,32 @@ public class WSDLParsingServiceTest
 		{
 			Message message = def.getMessage(new QName("http://tempuri.org/",
 					"GetCompletionListSoapIn"));
-			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes(),
-					delimiters);
+			List<String> roles = WSDLParsingService.extractRoles(message,
+					def.getTypes(), delimiters);
 			logList(roles);
 			assertEquals(getReferenceRoles(), roles);
 		}
 		{
 			Message message = def.getMessage(new QName("http://tempuri.org/",
 					"GetCompletionListSoapInSimple"));
-			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes(),
-					delimiters);
+			List<String> roles = WSDLParsingService.extractRoles(message,
+					def.getTypes(), delimiters);
 			logList(roles);
 			assertEquals(getReferenceRoles2(), roles);
 		}
 		{
 			Message message = def.getMessage(new QName("http://tempuri.org/",
 					"GetCompletionListSoapInComplex"));
-			List<String> roles = WSDLParsingService.extractRoles(message, def.getTypes(),
-					delimiters);
+			List<String> roles = WSDLParsingService.extractRoles(message,
+					def.getTypes(), delimiters);
 			logList(roles);
 			assertEquals(getReferenceRoles3(), roles);
 		}
-		/**
-		 * Negative tests
-		 */
+	}
+
+	@Test
+	public void testExtractRolesFromNullMessage() {
+		assertEquals(WSDLParsingService.extractRoles(null, null, null),
+				new ArrayList<String>());
 	}
 }
