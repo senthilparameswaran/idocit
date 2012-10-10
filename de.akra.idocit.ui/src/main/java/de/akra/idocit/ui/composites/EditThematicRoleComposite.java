@@ -191,11 +191,10 @@ public class EditThematicRoleComposite
 				{
 					txtDescription.setText(StringUtils.EMPTY);
 				}
+				
+				lblScope.setText("The thematic role " + item.getName() + " appears on");
+				comboScope.select(item.getRoleScope().ordinal());
 			}
-
-			lblScope.setText("The thematic role " + item.getName() + " appears on");
-
-			comboScope.select(item.getRoleScope().ordinal());
 		}
 	}
 
