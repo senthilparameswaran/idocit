@@ -41,9 +41,6 @@ public class ThematicGridServiceTest
 
 			// Test case #4: the extracted verb is null for the identifier "   ".
 			assertEquals(null, ThematicGridService.extractVerb("  "));
-
-			// Test case #5: the extracted verb is null for null.
-			assertEquals(null, null);
 		}
 
 		// Negative tests
