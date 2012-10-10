@@ -17,9 +17,11 @@ package de.akra.idocit.common.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -34,6 +36,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
@@ -51,31 +54,29 @@ import de.akra.idocit.common.structure.impl.TestOperation;
 import de.akra.idocit.common.structure.impl.TestParameter;
 import de.akra.idocit.common.structure.impl.TestParameters;
 
-public class TestUtils
-{
-	
+public class TestUtils {
+
 	/**
 	 * Creates an Eclipse project "External Files" and links the file
-	 * <code>fileName</code> to the project. Then the file can be used as {@link IFile}.
+	 * <code>fileName</code> to the project. Then the file can be used as
+	 * {@link IFile}.
 	 * 
 	 * @param fileName
 	 *            The path to a file.
 	 * @return {@link IFile} from the <code>fileName</code>.
 	 * @throws CoreException
 	 */
-	public static IFile makeIFileFromFileName(String fileName) throws CoreException
-	{
+	public static IFile makeIFileFromFileName(String fileName)
+			throws CoreException {
 		File file = new File(fileName);
 
 		// create project to link source file to it. Is needed to get an IFile.
 		IWorkspace ws = ResourcesPlugin.getWorkspace();
 		IProject project = ws.getRoot().getProject("External Files");
-		if (!project.exists())
-		{
+		if (!project.exists()) {
 			project.create(null);
 		}
-		if (!project.isOpen())
-		{
+		if (!project.isOpen()) {
 			project.open(null);
 		}
 
@@ -95,17 +96,17 @@ public class TestUtils
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static String readFile(String fileName) throws FileNotFoundException,
-			IOException
-	{
-		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+	public static String readFile(String fileName)
+			throws FileNotFoundException, IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(fileName),
+				Charset.forName(Misc.DEFAULT_CHARSET)));
 
 		StringBuffer fileContent = new StringBuffer();
 		int bufferSize = 256;
 		char[] charArray = new char[bufferSize];
 		int read = 0;
-		while ((read = reader.read(charArray, 0, bufferSize)) > -1)
-		{
+		while ((read = reader.read(charArray, 0, bufferSize)) > -1) {
 			fileContent.append(charArray, 0, read);
 		}
 		reader.close();
@@ -122,77 +123,54 @@ public class TestUtils
 	 * @param level
 	 *            The tree level (indentation of the line).
 	 */
-	public static void buildHierarchy(StringBuffer result, SignatureElement sigElem,
-			int level)
-	{
-		if (sigElem != null)
-		{
+	public static void buildHierarchy(StringBuffer result,
+			SignatureElement sigElem, int level) {
+		if (sigElem != null) {
 			// write tabs to the beginning of the line
-			for (int i = 0; i < level; i++)
-			{
+			for (int i = 0; i < level; i++) {
 				result.append('\t');
 			}
 			result.append(sigElem.getDisplayName() + "\n");
 
-			if (sigElem instanceof Parameter)
-			{
+			if (sigElem instanceof Parameter) {
 				Parameter param = (Parameter) sigElem;
-				if (param.getComplexType() != null)
-				{
-					for (Parameter p : param.getComplexType())
-					{
+				if (param.getComplexType() != null) {
+					for (Parameter p : param.getComplexType()) {
 						buildHierarchy(result, p, level + 1);
 					}
 				}
-			}
-			else if (sigElem instanceof Operation)
-			{
+			} else if (sigElem instanceof Operation) {
 				Operation op = (Operation) sigElem;
 				buildHierarchy(result, op.getInputParameters(), level + 1);
 				buildHierarchy(result, op.getOutputParameters(), level + 1);
 
-				for (Parameters paramList : op.getExceptions())
-				{
+				for (Parameters paramList : op.getExceptions()) {
 					buildHierarchy(result, paramList, level + 1);
 				}
-			}
-			else if (sigElem instanceof Parameters)
-			{
+			} else if (sigElem instanceof Parameters) {
 				Parameters paramList = (Parameters) sigElem;
-				if (paramList.getParameters() != null)
-				{
-					for (Parameter p : paramList.getParameters())
-					{
+				if (paramList.getParameters() != null) {
+					for (Parameter p : paramList.getParameters()) {
 						buildHierarchy(result, p, level + 1);
 					}
 				}
-			}
-			else if (sigElem instanceof Interface)
-			{
+			} else if (sigElem instanceof Interface) {
 				Interface interf = (Interface) sigElem;
 
-				if (interf.getOperations() != null)
-				{
-					for (Operation o : interf.getOperations())
-					{
+				if (interf.getOperations() != null) {
+					for (Operation o : interf.getOperations()) {
 						buildHierarchy(result, o, level + 1);
 					}
 				}
-				if (interf.getInnerInterfaces() != null)
-				{
-					for (Interface i : interf.getInnerInterfaces())
-					{
+				if (interf.getInnerInterfaces() != null) {
+					for (Interface i : interf.getInnerInterfaces()) {
 						buildHierarchy(result, i, level + 1);
 					}
 				}
-			}
-			else if (sigElem instanceof InterfaceArtifact)
-			{
+			} else if (sigElem instanceof InterfaceArtifact) {
 				InterfaceArtifact iArtifact = (InterfaceArtifact) sigElem;
-				if (iArtifact.getInterfaces() != null)
-				{
-					for (Interface i : iArtifact.getInterfaces())
-					{
+				if (iArtifact.getInterfaces() != null) {
+					for (Interface i : iArtifact.getInterfaces()) {
 						buildHierarchy(result, i, level + 1);
 					}
 				}
@@ -201,16 +179,17 @@ public class TestUtils
 	}
 
 	/**
-	 * A deep toString() implementation for implementations of {@link SignatureElement}s,
-	 * only the <code>id</code> of the signature element is omitted. Use this to test
-	 * equality for two {@link SignatureElement} object structures.
+	 * A deep toString() implementation for implementations of
+	 * {@link SignatureElement}s, only the <code>id</code> of the signature
+	 * element is omitted. Use this to test equality for two
+	 * {@link SignatureElement} object structures.
 	 * 
 	 * @param sigElem
-	 *            The {@link SignatureElement} to make a String representation from.
+	 *            The {@link SignatureElement} to make a String representation
+	 *            from.
 	 * @return The {@link SignatureElement} as String.
 	 */
-	public static String toStringWithoutId(SignatureElement sigElem)
-	{
+	public static String toStringWithoutId(SignatureElement sigElem) {
 		return doToStringWithoutId(sigElem).toString();
 	}
 
@@ -220,12 +199,10 @@ public class TestUtils
 	 * @return
 	 * @see #toStringWithoutId(SignatureElement)
 	 */
-	private static StringBuilder doToStringWithoutId(SignatureElement sigElem)
-	{
+	private static StringBuilder doToStringWithoutId(SignatureElement sigElem) {
 		StringBuilder builder = new StringBuilder();
 
-		if (sigElem != null)
-		{
+		if (sigElem != null) {
 			builder.append(sigElem.getClass().getSimpleName());
 			builder.append(" [documentations=");
 			builder.append(sigElem.getDocumentations().toString());
@@ -240,8 +217,7 @@ public class TestUtils
 			builder.append(", documentationChanged=");
 			builder.append(sigElem.isDocumentationChanged());
 
-			if (sigElem instanceof Parameter)
-			{
+			if (sigElem instanceof Parameter) {
 				Parameter param = (Parameter) sigElem;
 				builder.append(", dataTypeName=");
 				builder.append(param.getDataTypeName());
@@ -251,17 +227,13 @@ public class TestUtils
 				builder.append(param.getSignatureElementPath());
 
 				builder.append(", complexType={");
-				if (param.getComplexType() != null)
-				{
-					for (Parameter p : param.getComplexType())
-					{
+				if (param.getComplexType() != null) {
+					for (Parameter p : param.getComplexType()) {
 						builder.append(doToStringWithoutId(p));
 					}
 				}
 				builder.append("}");
-			}
-			else if (sigElem instanceof Operation)
-			{
+			} else if (sigElem instanceof Operation) {
 				Operation op = (Operation) sigElem;
 				builder.append(", inputParameters=");
 				builder.append(doToStringWithoutId(op.getInputParameters()));
@@ -269,56 +241,41 @@ public class TestUtils
 				builder.append(doToStringWithoutId(op.getOutputParameters()));
 
 				builder.append(", exceptions={");
-				for (Parameters paramList : op.getExceptions())
-				{
+				for (Parameters paramList : op.getExceptions()) {
 					builder.append(doToStringWithoutId(paramList));
 				}
 				builder.append("}");
-			}
-			else if (sigElem instanceof Parameters)
-			{
+			} else if (sigElem instanceof Parameters) {
 				Parameters paramList = (Parameters) sigElem;
 				builder.append(", parameters={");
-				if (paramList.getParameters() != null)
-				{
-					for (Parameter p : paramList.getParameters())
-					{
+				if (paramList.getParameters() != null) {
+					for (Parameter p : paramList.getParameters()) {
 						builder.append(doToStringWithoutId(p));
 					}
 				}
 				builder.append("}");
-			}
-			else if (sigElem instanceof Interface)
-			{
+			} else if (sigElem instanceof Interface) {
 				Interface interf = (Interface) sigElem;
 
 				builder.append(", operations={");
-				if (interf.getOperations() != null)
-				{
-					for (Operation o : interf.getOperations())
-					{
+				if (interf.getOperations() != null) {
+					for (Operation o : interf.getOperations()) {
 						builder.append(doToStringWithoutId(o));
 					}
 				}
 				builder.append("}");
 				builder.append(", interfaces={");
-				if (interf.getInnerInterfaces() != null)
-				{
-					for (Interface i : interf.getInnerInterfaces())
-					{
+				if (interf.getInnerInterfaces() != null) {
+					for (Interface i : interf.getInnerInterfaces()) {
 						builder.append(doToStringWithoutId(i));
 					}
 				}
 				builder.append("}");
-			}
-			else if (sigElem instanceof InterfaceArtifact)
-			{
+			} else if (sigElem instanceof InterfaceArtifact) {
 				InterfaceArtifact iArtifact = (InterfaceArtifact) sigElem;
 				builder.append(", interfaces={");
-				if (iArtifact.getInterfaces() != null)
-				{
-					for (Interface i : iArtifact.getInterfaces())
-					{
+				if (iArtifact.getInterfaces() != null) {
+					for (Interface i : iArtifact.getInterfaces()) {
 						builder.append(doToStringWithoutId(i));
 					}
 				}
@@ -329,8 +286,7 @@ public class TestUtils
 		return builder;
 	}
 
-	public static Addressee createDeveloper()
-	{
+	public static Addressee createDeveloper() {
 		Addressee addresseeDeveloper = new Addressee("Developer");
 		addresseeDeveloper.setDefault(true);
 		// The developer implements software-systems.
@@ -339,8 +295,7 @@ public class TestUtils
 		return addresseeDeveloper;
 	}
 
-	public static Addressee createTester()
-	{
+	public static Addressee createTester() {
 		Addressee addresseeTester = new Addressee("Tester");
 		addresseeTester.setDefault(false);
 		// "The tester tests the implemented systems and gives feedback on their functional- and not-functional quality."
@@ -349,8 +304,7 @@ public class TestUtils
 		return addresseeTester;
 	}
 
-	public static Addressee createArchitect()
-	{
+	public static Addressee createArchitect() {
 		Addressee addresseeArchitect = new Addressee("Architect");
 		addresseeArchitect.setDefault(false);
 		// "The architect designs software-systems"
@@ -359,8 +313,7 @@ public class TestUtils
 		return addresseeArchitect;
 	}
 
-	public static ThematicRole createObject()
-	{
+	public static ThematicRole createObject() {
 		ThematicRole action = new ThematicRole("OBJECT");
 		// "What the operation does."
 		action.setDescription(StringUtils.EMPTY);
@@ -368,17 +321,16 @@ public class TestUtils
 		return action;
 	}
 
-	public static ThematicRole createRule()
-	{
-		ThematicRole action = new ThematicRole(ThematicRoleConstants.MANDATORY_ROLE_RULE);
+	public static ThematicRole createRule() {
+		ThematicRole action = new ThematicRole(
+				ThematicRoleConstants.MANDATORY_ROLE_RULE);
 		// "What the operation does."
 		action.setDescription(StringUtils.EMPTY);
 
 		return action;
 	}
 
-	public static ThematicRole createAction()
-	{
+	public static ThematicRole createAction() {
 		ThematicRole action = new ThematicRole(
 				ThematicRoleConstants.MANDATORY_ROLE_ACTION);
 		// "What the operation does."
@@ -387,16 +339,14 @@ public class TestUtils
 		return action;
 	}
 
-	public static ThematicRole createAttribute()
-	{
+	public static ThematicRole createAttribute() {
 		final ThematicRole action = new ThematicRole("ATTRIBUTE");
 		// "What the operation does."
 		action.setDescription(StringUtils.EMPTY);
 		return action;
 	}
 
-	public static ThematicRole createComparison()
-	{
+	public static ThematicRole createComparison() {
 		ThematicRole comparison = new ThematicRole("COMPARISON");
 		// "What identifies the OBJECT(s)."
 		comparison.setDescription(StringUtils.EMPTY);
@@ -404,8 +354,7 @@ public class TestUtils
 		return comparison;
 	}
 
-	public static ThematicRole createSource()
-	{
+	public static ThematicRole createSource() {
 		ThematicRole source = new ThematicRole("SOURCE");
 		// "Where the OBJECT(s) come from"
 		source.setDescription(StringUtils.EMPTY);
@@ -413,8 +362,7 @@ public class TestUtils
 		return source;
 	}
 
-	public static ThematicRole createOrdering()
-	{
+	public static ThematicRole createOrdering() {
 		ThematicRole ordering = new ThematicRole("ORDERING");
 		// "Defines the sequence of OBJECTs"
 		ordering.setDescription(StringUtils.EMPTY);
@@ -427,12 +375,12 @@ public class TestUtils
 	 * 
 	 * @return [OBJECT]
 	 * 
-	 * @source The three addressees and their attributes are hard coded in this method.
+	 * @source The three addressees and their attributes are hard coded in this
+	 *         method.
 	 * 
 	 * @thematicgrid Creating Operations
 	 */
-	public static List<Addressee> createReferenceAddressees()
-	{
+	public static List<Addressee> createReferenceAddressees() {
 		List<Addressee> addressees = new ArrayList<Addressee>();
 
 		addressees.add(createDeveloper());
@@ -443,7 +391,8 @@ public class TestUtils
 	}
 
 	/**
-	 * Creates a list of thematic roles with action, comparison, source and ordering.
+	 * Creates a list of thematic roles with action, comparison, source and
+	 * ordering.
 	 * 
 	 * @return [OBJECT]
 	 * 
@@ -451,8 +400,7 @@ public class TestUtils
 	 * 
 	 * @thematicgrid Creating Operations
 	 */
-	public static List<ThematicRole> createReferenceThematicRoles()
-	{
+	public static List<ThematicRole> createReferenceThematicRoles() {
 		final List<ThematicRole> result = new ArrayList<ThematicRole>();
 
 		result.add(createAction());
@@ -466,8 +414,7 @@ public class TestUtils
 		return result;
 	}
 
-	public static List<Addressee> createDeveloperSequence()
-	{
+	public static List<Addressee> createDeveloperSequence() {
 		final List<Addressee> result = new ArrayList<Addressee>();
 		result.add(createDeveloper());
 		return result;
@@ -478,30 +425,30 @@ public class TestUtils
 	 * 
 	 * @param operation
 	 *            [SOURCE]
-	 * @return [OBJECT] all found {@link Documentation}s for the {@code operation}.
+	 * @return [OBJECT] all found {@link Documentation}s for the
+	 *         {@code operation}.
 	 */
-	public static List<Documentation> collectAllDocumentations(final Operation operation)
-	{
+	public static List<Documentation> collectAllDocumentations(
+			final Operation operation) {
 		final List<Documentation> documentations = new ArrayList<Documentation>();
 		documentations.addAll(operation.getDocumentations());
 
 		final Parameters inputParams = operation.getInputParameters();
-		if (inputParams != null)
-		{
-			collectParameterDocumentations(inputParams.getParameters(), documentations);
+		if (inputParams != null) {
+			collectParameterDocumentations(inputParams.getParameters(),
+					documentations);
 		}
 
 		final Parameters returnType = operation.getOutputParameters();
-		if (returnType != null)
-		{
-			collectParameterDocumentations(returnType.getParameters(), documentations);
+		if (returnType != null) {
+			collectParameterDocumentations(returnType.getParameters(),
+					documentations);
 		}
 
-		for (final Parameters exception : operation.getExceptions())
-		{
-			if (exception != null)
-			{
-				collectParameterDocumentations(exception.getParameters(), documentations);
+		for (final Parameters exception : operation.getExceptions()) {
+			if (exception != null) {
+				collectParameterDocumentations(exception.getParameters(),
+						documentations);
 			}
 		}
 
@@ -509,45 +456,46 @@ public class TestUtils
 	}
 
 	/**
-	 * Collect all {@link Documentation}s in the {@link Parameter} structure and adds it
-	 * to the result list <code>documentations</code>.
+	 * Collect all {@link Documentation}s in the {@link Parameter} structure and
+	 * adds it to the result list <code>documentations</code>.
 	 * 
 	 * @param parameters
 	 *            [SOURCE] The {@link Parameter} that should be processed.
 	 * @param documentations
 	 *            [DESINTATION] the result list of found {@link Documentation}s.
 	 */
-	private static void collectParameterDocumentations(final List<Parameter> parameters,
-			final List<Documentation> documentations)
-	{
-		if (parameters != null && !parameters.isEmpty())
-		{
-			for (final Parameter param : parameters)
-			{
+	private static void collectParameterDocumentations(
+			final List<Parameter> parameters,
+			final List<Documentation> documentations) {
+		if (parameters != null && !parameters.isEmpty()) {
+			for (final Parameter param : parameters) {
 				documentations.addAll(param.getDocumentations());
-				collectParameterDocumentations(param.getComplexType(), documentations);
+				collectParameterDocumentations(param.getComplexType(),
+						documentations);
 			}
 		}
 	}
-	
+
 	/**
 	 * Create a test InterfaceArtifact.
 	 * 
 	 * @return a new InterfaceArtifact with some constant values.
 	 */
-	public static InterfaceArtifact createInterfaceArtifact()
-	{
+	public static InterfaceArtifact createInterfaceArtifact() {
 		InterfaceArtifact artifact = new TestInterfaceArtifact(
-				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact", Numerus.SINGULAR);
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Artifact",
+				Numerus.SINGULAR);
 		artifact.setIdentifier("test.wsdl");
 
 		List<Interface> interfaceList = new Vector<Interface>();
-		Interface interf = new TestInterface(artifact, "PortType", Numerus.SINGULAR);
+		Interface interf = new TestInterface(artifact, "PortType",
+				Numerus.SINGULAR);
 		interf.setIdentifier("CustomerService");
 		interfaceList.add(interf);
 
 		List<Operation> operations = new Vector<Operation>();
-		Operation op = new TestOperation(interf, "Operation", "Searching Operations", Numerus.SINGULAR);
+		Operation op = new TestOperation(interf, "Operation",
+				"Searching Operations", Numerus.SINGULAR);
 		op.setIdentifier("find");
 		op.setDocumentationChanged(true);
 		operations.add(op);
@@ -556,21 +504,25 @@ public class TestUtils
 		/*
 		 * Input message
 		 */
-		Parameters inputParameters = new TestParameters(op, "InputMessage", Numerus.SINGULAR);
+		Parameters inputParameters = new TestParameters(op, "InputMessage",
+				Numerus.SINGULAR);
 		inputParameters.setIdentifier("findIn");
 		op.setInputParameters(inputParameters);
 
-		Parameter paramCust = new TestParameter(inputParameters, "Part", Numerus.SINGULAR, true);
+		Parameter paramCust = new TestParameter(inputParameters, "Part",
+				Numerus.SINGULAR, true);
 		paramCust.setIdentifier("Cust");
 		paramCust.setDataTypeName("Customer");
 		inputParameters.addParameter(paramCust);
 
-		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
+		Parameter paramId = new TestParameter(paramCust, "", Numerus.SINGULAR,
+				false);
 		paramId.setIdentifier("id");
 		paramId.setDataTypeName("int");
 		paramCust.addParameter(paramId);
 
-		Parameter paramNameIn = new TestParameter(paramCust, "", Numerus.SINGULAR, false);
+		Parameter paramNameIn = new TestParameter(paramCust, "",
+				Numerus.SINGULAR, false);
 		paramNameIn.setIdentifier("name");
 		paramNameIn.setDataTypeName("String");
 		paramCust.addParameter(paramNameIn);
@@ -578,22 +530,26 @@ public class TestUtils
 		/*
 		 * Output message
 		 */
-		Parameters outputParameters = new TestParameters(op, "OutputMessage", Numerus.SINGULAR);
+		Parameters outputParameters = new TestParameters(op, "OutputMessage",
+				Numerus.SINGULAR);
 		outputParameters.setIdentifier("findOut");
 		op.setOutputParameters(outputParameters);
 
-		Parameter paramCustOut = new TestParameter(outputParameters, "Part", Numerus.SINGULAR, true);
+		Parameter paramCustOut = new TestParameter(outputParameters, "Part",
+				Numerus.SINGULAR, true);
 		paramCustOut.setIdentifier("Cust");
 		paramCustOut.setDataTypeName("Customer");
 		outputParameters.addParameter(paramCust);
 
-		Parameter paramIdOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
+		Parameter paramIdOut = new TestParameter(paramCustOut, "",
+				Numerus.SINGULAR, false);
 		paramIdOut.setIdentifier("id");
 		paramIdOut.setDataTypeName("int");
 		paramIdOut.setDocumentationChanged(true);
 		paramCustOut.addParameter(paramIdOut);
 
-		Parameter paramNameOut = new TestParameter(paramCustOut, "", Numerus.SINGULAR, false);
+		Parameter paramNameOut = new TestParameter(paramCustOut, "",
+				Numerus.SINGULAR, false);
 		paramNameOut.setIdentifier("name");
 		paramNameOut.setDataTypeName("String");
 		paramCustOut.addParameter(paramNameOut);

@@ -18,13 +18,16 @@ package de.akra.idocit.core.services.impl;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -45,6 +48,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.factories.XStreamFactory;
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.InterfaceArtifact;
@@ -590,7 +594,9 @@ public class EclipsePersistenceService implements PersistenceService
 
 		try
 		{
-			lvWriter = new BufferedWriter(new FileWriter(destination));
+			lvWriter = new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(destination), 
+							Charset.forName(Misc.DEFAULT_CHARSET)));
 			lvXStream.toXML(grids, lvWriter);
 		}
 		finally
@@ -619,7 +625,8 @@ public class EclipsePersistenceService implements PersistenceService
 		try
 		{
 			XStream xmlStream = XStreamFactory.configureXStreamForThematicGrid();
-			reader = new BufferedReader(new FileReader(source));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(source), 
+					Charset.forName(Misc.DEFAULT_CHARSET)));
 			grids = (List<ThematicGrid>) xmlStream.fromXML(reader);
 		}
 		finally
@@ -708,7 +715,8 @@ public class EclipsePersistenceService implements PersistenceService
 
 		try
 		{
-			writer = new BufferedWriter(new FileWriter(destination));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destination), 
+					Charset.forName(Misc.DEFAULT_CHARSET)));
 			writer.write("<html>\n\t<head/>\n\t<body>");
 
 			for (ThematicGrid grid : grids)
