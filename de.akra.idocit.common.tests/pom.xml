@@ -88,6 +88,10 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+				<excludes>
+						<exclude>**/Test*.java</exclude>
+					</excludes>
+					
 					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
 					<product>org.eclipse.sdk.ide</product>
 					<useUIHarness>true</useUIHarness>
