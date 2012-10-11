@@ -17,8 +17,10 @@ package de.akra.idocit.wsdl.services;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +32,7 @@ import javax.wsdl.xml.WSDLWriter;
 
 import org.eclipse.core.resources.IFile;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.wsdl.structure.WSDLInterfaceArtifact;
 
@@ -101,7 +104,9 @@ public class WSDLParserMock extends WSDLParser
 				.updateDocumentationInDefinition();
 
 		// write to file
-		BufferedWriter bufWriter = new BufferedWriter(new FileWriter(file));
+		BufferedWriter bufWriter = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(file),
+					Charset.forName(Misc.DEFAULT_CHARSET)));
 		WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
 		wsdlWriter.writeWSDL(updatedDefinition, bufWriter);
 		bufWriter.close();

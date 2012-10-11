@@ -19,9 +19,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +35,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
@@ -113,8 +116,9 @@ public class WSDLParserTest
 			 * write the result to a file
 			 */
 			PrintWriter writer = new PrintWriter(
-					new BufferedWriter(new FileWriter(Constants.FOLDER_OUT
-							+ "testParseWSDL_with_CustomerService.wsdl.out")));
+					new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Constants.FOLDER_OUT
+							+ "testParseWSDL_with_CustomerService.wsdl.out"), 
+							Charset.forName(Misc.DEFAULT_CHARSET))));
 			writer.write(parseResult.toString());
 			writer.close();
 			/*
@@ -198,13 +202,12 @@ public class WSDLParserTest
 			StringBuffer parseResult = new StringBuffer();
 			TestUtils.buildHierarchy(parseResult, iStruct, 0);
 
-			// logger.log(Level.INFO, parseResult.toString());
-
 			/*
 			 * write the result to a file
 			 */
-			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-					Constants.FOLDER_OUT + "wsdl_100001.wsdl.out")));
+			PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(Constants.FOLDER_OUT + "wsdl_100001.wsdl.out"),
+					Charset.forName(Misc.DEFAULT_CHARSET))));
 			writer.write(parseResult.toString());
 			writer.close();
 		}
