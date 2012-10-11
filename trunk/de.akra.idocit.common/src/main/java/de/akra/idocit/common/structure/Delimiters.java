@@ -49,36 +49,63 @@ public class Delimiters
 	 * Quotes and returns the <code>typeDelimiter</code> for the use in regular
 	 * expressions.
 	 * 
+	 * If the typeDelimiter is <code>null</code>, an empty string is returned.
+	 * 
 	 * @return the quoted string of the delimiter.
 	 * @see Pattern#quote(String)
 	 */
 	public String getQuotedTypeDelimiter()
 	{
-		return Pattern.quote(typeDelimiter);
+		if (typeDelimiter != null)
+		{
+			return Pattern.quote(typeDelimiter);
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	/**
 	 * Quotes and returns the <code>namespaceDelimiter</code> for the use in regular
 	 * expressions.
 	 * 
+	 * If the namespaceDelimiter is <code>null</code>, an empty string is returned.
+	 * 
 	 * @return the quoted string of the delimiter.
 	 * @see Pattern#quote(String)
 	 */
 	public String getQuotedNamespaceDelimiter()
 	{
-		return Pattern.quote(namespaceDelimiter);
+		if (namespaceDelimiter != null)
+		{
+			return Pattern.quote(namespaceDelimiter);
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	/**
 	 * Quotes and returns the <code>pathDelimiter</code> for the use in regular
 	 * expressions.
 	 * 
+	 * If the pathDelimiter is <code>null</code>, an empty string is returned.
+	 * 
 	 * @return the quoted string of the delimiter.
 	 * @see Pattern#quote(String)
 	 */
 	public String getQuotedPathDelimiter()
 	{
-		return Pattern.quote(pathDelimiter);
+		if (pathDelimiter != null)
+		{
+			return Pattern.quote(pathDelimiter);
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	/*
