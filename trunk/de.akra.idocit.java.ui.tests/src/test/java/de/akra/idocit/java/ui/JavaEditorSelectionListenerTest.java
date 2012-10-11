@@ -19,8 +19,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -43,6 +44,8 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import de.akra.idocit.common.constants.Misc;
 
 public class JavaEditorSelectionListenerTest
 {
@@ -92,7 +95,7 @@ public class JavaEditorSelectionListenerTest
 	{
 		PrintStream out = System.out;
 		File tmpFileOutput = File.createTempFile("test", "out");
-		System.setOut(new PrintStream(tmpFileOutput));
+		System.setOut(new PrintStream(tmpFileOutput, Misc.DEFAULT_CHARSET));
 		boolean npeOccured = false;
 
 		try
@@ -160,7 +163,8 @@ public class JavaEditorSelectionListenerTest
 		finally
 		{
 			System.setOut(out);
-			BufferedReader reader = new BufferedReader(new FileReader(tmpFileOutput));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(tmpFileOutput), 
+					Charset.forName(Misc.DEFAULT_CHARSET)));
 			String line = reader.readLine();
 
 			while (line != null)
