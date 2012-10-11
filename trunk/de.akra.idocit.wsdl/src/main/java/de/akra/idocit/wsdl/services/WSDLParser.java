@@ -15,9 +15,11 @@
  *******************************************************************************/
 package de.akra.idocit.wsdl.services;
 
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +31,7 @@ import javax.wsdl.xml.WSDLWriter;
 
 import org.eclipse.core.resources.IFile;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.structure.Delimiters;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.core.extensions.Parser;
@@ -130,7 +133,8 @@ public class WSDLParser implements Parser
 		// write to file
 		WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
 		// Changes due to Issue #28
-		Writer writer = new FileWriter(iFile.getLocation().toFile());
+		Writer writer = new OutputStreamWriter(new FileOutputStream(iFile.getLocation().toFile()),
+				Charset.forName(Misc.DEFAULT_CHARSET));
 		wsdlWriter.writeWSDL(updatedDefinition, writer);
 		// End changes due to Issue #28
 

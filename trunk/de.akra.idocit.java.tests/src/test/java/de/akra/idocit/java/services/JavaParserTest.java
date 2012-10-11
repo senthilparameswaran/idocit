@@ -23,9 +23,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.InterfaceArtifact;
@@ -546,7 +549,8 @@ public class JavaParserTest
 	private String readLinesFromFile(final File javaFile, final int startLine, final int endLine)
 			throws FileNotFoundException, IOException
 	{
-		final BufferedReader reader = new BufferedReader(new FileReader(javaFile));
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(javaFile), 
+				Charset.forName(Misc.DEFAULT_CHARSET)));
 		final StringBuffer actJavadoc = new StringBuffer();
 		try
 		{
