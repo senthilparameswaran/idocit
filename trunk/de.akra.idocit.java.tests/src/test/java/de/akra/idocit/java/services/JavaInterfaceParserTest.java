@@ -202,9 +202,9 @@ public class JavaInterfaceParserTest
 	public void before()
 	{
 		this.delimiters = new Delimiters();
-		delimiters.pathDelimiter = "/";
-		delimiters.namespaceDelimiter = ".";
-		delimiters.typeDelimiter = ":";
+		delimiters.setPathDelimiter("/");
+		delimiters.setNamespaceDelimiter(".");
+		delimiters.setTypeDelimiter(":");
 
 		this.parser = ASTParser.newParser(AST.JLS3);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);

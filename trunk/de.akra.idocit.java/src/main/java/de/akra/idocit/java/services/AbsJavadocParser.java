@@ -193,13 +193,13 @@ public abstract class AbsJavadocParser
 						if (tag.getTagName().matches(JAVADOC_TAG_PARAM))
 						{
 							identifier = CONVERTED_JAVADOC_TAG_PARAM
-									+ JavaParser.delimiters.pathDelimiter
+									+ JavaParser.delimiters.getPathDelimiter()
 									+ name.getIdentifier();
 						}
 						else
 						{
 							identifier = CONVERTED_JAVADOC_TAG_THROWS
-									+ JavaParser.delimiters.pathDelimiter
+									+ JavaParser.delimiters.getPathDelimiter()
 									+ name.getIdentifier();
 						}
 						doc.setSignatureElementIdentifier(identifier);

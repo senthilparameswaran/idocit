@@ -70,10 +70,10 @@ public class WSDLParser implements Parser
 	static
 	{
 		delimiters = new Delimiters();
-		delimiters.pathDelimiter = ";";
+		delimiters.setPathDelimiter(";");
 		// TODO maybe '}' as namespace delimiter?
-		delimiters.namespaceDelimiter = "#";
-		delimiters.typeDelimiter = "+";
+		delimiters.setNamespaceDelimiter("#");
+		delimiters.setTypeDelimiter("+");
 	}
 
 	/**

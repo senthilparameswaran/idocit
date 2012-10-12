@@ -214,7 +214,7 @@ public class ReflectionHelper
 						newParameter,
 						attribute.getType(),
 						attribute.getName(),
-						qTypeName + JavaParser.delimiters.namespaceDelimiter
+						qTypeName + JavaParser.delimiters.getNamespaceDelimiter()
 								+ attribute.getName()));
 			}
 

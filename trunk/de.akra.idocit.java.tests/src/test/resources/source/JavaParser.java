@@ -80,9 +80,9 @@ public class JavaParser implements Parser
 	static
 	{
 		delimiters = new Delimiters();
-		delimiters.pathDelimiter = "/";
-		delimiters.namespaceDelimiter = ".";
-		delimiters.typeDelimiter = ":";
+		delimiters.setPathDelimiter("/");
+		delimiters.setNamespaceDelimiter(".");
+		delimiters.setTypeDelimiter(":");
 	}
 
 	/**

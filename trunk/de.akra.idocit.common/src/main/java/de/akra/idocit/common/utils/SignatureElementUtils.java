@@ -369,10 +369,10 @@ public class SignatureElementUtils
 			{
 				// omit the path delimiter if Parameters documentations are nor assignable
 				// to it (identifier is empty)
-				path += delimiters.pathDelimiter;
+				path += delimiters.getPathDelimiter();
 			}
 
-			path += parameter.getQualifiedIdentifier() + delimiters.typeDelimiter
+			path += parameter.getQualifiedIdentifier() + delimiters.getTypeDelimiter()
 					+ parameter.getQualifiedDataTypeName();
 			parameter.setSignatureElementPath(path);
 
@@ -403,7 +403,7 @@ public class SignatureElementUtils
 	{
 		ParameterPathElement paramPathElem = new ParameterPathElement();
 
-		int typeDelimiterPos = pathElement.indexOf(delimiters.typeDelimiter);
+		int typeDelimiterPos = pathElement.indexOf(delimiters.getTypeDelimiter());
 		if (typeDelimiterPos > -1)
 		{
 			String[] nameAndType = pathElement.split(delimiters.getQuotedTypeDelimiter());
@@ -434,7 +434,7 @@ public class SignatureElementUtils
 			String qualifiedIdentifier)
 	{
 		int namespaceDelimiterPos = qualifiedIdentifier
-				.lastIndexOf(delimiters.namespaceDelimiter);
+				.lastIndexOf(delimiters.getNamespaceDelimiter());
 		if (namespaceDelimiterPos > -1)
 		{
 			return qualifiedIdentifier.substring(namespaceDelimiterPos,

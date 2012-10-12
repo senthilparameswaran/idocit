@@ -442,7 +442,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	private String[] extractLastPath(final String signatureElementPath,
 			final Delimiters delimiters)
 	{
-		if (signatureElementPath.lastIndexOf(delimiters.pathDelimiter) > -1)
+		if (signatureElementPath.lastIndexOf(delimiters.getPathDelimiter()) > -1)
 		{
 			final String[] paths = signatureElementPath.split(delimiters
 					.getQuotedPathDelimiter());

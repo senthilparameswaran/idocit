@@ -139,13 +139,13 @@ public final class WSDLParsingService
 						: part.getTypeName() != null ? part.getTypeName().getLocalPart()
 								: part.getName();
 				String path = wsdlMessage.getQName().getLocalPart()
-						+ delimiters.pathDelimiter + part.getName()
-						+ delimiters.typeDelimiter + localPartName;
+						+ delimiters.getPathDelimiter() + part.getName()
+						+ delimiters.getTypeDelimiter() + localPartName;
 
 				// ... and append a dot, if the Part has a simple type as type.
 				if (!isSimpleType(localPartName) && (types != null))
 				{
-					path += delimiters.pathDelimiter;
+					path += delimiters.getPathDelimiter();
 					List<Node> schemata = new ArrayList<Node>();
 
 					// 2. Collect all schema-nodes in one list, ...
@@ -331,7 +331,7 @@ public final class WSDLParsingService
 			// Ok, we have to add this element to our result.
 			String elementName = getNameAttribute(node);
 
-			result.add(elementName + delimiters.typeDelimiter + typeName);
+			result.add(elementName + delimiters.getTypeDelimiter() + typeName);
 			// 2nd case: do we have a recursive type definition?
 		}
 		else if (isVisitedType && !TYPE_NAME_ANONYMOUS.equals(typeName))
@@ -339,7 +339,7 @@ public final class WSDLParsingService
 			// Ok, we have to add this element to our result and stop recursion.
 			String elementName = getNameAttribute(node);
 
-			result.add(elementName + delimiters.typeDelimiter + typeName
+			result.add(elementName + delimiters.getTypeDelimiter() + typeName
 					+ TYPE_NAME_RECURSION);
 		}
 		else
@@ -397,19 +397,19 @@ public final class WSDLParsingService
 						}
 						else
 						{
-							result.add(elementName + delimiters.typeDelimiter + typeName
-									+ delimiters.pathDelimiter + childPath);
+							result.add(elementName + delimiters.getTypeDelimiter() + typeName
+									+ delimiters.getPathDelimiter() + childPath);
 						}
 					}
 				}
 				else if (isSimpleType(typeDeclarationNode))
 				{
-					result.add(elementName + delimiters.typeDelimiter
+					result.add(elementName + delimiters.getTypeDelimiter()
 							+ getNameAttribute(typeDeclarationNode));
 				}
 				else
 				{
-					result.add(elementName + delimiters.typeDelimiter
+					result.add(elementName + delimiters.getTypeDelimiter()
 							+ TYPE_NAME_NO_DEFINITION);
 				}
 			}
