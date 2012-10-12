@@ -119,8 +119,22 @@ public class DocumentationEditorTest
 		// Create Java file
 		File customerFile = new File(SOURCE_DIR + "EmptyInterface.java");
 		IFile customerWorkspaceFile = packageFolder.getFile("EmptyInterface.java");
-		customerWorkspaceFile.create(new FileInputStream(customerFile), true,
-				progressMonitor);
+		
+		FileInputStream javaStream = null;
+		
+		try
+		{
+			javaStream = new FileInputStream(customerFile);
+			customerWorkspaceFile.create(javaStream, true, progressMonitor);
+		} 
+		finally
+		{
+			if(javaStream != null)
+			{
+				javaStream.close();
+			}
+		}
+
 
 		project.refreshLocal(IProject.DEPTH_INFINITE, progressMonitor);
 	}
