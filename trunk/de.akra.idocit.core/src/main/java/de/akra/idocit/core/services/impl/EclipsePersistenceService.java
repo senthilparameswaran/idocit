@@ -79,17 +79,17 @@ public class EclipsePersistenceService implements PersistenceService
 	 */
 	private static final String XML_ALIAS_ADDRESSEE = "addressee";
 
-	private static long LAST_SAVE_TIME_OF_THEMATIC_GRIDS = -1;
-	private static long LAST_SAVE_TIME_OF_THEMATIC_ROLES = -1;
-	private static long LAST_SAVE_TIME_OF_ADDRESSEES = -1;
-
-	/**
+	/*
 	 * Logger.
 	 */
 	private static Logger logger = Logger.getLogger(EclipsePersistenceService.class
 			.getName());
 
 	private boolean isInitialized = false;
+	
+	private long lastSaveTimeOfThematicGrids = -1;
+	private long lastSaveTimeOfThematicRoles = -1;
+	private long lastSaveTimeOfAddressees = -1;
 
 	/*
 	 * (non-Javadoc)
@@ -276,7 +276,7 @@ public class EclipsePersistenceService implements PersistenceService
 
 		String addresseeXML = stream.toXML(addressees);
 		prefStore.putValue(PreferenceStoreConstants.ADDRESSEES, addresseeXML);
-		LAST_SAVE_TIME_OF_ADDRESSEES = System.currentTimeMillis();
+		lastSaveTimeOfAddressees = System.currentTimeMillis();
 	}
 
 	/*
@@ -305,7 +305,7 @@ public class EclipsePersistenceService implements PersistenceService
 
 		String rolesXML = stream.toXML(roles);
 		prefStore.putValue(PreferenceStoreConstants.THEMATIC_ROLES, rolesXML);
-		LAST_SAVE_TIME_OF_THEMATIC_ROLES = System.currentTimeMillis();
+		lastSaveTimeOfThematicRoles = System.currentTimeMillis();
 	}
 
 	/*
@@ -575,7 +575,7 @@ public class EclipsePersistenceService implements PersistenceService
 
 		prefStore.putValue(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING,
 				verbClassRoleAssocsXML);
-		LAST_SAVE_TIME_OF_THEMATIC_GRIDS = System.currentTimeMillis();
+		lastSaveTimeOfThematicGrids = System.currentTimeMillis();
 	}
 
 	/*
@@ -756,7 +756,7 @@ public class EclipsePersistenceService implements PersistenceService
 	@Override
 	public long getLastSaveTimeOfThematicGrids()
 	{
-		return LAST_SAVE_TIME_OF_THEMATIC_GRIDS;
+		return lastSaveTimeOfThematicGrids;
 	}
 
 	/*
@@ -769,7 +769,7 @@ public class EclipsePersistenceService implements PersistenceService
 	@Override
 	public long getLastSaveTimeOfThematicRoles()
 	{
-		return LAST_SAVE_TIME_OF_THEMATIC_ROLES;
+		return lastSaveTimeOfThematicRoles;
 	}
 
 	/*
@@ -781,7 +781,7 @@ public class EclipsePersistenceService implements PersistenceService
 	@Override
 	public long getLastSaveTimeOfAddressees()
 	{
-		return LAST_SAVE_TIME_OF_ADDRESSEES;
+		return lastSaveTimeOfAddressees;
 	}
 
 	@Override
