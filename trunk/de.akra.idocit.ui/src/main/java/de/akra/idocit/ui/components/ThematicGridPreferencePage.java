@@ -17,7 +17,6 @@ package de.akra.idocit.ui.components;
 
 import java.util.List;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
@@ -80,12 +79,9 @@ public class ThematicGridPreferencePage
 	@Override
 	public void init(IWorkbench workbench)
 	{
-		IPreferenceStore prefStore = getPreferenceStore();
-
-		if (prefStore == null)
+		if (getPreferenceStore() == null)
 		{
 			setPreferenceStore(PlatformUI.getPreferenceStore());
-			prefStore = getPreferenceStore();
 		}
 
 		loadPreferences();
