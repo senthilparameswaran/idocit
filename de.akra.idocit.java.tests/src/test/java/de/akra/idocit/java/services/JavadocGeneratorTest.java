@@ -174,9 +174,9 @@ public class JavadocGeneratorTest
 	public void init()
 	{
 		// must be the same delimiters as in JavaParser
-		delimiters.pathDelimiter = "/";
-		delimiters.namespaceDelimiter = ".";
-		delimiters.typeDelimiter = ":";
+		delimiters.setPathDelimiter("/");
+		delimiters.setNamespaceDelimiter(".");
+		delimiters.setTypeDelimiter(":");
 	}
 
 	/**

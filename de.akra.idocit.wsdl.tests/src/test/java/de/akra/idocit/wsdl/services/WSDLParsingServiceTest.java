@@ -98,9 +98,9 @@ public class WSDLParsingServiceTest {
 				+ "wsdl_46001.wsdl");
 
 		Delimiters delimiters = new Delimiters();
-		delimiters.namespaceDelimiter = ":";
-		delimiters.pathDelimiter = ".";
-		delimiters.typeDelimiter = ".";
+		delimiters.setNamespaceDelimiter(":");
+		delimiters.setPathDelimiter(".");
+		delimiters.setTypeDelimiter(".");
 
 		{
 			Message message = def.getMessage(new QName("http://tempuri.org/",

@@ -604,7 +604,7 @@ public class JavaInterfaceParser
 			else
 			{
 				final String name = identifier.substring(
-						identifier.indexOf(JavaParser.delimiters.pathDelimiter) + 1,
+						identifier.indexOf(JavaParser.delimiters.getPathDelimiter()) + 1,
 						identifier.length());
 
 				if (!((identifier
@@ -656,7 +656,7 @@ public class JavaInterfaceParser
 		if (identifier.startsWith(AbsJavadocParser.CONVERTED_JAVADOC_TAG_THROWS))
 		{
 			final String name = identifier
-					.substring(identifier.indexOf(delimiters.pathDelimiter) + 1,
+					.substring(identifier.indexOf(delimiters.getPathDelimiter()) + 1,
 							identifier.length());
 
 			final Javadoc javadoc = method.getRefToASTNode().getJavadoc();

@@ -193,11 +193,11 @@ public abstract class Parameter extends SignatureElement
 		// if there are previous parameters, add a dot
 		if (parameterPath.length() > 0)
 		{
-			parameterPath += delimiters.pathDelimiter;
+			parameterPath += delimiters.getPathDelimiter();
 		}
 
 		// append own data
-		parameterPath += super.getQualifiedIdentifier() + delimiters.typeDelimiter
+		parameterPath += super.getQualifiedIdentifier() + delimiters.getTypeDelimiter()
 				+ qualifiedDataTypeName;
 
 		// if searched Parameter found, add the documentation

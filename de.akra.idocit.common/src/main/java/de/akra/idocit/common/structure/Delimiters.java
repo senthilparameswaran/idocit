@@ -33,17 +33,17 @@ public class Delimiters
 	/**
 	 * Delimiter for the type information.
 	 */
-	public String typeDelimiter;
+	private String typeDelimiter;
 
 	/**
 	 * Delimiter for the namespace information.
 	 */
-	public String namespaceDelimiter;
+	private String namespaceDelimiter;
 
 	/**
 	 * Delimiter to separate the path elements.
 	 */
-	public String pathDelimiter;
+	private String pathDelimiter;
 
 	/**
 	 * Quotes and returns the <code>typeDelimiter</code> for the use in regular
@@ -202,4 +202,29 @@ public class Delimiters
 		builder.append("]");
 		return builder.toString();
 	}
+
+	public String getTypeDelimiter() {
+		return typeDelimiter;
+	}
+
+	public void setTypeDelimiter(String typeDelimiter) {
+		this.typeDelimiter = typeDelimiter;
+	}
+
+	public String getNamespaceDelimiter() {
+		return namespaceDelimiter;
+	}
+
+	public void setNamespaceDelimiter(String namespaceDelimiter) {
+		this.namespaceDelimiter = namespaceDelimiter;
+	}
+
+	public String getPathDelimiter() {
+		return pathDelimiter;
+	}
+
+	public void setPathDelimiter(String pathDelimiter) {
+		this.pathDelimiter = pathDelimiter;
+	}
+	
 }

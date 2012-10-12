@@ -548,7 +548,7 @@ public class WSDLInterfaceParser
 	 */
 	private String extractMessageName(String path)
 	{
-		int endPosOfName = path.indexOf(delimiters.pathDelimiter);
+		int endPosOfName = path.indexOf(delimiters.getPathDelimiter());
 		if (endPosOfName == -1)
 		{
 			endPosOfName = path.length();
