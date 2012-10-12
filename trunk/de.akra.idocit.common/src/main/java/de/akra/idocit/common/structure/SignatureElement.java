@@ -150,6 +150,17 @@ public abstract class SignatureElement
 	private boolean hasPublicAccessibleAttributes = false;
 
 	/**
+	 * Returns the next free id for a SignatureElement.
+	 *  
+	 * @return [OBJECT]
+	 */
+	private static int fetchNextId()
+	{
+		ID_COUNTER++;
+		return ID_COUNTER;
+	}
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param parent
@@ -160,7 +171,7 @@ public abstract class SignatureElement
 	 */
 	public SignatureElement(SignatureElement parent, String category, Numerus numerus, boolean hasPublicAccessibleAttributes)
 	{
-		this.id = ID_COUNTER++;
+		this.id = fetchNextId();
 		this.parent = parent;
 		this.category = category;
 		this.documentations = Collections.emptyList();
