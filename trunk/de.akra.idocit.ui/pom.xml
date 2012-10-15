@@ -54,6 +54,24 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+				
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+						<product>org.eclipse.sdk.ide</product>
+						<useUIHarness>true</useUIHarness>
+						<useUIThread>true</useUIThread>
+						<failIfNoTests>true</failIfNoTests>
+						<showEclipseLog>true</showEclipseLog>
+	
+						<argLine>${ui.test.vmargs}</argLine>
+						<skip>false</skip>
+						<skipTests>false</skipTests>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
