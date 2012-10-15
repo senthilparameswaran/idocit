@@ -391,8 +391,12 @@ public class DocumentItemListComposite
 						newInSelection.getRolesRecommendations()
 								.getSecondLevelRecommendations(), associatedThematicRoles);
 
-				newInSelection.getRolesRecommendations().setSecondLevelRecommendations(
+				RolesRecommendations recommendedRoles = new RolesRecommendations(
+						newInSelection.getRolesRecommendations()
+								.getFirstLevelRecommendations(),
 						allAvailableThematicRoles);
+
+				newInSelection.setRolesRecommendations(recommendedRoles);
 
 				for (int i = 0; i < documentations.size(); i++)
 				{
@@ -427,19 +431,28 @@ public class DocumentItemListComposite
 	 * @param <T>
 	 *            The type of the {@link Collection}s.
 	 * @param first
-	 *            The first Collection.
+	 *            The first Collection (nullable)
 	 * @param second
-	 *            The second Collection.
+	 *            The second Collection (nullable).
 	 * @return a new {@link List} without duplicate items.
 	 */
 	private <T> List<T> mergeCollections(Collection<T> first, Collection<T> second)
 	{
-		List<T> newList = new ArrayList<T>(first);
-		for (T o : second)
+		List<T> newList = new ArrayList<T>();
+
+		if (first != null)
 		{
-			if (!newList.contains(o))
+			newList.addAll(first);
+		}
+
+		if (second != null)
+		{
+			for (T o : second)
 			{
-				newList.add(o);
+				if (!newList.contains(o))
+				{
+					newList.add(o);
+				}
 			}
 		}
 		return newList;
