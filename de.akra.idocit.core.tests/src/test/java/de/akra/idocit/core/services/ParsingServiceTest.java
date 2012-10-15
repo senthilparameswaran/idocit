@@ -52,7 +52,7 @@ public class ParsingServiceTest {
 				.init(new TestParserInitializer());
 	}
 
-	private class WsdlTestParser implements Parser {
+	private static class WsdlTestParser implements Parser {
 		@Override
 		public InterfaceArtifact parse(IFile iFile) throws Exception {
 			return null;
