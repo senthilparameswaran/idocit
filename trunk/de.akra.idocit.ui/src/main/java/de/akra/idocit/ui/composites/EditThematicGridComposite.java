@@ -227,24 +227,21 @@ public class EditThematicGridComposite
 		{
 			String newName = newSelection.getActiveThematicGrid().getName();
 
-			if ((sourceControl == null)
-					|| ((sourceControl != null) && (!sourceControl.equals(txtName))))
+			if ((sourceControl == null) || !sourceControl.equals(txtName))
 			{
 				txtName.setText(newName);
 			}
 
 			String newDescription = newSelection.getActiveThematicGrid().getDescription();
 
-			if ((sourceControl == null)
-					|| ((sourceControl != null) && (!sourceControl.equals(txtDescription))))
+			if ((sourceControl == null) || !sourceControl.equals(txtDescription))
 			{
 				txtDescription.setText(newDescription);
 			}
 
 			Set<String> newVerbs = newSelection.getActiveThematicGrid().getVerbs();
 
-			if ((sourceControl == null)
-					|| ((sourceControl != null) && (!sourceControl.equals(txtVerbs))))
+			if ((sourceControl == null) || !sourceControl.equals(txtVerbs))
 			{
 				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newVerbs));
 			}
@@ -542,7 +539,7 @@ public class EditThematicGridComposite
 				}
 				else
 				{
-					selection.setActiveRole(null);
+					selection = selection.setActiveRole(null);
 				}
 
 				setSelection(selection);
