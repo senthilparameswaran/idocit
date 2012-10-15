@@ -245,7 +245,7 @@ public class DocumentItemComposite
 
 		textModifyCheckThread = new Thread() {
 
-			private final long checkInterval = 1500;
+			private static final long CHECK_INTERVAL = 1500;
 
 			@Override
 			public void run()
@@ -254,10 +254,10 @@ public class DocumentItemComposite
 				{
 					while (!isInterrupted())
 					{
-						sleep(checkInterval);
+						sleep(CHECK_INTERVAL);
 						long intervalDiff = System.currentTimeMillis()
 								- lastTextModification;
-						if (isInTextField && intervalDiff >= checkInterval)
+						if (isInTextField && intervalDiff >= CHECK_INTERVAL)
 						{
 							if (!isDisposed())
 							{
