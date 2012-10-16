@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  de.akra.idocit.core;bundle-version="0.0.10",
  org.eclipse.jface.text,
  org.eclipse.jdt.launching;bundle-version="3.6.1",
- de.akra.idocit.common.tests;bundle-version="0.0.1"
+ de.akra.idocit.common.tests;bundle-version="0.0.1",
+ org.eclipse.jdt;bundle-version="3.7.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
@@ -23,6 +24,7 @@ Bundle-ClassPath: .,
  lib/pocui_swt-1.0.0-SNAPSHOT.jar
 Bundle-Vendor: AKRA GmbH
 Export-Package: de.akra.idocit.ui.components,
+ de.akra.idocit.ui.composites,
  org.pocui.core.actions;uses:="org.pocui.core.composites,org.pocui.core.actions.progress",
  org.pocui.core.actions.progress,
  org.pocui.core.composites,
