@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: iDocIt! GUI
+Bundle-Name: iDocIt! UI
 Bundle-SymbolicName: de.akra.idocit.ui; singleton:=true
 Bundle-Version: 0.0.7.qualifier
 Bundle-Activator: de.akra.idocit.ui.Activator
