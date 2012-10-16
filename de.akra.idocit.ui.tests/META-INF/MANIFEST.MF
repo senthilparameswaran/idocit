@@ -20,4 +20,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.launching;bundle-version="3.6.1",
  de.akra.idocit.common.tests;bundle-version="0.0.1",
  org.eclipse.jdt;bundle-version="3.7.2",
- de.akra.idocit.ui;bundle-version="0.0.7"
+ de.akra.idocit.ui;bundle-version="0.0.7",
+ de.akra.idocit.java;bundle-version="0.0.5",
+ de.akra.idocit.java.ui;bundle-version="0.0.1"
