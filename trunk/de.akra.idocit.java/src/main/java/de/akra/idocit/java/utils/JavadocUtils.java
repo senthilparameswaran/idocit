@@ -292,6 +292,10 @@ public class JavadocUtils
 					}
 					break;
 				}
+				default:
+				{
+					// Do nothing!
+				}
 				}
 				appendWithSpace(html, tempText);
 			}
