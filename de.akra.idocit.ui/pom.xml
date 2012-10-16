@@ -12,7 +12,7 @@
 	<artifactId>de.akra.idocit.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<version>0.0.7.qualifier</version>
-	<name>iDocIt! GUI</name>
+	<name>iDocIt! UI</name>
 
 	<parent>
 		<version>0.0.1</version>
