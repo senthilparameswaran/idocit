@@ -198,6 +198,9 @@ public class JavaInterfaceParser
 								enumDec, parser));
 						break;
 					}
+					default:{
+						// Do nothing!
+					}
 					}
 				}
 			}
@@ -349,6 +352,9 @@ public class JavaInterfaceParser
 					operations.add(processMethodDeclaration(jInterface, methodDec,
 							parser, knownRoles));
 					break;
+				}
+				default:{
+					// Do nothing!
 				}
 				}
 			}
