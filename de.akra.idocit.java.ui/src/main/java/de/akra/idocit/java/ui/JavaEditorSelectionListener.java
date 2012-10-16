@@ -95,42 +95,38 @@ public class JavaEditorSelectionListener implements ISelectionListener
 				if (findView != null && findView instanceof RecommendedGridsView)
 				{
 					final RecommendedGridsView view = (RecommendedGridsView) findView;
-
-					if (view != null)
+					final ITextSelection textSel = (ITextSelection) sel;
+					IJavaElement elt = null;
+					try
 					{
-						final ITextSelection textSel = (ITextSelection) sel;
-						IJavaElement elt = null;
-						try
+						elt = root.getElementAt(textSel.getOffset());
+						if (elt != null && elt.getElementType() == IJavaElement.METHOD)
 						{
-							elt = root.getElementAt(textSel.getOffset());
-							if (elt != null
-									&& elt.getElementType() == IJavaElement.METHOD)
-							{
-								view.setSelection(prepareViewSelection((IMethod) elt));
-							}
-							else
-							{
-								view.setSelection(null);
-							}
+							view.setSelection(prepareViewSelection((IMethod) elt));
 						}
-						catch (final JavaModelException e)
+						else
 						{
-							LOG.log(Level.WARNING,
-									"Java method not found for \"{0}\" (file offset={1}).",
-									new Object[] { textSel.getText(), textSel.getOffset() });
 							view.setSelection(null);
 						}
-						catch (final Exception e)
-						{
-							LOG.log(Level.WARNING,
-									"Failed to collect assigned ThematicRoles.", e);
-							view.setSelection(null);
-						}
+					}
+					catch (final JavaModelException e)
+					{
+						LOG.log(Level.WARNING,
+								"Java method not found for \"{0}\" (file offset={1}).",
+								new Object[] { textSel.getText(), textSel.getOffset() });
+						view.setSelection(null);
+					}
+					catch (final Exception e)
+					{
+						LOG.log(Level.WARNING,
+								"Failed to collect assigned ThematicRoles.", e);
+						view.setSelection(null);
 					}
 				}
 				else
 				{
-					LOG.log(Level.WARNING, "RecommendedGridsView not found: " + String.valueOf(findView));
+					LOG.log(Level.WARNING,
+							"RecommendedGridsView not found: " + String.valueOf(findView));
 				}
 			}
 		}
