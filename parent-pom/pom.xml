@@ -38,6 +38,7 @@
 		<module>../de.akra.idocit.java.ui</module>
 		<module>../de.akra.idocit.java.ui.tests</module>
 		<module>../de.akra.idocit.ui</module>
+		<module>../de.akra.idocit.ui.tests</module>
 		<module>../de.akra.idocit.ui.feature</module>
 		<module>../de.akra.idocit.wsdl</module>
 		<module>../de.akra.idocit.wsdl.tests</module>
