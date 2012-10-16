@@ -17,7 +17,6 @@ package de.akra.idocit.ui.composites.factories;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
@@ -31,24 +30,6 @@ import de.akra.idocit.common.structure.ThematicRole;
  */
 public class DocumentationTestFactory
 {
-	/**
-	 * The addresses who should be considered independently by writing documentations.
-	 * 
-	 * @author Dirk Meier-Eickhoff
-	 * 
-	 */
-	public static enum AddresseeEnum
-	{
-		BUILDER, TESTER, DEVELOPER, ANALYST, SYSTEM_BUILDER, INTEGRATOR, ARCHITECT, MANAGER;
-	}
-
-	/**
-	 * String values for {@link Addressee}s.
-	 */
-	public static String[] addresseeArray = new String[] { "Builder", "Tester",
-			"Developer", "Analyst", "System Builder", "Integrator", "Architect",
-			"Manager" };
-
 	/**
 	 * The supported thematic roles for the signature elements.
 	 * 
@@ -92,42 +73,9 @@ public class DocumentationTestFactory
 		Addressee tester = new Addressee("Tester");
 		docs.put(tester, "Doku f�r " + tester.getName());
 		addresseeSequence.add(tester);
-		
+
 		doc.setErrorCase(true);
-		
+
 		return doc;
 	}
-
-	/**
-	 * Create a List of the {@link Addressee}s.
-	 * 
-	 * @return {@link List} of {@link Addressee}s as strings.
-	 */
-	public static List<String> createAddresseeList()
-	{
-		List<String> addrList = new Vector<String>(addresseeArray.length);
-
-		for (int i = 0; i < addresseeArray.length; ++i)
-		{
-			addrList.add(addresseeArray[i].toString());
-		}
-		return addrList;
-	}
-
-	/**
-	 * Create a List of the {@link ThematicRole}s.
-	 * 
-	 * @return {@link List} of {@link ThematicRole}s as strings.
-	 */
-	public static List<String> createThematicRoleList()
-	{
-		List<String> thematicRoleList = new Vector<String>(thematicRoleArray.length);
-
-		for (int i = 0; i < thematicRoleArray.length; ++i)
-		{
-			thematicRoleList.add(thematicRoleArray[i].toString());
-		}
-		return thematicRoleList;
-	}
-
 }
