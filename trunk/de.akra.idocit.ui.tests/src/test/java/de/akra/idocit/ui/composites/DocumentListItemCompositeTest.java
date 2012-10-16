@@ -11,6 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class DocumentListItemCompositeTest
 	@Before
 	public void setUp() throws Exception
 	{
-		Display display = new Display();
+		Display display = PlatformUI.createDisplay();
 		mainWindow = new Shell(display, SWT.BORDER | SWT.RESIZE);
 		FillLayout layout = new FillLayout();
 		mainWindow.setLayout(layout);
