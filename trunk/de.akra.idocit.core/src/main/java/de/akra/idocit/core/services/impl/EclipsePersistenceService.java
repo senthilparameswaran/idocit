@@ -86,7 +86,7 @@ public class EclipsePersistenceService implements PersistenceService
 			.getName());
 
 	private boolean isInitialized = false;
-	
+
 	private long lastSaveTimeOfThematicGrids = -1;
 	private long lastSaveTimeOfThematicRoles = -1;
 	private long lastSaveTimeOfAddressees = -1;
@@ -245,17 +245,6 @@ public class EclipsePersistenceService implements PersistenceService
 	}
 
 	/**
-	 * Reads the in the plugin stored addressees.
-	 * 
-	 * @return Map of thematic addressee names mapping to their description.
-	 */
-	private Map<String, String> getInitialAddressees()
-	{
-		return convertResourceBundleToMap(IDocItActivator.getDefault()
-				.getAddresseeResourceBundle());
-	}
-
-	/**
 	 * Stores the List of {@link Addressee}s into the {@link IPreferenceStore}.
 	 * 
 	 * @param addressees
@@ -338,18 +327,21 @@ public class EclipsePersistenceService implements PersistenceService
 	 * 
 	 * @see de.akra.idocit.core.services.impl.PersistenceService#readInitialAddressees()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Addressee> readInitialAddressees()
 	{
+		XStream stream = XStreamFactory.configureXStreamForAddressee();
 		List<Addressee> addressees = new ArrayList<Addressee>();
-		Map<String, String> initialAddressees = getInitialAddressees();
 
-		for (Entry<String, String> entry : initialAddressees.entrySet())
+		try
 		{
-			Addressee addressee = new Addressee(entry.getKey());
-			addressee.setDescription(entry.getValue());
-
-			addressees.add(addressee);
+			addressees = (List<Addressee>) stream.fromXML(ResourceUtils
+					.getResourceInputStream(ResourceUtils.ADDRESSEE_RESOURCE_FILE));
+		}
+		catch (XStreamException e)
+		{
+			logger.log(Level.WARNING, "No addressees were loaded.", e);
 		}
 
 		return addressees;
@@ -594,9 +586,8 @@ public class EclipsePersistenceService implements PersistenceService
 
 		try
 		{
-			lvWriter = new BufferedWriter(
-					new OutputStreamWriter(new FileOutputStream(destination), 
-							Charset.forName(Misc.DEFAULT_CHARSET)));
+			lvWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+					destination), Charset.forName(Misc.DEFAULT_CHARSET)));
 			lvXStream.toXML(grids, lvWriter);
 		}
 		finally
@@ -625,8 +616,8 @@ public class EclipsePersistenceService implements PersistenceService
 		try
 		{
 			XStream xmlStream = XStreamFactory.configureXStreamForThematicGrid();
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(source), 
-					Charset.forName(Misc.DEFAULT_CHARSET)));
+			reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(source), Charset.forName(Misc.DEFAULT_CHARSET)));
 			grids = (List<ThematicGrid>) xmlStream.fromXML(reader);
 		}
 		finally
@@ -715,8 +706,8 @@ public class EclipsePersistenceService implements PersistenceService
 
 		try
 		{
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destination), 
-					Charset.forName(Misc.DEFAULT_CHARSET)));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+					destination), Charset.forName(Misc.DEFAULT_CHARSET)));
 			writer.write("<html>\n\t<head/>\n\t<body>");
 
 			for (ThematicGrid grid : grids)
