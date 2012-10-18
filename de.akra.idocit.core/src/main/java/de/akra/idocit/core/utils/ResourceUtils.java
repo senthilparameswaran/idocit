@@ -48,7 +48,7 @@ public class ResourceUtils
 	/**
 	 * Path in the resource file for the stored addresses.
 	 */
-	public static final String ADDRESSEE_RESOURCE_FILE = "addressees.properties";
+	public static final String ADDRESSEE_RESOURCE_FILE = "addressees.xml";
 
 	public static final String THEMATIC_GRIDS_RESOURCE_FILE = "thematic_grids.xml";
 

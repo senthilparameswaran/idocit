@@ -17,6 +17,7 @@ package de.akra.idocit.common.factories;
 
 import com.thoughtworks.xstream.XStream;
 
+import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 
@@ -36,6 +37,8 @@ public final class XStreamFactory {
 	public static final String XML_ALIAS_THEMATIC_GRID = "thematicGrid";
 
 	public static final String XML_ALIAS_THEMATIC_ROLE = "thematicRole";
+	
+	public static final String XML_ALIAS_ADDRESSEE = "addressee";
 
 	/**
 	 * <table border="1" cellspacing="0">
@@ -73,4 +76,11 @@ public final class XStreamFactory {
 		stream.alias(XML_ALIAS_THEMATIC_ROLE, ThematicRole.class);
 		return stream;
 	}
+	
+	public static XStream configureXStreamForAddressee() {
+		XStream stream = new XStream();
+		stream.alias(XML_ALIAS_ADDRESSEE, Addressee.class);
+		return stream;
+	}
+
 }
