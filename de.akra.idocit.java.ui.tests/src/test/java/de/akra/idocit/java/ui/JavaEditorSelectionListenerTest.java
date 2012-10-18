@@ -163,7 +163,8 @@ public class JavaEditorSelectionListenerTest
 		finally
 		{
 			System.setOut(out);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(tmpFileOutput), 
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(tmpFileOutput),
 					Charset.forName(Misc.DEFAULT_CHARSET)));
 			String line = reader.readLine();
 
@@ -178,7 +179,10 @@ public class JavaEditorSelectionListenerTest
 			}
 
 			reader.close();
-			tmpFileOutput.delete();
+			if (!tmpFileOutput.delete())
+			{
+				throw new RuntimeException("Tmp test file could not be deleted!");
+			}
 		}
 
 		if (npeOccured)
