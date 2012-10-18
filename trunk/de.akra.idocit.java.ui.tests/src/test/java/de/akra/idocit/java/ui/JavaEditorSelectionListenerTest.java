@@ -18,7 +18,7 @@ package de.akra.idocit.java.ui;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
@@ -54,7 +54,7 @@ public class JavaEditorSelectionListenerTest
 	private static final String SEPERATOR = System.getProperty("file.separator");
 
 	@Before
-	public void setupWorkspace() throws CoreException, FileNotFoundException
+	public void setupWorkspace() throws CoreException, IOException
 	{
 		// Create Java Project
 		IProgressMonitor progressMonitor = new NullProgressMonitor();
@@ -81,8 +81,22 @@ public class JavaEditorSelectionListenerTest
 		File customerFile = new File("src" + SEPERATOR + "test" + SEPERATOR + "resources"
 				+ SEPERATOR + "source" + SEPERATOR + "Customer.java");
 		IFile customerWorkspaceFile = packageFolder.getFile("Customer.java");
-		customerWorkspaceFile.create(new FileInputStream(customerFile), true,
-				progressMonitor);
+
+		FileInputStream fileInputStream = null;
+
+		try
+		{
+			fileInputStream = new FileInputStream(customerFile);
+			customerWorkspaceFile.create(fileInputStream, true, progressMonitor);
+		}
+		finally
+		{
+			if (fileInputStream != null)
+			{
+				fileInputStream.close();
+			}
+		}
+
 	}
 
 	/**
