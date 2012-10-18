@@ -192,14 +192,15 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 		{
 
 			final StringBuffer docText = new StringBuffer();
+			if (documentation.isErrorCase())
+			{
+				docText.append("(" + Constants.ERROR_CASE_DOCUMENTATION_TEXT + ") ");
+			}
+
 			docText.append(findDocTextByAddresseeName(
 					AddresseeConstants.MOST_IMPORTANT_ADDRESSEE,
 					documentation.getDocumentation()));
 
-			if (documentation.isErrorCase())
-			{
-				docText.append(" (" + Constants.ERROR_CASE_DOCUMENTATION_TEXT + ") ");
-			}
 
 			return StringUtils.toString(docText.toString()).trim();
 		}
