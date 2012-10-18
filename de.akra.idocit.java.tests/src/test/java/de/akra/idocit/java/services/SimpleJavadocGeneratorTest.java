@@ -30,8 +30,13 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.junit.Test;
 
+import de.akra.idocit.common.structure.Addressee;
+import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.DocumentationUtils;
+import de.akra.idocit.core.constants.AddresseeConstants;
+import de.akra.idocit.core.utils.DescribedItemUtils;
 import de.akra.idocit.java.AllIDocItJavaTests;
 import de.akra.idocit.java.constants.Constants;
 import de.akra.idocit.java.exceptions.ParsingException;
@@ -344,6 +349,65 @@ public class SimpleJavadocGeneratorTest
 			assertFalse(options.contains("TIME_TO_LIVE"));
 			assertFalse(options.contains("YES-NO-ANSWER"));
 			assertFalse(options.contains("@"));
+		}
+	}
+
+	/**
+	 * Tests if the error case documentation is generated correctly. It is correct, if
+	 * first comes the {@link Constants#ERROR_CASE_DOCUMENTATION_TEXT} and then the
+	 * documentation text.
+	 * 
+	 * @throws FileNotFoundException
+	 *             If the reference java-file {@link AllIDocItJavaTests#SOURCE_DIR}
+	 *             /InvariantService.java could not be found
+	 * @throws IOException
+	 *             If the reference java-file {@link AllIDocItJavaTests#SOURCE_DIR}
+	 *             /InvariantService.java could not be read
+	 * @throws ParsingException
+	 *             If the reference java-file {@link AllIDocItJavaTests#SOURCE_DIR}
+	 *             /InvariantService.java could not be parsed due to syntax errors
+	 */
+	@Test
+	public void testGenerateJavaDocErrorCaseWithDocumentation()
+			throws FileNotFoundException, IOException, ParsingException
+	{
+		{
+			final String referenceJavadoc = String.format("/** %1$s"
+					+ " * Rule: Maximum length of an address are 40 chars.%1$s"
+					+ " * %1$s" + " * @ordering("
+					+ Constants.ERROR_CASE_DOCUMENTATION_TEXT + ") Ascending%1$s"
+					+ " * %1$s" + " * @parammailAddress [OBJECT]%1$s" + " * %1$s"
+					+ " * @return[REPORT] <code>false</code> if the rule is violated%1$s"
+					+ " * @thematicgridChecking Operations%1$s" + " */%1$s",
+					JAVADOC_NEW_LINE);
+
+			final ParserOutput output = JavaTestUtils
+					.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+							+ "InvariantService.java");
+			final CompilationUnit cu = output.getCompilationUnit();
+
+			final JavaInterfaceArtifact artifact = TestDataFactory
+					.createInvariantService(AddresseeConstants.MOST_IMPORTANT_ADDRESSEE
+							, cu, true);
+			final Addressee addressee = DescribedItemUtils.findAddressee(
+					AddresseeConstants.MOST_IMPORTANT_ADDRESSEE);
+			List<Documentation> documentations = artifact.getInterfaces().get(0)
+					.getOperations().get(0).getDocumentations();
+			Documentation doc = DocumentationUtils.findDocumentationByRoleName(
+					"ORDERING", documentations);
+			doc.getDocumentation().put(
+					addressee, "Ascending");
+
+			JavaInterfaceGenerator.updateJavadocInAST(artifact,
+					SimpleJavadocGenerator.INSTANCE);
+
+			final JavaInterface invariantServiceIntf = (JavaInterface) artifact
+					.getInterfaces().get(0);
+			final JavaMethod checkInvariantMeth = (JavaMethod) invariantServiceIntf
+					.getOperations().get(0);
+			final Javadoc javadoc = checkInvariantMeth.getRefToASTNode().getJavadoc();
+
+			assertEquals(referenceJavadoc, javadoc.toString());
 		}
 	}
 }
