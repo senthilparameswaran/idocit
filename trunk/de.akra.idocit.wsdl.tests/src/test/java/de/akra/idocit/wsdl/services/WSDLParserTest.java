@@ -77,6 +77,7 @@ public class WSDLParserTest
 		{
 			for (final File file : out.listFiles())
 			{
+				// Prevent deletion of .svn-dir (2nd check)!
 				if (!file.delete() && !file.getName().startsWith("."))
 				{
 					throw new RuntimeException("Could not delete "

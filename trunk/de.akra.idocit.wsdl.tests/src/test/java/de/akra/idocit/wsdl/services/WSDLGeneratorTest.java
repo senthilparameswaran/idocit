@@ -51,7 +51,8 @@ public class WSDLGeneratorTest
 		{
 			for (final File file : out.listFiles())
 			{
-				if (!file.delete())
+				// Prevent deletion of .svn-dir (2nd check)!
+				if (!file.delete() && !file.getName().startsWith("."))
 				{
 					throw new RuntimeException("Could not delete "
 							+ file.getAbsolutePath());
