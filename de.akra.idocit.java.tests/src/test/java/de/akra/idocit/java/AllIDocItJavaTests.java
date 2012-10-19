@@ -59,8 +59,8 @@ import de.akra.idocit.java.structure.JavaParameterTest;
 		JavadocParserTest.class, JavaInterfaceParserTest.class, JavaParserTest.class,
 		DocumentationTest.class, JavaInterfaceArtifactTest.class,
 		JavaInterfaceTest.class, JavaMethodTest.class, JavaParameterTest.class,
-		SimpleJavadocGeneratorTest.class, SimpleJavadocParserTest.class , AddresseeUtilsTest.class })
-
+		SimpleJavadocGeneratorTest.class, SimpleJavadocParserTest.class,
+		AddresseeUtilsTest.class })
 public class AllIDocItJavaTests
 {
 	public static final String SOURCE_DIR = "src/test/resources/source/";
@@ -82,8 +82,8 @@ public class AllIDocItJavaTests
 	}
 
 	/**
-	 * @action Delete the converted reference files and move all original reference files back to
-	 * source folder.
+	 * @action Delete the converted reference files and move all original reference files
+	 *         back to source folder.
 	 * 
 	 * @throws IOException
 	 */
@@ -94,7 +94,12 @@ public class AllIDocItJavaTests
 		final File backupFolder = new File(SOURCE_DIR_BACKUP);
 		Assert.assertEquals("Not all reference files were recovered correctly.", 0,
 				backupFolder.listFiles().length);
-		backupFolder.delete();
+
+		if (!backupFolder.delete())
+		{
+			throw new RuntimeException("Could not delete folder"
+					+ backupFolder.getAbsolutePath());
+		}
 	}
 
 	/**
@@ -123,10 +128,10 @@ public class AllIDocItJavaTests
 			Writer writer = null;
 			try
 			{
-				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), 
-						Charset.forName(Misc.DEFAULT_CHARSET)));
-				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest), 
-						Charset.forName(Misc.DEFAULT_CHARSET)));
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(
+						file), Charset.forName(Misc.DEFAULT_CHARSET)));
+				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+						dest), Charset.forName(Misc.DEFAULT_CHARSET)));
 
 				String line;
 				while ((line = reader.readLine()) != null)
@@ -176,7 +181,11 @@ public class AllIDocItJavaTests
 		final File destFolder = new File(destDir);
 		if (!destFolder.exists())
 		{
-			destFolder.mkdir();
+			if (!destFolder.mkdir())
+			{
+				throw new RuntimeException("Could not create "
+						+ destFolder.getAbsolutePath());
+			}
 		}
 
 		// back up source files
@@ -186,7 +195,11 @@ public class AllIDocItJavaTests
 			final File dest = new File(destDir, file.getName());
 			if (dest.exists())
 			{
-				dest.delete();
+				if (dest.delete())
+				{
+					throw new RuntimeException("Could not delete "
+							+ dest.getAbsolutePath());
+				}
 			}
 			final boolean success = file.renameTo(dest);
 			Assert.assertTrue(
