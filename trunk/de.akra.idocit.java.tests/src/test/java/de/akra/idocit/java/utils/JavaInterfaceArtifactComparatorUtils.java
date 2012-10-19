@@ -123,54 +123,61 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-
-		if ((parameter1 != null) && (parameter2 == null))
+		else if ((parameter1 != null) && (parameter2 == null))
 		{
 			return false;
 		}
-		if ((parameter1 == null) && (parameter2 != null))
+		else if ((parameter1 == null) && (parameter2 != null))
 		{
 			return false;
 		}
-
-		if (!equalsSignatureElement(parameter1, parameter2))
+		else if (!equalsSignatureElement(parameter1, parameter2))
 		{
 			return false;
 		}
-
-		if (parameter1.getComplexType() == null)
+		else if ((parameter1.getComplexType() == null)
+				&& (parameter2.getComplexType() != null))
 		{
-			if (parameter2.getComplexType() != null)
-				return false;
+			return false;
 		}
 		else if (!equalsParameters(parameter1.getComplexType(),
 				(parameter2.getComplexType())))
-			return false;
-		if (parameter1.getDataTypeName() == null)
 		{
-			if (parameter2.getDataTypeName() != null)
-				return false;
+			return false;
+		}
+		else if ((parameter1.getDataTypeName() == null)
+				&& (parameter2.getDataTypeName() != null))
+		{
+			return false;
 		}
 		else if (!parameter1.getDataTypeName().equals(parameter2.getDataTypeName()))
-			return false;
-		if (parameter1.getQualifiedDataTypeName() == null)
 		{
-			if (parameter2.getQualifiedDataTypeName() != null)
-				return false;
+			return false;
+		}
+		else if ((parameter1.getQualifiedDataTypeName() == null)
+				&& (parameter2.getQualifiedDataTypeName() != null))
+		{
+			return false;
 		}
 		else if (!parameter1.getQualifiedDataTypeName().equals(
 				parameter2.getQualifiedDataTypeName()))
-			return false;
-		if (parameter1.getSignatureElementPath() == null)
 		{
-			if (parameter2.getSignatureElementPath() != null)
-				return false;
+			return false;
+		}
+		else if ((parameter1.getSignatureElementPath() == null)
+				&& (parameter2.getSignatureElementPath() != null))
+		{
+			return false;
 		}
 		else if (!parameter1.getSignatureElementPath().equals(
 				parameter2.getSignatureElementPath()))
+		{
 			return false;
-
-		return true;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	public static boolean equalsParameters(final List<? extends Parameter> parameters1,
@@ -414,9 +421,10 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return false;
 		}
-		else if ((interface1.getAdditionalTags() == null) && (interface2.getAdditionalTags() != null))
+		else if ((interface1.getAdditionalTags() == null)
+				&& (interface2.getAdditionalTags() != null))
 		{
-				return false;
+			return false;
 		}
 		else if (!interface1.getAdditionalTags().equals(interface2.getAdditionalTags()))
 			return false;
