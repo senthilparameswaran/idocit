@@ -64,15 +64,15 @@ public class WSDLGeneratorTest
 	 * Tests the error documentation-flag is written to an WSDL-file correctly:
 	 * 
 	 * <ol>
-	 * <li>1) Parse the file {@link Constants#FOLDER_SOURCE}/CustomerServiceErrorDocs.wsdl
-	 * <li>2) Check if the error documentation of ACTION is true.
-	 * <li>3) Set it to false.
-	 * <li>4) Write the changed interface to a file.
-	 * <li>5) Parse the written file.
-	 * <li>6) Check if the flag is set to false.
-	 * <li>7) Set it to true.
-	 * <li>8) Write it again into the file.
-	 * <li>9) Parse it again and check if its still true.
+	 * <li>Parse the file {@link Constants#FOLDER_SOURCE}/CustomerServiceErrorDocs.wsdl
+	 * <li>Check if the error documentation of ACTION is true.
+	 * <li>Set it to false.
+	 * <li>Write the changed interface to a file.
+	 * <li>Parse the written file.
+	 * <li>Check if the flag is set to false.
+	 * <li>Set it to true.
+	 * <li>Write it again into the file.
+	 * <li>Parse it again and check if its still true.
 	 * </ol>
 	 * 
 	 * @throws WSDLException
