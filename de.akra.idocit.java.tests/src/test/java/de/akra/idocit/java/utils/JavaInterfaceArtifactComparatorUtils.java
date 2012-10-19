@@ -35,39 +35,41 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-		if ((documentations1 != null) && (documentations2 == null))
+		else if ((documentations1 != null) && (documentations2 == null))
 		{
 			return false;
 		}
-		if ((documentations1 == null) && (documentations2 != null))
+		else if ((documentations1 == null) && (documentations2 != null))
 		{
 			return false;
 		}
-		if (documentations1.size() != documentations2.size())
+		else if (documentations1.size() != documentations2.size())
 		{
 			return false;
 		}
-
-		for (int i = 0; i < documentations1.size(); i++)
+		else
 		{
-			final Documentation doc1 = documentations1.get(i);
-			final Documentation doc2 = documentations2.get(i);
+			for (int i = 0; i < documentations1.size(); i++)
+			{
+				final Documentation doc1 = documentations1.get(i);
+				final Documentation doc2 = documentations2.get(i);
 
-			if ((doc1 != null) && (doc2 == null))
-			{
-				return false;
+				if ((doc1 != null) && (doc2 == null))
+				{
+					return false;
+				}
+				else if ((doc1 == null) && (doc2 != null))
+				{
+					return false;
+				}
+				else if ((doc1 != null) && !doc1.equals(doc2))
+				{
+					return false;
+				}
 			}
-			if ((doc1 == null) && (doc2 != null))
-			{
-				return false;
-			}
-			if ((doc1 != null) && !doc1.equals(doc2))
-			{
-				return false;
-			}
+
+			return true;
 		}
-
-		return true;
 	}
 
 	public static boolean equalsSignatureElement(final SignatureElement element1,
@@ -178,41 +180,41 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-		if ((parameters1 != null) && (parameters2 == null))
+		else if ((parameters1 != null) && (parameters2 == null))
 		{
 			return false;
 		}
-		if ((parameters1 == null) && (parameters2 != null))
+		else if ((parameters1 == null) && (parameters2 != null))
 		{
 			return false;
 		}
-		if (parameters1.size() != parameters2.size())
+		else if (parameters1.size() != parameters2.size())
 		{
 			return false;
 		}
-
-		for (int i = 0; i < parameters1.size(); i++)
+		else
 		{
-			final Parameter param1 = parameters1.get(i);
-			final Parameter param2 = parameters2.get(i);
+			for (int i = 0; i < parameters1.size(); i++)
+			{
+				final Parameter param1 = parameters1.get(i);
+				final Parameter param2 = parameters2.get(i);
 
-			if ((param1 != null) && (param2 == null))
-			{
-				return false;
-			}
-			if ((param1 == null) && (param2 != null))
-			{
-				return false;
-			}
-
-			if (!equalsSignatureElement(param1, param2))
-			{
-				return false;
-			}
-
-			if (!equalsParameter(param1, param2))
-			{
-				return false;
+				if ((param1 != null) && (param2 == null))
+				{
+					return false;
+				}
+				else if ((param1 == null) && (param2 != null))
+				{
+					return false;
+				}
+				else if (!equalsSignatureElement(param1, param2))
+				{
+					return false;
+				}
+				else if (!equalsParameter(param1, param2))
+				{
+					return false;
+				}
 			}
 		}
 
@@ -226,22 +228,20 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-
-		if ((parameters1 != null) && (parameters2 == null))
+		else if ((parameters1 != null) && (parameters2 == null))
 		{
 			return false;
 		}
-		if ((parameters1 == null) && (parameters2 != null))
+		else if ((parameters1 == null) && (parameters2 != null))
 		{
 			return false;
 		}
-
-		if (!equalsSignatureElement(parameters1, parameters2))
+		else if (!equalsSignatureElement(parameters1, parameters2))
 		{
 			return false;
 		}
-
-		if (!equalsParameters(parameters1.getParameters(), parameters2.getParameters()))
+		else if (!equalsParameters(parameters1.getParameters(),
+				parameters2.getParameters()))
 		{
 			return false;
 		}
@@ -257,40 +257,41 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-		if ((parameterList1 != null) && (parameterList2 == null))
+		else if ((parameterList1 != null) && (parameterList2 == null))
 		{
 			return false;
 		}
-		if ((parameterList1 == null) && (parameterList2 != null))
+		else if ((parameterList1 == null) && (parameterList2 != null))
 		{
 			return false;
 		}
-
-		if (parameterList1.size() != parameterList2.size())
+		else if (parameterList1.size() != parameterList2.size())
 		{
 			return false;
 		}
-
-		for (int i = 0; i < parameterList1.size(); i++)
+		else
 		{
-			final Parameters param1 = parameterList1.get(i);
-			final Parameters param2 = parameterList2.get(i);
+			for (int i = 0; i < parameterList1.size(); i++)
+			{
+				final Parameters param1 = parameterList1.get(i);
+				final Parameters param2 = parameterList2.get(i);
 
-			if ((param1 != null) && (param2 == null))
-			{
-				return false;
+				if ((param1 != null) && (param2 == null))
+				{
+					return false;
+				}
+				if ((param1 == null) && (param2 != null))
+				{
+					return false;
+				}
+				if (!equalsParameters(param1, param2))
+				{
+					return false;
+				}
 			}
-			if ((param1 == null) && (param2 != null))
-			{
-				return false;
-			}
-			if (!equalsParameters(param1, param2))
-			{
-				return false;
-			}
+
+			return true;
 		}
-
-		return true;
 	}
 
 	public static boolean equalsMethods(final JavaMethod method1, final JavaMethod method2)
@@ -299,21 +300,19 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-		if ((method1 != null) && (method2 == null))
+		else if ((method1 != null) && (method2 == null))
 		{
 			return false;
 		}
-		if ((method1 == null) && (method2 != null))
+		else if ((method1 == null) && (method2 != null))
 		{
 			return false;
 		}
-
-		if (!equalsSignatureElement(method1, method2))
+		else if (!equalsSignatureElement(method1, method2))
 		{
 			return false;
 		}
-
-		if (method1.getExceptions() == null)
+		else if (method1.getExceptions() == null)
 		{
 			if (method2.getExceptions() != null)
 				return false;
@@ -354,41 +353,41 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-
-		if ((interfaces1 != null) && (interfaces2 == null))
+		else if ((interfaces1 != null) && (interfaces2 == null))
 		{
 			return false;
 		}
-		if ((interfaces1 == null) && (interfaces2 != null))
+		else if ((interfaces1 == null) && (interfaces2 != null))
 		{
 			return false;
 		}
-
-		if (interfaces1.size() != interfaces2.size())
+		else if (interfaces1.size() != interfaces2.size())
 		{
 			return false;
 		}
-
-		for (int i = 0; i < interfaces1.size(); i++)
+		else
 		{
-			final JavaInterface interface1 = (JavaInterface) interfaces1.get(i);
-			final JavaInterface interface2 = (JavaInterface) interfaces2.get(i);
+			for (int i = 0; i < interfaces1.size(); i++)
+			{
+				final JavaInterface interface1 = (JavaInterface) interfaces1.get(i);
+				final JavaInterface interface2 = (JavaInterface) interfaces2.get(i);
 
-			if ((interface1 != null) && (interface2 == null))
-			{
-				return false;
+				if ((interface1 != null) && (interface2 == null))
+				{
+					return false;
+				}
+				if ((interface1 == null) && (interface2 != null))
+				{
+					return false;
+				}
+				if (!equalsInterfaces(interface1, interface2))
+				{
+					return false;
+				}
 			}
-			if ((interface1 == null) && (interface2 != null))
-			{
-				return false;
-			}
-			if (!equalsInterfaces(interface1, interface2))
-			{
-				return false;
-			}
+
+			return true;
 		}
-
-		return true;
 	}
 
 	public static boolean equalsInterfaces(final JavaInterface interface1,
@@ -398,62 +397,62 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-		if ((interface1 != null) && (interface2 == null))
+		else if ((interface1 != null) && (interface2 == null))
 		{
 			return false;
 		}
-		if ((interface1 == null) && (interface2 != null))
+		else if ((interface1 == null) && (interface2 != null))
 		{
 			return false;
 		}
-
-		if (!equalsSignatureElement(interface1, interface2))
+		else if (!equalsSignatureElement(interface1, interface2))
 		{
 			return false;
 		}
-
-		if (!equalsInterfaces(interface1.getInnerInterfaces(),
+		else if (!equalsInterfaces(interface1.getInnerInterfaces(),
 				interface2.getInnerInterfaces()))
 		{
 			return false;
 		}
-
-		if (interface1.getAdditionalTags() == null)
+		else if ((interface1.getAdditionalTags() == null) && (interface2.getAdditionalTags() != null))
 		{
-			if (interface2.getAdditionalTags() != null)
 				return false;
 		}
 		else if (!interface1.getAdditionalTags().equals(interface2.getAdditionalTags()))
 			return false;
 
-		if ((interface1.getOperations() != null) && (interface2.getOperations() == null))
+		else if ((interface1.getOperations() != null)
+				&& (interface2.getOperations() == null))
 		{
 			return false;
 		}
-
-		if ((interface1.getOperations() == null) && (interface2.getOperations() != null))
+		else if ((interface1.getOperations() == null)
+				&& (interface2.getOperations() != null))
 		{
 			return false;
 		}
-
-		if (interface1.getOperations().size() != interface2.getOperations().size())
+		else if (interface1.getOperations().size() != interface2.getOperations().size())
 		{
 			return false;
 		}
-
-		for (int i = 0; i < interface1.getOperations().size(); i++)
+		else
 		{
-			final JavaMethod operation1 = (JavaMethod) interface1.getOperations().get(i);
-			final JavaMethod operation2 = (JavaMethod) interface2.getOperations().get(i);
-
-			if (!equalsMethods(operation1, operation2))
+			for (int i = 0; i < interface1.getOperations().size(); i++)
 			{
-				return false;
+				final JavaMethod operation1 = (JavaMethod) interface1.getOperations()
+						.get(i);
+				final JavaMethod operation2 = (JavaMethod) interface2.getOperations()
+						.get(i);
+
+				if (!equalsMethods(operation1, operation2))
+				{
+					return false;
+				}
+
 			}
 
+			return true;
 		}
-
-		return true;
 	}
 
 	private static boolean equalsReference(final Object obj1, final Object obj2)
@@ -462,11 +461,11 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return true;
 		}
-		if ((obj1 != null) && (obj2 == null))
+		else if ((obj1 != null) && (obj2 == null))
 		{
 			return false;
 		}
-		if ((obj1 == null) && (obj2 != null))
+		else if ((obj1 == null) && (obj2 != null))
 		{
 			return false;
 		}
@@ -481,13 +480,11 @@ public final class JavaInterfaceArtifactComparatorUtils
 		{
 			return false;
 		}
-
-		if (!equalsSignatureElement(artifact1, artifact2))
+		else if (!equalsSignatureElement(artifact1, artifact2))
 		{
 			return false;
 		}
-
-		if (!equalsReference(artifact1.getInterfaces(), artifact2.getInterfaces()))
+		else if (!equalsReference(artifact1.getInterfaces(), artifact2.getInterfaces()))
 		{
 			return false;
 		}
