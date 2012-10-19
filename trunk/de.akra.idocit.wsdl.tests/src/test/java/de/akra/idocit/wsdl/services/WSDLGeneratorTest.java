@@ -33,11 +33,11 @@ import de.akra.idocit.wsdl.Constants;
 
 public class WSDLGeneratorTest
 {
-	private final String TMP_WSDL_FILE_NAME = Constants.FOLDER_OUT
+	private static final String TMP_WSDL_FILE_NAME = Constants.FOLDER_OUT
 			+ "CustomerServiceErrorDocs.wsdl";
-	private final String XML_SCHEMA_FILE_NAME = Constants.FOLDER_SOURCE
+	private static final String XML_SCHEMA_FILE_NAME = Constants.FOLDER_SOURCE
 			+ "CompanySchema.xsd";
-	private final String TMP_XML_SCHEMA_FILE_NAME = Constants.FOLDER_OUT
+	private static final String TMP_XML_SCHEMA_FILE_NAME = Constants.FOLDER_OUT
 			+ "CompanySchema.xsd";
 
 	/**
@@ -51,11 +51,15 @@ public class WSDLGeneratorTest
 		{
 			for (final File file : out.listFiles())
 			{
-				file.delete();
+				if (!file.delete())
+				{
+					throw new RuntimeException("Could not delete "
+							+ file.getAbsolutePath());
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Tests the error documentation-flag is written to an WSDL-file correctly:
 	 * 
