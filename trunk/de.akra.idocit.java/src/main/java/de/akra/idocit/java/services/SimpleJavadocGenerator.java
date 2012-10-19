@@ -377,13 +377,12 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 
 				if (newTag.getTagName() == null)
 				{
-					final String roleName = getThematicRoleName(documentation);
-					String formattedRoleName = (roleName != null) ? roleName
-							: StringUtils.EMPTY;
+					String formattedRoleName = getThematicRoleName(documentation);
 
 					if (!StringUtils.EMPTY.equals(formattedRoleName.trim()))
 					{
-						formattedRoleName = StringUtils.capitalizeFirstChar(roleName) + ':';
+						formattedRoleName = StringUtils
+								.capitalizeFirstChar(formattedRoleName) + ':';
 					}
 					docText = formattedRoleName + StringUtils.SPACE + docText.trim();
 				}
