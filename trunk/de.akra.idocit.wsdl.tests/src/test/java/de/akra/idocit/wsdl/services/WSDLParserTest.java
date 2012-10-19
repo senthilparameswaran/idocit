@@ -77,7 +77,7 @@ public class WSDLParserTest
 		{
 			for (final File file : out.listFiles())
 			{
-				if (!file.delete())
+				if (!file.delete() && !file.getName().startsWith("."))
 				{
 					throw new RuntimeException("Could not delete "
 							+ file.getAbsolutePath());
