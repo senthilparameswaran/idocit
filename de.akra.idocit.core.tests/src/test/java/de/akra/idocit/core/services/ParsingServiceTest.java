@@ -41,40 +41,46 @@ import de.akra.idocit.core.services.impl.ServiceManager;
  * @author Dirk Meier-Eickhoff
  * 
  */
-public class ParsingServiceTest {
-	private static Logger logger = Logger.getLogger(ParsingServiceTest.class
-			.getName());
+public class ParsingServiceTest
+{
+	private static Logger logger = Logger.getLogger(ParsingServiceTest.class.getName());
 
 	@Before
-	public void setUp() {
+	public void setUp()
+	{
 		ServiceManager.getInstance().setParsingService(new ParsingService());
 		ServiceManager.getInstance().getParsingService()
 				.init(new TestParserInitializer());
 	}
 
-	private static class WsdlTestParser implements Parser {
+	private static class WsdlTestParser implements Parser
+	{
 		@Override
-		public InterfaceArtifact parse(IFile iFile) throws Exception {
+		public InterfaceArtifact parse(IFile iFile) throws Exception
+		{
 			return null;
 		}
 
 		@Override
 		public void write(InterfaceArtifact interfaceStructure, IFile iFile)
-				throws Exception {
-		}
+				throws Exception
+		{}
 
 		@Override
-		public boolean isSupported(String type) {
+		public boolean isSupported(String type)
+		{
 			return "wsdl".equals(type);
 		}
 
 		@Override
-		public String getSupportedType() {
+		public String getSupportedType()
+		{
 			return "wsdl";
 		}
 
 		@Override
-		public Delimiters getDelimiters() {
+		public Delimiters getDelimiters()
+		{
 			return null;
 		}
 
@@ -86,10 +92,12 @@ public class ParsingServiceTest {
 
 	}
 
-	private class TestParserInitializer implements ParsingServiceInitializer {
+	private static class TestParserInitializer implements ParsingServiceInitializer
+	{
 
 		@Override
-		public Map<String, Parser> readRegisteredParsers() {
+		public Map<String, Parser> readRegisteredParsers()
+		{
 			Map<String, Parser> testParsers = new HashMap<String, Parser>();
 
 			testParsers.put("wsdl", new WsdlTestParser());
@@ -103,36 +111,36 @@ public class ParsingServiceTest {
 	 * Tests {@link ParsingService#getParser(String)}.
 	 */
 	@Test
-	public void testGetParser() throws UnitializedIDocItException {
+	public void testGetParser() throws UnitializedIDocItException
+	{
 		/*
-		 * Positive tests
-		 * ******************************************************* Test case #1:
-		 * Get the parser for WSDL files, with the type "wsdl".
+		 * Positive tests ******************************************************* Test
+		 * case #1: Get the parser for WSDL files, with the type "wsdl".
 		 * *******************************************************
 		 */
 		{
 			Parser parser = ServiceManager.getInstance().getParsingService()
 					.getParser("wsdl");
-			logger.log(Level.FINE, "The received parser for \"wsdl\": "
-					+ parser);
+			logger.log(Level.FINE, "The received parser for \"wsdl\": " + parser);
 			assertEquals(true, parser != null);
 		}
 
 		/*
-		 * Negative tests
-		 * ******************************************************* Test case #1:
-		 * Getting the parser for the type "xyz" should fail.
+		 * Negative tests ******************************************************* Test
+		 * case #1: Getting the parser for the type "xyz" should fail.
 		 * *******************************************************
 		 */
 		{
 			ServiceManager.getInstance().getParsingService().init(null);
 			boolean exceptionOccured = false;
-			try {
-				Parser parser = ServiceManager.getInstance()
-						.getParsingService().getParser("xyz");
-				logger.log(Level.FINE, "The received parser for \"xyz\": "
-						+ parser);
-			} catch (UnitializedIDocItException unInitEx) {
+			try
+			{
+				Parser parser = ServiceManager.getInstance().getParsingService()
+						.getParser("xyz");
+				logger.log(Level.FINE, "The received parser for \"xyz\": " + parser);
+			}
+			catch (UnitializedIDocItException unInitEx)
+			{
 				exceptionOccured = true;
 			}
 			assertEquals(true, exceptionOccured);
