@@ -210,11 +210,9 @@ public class ReflectionHelper
 
 			for (final JavaAttribute attribute : accessableAttributes)
 			{
-				newParameter.addParameter(doReflectParameter(
-						newParameter,
-						attribute.getType(),
-						attribute.getName(),
-						qTypeName + JavaParser.delimiters.getNamespaceDelimiter()
+				newParameter.addParameter(doReflectParameter(newParameter,
+						attribute.getType(), attribute.getName(), qTypeName
+								+ JavaParser.delimiters.getNamespaceDelimiter()
 								+ attribute.getName()));
 			}
 
@@ -279,15 +277,19 @@ public class ReflectionHelper
 			return doReflectParameter(parent, typeBinding, identifier,
 					qualifiedIdentifier);
 		}
-
-		final JavaParameter returnParameter = new JavaParameter(parent,
-				deriveNumerus(typeBinding), hasPublicAccessableAttributes(typeBinding));
-		returnParameter.setIdentifier(identifier);
-		returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
-		final String typeName = extractIdentifierFrom(type);
-		returnParameter.setDataTypeName(typeName);
-		returnParameter.setQualifiedDataTypeName(typeName);
-		return returnParameter;
+		else
+		{
+			// We know that the typebinding is null, so the numerus must be
+			// singular!
+			final JavaParameter returnParameter = new JavaParameter(parent,
+					Numerus.SINGULAR, hasPublicAccessableAttributes(typeBinding));
+			returnParameter.setIdentifier(identifier);
+			returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
+			final String typeName = extractIdentifierFrom(type);
+			returnParameter.setDataTypeName(typeName);
+			returnParameter.setQualifiedDataTypeName(typeName);
+			return returnParameter;
+		}
 	}
 
 	/**
