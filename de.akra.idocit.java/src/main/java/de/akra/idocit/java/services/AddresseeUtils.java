@@ -28,6 +28,7 @@ import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.utils.Preconditions;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 
 public class AddresseeUtils
@@ -51,28 +52,43 @@ public class AddresseeUtils
 		return false;
 	}
 
-	private static boolean checkSignatureElement(SignatureElement sigElement,
+	public static boolean checkDocumentations(List<Documentation> documentations,
 			String addresseeName)
 	{
-		if (sigElement.getDocumentations() != null)
+		if (documentations != null)
 		{
-			for (Documentation documentation : sigElement.getDocumentations())
+			for (Documentation documentation : documentations)
 			{
 				Map<Addressee, String> addresseeDocs = documentation.getDocumentation();
 
 				if (addresseeDocs != null)
 				{
-					if ((addresseeDocs.size() > 1)
-							|| ((addresseeDocs.size() == 1) && !AddresseeUtils
-									.containsAddresseeName(addresseeName, addresseeDocs)))
+					for (Entry<Addressee, String> docEntry : addresseeDocs.entrySet())
 					{
-						return false;
+						if (docEntry.getKey() != null)
+						{
+							String addreseeName = docEntry.getKey().getName();
+							String docText = docEntry.getValue();
+
+							if (!addresseeName.equals(addreseeName) && (docText != null)
+									&& !StringUtils.EMPTY.equals(docText.trim()))
+							{
+								return false;
+							}
+						}
 					}
 				}
 			}
 		}
 
 		return true;
+
+	}
+
+	private static boolean checkSignatureElement(SignatureElement sigElement,
+			String addresseeName)
+	{
+		return checkDocumentations(sigElement.getDocumentations(), addresseeName);
 	}
 
 	private static boolean checkParamsIfOnlyForDeveloper(List<Parameter> parameters,
