@@ -430,4 +430,35 @@ public class AddresseeUtilsTest
 			assertTrue(illegalArgumentException);
 		}
 	}
+
+	/**
+	 * If the documentation contains other addressees with empty (before or after trim())
+	 * documentation, these are also accepted.
+	 * 
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
+	@Test
+	public void testEmptyStringsAreIgnored() throws FileNotFoundException, IOException
+	{
+		ParserOutput output = JavaTestUtils
+				.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+						+ "CustomerService.java");
+		CompilationUnit cu = output.getCompilationUnit();
+		JavaInterfaceArtifact artifact = TestDataFactory.createCustomerService(
+				"Developer", true, cu);
+
+		JavaInterface emptyInterface = new JavaInterface(artifact, "Interface",
+				Numerus.SINGULAR);
+
+		artifact.addInterface(emptyInterface);
+
+		TestDataFactory.addDocumentation(emptyInterface, "Tester", "NONE", "",
+				emptyInterface.getIdentifier(), false);
+
+		TestDataFactory.addDocumentation(emptyInterface, "Architect", "NONE", "\t  \t",
+				emptyInterface.getIdentifier(), false);
+
+		assertTrue(AddresseeUtils.containsOnlyOneAddressee(artifact, "Developer"));
+	}
 }

@@ -102,26 +102,10 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 	 */
 	private void checkInvariant(final List<Documentation> documentations)
 	{
-		if (documentations != null)
-		{
-			for (final Documentation documentation : documentations)
-			{
-				final Map<Addressee, String> addresseeDocs = documentation
-						.getDocumentation();
-
-				if ((addresseeDocs != null) && !addresseeDocs.isEmpty())
-				{
-					Preconditions
-							.checkTrue(addresseeDocs.size() == 1,
-									"Simplified Javadoc could not be generated for more than one addressee");
-
-					Preconditions.checkTrue(AddresseeUtils.containsAddresseeName(
-							AddresseeConstants.MOST_IMPORTANT_ADDRESSEE, addresseeDocs),
-							"Simplified Javadoc could only be generated for the "
-									+ AddresseeConstants.MOST_IMPORTANT_ADDRESSEE + ".");
-				}
-			}
-		}
+		boolean documentationsValid = AddresseeUtils.checkDocumentations(documentations,
+				AddresseeConstants.MOST_IMPORTANT_ADDRESSEE);
+		Preconditions.checkTrue(documentationsValid,
+				"Simplified Javadoc could not be generated for more than one addressee");
 	}
 
 	/**
@@ -200,7 +184,6 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 			docText.append(findDocTextByAddresseeName(
 					AddresseeConstants.MOST_IMPORTANT_ADDRESSEE,
 					documentation.getDocumentation()));
-
 
 			return StringUtils.toString(docText.toString()).trim();
 		}
@@ -998,7 +981,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 				{
 					String[] splittedText = escapedDocText.split(Pattern.quote(HTML_BR));
 					splittedText = appendBRTag(splittedText);
-					
+
 					identifierElement.setText(splittedText[0]);
 					fragments.add(identifierElement);
 					result.add(newTagElement);
