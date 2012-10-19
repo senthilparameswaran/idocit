@@ -29,7 +29,7 @@ public class TestRecursion
 		return new Container2();
 	}
 	
-	public class Container {
+	public static class Container {
 
 		private List<Container> innerContainers;
 		private Container parent;
@@ -69,7 +69,7 @@ public class TestRecursion
 		}
 	}
 	
-	public class Container2 {
+	public static class Container2 {
 
 		private Container container;
 		private Container container2;
