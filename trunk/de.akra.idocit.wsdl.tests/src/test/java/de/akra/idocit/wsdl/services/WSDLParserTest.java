@@ -77,7 +77,11 @@ public class WSDLParserTest
 		{
 			for (final File file : out.listFiles())
 			{
-				file.delete();
+				if (file.delete())
+				{
+					throw new RuntimeException("Could not delete "
+							+ file.getAbsolutePath());
+				}
 			}
 		}
 	}
@@ -115,9 +119,9 @@ public class WSDLParserTest
 			/*
 			 * write the result to a file
 			 */
-			PrintWriter writer = new PrintWriter(
-					new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Constants.FOLDER_OUT
-							+ "testParseWSDL_with_CustomerService.wsdl.out"), 
+			PrintWriter writer = new PrintWriter(new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(Constants.FOLDER_OUT
+							+ "testParseWSDL_with_CustomerService.wsdl.out"),
 							Charset.forName(Misc.DEFAULT_CHARSET))));
 			writer.write(parseResult.toString());
 			writer.close();
@@ -205,9 +209,10 @@ public class WSDLParserTest
 			/*
 			 * write the result to a file
 			 */
-			PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(Constants.FOLDER_OUT + "wsdl_100001.wsdl.out"),
-					Charset.forName(Misc.DEFAULT_CHARSET))));
+			PrintWriter writer = new PrintWriter(new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(Constants.FOLDER_OUT
+							+ "wsdl_100001.wsdl.out"),
+							Charset.forName(Misc.DEFAULT_CHARSET))));
 			writer.write(parseResult.toString());
 			writer.close();
 		}
