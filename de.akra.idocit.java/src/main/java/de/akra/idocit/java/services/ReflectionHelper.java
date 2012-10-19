@@ -280,9 +280,9 @@ public class ReflectionHelper
 		else
 		{
 			// We know that the typebinding is null, so the numerus must be
-			// singular!
+			// singular and there are no public accessable attributes!
 			final JavaParameter returnParameter = new JavaParameter(parent,
-					Numerus.SINGULAR, hasPublicAccessableAttributes(typeBinding));
+					Numerus.SINGULAR, false);
 			returnParameter.setIdentifier(identifier);
 			returnParameter.setQualifiedIdentifier(qualifiedIdentifier);
 			final String typeName = extractIdentifierFrom(type);
