@@ -198,8 +198,10 @@ public class JavaInterfaceParser
 								enumDec, parser));
 						break;
 					}
-					default:{
+					default:
+					{
 						// Do nothing!
+						logger.info("Nodetype is " + type.getNodeType());
 					}
 					}
 				}
@@ -353,8 +355,10 @@ public class JavaInterfaceParser
 							parser, knownRoles));
 					break;
 				}
-				default:{
+				default:
+				{
 					// Do nothing!
+					logger.info("Nodetype of ASTNode is " + bodyDec.getNodeType());
 				}
 				}
 			}
@@ -661,9 +665,9 @@ public class JavaInterfaceParser
 		// so we need only to check these tags
 		if (identifier.startsWith(AbsJavadocParser.CONVERTED_JAVADOC_TAG_THROWS))
 		{
-			final String name = identifier
-					.substring(identifier.indexOf(delimiters.getPathDelimiter()) + 1,
-							identifier.length());
+			final String name = identifier.substring(
+					identifier.indexOf(delimiters.getPathDelimiter()) + 1,
+					identifier.length());
 
 			final Javadoc javadoc = method.getRefToASTNode().getJavadoc();
 			final Iterator<TagElement> iter = javadoc.tags().iterator();
