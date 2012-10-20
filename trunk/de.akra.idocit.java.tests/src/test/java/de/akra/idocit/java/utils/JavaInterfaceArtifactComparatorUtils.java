@@ -26,8 +26,35 @@ import de.akra.idocit.java.structure.JavaInterface;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
 
+/**
+ * Contains equals-methods for different parts of the implementations of
+ * {@link SignatureElement}.
+ * 
+ * Please note:
+ * I suppressed the FindBugs-warning RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE
+ * by annotating all methods of this class. I did so, because I think the code
+ * more readable when using constant null-check patterns. Consider this example:
+ * 
+ * A and B are variables
+ * 
+ * The pattern is:
+ * 
+ * 1) if(A == B){}
+ * 2) else if((A != null) && (B == null){}
+ * 3) else if((A == null) && (B != null){}
+ * 
+ * FindBugs would complain about line 3) because this line checks
+ * the last possible condition and could be omitted therefore. But
+ * if you write it down, everybody could which variable is null
+ * and which not in the following block. To me, this is a real 
+ * advantage.
+ * 
+ * @author Jan Christian Krause
+ * 
+ */
 public final class JavaInterfaceArtifactComparatorUtils
 {
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsDocumentations(final List<Documentation> documentations1,
 			final List<Documentation> documentations2)
 	{
@@ -72,6 +99,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		}
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsSignatureElement(final SignatureElement element1,
 			final SignatureElement element2)
 	{
@@ -116,6 +144,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsParameter(final Parameter parameter1,
 			final Parameter parameter2)
 	{
@@ -180,6 +209,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		}
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsParameters(final List<? extends Parameter> parameters1,
 			final List<? extends Parameter> parameters2)
 	{
@@ -228,6 +258,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsParameters(final Parameters parameters1,
 			final Parameters parameters2)
 	{
@@ -256,6 +287,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsExceptions(
 			final List<? extends Parameters> parameterList1,
 			final List<? extends Parameters> parameterList2)
@@ -301,6 +333,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		}
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsMethods(final JavaMethod method1, final JavaMethod method2)
 	{
 		if (method1 == method2)
@@ -353,6 +386,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		return true;
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsInterfaces(final List<? extends Interface> interfaces1,
 			final List<? extends Interface> interfaces2)
 	{
@@ -397,6 +431,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		}
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsInterfaces(final JavaInterface interface1,
 			final JavaInterface interface2)
 	{
@@ -463,6 +498,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 		}
 	}
 
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	private static boolean equalsReference(final Object obj1, final Object obj2)
 	{
 		if (obj1 == obj2)
@@ -481,6 +517,7 @@ public final class JavaInterfaceArtifactComparatorUtils
 	}
 
 	@SuppressWarnings("unchecked")
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 	public static boolean equalsInterfaceArtifacts(final JavaInterfaceArtifact artifact1,
 			final JavaInterfaceArtifact artifact2)
 	{
