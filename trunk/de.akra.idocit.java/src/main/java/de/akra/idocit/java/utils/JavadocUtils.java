@@ -295,6 +295,8 @@ public class JavadocUtils
 				default:
 				{
 					// Do nothing!
+					logger.info("The fragment " + String.valueOf(fragment)
+							+ " has nodetype-value " + fragment.getNodeType());
 				}
 				}
 				appendWithSpace(html, tempText);
@@ -417,8 +419,8 @@ public class JavadocUtils
 		final JavadocHtmlHandler handler = new JavadocHtmlHandler();
 		handler.setDtdInputSources(readDTDs());
 		saxParser.parse(
-				new ByteArrayInputStream(xml.toString()
-						.getBytes(Charset.forName(Misc.DEFAULT_CHARSET))), handler);
+				new ByteArrayInputStream(xml.toString().getBytes(
+						Charset.forName(Misc.DEFAULT_CHARSET))), handler);
 		final List<StringReplacement> replacements = handler.getReplacements();
 
 		for (StringReplacement replacement : replacements)
