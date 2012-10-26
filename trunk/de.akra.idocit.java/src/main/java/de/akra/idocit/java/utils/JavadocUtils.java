@@ -52,6 +52,9 @@ import de.akra.idocit.java.structure.StringReplacement;
 public class JavadocUtils
 {
 	private static final String REGEX_CR = "[\r]";
+	private static final String REGEX_LEFT_BRACKET = Pattern.quote("<");
+	private static final String REGEX_RIGHT_BRACKET = Pattern.quote(">");
+	
 	public static final String NEW_LINE = System.getProperty("line.separator");
 
 	public static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
@@ -400,11 +403,15 @@ public class JavadocUtils
 	{
 		// Changes due to Issue #105
 		// delete all '\r' from original text, because the SAXParser will loose them
-		// during
-		// parsing process. Because of that string replacement would not work at the end.
+		// during parsing process. Because of that string replacement would not 
+		// work at the end.
 		javadocText = javadocText.replaceAll(REGEX_CR,
 				de.akra.idocit.common.utils.StringUtils.EMPTY);
 		// Changes due to Issue #105
+		javadocText = javadocText.replaceAll(REGEX_LEFT_BRACKET,
+				"&gt;");
+		javadocText = javadocText.replaceAll(REGEX_RIGHT_BRACKET,
+				"&lt;");
 
 		final StringBuilder xml = new StringBuilder(XML_HEADER.length()
 				+ XML_ROOT_START.length() + javadocText.length() + XML_ROOT_END.length());
