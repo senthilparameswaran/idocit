@@ -52,8 +52,8 @@ import de.akra.idocit.java.structure.StringReplacement;
 public class JavadocUtils
 {
 	private static final String REGEX_CR = "[\r]";
-	private static final String REGEX_LEFT_BRACKET = Pattern.quote("<");
-	private static final String REGEX_RIGHT_BRACKET = Pattern.quote(">");
+	private static final char LEFT_BRACKET = '<';
+	private static final char RIGHT_BRACKET = '>';
 	
 	public static final String NEW_LINE = System.getProperty("line.separator");
 
@@ -397,6 +397,82 @@ public class JavadocUtils
 				|| CustomTaglets.THROWS_INFO.getTagName().equals(tagElementName)
 				|| CustomTaglets.SUB_THROWS_INFO.getTagName().equals(tagElementName);
 	}
+	
+	/**
+	 * Masks all '&lt;' and '&gt;' characters in the <code>unescapedString</code>, which don't
+	 * belong to an XML-tag.
+	 * 
+	 * Example:
+	 * <code>
+	 * 	escapeXmlBrackets("<xml>y < x</xml>") == "<xml>y &lt; x</xml>"
+	 * </code>
+	 * 
+	 * @param unescapedString [OBJECT] Not nullable  
+	 * 
+	 * @return Masked String
+	 */
+	private static String escapeXmlBrackets(String unescapedString)
+	{
+		int leftBracketPos = unescapedString.indexOf(LEFT_BRACKET);
+		int rightBracketPos = unescapedString.indexOf(RIGHT_BRACKET);
+		
+		if((leftBracketPos <= -1) && (rightBracketPos <= -1)){
+			// Case ' '
+			return unescapedString;
+		}
+		else if((leftBracketPos >= 0) && (rightBracketPos < 0))
+		{
+			// Case '< <' 
+			return escapeBrackets(unescapedString);
+		}
+		else if((leftBracketPos < 0) && (rightBracketPos >= 0))
+		{
+			// Case '> >'
+			return escapeBrackets(unescapedString);
+		}
+		else
+		{
+			String escapedString = unescapedString.substring(0, leftBracketPos);
+			String checkString = "";
+			
+			if((leftBracketPos + 1) < unescapedString.length())
+			{
+				checkString = unescapedString.substring(rightBracketPos + 1, unescapedString.length());
+			}
+			
+			if(leftBracketPos < rightBracketPos)
+			{
+				String betweenBrackets = unescapedString.substring(leftBracketPos + 1, rightBracketPos).trim();
+					
+				if(!(de.akra.idocit.common.utils.StringUtils.EMPTY.equals(betweenBrackets.trim()) || (betweenBrackets.startsWith("="))))
+				{
+					// Case '<XML>'
+					escapedString = unescapedString.substring(0, rightBracketPos + 1);
+				}
+				else
+				{
+					escapedString = escapeBrackets(unescapedString.substring(0, rightBracketPos + 1));
+				}
+					
+				return escapedString + escapeXmlBrackets(checkString);
+			}
+			else
+			{
+				// Case '< >'
+				escapedString = escapeBrackets(escapedString);
+				return escapedString + escapeXmlBrackets(checkString);
+			}
+		}
+	}
+
+	private static String escapeBrackets(String escapedString)
+	{
+		escapedString = escapedString.replaceAll(String.valueOf(LEFT_BRACKET),
+				"&lt;");
+		escapedString = escapedString.replaceAll(String.valueOf(RIGHT_BRACKET),
+				"&gt;");
+		return escapedString;
+	}
 
 	public static String escapeHtml4(String javadocText)
 			throws ParserConfigurationException, SAXException, IOException
@@ -408,10 +484,7 @@ public class JavadocUtils
 		javadocText = javadocText.replaceAll(REGEX_CR,
 				de.akra.idocit.common.utils.StringUtils.EMPTY);
 		// Changes due to Issue #105
-		javadocText = javadocText.replaceAll(REGEX_LEFT_BRACKET,
-				"&gt;");
-		javadocText = javadocText.replaceAll(REGEX_RIGHT_BRACKET,
-				"&lt;");
+		javadocText = escapeXmlBrackets(javadocText);
 
 		final StringBuilder xml = new StringBuilder(XML_HEADER.length()
 				+ XML_ROOT_START.length() + javadocText.length() + XML_ROOT_END.length());
