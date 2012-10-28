@@ -1004,7 +1004,7 @@ public class SimpleJavadocGenerator implements IJavadocGenerator
 					identifierElement.setText(escapedDocText);
 					fragments.add(identifierElement);
 
-					result.add(tagElement);
+					result.add(newTagElement);
 				}
 			}
 			else
