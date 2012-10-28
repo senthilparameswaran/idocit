@@ -34,7 +34,7 @@ public class StringUtils
 	 * 
 	 * @return [OBJECT] The escaped text
 	 */
-	public static String escapeHtml(String unescapedText)
+	public static String escapeHtml(final String unescapedText)
 	{
 		final String escapedText = StringEscapeUtils.escapeHtml4(unescapedText);
 		final StringBuilder tmpText = new StringBuilder();

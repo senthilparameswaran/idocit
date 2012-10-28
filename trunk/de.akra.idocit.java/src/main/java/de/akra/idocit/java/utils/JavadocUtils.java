@@ -54,7 +54,7 @@ public class JavadocUtils
 	private static final String REGEX_CR = "[\r]";
 	private static final char LEFT_BRACKET = '<';
 	private static final char RIGHT_BRACKET = '>';
-	
+
 	public static final String NEW_LINE = System.getProperty("line.separator");
 
 	public static final String XML_HEADER = "<?xml version=\"1.1\" encoding=\"UTF-8\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
@@ -74,13 +74,17 @@ public class JavadocUtils
 		public void characters(char[] ch, int start, int length) throws SAXException
 		{
 			String origValue = String.valueOf(ch, start, length);
-			String escapedValue = StringUtils.escapeHtml(origValue);
+			if (!"<".equals(origValue) && !">".equals(origValue))
+			{
+				String escapedValue = StringUtils
+						.escapeHtml(unquoteFormatChars(origValue));
 
-			StringReplacement replacement = new StringReplacement();
-			replacement.setOriginalString(origValue);
-			replacement.setEscapedString(escapedValue);
+				StringReplacement replacement = new StringReplacement();
+				replacement.setOriginalString(origValue);
+				replacement.setEscapedString(escapedValue);
 
-			replacements.add(replacement);
+				replacements.add(replacement);
+			}
 		}
 
 		@Override
@@ -397,80 +401,98 @@ public class JavadocUtils
 				|| CustomTaglets.THROWS_INFO.getTagName().equals(tagElementName)
 				|| CustomTaglets.SUB_THROWS_INFO.getTagName().equals(tagElementName);
 	}
-	
+
+	private static String quoteFormatChars(String unquotedString)
+	{
+		return unquotedString.replaceAll(Pattern.quote(StringUtils.XML_TAG_BR), "\n")
+				.replaceAll(Pattern.quote(StringUtils.XML_TAG_TAB), "\t");
+	}
+
+	private static String unquoteFormatChars(String unquotedString)
+	{
+		return unquotedString.replaceAll(Pattern.quote("\n"), StringUtils.XML_TAG_BR)
+				.replaceAll(Pattern.quote("\t"), StringUtils.XML_TAG_TAB);
+	}
+
 	/**
-	 * Masks all '&lt;' and '&gt;' characters in the <code>unescapedString</code>, which don't
-	 * belong to an XML-tag.
+	 * Masks all '&lt;' and '&gt;' characters in the <code>unescapedString</code>, which
+	 * don't belong to an XML-tag.
 	 * 
-	 * Example:
-	 * <code>
+	 * Example: <code>
 	 * 	escapeXmlBrackets("<xml>y < x</xml>") == "<xml>y &lt; x</xml>"
 	 * </code>
 	 * 
-	 * @param unescapedString [OBJECT] Not nullable  
+	 * @param unescapedString
+	 *            [OBJECT] Not nullable
 	 * 
 	 * @return Masked String
 	 */
-	private static String escapeXmlBrackets(String unescapedString)
+	public static String escapeXmlBrackets(final String unescapedString)
 	{
-		int leftBracketPos = unescapedString.indexOf(LEFT_BRACKET);
-		int rightBracketPos = unescapedString.indexOf(RIGHT_BRACKET);
-		
-		if((leftBracketPos <= -1) && (rightBracketPos <= -1)){
-			// Case ' '
-			return unescapedString;
-		}
-		else if((leftBracketPos >= 0) && (rightBracketPos < 0))
+		final String quotedString = quoteFormatChars(unescapedString);
+
+		int leftBracketPos = quotedString.indexOf(LEFT_BRACKET);
+		int rightBracketPos = quotedString.indexOf(RIGHT_BRACKET);
+
+		if ((leftBracketPos <= -1) && (rightBracketPos <= -1))
 		{
-			// Case '< <' 
-			return escapeBrackets(unescapedString);
+			// Case ' '
+			return unquoteFormatChars(quotedString);
 		}
-		else if((leftBracketPos < 0) && (rightBracketPos >= 0))
+		else if ((leftBracketPos >= 0) && (rightBracketPos < 0))
+		{
+			// Case '< <'
+			return unquoteFormatChars(escapeBrackets(quotedString));
+		}
+		else if ((leftBracketPos < 0) && (rightBracketPos >= 0))
 		{
 			// Case '> >'
-			return escapeBrackets(unescapedString);
+			return unquoteFormatChars(escapeBrackets(quotedString));
 		}
 		else
 		{
-			String escapedString = unescapedString.substring(0, leftBracketPos);
+			String escapedString = quotedString.substring(0, leftBracketPos);
 			String checkString = "";
-			
-			if((leftBracketPos + 1) < unescapedString.length())
+
+			if ((leftBracketPos + 1) < quotedString.length())
 			{
-				checkString = unescapedString.substring(rightBracketPos + 1, unescapedString.length());
+				checkString = quotedString.substring(rightBracketPos + 1,
+						quotedString.length());
 			}
-			
-			if(leftBracketPos < rightBracketPos)
+
+			if (leftBracketPos < rightBracketPos)
 			{
-				String betweenBrackets = unescapedString.substring(leftBracketPos + 1, rightBracketPos).trim();
-					
-				if(!(de.akra.idocit.common.utils.StringUtils.EMPTY.equals(betweenBrackets.trim()) || (betweenBrackets.startsWith("="))))
+				String betweenBrackets = quotedString.substring(leftBracketPos + 1,
+						rightBracketPos).trim();
+
+				if (!(de.akra.idocit.common.utils.StringUtils.EMPTY
+						.equals(betweenBrackets.trim()) || (betweenBrackets
+						.startsWith("="))))
 				{
 					// Case '<XML>'
-					escapedString = unescapedString.substring(0, rightBracketPos + 1);
+					escapedString = quotedString.substring(0, rightBracketPos + 1);
 				}
 				else
 				{
-					escapedString = escapeBrackets(unescapedString.substring(0, rightBracketPos + 1));
+					escapedString = escapeBrackets(quotedString.substring(0,
+							rightBracketPos + 1));
 				}
-					
-				return escapedString + escapeXmlBrackets(checkString);
+
+				return unquoteFormatChars(escapedString + escapeXmlBrackets(checkString));
 			}
 			else
 			{
 				// Case '< >'
 				escapedString = escapeBrackets(escapedString);
-				return escapedString + escapeXmlBrackets(checkString);
+				return unquoteFormatChars(escapedString + escapeXmlBrackets(checkString));
 			}
 		}
 	}
 
 	private static String escapeBrackets(String escapedString)
 	{
-		escapedString = escapedString.replaceAll(String.valueOf(LEFT_BRACKET),
-				"&lt;");
-		escapedString = escapedString.replaceAll(String.valueOf(RIGHT_BRACKET),
-				"&gt;");
+		escapedString = escapedString.replaceAll(String.valueOf(LEFT_BRACKET), "&lt;");
+		escapedString = escapedString.replaceAll(String.valueOf(RIGHT_BRACKET), "&gt;");
 		return escapedString;
 	}
 
@@ -479,7 +501,7 @@ public class JavadocUtils
 	{
 		// Changes due to Issue #105
 		// delete all '\r' from original text, because the SAXParser will loose them
-		// during parsing process. Because of that string replacement would not 
+		// during parsing process. Because of that string replacement would not
 		// work at the end.
 		javadocText = javadocText.replaceAll(REGEX_CR,
 				de.akra.idocit.common.utils.StringUtils.EMPTY);
