@@ -498,7 +498,9 @@ public class SimpleJavadocGeneratorTest
 						+ " * %1$s"
 						+ " * @ordering("
 						+ Constants.ERROR_CASE_DOCUMENTATION_TEXT
-						+ ") Ascending &lt;&gt; Test y &lt;= x Test y &gt;= x%1$s"
+						+ ") Ascending &lt;&gt;<br/>%1$s" 
+						+ " *  Test y &lt;= x<br/>%1$s" 
+						+ " *  Test y &gt;= x%1$s"
 						+ " * %1$s"
 						+ " * @parammailAddress [OBJECT]%1$s"
 						+ " * %1$s"
@@ -520,7 +522,7 @@ public class SimpleJavadocGeneratorTest
 		Documentation doc = DocumentationUtils.findDocumentationByRoleName("ORDERING",
 				documentations);
 		// HERE WE HAVE THE '<' and '>' characters!!!
-		doc.getDocumentation().put(addressee, "Ascending <> Test y <= x Test y >= x");
+		doc.getDocumentation().put(addressee, "Ascending <>\n Test y <= x\n Test y >= x");
 
 		final Addressee tester = DescribedItemUtils.findAddressee("Tester");
 		doc.getDocumentation().put(tester, "  \t  ");
