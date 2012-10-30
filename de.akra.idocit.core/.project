@@ -37,11 +37,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>junit.jar</name>
-			<type>1</type>
-			<location>/Users/jakr/.m2/repository/.cache/tycho/org.junit-4.8.2.v4_8_2_v20110321-1705.jar/junit.jar</location>
-		</link>
-	</linkedResources>
 </projectDescription>
