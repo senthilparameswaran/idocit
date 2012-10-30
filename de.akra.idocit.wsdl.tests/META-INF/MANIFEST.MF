@@ -4,7 +4,9 @@ Bundle-Name: iDocIt! WSDL Tests
 Bundle-SymbolicName: de.akra.idocit.wsdl.tests;singleton:=true
 Bundle-Version: 0.0.5.qualifier
 Bundle-Vendor: AKRA GmbH
-Fragment-Host: de.akra.idocit.wsdl;bundle-version="0.0.5"
+Fragment-Host: de.akra.idocit.wsdl;bundle-version="0.0.5.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4;bundle-version="4.8.1",
  de.akra.idocit.common.tests;bundle-version="0.0.1"
+Bundle-ClassPath: libs/commons-io-2.4.jar,
+ .
