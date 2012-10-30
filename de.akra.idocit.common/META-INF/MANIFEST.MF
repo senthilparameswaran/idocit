@@ -6,7 +6,6 @@ Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;bundle-version="3.6.0",
  org.eclipse.core.resources;bundle-version="3.6.0",
- org.junit4;bundle-version="4.8.1",
  org.eclipse.osgi.services;bundle-version="3.2.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.thoughtworks.xstream,
@@ -45,7 +44,6 @@ Export-Package: com.thoughtworks.xstream,
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: AKRA GmbH
 Bundle-ClassPath: .,
- junit.jar,
  lib/annotations.jar,
  lib/xmlpull-1.1.3.1.jar,
  lib/xpp3_min-1.1.4c.jar,
