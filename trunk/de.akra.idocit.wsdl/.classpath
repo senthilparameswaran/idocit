@@ -9,6 +9,5 @@
 	<classpathentry exported="true" kind="lib" path="libs/idocit.wsdl.wsdl4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/xercesImpl3263291.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-lang3-3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
