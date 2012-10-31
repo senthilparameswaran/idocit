@@ -316,10 +316,12 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 				if (ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
 						.equals(referenceGridName))
 				{
-					int startIndex = docText.toLowerCase().indexOf(
-							ThematicRoleConstants.MANDATORY_ROLE_RULE.toLowerCase());
+					int startIndex = docText.toLowerCase()
+							.indexOf(
+									ThematicRoleConstants.MANDATORY_ROLE_RULE
+											.toLowerCase() + ":");
 
-					if (startIndex >= 0)
+					if (startIndex == 0)
 					{
 						// jakr: + 1 is needed because of the ':'
 						startIndex += ThematicRoleConstants.MANDATORY_ROLE_RULE.length() + 1;
@@ -674,9 +676,9 @@ public final class SimpleJavadocParser extends AbsJavadocParser
 		else if (identifier == null)
 		{
 			int startIndex = allTexts.toLowerCase().indexOf(
-					ThematicRoleConstants.MANDATORY_ROLE_RULE.toLowerCase());
+					ThematicRoleConstants.MANDATORY_ROLE_RULE.toLowerCase() + ":");
 
-			if (startIndex >= 0)
+			if (startIndex == 0)
 			{
 				// jakr: + 1 is needed because of the ':'
 				startIndex += ThematicRoleConstants.MANDATORY_ROLE_RULE.length() + 1;
