@@ -24,7 +24,6 @@
 		<relativePath>../parent-pom/pom.xml</relativePath>
 	</parent>
 
-	<groupId>de.akra.idocit.common</groupId>
 	<artifactId>de.akra.idocit.common.tests</artifactId>
 	<version>0.0.1.qualifier</version>
 	<packaging>eclipse-test-plugin</packaging>
