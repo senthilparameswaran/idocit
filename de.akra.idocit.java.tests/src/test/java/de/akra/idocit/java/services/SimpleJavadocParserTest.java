@@ -30,11 +30,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import de.akra.idocit.common.structure.Addressee;
 import de.akra.idocit.common.structure.Documentation;
+import de.akra.idocit.common.structure.Numerus;
+import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.TestUtils;
@@ -42,6 +45,8 @@ import de.akra.idocit.java.AllIDocItJavaTests;
 import de.akra.idocit.java.exceptions.ParsingException;
 import de.akra.idocit.java.structure.JavaInterfaceArtifact;
 import de.akra.idocit.java.structure.JavaMethod;
+import de.akra.idocit.java.structure.JavaParameter;
+import de.akra.idocit.java.structure.JavaParameters;
 import de.akra.idocit.java.structure.ParserOutput;
 import de.akra.idocit.java.utils.JavaTestUtils;
 import de.akra.idocit.java.utils.TestDataFactory;
@@ -49,6 +54,8 @@ import de.akra.idocit.java.utils.TestDataFactory;
 public class SimpleJavadocParserTest
 {
 
+	public static final String ADDRESSEE_DEVELOPER = "Developer";
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testParseIDocItJavadoc() throws FileNotFoundException, IOException,
@@ -231,7 +238,7 @@ public class SimpleJavadocParserTest
 								+ "CustomerService.java");
 				final CompilationUnit cu = output.getCompilationUnit();
 				final JavaInterfaceArtifact artifact = TestDataFactory
-						.createCustomerService("Developer", true, cu);
+						.createCustomerService(ADDRESSEE_DEVELOPER, true, cu);
 				final JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
 						.getOperations().get(0);
 
@@ -304,7 +311,7 @@ public class SimpleJavadocParserTest
 				List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
 						.bodyDeclarations();
 				JavaInterfaceArtifact artifact = TestDataFactory.createExampleService(cu,
-						true, "Developer");
+						true, ADDRESSEE_DEVELOPER);
 				JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
 						.getOperations().get(1);
 
@@ -342,7 +349,7 @@ public class SimpleJavadocParserTest
 				List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
 						.bodyDeclarations();
 				JavaInterfaceArtifact artifact = TestDataFactory.createExampleService(cu,
-						true, "Developer");
+						true, ADDRESSEE_DEVELOPER);
 				JavaMethod method = (JavaMethod) artifact.getInterfaces().get(0)
 						.getOperations().get(0);
 
@@ -368,5 +375,67 @@ public class SimpleJavadocParserTest
 				assertTrue(runtimeExceptionOccured);
 			}
 		}
+	}
+	
+	@Test
+	public void testParsingDocPartWithRoleRULE() throws FileNotFoundException,
+			IOException, SAXException, ParserConfigurationException, ParsingException
+	{
+
+		final ParserOutput output = JavaTestUtils
+				.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+						+ "ITestRoleRULE.java");
+		final CompilationUnit cu = output.getCompilationUnit();
+
+		final AbstractTypeDeclaration absTypeDecl = (AbstractTypeDeclaration) cu.types()
+				.get(0);
+		@SuppressWarnings("unchecked")
+		final List<BodyDeclaration> bodyDeclarations = (List<BodyDeclaration>) absTypeDecl
+				.bodyDeclarations();
+		
+		final Addressee developer = TestUtils.createDeveloper();
+		
+		// Method
+		final JavaMethod getString = new JavaMethod(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Method", null,
+				Numerus.SINGULAR);
+		getString.setRefToASTNode((MethodDeclaration) bodyDeclarations.get(0));
+		getString.setIdentifier("getString");
+		getString.setDocumentationChanged(false);
+		getString.setThematicGridName("Getting Operations / Getter");
+
+		TestUtils.addDocumentation(getString, developer, TestUtils.createRule(),
+				"The rule", null, false);
+
+		// Return value
+		final JavaParameters outputParameters = new JavaParameters(getString,
+				"ReturnType", Numerus.SINGULAR, false);
+		getString.setOutputParameters(outputParameters);
+
+		final JavaParameter returnString = new JavaParameter(outputParameters,
+				Numerus.SINGULAR, false);
+		returnString.setDataTypeName("String");
+		returnString.setQualifiedDataTypeName("java.lang.String");
+
+		TestUtils.addDocumentation(returnString, developer, null, "String", null, false);
+
+		outputParameters.addParameter(returnString);
+
+		// The intention of this assertion is to ensure that the
+		// CustomerService-code, which is part of this test, is not extended by
+		// further methods without refactoring this test-case.
+		assertTrue(bodyDeclarations.size() == 1);
+
+		final List<Addressee> addressees = TestUtils.createAdresseeSequence(developer);
+		final List<ThematicRole> thematicRoles = TestUtils.createReferenceThematicRoles();
+		final List<Documentation> actualDocs = SimpleJavadocParser.INSTANCE
+				.parseIDocItJavadoc(bodyDeclarations.get(0).getJavadoc(), addressees,
+						thematicRoles, getString);
+
+		final List<Documentation> referenceDocs = new ArrayList<Documentation>();
+		referenceDocs.addAll(getString.getDocumentations());
+		referenceDocs.addAll(returnString.getDocumentations());
+		
+		assertEquals(referenceDocs.toString(), actualDocs.toString());
 	}
 }
