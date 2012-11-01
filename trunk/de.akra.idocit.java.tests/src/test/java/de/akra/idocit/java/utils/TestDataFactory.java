@@ -1025,7 +1025,7 @@ public class TestDataFactory
 		methodCheck.setIdentifier("checkSomething");
 		methodCheck.setDocumentationChanged(documentationChanged);
 
-		addDocumentation(methodCheck, "Developer", "RULE", "Check the beat.", null, false);
+		addDocumentation(methodCheck, addresseeName, "RULE", "Check the beat.", null, false);
 
 		return methodCheck;
 	}
