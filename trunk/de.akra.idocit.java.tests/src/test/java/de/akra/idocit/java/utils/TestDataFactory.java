@@ -58,7 +58,7 @@ import de.akra.idocit.java.structure.JavaParameters;
 public class TestDataFactory
 {
 	/**
-	 * Reurns a list of one {@link Addressee} with the name <code>addresseeName</code>.
+	 * Returns a list of one {@link Addressee} with the name <code>addresseeName</code>.
 	 * 
 	 * @param addresseeName
 	 *            [ATTRIBUTE]
@@ -85,11 +85,10 @@ public class TestDataFactory
 	 * @thematicgrid Creating Operations
 	 */
 	private static Map<Addressee, String> createComparisonDocumentation(
-			String addresseeName)
+			final String addresseeName)
 	{
-
-		Map<Addressee, String> comparisonDocumentation = new HashMap<Addressee, String>();
-		Addressee addressee = DescribedItemUtils.findAddressee(addresseeName);
+		final Map<Addressee, String> comparisonDocumentation = new HashMap<Addressee, String>();
+		final Addressee addressee = DescribedItemUtils.findAddressee(addresseeName);
 
 		comparisonDocumentation.put(addressee, StringUtils.EMPTY);
 
@@ -930,6 +929,8 @@ public class TestDataFactory
 	 * @param thematicRole
 	 *            [ATTRIBUTE] Used in the new documentation
 	 * @param docText
+	 *            [ATTRIBUTE] Used in the new documentation
+	 * @param signatureElementPath
 	 *            [ATTRIBUTE] Used in the new documentation
 	 * @param describesErrorCase
 	 *            [ATTRIBUTE] Used in the new documentation
