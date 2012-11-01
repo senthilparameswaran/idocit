@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
@@ -415,8 +417,12 @@ public class TestUtils {
 	}
 
 	public static List<Addressee> createDeveloperSequence() {
-		final List<Addressee> result = new ArrayList<Addressee>();
-		result.add(createDeveloper());
+		return createAdresseeSequence(createDeveloper());
+	}
+	
+	public static List<Addressee> createAdresseeSequence(final Addressee addressee) {
+		final List<Addressee> result = new ArrayList<Addressee>(1);
+		result.add(addressee);
 		return result;
 	}
 
@@ -557,6 +563,43 @@ public class TestUtils {
 		artifact.setInterfaces(interfaceList);
 
 		return artifact;
+	}
+
+	/**
+	 * Adds a new {@link Documentation} with the given attributes to the given
+	 * {@link SignatureElement}.
+	 * 
+	 * @param element
+	 *            [DESTINATION]
+	 * @param addressee
+	 *             [ATTRIBUTE] Used in the new documentation
+	 * @param thematicRole
+	 *            [ATTRIBUTE] Used in the new documentation
+	 * @param docText
+	 *            [ATTRIBUTE] Used in the new documentation
+	 * @param signatureElementPath
+	 *            [ATTRIBUTE] Used in the new documentation
+	 * @param describesErrorCase
+	 *            [ATTRIBUTE] Used in the new documentation
+	 * 
+	 * @thematicgrid Putting Operations
+	 */
+	public static void addDocumentation(final SignatureElement element,
+			final Addressee addressee, final ThematicRole thematicRole, final String docText,
+			final String signatureElementPath, final boolean describesErrorCase)
+	{
+		final Map<Addressee, String> docs = new HashMap<Addressee, String>();
+		docs.put(addressee, docText);
+
+		final Documentation documentation = new Documentation();
+		documentation.setAddresseeSequence(createAdresseeSequence(addressee));
+
+		documentation.setThematicRole(thematicRole);
+		documentation.setSignatureElementIdentifier(signatureElementPath);
+		documentation.setDocumentation(docs);
+		documentation.setErrorCase(describesErrorCase);
+
+		element.addDocpart(documentation);
 	}
 
 }
