@@ -97,7 +97,7 @@ public class AllIDocItJavaTests
 
 		if (!backupFolder.delete())
 		{
-			throw new RuntimeException("Could not delete folder"
+			throw new RuntimeException("Could not delete folder "
 					+ backupFolder.getAbsolutePath());
 		}
 	}
@@ -195,7 +195,7 @@ public class AllIDocItJavaTests
 			final File dest = new File(destDir, file.getName());
 			if (dest.exists())
 			{
-				if (dest.delete())
+				if (!dest.delete())
 				{
 					throw new RuntimeException("Could not delete "
 							+ dest.getAbsolutePath());
