@@ -35,6 +35,7 @@ import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.RoleScope;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.DocumentationUtils;
+import de.akra.idocit.common.utils.TestUtils;
 import de.akra.idocit.core.constants.AddresseeConstants;
 import de.akra.idocit.core.utils.DescribedItemUtils;
 import de.akra.idocit.java.AllIDocItJavaTests;
@@ -475,7 +476,7 @@ public class SimpleJavadocGeneratorTest
 
 		assertEquals(referenceJavadoc, javadoc.toString());
 	}
-	
+
 	/**
 	 * If there is a '>' or '<' in the documentation-text, these characters must be quoted.
 	 *  
@@ -490,16 +491,17 @@ public class SimpleJavadocGeneratorTest
 	 *             /InvariantService.java could not be parsed due to syntax errors
 	 */
 	@Test
-	public void testXmlBracketsInDocumentationText() 
-			throws FileNotFoundException, IOException, ParsingException{
+	public void testXmlBracketsInDocumentationText() throws FileNotFoundException,
+			IOException, ParsingException
+	{
 		final String referenceJavadoc = String
 				.format("/** %1$s"
 						+ " * Rule: Maximum length of an address are 40 chars.%1$s"
 						+ " * %1$s"
 						+ " * @ordering("
 						+ Constants.ERROR_CASE_DOCUMENTATION_TEXT
-						+ ") Ascending &lt;&gt;<br/>%1$s" 
-						+ " *  Test y &lt;= x<br/>%1$s" 
+						+ ") Ascending &lt;&gt;<br/>%1$s"
+						+ " *  Test y &lt;= x<br/>%1$s"
 						+ " *  Test y &gt;= x%1$s"
 						+ " * %1$s"
 						+ " * @parammailAddress [OBJECT]%1$s"
@@ -537,5 +539,57 @@ public class SimpleJavadocGeneratorTest
 		final Javadoc javadoc = checkInvariantMeth.getRefToASTNode().getJavadoc();
 
 		assertEquals(referenceJavadoc, javadoc.toString());
+	}
+
+	/**
+	 * Test if the role ACTION or RULE is always at first position in the Javadoc comment.
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParsingException
+	 */
+	@Test
+	public void testCorrectJavadocTagOrdering() throws FileNotFoundException,
+			IOException, ParsingException
+	{
+		final String[] referenceJavadocs = new String[] {
+				/*
+				 * Test 1: with thematic role ACTION
+				 */
+				String.format("/** %1$s" + " * The Action%1$s" + " * %1$s"
+						+ " * @sourceThe Source%1$s" + " * %1$s" + " * @returnString%1$s"
+						+ " * @thematicgridGetting Operations / Getter%1$s" + " */%1$s",
+						JAVADOC_NEW_LINE),
+
+				/*
+				 * Test 2: with thematic role RULE
+				 */
+				String.format("/** %1$s" + " * Rule: The rule%1$s" + " * %1$s"
+						+ " * @sourceThe Source%1$s" + " * %1$s" + " * @returnString%1$s"
+						+ " * @thematicgridChecking Operations%1$s" + " */%1$s",
+						JAVADOC_NEW_LINE) };
+
+		for (int i = 0; i < referenceJavadocs.length; ++i)
+		{
+			final ParserOutput output = JavaTestUtils
+					.createCompilationUnit(AllIDocItJavaTests.SOURCE_DIR
+							+ "TestInterface1.java");
+			final CompilationUnit cu = output.getCompilationUnit();
+
+			final JavaInterfaceArtifact artifact = TestDataFactory.createTestInterface1(
+					TestUtils.createDeveloper(), cu, true, i);
+
+			JavaInterfaceGenerator.updateJavadocInAST(artifact,
+					SimpleJavadocGenerator.INSTANCE);
+
+			final JavaInterface testIntf1 = (JavaInterface) artifact.getInterfaces().get(
+					0);
+			final JavaMethod getStringMeth = (JavaMethod) testIntf1.getOperations()
+					.get(0);
+			final Javadoc javadoc = getStringMeth.getRefToASTNode().getJavadoc();
+
+			assertEquals(referenceJavadocs[i], javadoc.toString());
+		}
+
 	}
 }

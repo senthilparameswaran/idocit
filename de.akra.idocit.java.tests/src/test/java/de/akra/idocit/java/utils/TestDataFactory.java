@@ -38,6 +38,7 @@ import de.akra.idocit.common.structure.Parameters;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
+import de.akra.idocit.common.utils.TestUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.DescribedItemUtils;
@@ -1026,7 +1027,8 @@ public class TestDataFactory
 		methodCheck.setIdentifier("checkSomething");
 		methodCheck.setDocumentationChanged(documentationChanged);
 
-		addDocumentation(methodCheck, addresseeName, "RULE", "Check the beat.", null, false);
+		addDocumentation(methodCheck, addresseeName, "RULE", "Check the beat.", null,
+				false);
 
 		return methodCheck;
 	}
@@ -1187,7 +1189,8 @@ public class TestDataFactory
 
 	/**
 	 * Creates an {@link JavaInterfaceArtifact} with one {@link JavaInterface} containing
-	 * the result from {@link this#createDocumentedCheckInvariant(String)}.
+	 * the result from {@link this#createDocumentedCheckInvariant(String, boolean,
+	 * TypeDeclaration)}.
 	 * 
 	 * @param addresseeName
 	 *            [ATTRIBUTE]
@@ -1223,6 +1226,141 @@ public class TestDataFactory
 		result.addInterface(invariantService);
 
 		return result;
+	}
+
+	/**
+	 * Creates an {@link JavaInterfaceArtifact} with one {@link JavaInterface} containing
+	 * the result from {@link this#createDocumentedTestInterface1(String, boolean,
+	 * TypeDeclaration)}.
+	 * 
+	 * @param addressee
+	 *            [ATTRIBUTE]
+	 * @param cuInvariantService
+	 * @param documentationChanged
+	 * @param alternative
+	 *            legal values are:
+	 *            <ul>
+	 *            <li>0: create method's documentation with role ACTION
+	 *            <li>1: create method's documentation with role RULE
+	 *            </ul>
+	 * 
+	 * @return [OBJECT]
+	 * 
+	 * @thematicgrid Creating Operations
+	 */
+	public static JavaInterfaceArtifact createTestInterface1(final Addressee addressee,
+			final CompilationUnit cuInvariantService, final boolean documentationChanged,
+			final int alternative)
+	{
+		final JavaInterfaceArtifact result = new JavaInterfaceArtifact(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, StringUtils.EMPTY, null,
+				Numerus.SINGULAR);
+		result.setIdentifier("TestInterface1.java");
+		result.setQualifiedIdentifier(null);
+		result.setDocumentationChanged(documentationChanged);
+
+		final JavaInterface testInterface1 = new JavaInterface(result, "Interface",
+				Numerus.SINGULAR);
+		testInterface1.setDocumentationChanged(documentationChanged);
+
+		final TypeDeclaration testInterface1Intfc = (TypeDeclaration) cuInvariantService
+				.types().get(0);
+		testInterface1.setRefToASTNode(testInterface1Intfc);
+
+		final List<JavaMethod> methods = new ArrayList<JavaMethod>();
+
+		switch (alternative)
+		{
+		case 0:
+			methods.add(createDocumentedTestInterface1_Alt0(addressee,
+					documentationChanged, testInterface1Intfc));
+			break;
+		case 1:
+			methods.add(createDocumentedTestInterface1_Alt1(addressee,
+					documentationChanged, testInterface1Intfc));
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal alternative \"" + alternative
+					+ "\". Legal are: 0 and 1");
+		}
+
+		testInterface1.setOperations(methods);
+
+		result.addInterface(testInterface1);
+
+		return result;
+	}
+
+	private static JavaMethod createDocumentedTestInterface1_Alt0(
+			final Addressee addressee, boolean documentationChanged,
+			TypeDeclaration testInterface1)
+	{
+		final JavaMethod methodGetString = new JavaMethod(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Method",
+				"Getting Operations / Getter", Numerus.SINGULAR);
+		final MethodDeclaration getStringMeth = (MethodDeclaration) testInterface1
+				.bodyDeclarations().get(0);
+		methodGetString.setRefToASTNode(getStringMeth);
+		methodGetString.setIdentifier("getString");
+		methodGetString.setDocumentationChanged(documentationChanged);
+
+		TestUtils.addDocumentation(methodGetString, addressee, TestUtils.createSource(),
+				"The Source", methodGetString.getIdentifier(), false);
+		TestUtils.addDocumentation(methodGetString, addressee, TestUtils.createAction(),
+				"The Action", methodGetString.getIdentifier(), false);
+
+		// Return value
+		final JavaParameters outputParameters = new JavaParameters(methodGetString,
+				"ReturnType", Numerus.SINGULAR, false);
+		methodGetString.setOutputParameters(outputParameters);
+
+		final JavaParameter returnParam = new JavaParameter(outputParameters,
+				Numerus.SINGULAR, false);
+		returnParam.setDataTypeName("String");
+		returnParam.setQualifiedDataTypeName("java.lang.String");
+		returnParam.setDocumentationChanged(documentationChanged);
+		outputParameters.addParameter(returnParam);
+
+		TestUtils.addDocumentation(returnParam, addressee, null, "String",
+				returnParam.getSignatureElementPath(), false);
+
+		return methodGetString;
+	}
+
+	private static JavaMethod createDocumentedTestInterface1_Alt1(
+			final Addressee addressee, boolean documentationChanged,
+			TypeDeclaration testInterface1)
+	{
+		final JavaMethod methodGetString = new JavaMethod(
+				SignatureElement.EMPTY_SIGNATURE_ELEMENT, "Method",
+				"Checking Operations", Numerus.SINGULAR);
+		final MethodDeclaration getStringMeth = (MethodDeclaration) testInterface1
+				.bodyDeclarations().get(0);
+		methodGetString.setRefToASTNode(getStringMeth);
+		methodGetString.setIdentifier("getString");
+		methodGetString.setDocumentationChanged(documentationChanged);
+
+		TestUtils.addDocumentation(methodGetString, addressee, TestUtils.createSource(),
+				"The Source", methodGetString.getIdentifier(), false);
+		TestUtils.addDocumentation(methodGetString, addressee, TestUtils.createRule(),
+				"The rule", methodGetString.getIdentifier(), false);
+
+		// Return value
+		final JavaParameters outputParameters = new JavaParameters(methodGetString,
+				"ReturnType", Numerus.SINGULAR, false);
+		methodGetString.setOutputParameters(outputParameters);
+
+		final JavaParameter returnParam = new JavaParameter(outputParameters,
+				Numerus.SINGULAR, false);
+		returnParam.setDataTypeName("String");
+		returnParam.setQualifiedDataTypeName("java.lang.String");
+		returnParam.setDocumentationChanged(documentationChanged);
+		outputParameters.addParameter(returnParam);
+
+		TestUtils.addDocumentation(returnParam, addressee, null, "String",
+				returnParam.getSignatureElementPath(), false);
+
+		return methodGetString;
 	}
 
 	private static Documentation createEmptyDocumentation(String identifier)

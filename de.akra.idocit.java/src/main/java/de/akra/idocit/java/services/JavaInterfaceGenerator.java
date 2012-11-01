@@ -16,6 +16,7 @@
 package de.akra.idocit.java.services;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -27,6 +28,7 @@ import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
 
 import de.akra.idocit.common.constants.ThematicGridConstants;
+import de.akra.idocit.common.constants.ThematicRoleConstants;
 import de.akra.idocit.common.structure.Documentation;
 import de.akra.idocit.common.structure.Parameter;
 import de.akra.idocit.common.structure.Parameters;
@@ -147,19 +149,21 @@ public class JavaInterfaceGenerator
 	private static List<JavadocTagElement> createMethodJavadocTagElements(
 			JavaMethod method)
 	{
-		List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
-		JavadocTagElement tagElem = new JavadocTagElement(method.getDocumentations(),
-				method);
+		final List<JavadocTagElement> jDocTags = new ArrayList<JavadocTagElement>();
+
+		final List<Documentation> documentations = sortDocumenations(
+				method.getDocumentations(), method.getThematicGridName());
+		final JavadocTagElement tagElem = new JavadocTagElement(documentations, method);
 		jDocTags.add(tagElem);
 
-		Parameters inputParams = method.getInputParameters();
+		final Parameters inputParams = method.getInputParameters();
 		if (inputParams != null)
 		{
 			collectParametersDocumentations(inputParams.getParameters(),
 					TagElement.TAG_PARAM, jDocTags, CustomTaglets.SUB_PARAM.getTagName());
 		}
 
-		Parameters returnType = method.getOutputParameters();
+		final Parameters returnType = method.getOutputParameters();
 
 		if (returnType != null)
 		{
@@ -168,7 +172,7 @@ public class JavaInterfaceGenerator
 					CustomTaglets.SUB_RETURN.getTagName());
 		}
 
-		for (Parameters exception : method.getExceptions())
+		for (final Parameters exception : method.getExceptions())
 		{
 			if (exception != null)
 			{
@@ -178,6 +182,44 @@ public class JavaInterfaceGenerator
 		}
 
 		return jDocTags;
+	}
+
+	/**
+	 * 
+	 * @param documentations
+	 *            [SOURCE]
+	 * @param thematicGridName
+	 *            [ATTIBUTE]
+	 * @return sorted list of {@link Documentation}s.
+	 * @subreturn [ORDERING] at first comes the {@link Documentation} with the thematic
+	 *            role ACTION or if <code>thematicGridName</code> equals
+	 *            {@link ThematicGridConstants#THEMATIC_GRID_CHECKING_OPERATIONS} then the
+	 *            {@link Documentation} with the role RULE comes first. Other ordering is
+	 *            not considered.
+	 */
+	private static List<Documentation> sortDocumenations(
+			final List<Documentation> documentations, final String thematicGridName)
+	{
+		final List<Documentation> result = new LinkedList<Documentation>();
+		for (final Documentation doc : documentations)
+		{
+			if ((doc.getThematicRole() != null && ThematicRoleConstants.MANDATORY_ROLE_ACTION
+					.equals(doc.getThematicRole().getName()))
+					|| (thematicGridName != null
+							&& ThematicGridConstants.THEMATIC_GRID_CHECKING_OPERATIONS
+									.equals(thematicGridName)
+							&& doc.getThematicRole() != null && ThematicRoleConstants.MANDATORY_ROLE_RULE
+								.equals(doc.getThematicRole().getName())))
+			{
+				result.add(0, doc);
+			}
+			else
+			{
+				result.add(doc);
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -318,9 +360,10 @@ public class JavaInterfaceGenerator
 	 */
 	// Changes due to Issue #62
 	@SuppressWarnings("unchecked")
-	public static Javadoc createOrUpdateJavadoc(List<JavadocTagElement> javadocTagElements,
-			List<TagElement> additionalTags, Javadoc javadoc, AST ast,
-			String thematicGridName, IJavadocGenerator javadocGenerator, JavaMethod method)
+	public static Javadoc createOrUpdateJavadoc(
+			List<JavadocTagElement> javadocTagElements, List<TagElement> additionalTags,
+			Javadoc javadoc, AST ast, String thematicGridName,
+			IJavadocGenerator javadocGenerator, JavaMethod method)
 			throws ParsingException
 	{
 		Javadoc newJavadoc = javadoc;
