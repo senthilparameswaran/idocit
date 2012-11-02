@@ -81,7 +81,7 @@ public class ManageJavadocGeneratorComposite
 			String javadocType = newSelection.getSelectedJavadocType();
 			if (javadocType == null || javadocType.isEmpty())
 			{
-				javadocType = PreferenceStoreConstants.JAVADOC_GENERATION_MODE_COMPLEX;
+				javadocType = PreferenceStoreConstants.JAVADOC_GENERATION_MODE_SIMPLE;
 			}
 			this.radioButtonGroup.setSelected(javadocType);
 		}
