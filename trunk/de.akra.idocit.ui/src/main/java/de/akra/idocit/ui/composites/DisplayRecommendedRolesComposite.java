@@ -47,7 +47,9 @@ import org.pocui.swt.composites.AbsComposite;
 import de.akra.idocit.common.constants.ThematicGridConstants;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.common.utils.ThematicRoleUtils;
+import de.akra.idocit.ui.utils.ToolTipHandler;
 
 /**
  * Composite with the {@link List} of recommended {@link ThematicRole}s. The list is only
@@ -62,6 +64,7 @@ public class DisplayRecommendedRolesComposite
 		extends
 		AbsComposite<EmptyActionConfiguration, DisplayRecommendedRolesCompositeRC, DisplayRecommendedRolesCompositeSelection>
 {
+	private static final int TOOLTIP_MAX_LINE_LENGTH = 80;
 	private static final String ASSOCIATED_ROLE = " (Associated)";
 	private static final String REFERENCE_GRID = " (Reference Grid)";
 
@@ -109,7 +112,9 @@ public class DisplayRecommendedRolesComposite
 		GridLayoutFactory.fillDefaults().applyTo(this);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(this);
 
+		final ToolTipHandler tooltip = new ToolTipHandler(this.getShell());
 		rolesTree = new Tree(this, SWT.BORDER | SWT.VIRTUAL | SWT.SINGLE);
+		tooltip.activateHoverToolTip(rolesTree);
 
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(rolesTree);
 
@@ -150,7 +155,8 @@ public class DisplayRecommendedRolesComposite
 			final TreeMap<String, ThematicGrid> sortedVerbClasses = new TreeMap<String, ThematicGrid>(
 					recThematicGrids);
 
-			for (Entry<String, ThematicGrid> roleClass : sortedVerbClasses.entrySet())
+			for (final Entry<String, ThematicGrid> roleClass : sortedVerbClasses
+					.entrySet())
 			{
 				final TreeItem verbClassRoot = new TreeItem(rolesTree, SWT.NONE);
 				final String thematicGridName = roleClass.getKey();
@@ -167,6 +173,12 @@ public class DisplayRecommendedRolesComposite
 
 				if (roleClass.getValue() != null)
 				{
+					verbClassRoot
+							.setData(ToolTipHandler.KEY_TIP_TEXT, StringUtils
+									.addLineBreaks(roleClass.getValue().getDescription(),
+											TOOLTIP_MAX_LINE_LENGTH,
+											StringUtils.SPACE.charAt(0)));
+
 					final Set<ThematicRole> displayNotAssignedRoles = new TreeSet<ThematicRole>();
 					final Set<ThematicRole> displayAssignedRoles = new TreeSet<ThematicRole>();
 
@@ -188,11 +200,15 @@ public class DisplayRecommendedRolesComposite
 					/*
 					 * insert items into list
 					 */
-					for (ThematicRole role : displayAssignedRoles)
+					for (final ThematicRole role : displayAssignedRoles)
 					{
-						TreeItem roleItem = new TreeItem(verbClassRoot, SWT.BOLD);
+						final TreeItem roleItem = new TreeItem(verbClassRoot, SWT.BOLD);
 						roleItem.setText(role.getName() + ASSOCIATED_ROLE);
 						roleItem.setForeground(GREEN);
+						roleItem.setData(ToolTipHandler.KEY_TIP_TEXT, StringUtils
+								.addLineBreaks(role.getDescription(),
+										TOOLTIP_MAX_LINE_LENGTH,
+										StringUtils.SPACE.charAt(0)));
 
 						if (roleClass.getValue().getRoles().get(role))
 						{
@@ -203,10 +219,14 @@ public class DisplayRecommendedRolesComposite
 						setMissingErrorDocumentationWarning(roleItem, role,
 								errorDocumentingRoles);
 					}
-					for (ThematicRole role : displayNotAssignedRoles)
+					for (final ThematicRole role : displayNotAssignedRoles)
 					{
-						TreeItem roleItem = new TreeItem(verbClassRoot, SWT.NONE);
+						final TreeItem roleItem = new TreeItem(verbClassRoot, SWT.NONE);
 						roleItem.setText(role.getName());
+						roleItem.setData(ToolTipHandler.KEY_TIP_TEXT, StringUtils
+								.addLineBreaks(role.getDescription(),
+										TOOLTIP_MAX_LINE_LENGTH,
+										StringUtils.SPACE.charAt(0)));
 
 						if (roleClass.getValue().getRoles().get(role))
 						{
