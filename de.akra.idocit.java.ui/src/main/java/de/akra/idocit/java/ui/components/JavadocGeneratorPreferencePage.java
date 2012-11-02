@@ -43,7 +43,7 @@ public class JavadocGeneratorPreferencePage
 		// Set the preference store for the preference page.
 		setPreferenceStore(PlatformUI.getPreferenceStore());
 		getPreferenceStore().setDefault(PreferenceStoreConstants.JAVADOC_GENERATION_MODE,
-				PreferenceStoreConstants.JAVADOC_GENERATION_MODE_COMPLEX);
+				PreferenceStoreConstants.JAVADOC_GENERATION_MODE_SIMPLE);
 		
 		final List<ThematicRole> roles = ServiceManager.getInstance()
 				.getPersistenceService().loadThematicRoles();
