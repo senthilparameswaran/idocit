@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2011 AKRA GmbH Licensed under the Apache License, Version 
+	2.0 (the "License"); you may not use this file except in compliance with 
+	the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<version>0.0.1</version>
+	<groupId>de.akra.idocit</groupId>
+	<artifactId>parent</artifactId>
+	<packaging>pom</packaging>
+	<name>iDocIt! Parent</name>
+
+	<properties>
+		<tycho-version>0.13.0</tycho-version>
+		<ui.test.vmargs>-Xmx1024m -XX:MaxPermSize=256m</ui.test.vmargs>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<platform-version-name>indigo</platform-version-name>
+		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
+		<!-- Default update site -->
+		<idocit-update-site-dir>../idocit-updatesite</idocit-update-site-dir>
+	</properties>
+
+	<modules>
+		<module>../de.akra.idocit.common</module>
+		<module>../de.akra.idocit.common.tests</module>
+		<module>../de.akra.idocit.core</module>
+		<module>../de.akra.idocit.core.feature</module>
+		<module>../de.akra.idocit.core.tests</module>
+		<module>../de.akra.idocit.java</module>
+		<module>../de.akra.idocit.java.tests</module>
+		<module>../de.akra.idocit.java.feature</module>
+		<module>../de.akra.idocit.java.ui</module>
+		<module>../de.akra.idocit.java.ui.tests</module>
+		<module>../de.akra.idocit.ui</module>
+		<module>../de.akra.idocit.ui.tests</module>
+		<module>../de.akra.idocit.ui.feature</module>
+		<module>../de.akra.idocit.wsdl</module>
+		<module>../de.akra.idocit.wsdl.tests</module>
+		<module>../de.akra.idocit.wsdl.feature</module>
+		<module>../updatesite</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>maven-osgi-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>indigo</id>
+			<layout>p2</layout>
+			<url>${eclipse-site}</url>
+		</repository>
+		<repository>
+			<id>AKRA-Artifactory</id>
+			<name>AKRA-internal Artifactory</name>
+			<url>https://artifactory.akra.de/artifactory/repo</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<profile>
+			<id>nightly-build</id>
+			<properties>
+				<idocit-update-site-dir>/var/www/idocit/updatesite-nb</idocit-update-site-dir>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>release-build</id>
+			<properties>
+				<idocit-update-site-dir>/var/www/idocit/updatesite</idocit-update-site-dir>
+			</properties>
+		</profile>
+	</profiles>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<xmlOutput>true</xmlOutput>
+					<!-- Optional directory to put findbugs xdoc xml report -->
+					<xmlOutputDirectory>target/site</xmlOutputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>
