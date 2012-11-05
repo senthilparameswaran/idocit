@@ -26,6 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,6 +43,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import de.akra.idocit.common.constants.Misc;
 import de.akra.idocit.common.structure.InterfaceArtifact;
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.services.impl.HTMLDocGenerator;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.ResourceUtils;
@@ -48,15 +51,16 @@ import de.akra.idocit.ui.components.DocumentationEditor;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
- * PopupMenu action to open the {@link DocumentationEditor} with the selected
- * file.
+ * PopupMenu action to open the {@link DocumentationEditor} with the selected file.
  * 
  * @author Dirk Meier-Eickhoff
  * @since 0.0.1
  * @version 0.0.1
  * 
  */
-public class HTMLExport implements IObjectActionDelegate {
+@SuppressWarnings("restriction")
+public class HTMLExport implements IObjectActionDelegate
+{
 	/**
 	 * Logger.
 	 */
@@ -67,47 +71,77 @@ public class HTMLExport implements IObjectActionDelegate {
 	/**
 	 * Constructor for Action1.
 	 */
-	public HTMLExport() {
+	public HTMLExport()
+	{
 		super();
 	}
 
 	/**
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(IAction action, IWorkbenchPart targetPart)
+	{
 		shell = targetPart.getSite().getShell();
 	}
 
 	/**
 	 * @see IActionDelegate#run(IAction)
 	 */
-	public void run(IAction action) {
-		ISelectionService selectionService = PlatformUI.getWorkbench()
+	public void run(final IAction action)
+	{
+		final ISelectionService selectionService = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getSelectionService();
-		IStructuredSelection structuredSelection = (IStructuredSelection) selectionService
+		final IStructuredSelection structuredSelection = (IStructuredSelection) selectionService
 				.getSelection();
 
-		if (structuredSelection != null) {
-			IFile file = (IFile) structuredSelection.getFirstElement();
-			if (file != null) {
-				// Get the interface as file ...
-				IFile interfaceIFile = new FileEditorInput(file).getFile();
-				File interfaceFile = interfaceIFile.getLocation().toFile();
+		if (structuredSelection != null)
+		{
+			IFile file = null;
+			if (structuredSelection.getFirstElement() instanceof CompilationUnit)
+			{
+				final CompilationUnit cu = (CompilationUnit) structuredSelection
+						.getFirstElement();
+				try
+				{
+					file = (IFile) cu.getCorrespondingResource();
+				}
+				catch (final JavaModelException e)
+				{
+					final String msg = "CompilationUnit \"" + cu.getPath().toOSString()
+							+ "\" has no corresponding resource.";
+					logger.log(Level.SEVERE, msg, e);
+					MessageBoxUtils.openErrorBox(shell, msg + StringUtils.NEW_LINE
+							+ StringUtils.NEW_LINE + e.getMessage());
+				}
 
-				if (interfaceFile.exists()) {
+			}
+			else if (structuredSelection.getFirstElement() instanceof IFile)
+			{
+				file = (IFile) structuredSelection.getFirstElement();
+			}
+
+			if (file != null)
+			{
+				// Get the interface as file ...
+				final IFile interfaceIFile = new FileEditorInput(file).getFile();
+				final File interfaceFile = interfaceIFile.getLocation().toFile();
+
+				if (interfaceFile.exists())
+				{
 					// get target file
-					FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
+					final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 					fileDialog.setText("Export Documentation as HTML-file");
-					String[] filterExt = { "*.html", "*.htm" };
+					final String[] filterExt = { "*.html", "*.htm" };
 					fileDialog.setFilterExtensions(filterExt);
 					String selectedFileName = fileDialog.open();
 
 					boolean stored = false;
 
-					while ((selectedFileName != null) && !stored) {
+					while ((selectedFileName != null) && !stored)
+					{
 
-						boolean exists = new File(selectedFileName).exists();
-						boolean overwrite = exists
+						final boolean exists = new File(selectedFileName).exists();
+						final boolean overwrite = exists
 								&& MessageBoxUtils
 										.openQuestionDialogBox(
 												shell,
@@ -115,32 +149,41 @@ public class HTMLExport implements IObjectActionDelegate {
 														+ selectedFileName
 														+ " already exists. Do you want to overwrite it?");
 
-						if (overwrite || !exists) {
+						if (overwrite || !exists)
+						{
 							// parse interface file.
-							try {
+							try
+							{
 								logger.log(Level.INFO, "Start parsing");
-								InterfaceArtifact interfaceArtifact = ServiceManager
+								final InterfaceArtifact interfaceArtifact = ServiceManager
 										.getInstance().getPersistenceService()
 										.loadInterface(interfaceIFile);
 								logger.log(Level.INFO, "End parsing");
 								logger.log(Level.INFO, "Start converting");
-								HTMLDocGenerator docGen = new HTMLDocGenerator(
-										interfaceArtifact);								
-								String html = docGen.generateHTML();
+								final HTMLDocGenerator docGen = new HTMLDocGenerator(
+										interfaceArtifact);
+								final String html = docGen.generateHTML();
 								logger.log(Level.INFO, "End converting");
 
-								BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(selectedFileName), 
-										Charset.forName(Misc.DEFAULT_CHARSET)));
+								BufferedWriter writer = new BufferedWriter(
+										new OutputStreamWriter(new FileOutputStream(
+												selectedFileName),
+												Charset.forName(Misc.DEFAULT_CHARSET)));
 								writer.write(html);
 								writer.close();
-								
+
 								// copy css file
 								BufferedReader reader = new BufferedReader(
-										new InputStreamReader(ResourceUtils.getResourceInputStream("stylesheet.css"), 
+										new InputStreamReader(
+												ResourceUtils
+														.getResourceInputStream("stylesheet.css"),
 												Charset.forName(Misc.DEFAULT_CHARSET)));
-								String cssFileName = selectedFileName.substring(
-										0, selectedFileName.lastIndexOf(System.getProperty("file.separator"))+1) + "stylesheet.css";
-								writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cssFileName), 
+								String cssFileName = selectedFileName.substring(0,
+										selectedFileName.lastIndexOf(System
+												.getProperty("file.separator")) + 1)
+										+ "stylesheet.css";
+								writer = new BufferedWriter(new OutputStreamWriter(
+										new FileOutputStream(cssFileName),
 										Charset.forName(Misc.DEFAULT_CHARSET)));
 								String line = reader.readLine();
 								while (line != null)
@@ -150,21 +193,27 @@ public class HTMLExport implements IObjectActionDelegate {
 								}
 								reader.close();
 								writer.close();
-								
-							} catch (Exception ex) {
-								String msg = "Could not export documentation for "
+
+							}
+							catch (Exception ex)
+							{
+								final String msg = "Could not export documentation for "
 										+ interfaceIFile.getFullPath();
 								logger.log(Level.SEVERE, msg, ex);
 								MessageBoxUtils.openErrorBox(shell, msg);
 							}
 
 							stored = true;
-						} else {
+						}
+						else
+						{
 							selectedFileName = fileDialog.open();
 						}
 					}
-				} else {
-					String msg = "File is no longer available: "
+				}
+				else
+				{
+					final String msg = "File is no longer available: "
 							+ interfaceFile.getAbsolutePath();
 					logger.log(Level.WARNING, msg);
 					MessageBoxUtils.openErrorBox(shell, msg);
@@ -177,7 +226,7 @@ public class HTMLExport implements IObjectActionDelegate {
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+	public void selectionChanged(IAction action, ISelection selection)
+	{}
 
 }

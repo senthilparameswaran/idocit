@@ -56,26 +56,16 @@
       </page>
    </extension>
    <extension point="org.eclipse.ui.popupMenus">
-		<objectContribution
-            id="de.akra.idocit.ui.contribution.IDocIt"
-            objectClass="org.eclipse.core.resources.IFile">
-	     
-	     <!--
-	     <filter name="extension" value="wsdl" />
-	     -->
-            
-         <action
-               class="de.akra.idocit.ui.actions.OpenEditorAction"
-               enablesFor="1"
-               id="de.akra.idocit.ui.actions.OpenEditorAction"
-               label="iDocIt!"
-               menubarPath="additions">
-         </action>
-		</objectContribution>
-      
 		<objectContribution 
 				id="de.akra.idocit.ui.contribution.IDocIt.HTMLExport"
-				objectClass="org.eclipse.core.resources.IFile" >
+				objectClass="org.eclipse.core.resources.IFile"
+				adaptable="true">
+			<visibility>
+				<or>
+					<objectState name="extension" value="java" />
+					<objectState name="extension" value="wsdl" />
+				</or>
+			</visibility>
 		
 			<action
 				id="de.akra.idocit.ui.contribution.IDocIt.HTMLExport.generateHTML" 
@@ -84,6 +74,24 @@
 				menubarPath="additions" 
 				class="de.akra.idocit.ui.actions.HTMLExport"> 
 			</action> 
+		</objectContribution>
+		<objectContribution id="de.akra.idocit.ui.contribution.IDocIt"
+		  objectClass="org.eclipse.core.resources.IFile"
+		  adaptable="true">
+			<visibility>
+				<or>
+					<objectState name="extension" value="java" />
+					<objectState name="extension" value="wsdl" />
+				</or>
+			</visibility>
+			<action
+			   class="de.akra.idocit.ui.actions.OpenEditorAction"
+			   enablesFor="1"
+			   icon="src/main/resources/images/idocit.ico"
+			   id="de.akra.idocit.ui.actions.OpenEditorAction"
+			   label="iDocIt!"
+			   menubarPath="additions">
+			</action>
 		</objectContribution> 
    </extension>
    <extension

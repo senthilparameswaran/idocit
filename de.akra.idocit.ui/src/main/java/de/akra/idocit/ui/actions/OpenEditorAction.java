@@ -19,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -33,6 +35,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
+import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.ui.components.DocumentationEditor;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -44,6 +47,7 @@ import de.akra.idocit.ui.utils.MessageBoxUtils;
  * @version 0.0.1
  * 
  */
+@SuppressWarnings("restriction")
 public class OpenEditorAction implements IObjectActionDelegate
 {
 	/**
@@ -88,7 +92,30 @@ public class OpenEditorAction implements IObjectActionDelegate
 
 		if (structuredSelection != null)
 		{
-			IFile file = (IFile) structuredSelection.getFirstElement();
+			IFile file = null;
+			if (structuredSelection.getFirstElement() instanceof CompilationUnit)
+			{
+				final CompilationUnit cu = (CompilationUnit) structuredSelection
+						.getFirstElement();
+				try
+				{
+					file = (IFile) cu.getCorrespondingResource();
+				}
+				catch (final JavaModelException e)
+				{
+					final String msg = "CompilationUnit \"" + cu.getPath().toOSString()
+							+ "\" has no corresponding resource.";
+					logger.log(Level.SEVERE, msg, e);
+					MessageBoxUtils.openErrorBox(shell, msg + StringUtils.NEW_LINE
+							+ StringUtils.NEW_LINE + e.getMessage());
+				}
+
+			}
+			else if (structuredSelection.getFirstElement() instanceof IFile)
+			{
+				file = (IFile) structuredSelection.getFirstElement();
+			}
+			
 			if (file != null)
 			{
 				try
