@@ -24,6 +24,7 @@ import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
 
 /**
  * 
@@ -233,7 +234,51 @@ public class HTMLDocGenerator
 						interfaceDoc.append("</p>\n</li>\n");
 					}
 					interfaceDoc.append("</ul>\n"); // end parameter description
-					interfaceDoc.append("</div>\n"); // end input parameters
+					interfaceDoc.append("</div>\n"); // end output parameters
+				}
+
+				// Exceptions
+				if (operation.getExceptions() != null
+						&& !operation.getExceptions().isEmpty())
+				{
+					interfaceDoc
+							.append("<div class=\"exception\">\n<h5>Exceptions</h5>\n");
+
+					// start exception description
+					interfaceDoc.append("<ul class=\"paramDescription\">\n");
+
+					for (final Parameters exception : operation.getExceptions())
+					{
+
+						if (exception.isDocumentationAllowed())
+						{
+							interfaceDoc.append("<li>\n<p>\n")
+									.append(exception.getDisplayName())
+									.append("<br />\n");
+							interfaceDoc.append(generateDocumentationHTML(exception
+									.getDocumentations()));
+
+							// start parameter description
+							interfaceDoc.append("<ul class=\"paramDescription\">\n");
+						}
+
+						for (final Parameter param : exception.getParameters())
+						{
+							interfaceDoc.append("<li>\n<p>\n")
+									.append(param.getDisplayName()).append("<br />\n");
+							interfaceDoc.append(generateParametersDocHTML(param));
+							interfaceDoc.append("</p>\n</li>\n");
+						}
+
+						if (exception.isDocumentationAllowed())
+						{
+							interfaceDoc.append("</ul>\n"); // end parameter description
+							interfaceDoc.append("</p>\n</li>\n");
+						}
+					}
+
+					interfaceDoc.append("</ul>\n"); // end exception description
+					interfaceDoc.append("</div>\n"); // end exceptions
 				}
 				interfaceDoc.append("</li>\n"); // end single operation
 			}
