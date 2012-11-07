@@ -143,13 +143,10 @@ public class EditThematicRoleComposite
 			{
 				EditThematicRoleCompositeSelection selection = getSelection();
 				ThematicRole item = selection.getModifiedItem();
-
 				item.setDescription(txtDescription.getText());
-
 				selection.setModifiedItem(item);
-				setSelection(selection);
 				
-				fireChangeEvent(txtDescription);
+				setSelection(selection);
 			}
 		};
 
