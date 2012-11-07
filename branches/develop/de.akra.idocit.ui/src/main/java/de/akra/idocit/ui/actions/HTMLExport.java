@@ -68,6 +68,8 @@ public class HTMLExport implements IObjectActionDelegate
 
 	private Shell shell;
 
+	private static String lastSelectedPath;
+
 	/**
 	 * Constructor for Action1.
 	 */
@@ -133,14 +135,20 @@ public class HTMLExport implements IObjectActionDelegate
 					fileDialog.setText("Export Documentation as HTML-file");
 					final String[] filterExt = { "*.html", "*.htm" };
 					fileDialog.setFilterExtensions(filterExt);
+
+					final String preselectPath = buildPreselectedPath(interfaceIFile);
+
+					fileDialog.setFileName(preselectPath);
 					String selectedFileName = fileDialog.open();
 
 					boolean stored = false;
 
 					while ((selectedFileName != null) && !stored)
 					{
+						final File destFile = new File(selectedFileName);
+						lastSelectedPath = destFile.getParentFile().getAbsolutePath();
 
-						final boolean exists = new File(selectedFileName).exists();
+						final boolean exists = destFile.exists();
 						final boolean overwrite = exists
 								&& MessageBoxUtils
 										.openQuestionDialogBox(
@@ -167,7 +175,7 @@ public class HTMLExport implements IObjectActionDelegate
 
 								BufferedWriter writer = new BufferedWriter(
 										new OutputStreamWriter(new FileOutputStream(
-												selectedFileName),
+												destFile),
 												Charset.forName(Misc.DEFAULT_CHARSET)));
 								writer.write(html);
 								writer.close();
@@ -178,7 +186,7 @@ public class HTMLExport implements IObjectActionDelegate
 												ResourceUtils
 														.getResourceInputStream("stylesheet.css"),
 												Charset.forName(Misc.DEFAULT_CHARSET)));
-								String cssFileName = selectedFileName.substring(0,
+								final String cssFileName = selectedFileName.substring(0,
 										selectedFileName.lastIndexOf(System
 												.getProperty("file.separator")) + 1)
 										+ "stylesheet.css";
@@ -195,7 +203,7 @@ public class HTMLExport implements IObjectActionDelegate
 								writer.close();
 
 							}
-							catch (Exception ex)
+							catch (final Exception ex)
 							{
 								final String msg = "Could not export documentation for "
 										+ interfaceIFile.getFullPath();
@@ -221,6 +229,21 @@ public class HTMLExport implements IObjectActionDelegate
 
 			}
 		}
+	}
+
+	private String buildPreselectedPath(final IFile file)
+	{
+		String preselectPath = lastSelectedPath;
+		if (StringUtils.isBlank(preselectPath))
+		{
+			preselectPath = file.getLocation().toFile().getParentFile().getAbsolutePath();
+		}
+
+		final String sourceFileName = file.getName();
+		preselectPath += File.separatorChar
+				+ sourceFileName.substring(0, sourceFileName.length()
+						- file.getFileExtension().length()) + "html";
+		return preselectPath;
 	}
 
 	/**
