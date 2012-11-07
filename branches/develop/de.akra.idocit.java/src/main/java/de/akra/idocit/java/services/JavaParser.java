@@ -268,7 +268,9 @@ public class JavaParser implements Parser
 	 * Checks if the key {@link PreferenceStoreConstants#JAVADOC_GENERATION_MODE} has the
 	 * value {@link PreferenceStoreConstants#JAVADOC_GENERATION_MODE_SIMPLE}.
 	 * 
-	 * @return [REPORT]
+	 * @return [REPORT] <code>true</code> if
+	 *         {@link PreferenceStoreConstants#JAVADOC_GENERATION_MODE_SIMPLE} or nothing
+	 *         is configured.
 	 * 
 	 * @thematicgrid Checking Operations
 	 */
@@ -278,7 +280,8 @@ public class JavaParser implements Parser
 		final String mode = store
 				.getString(PreferenceStoreConstants.JAVADOC_GENERATION_MODE);
 
-		return PreferenceStoreConstants.JAVADOC_GENERATION_MODE_SIMPLE.equals(mode);
+		return PreferenceStoreConstants.JAVADOC_GENERATION_MODE_SIMPLE.equals(mode)
+				|| StringUtils.isBlank(mode);
 	}
 
 	/**
