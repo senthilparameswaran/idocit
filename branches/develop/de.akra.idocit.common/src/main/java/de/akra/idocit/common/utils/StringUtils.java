@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -213,19 +214,19 @@ public class StringUtils
 	}
 
 	/**
-	 * Converts the Set of Strings into one comma separated string with the tokens.
+	 * Converts the Collection of Strings into one comma separated string with the tokens.
 	 * 
 	 * @param tokens
 	 *            Tokens to be converted.
 	 * @return String with the comma separated tokens.
 	 */
-	public static String convertIntoCommaSeperatedTokens(Set<String> tokens)
+	public static String convertIntoCommaSeperatedTokens(final Collection<String> tokens)
 	{
-		StringBuffer buffer = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		int tokenNo = 0;
-		int size = tokens.size();
+		final int size = tokens.size();
 
-		for (String token : tokens)
+		for (final String token : tokens)
 		{
 			buffer.append(token);
 
@@ -234,7 +235,7 @@ public class StringUtils
 				buffer.append(", ");
 			}
 
-			tokenNo++;
+			++tokenNo;
 		}
 
 		return buffer.toString();

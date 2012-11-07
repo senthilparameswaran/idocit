@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -225,29 +226,28 @@ public class EditThematicGridComposite
 		if (!newSelection.equals(oldSelection)
 				&& newSelection.getActiveThematicGrid() != null)
 		{
-			String newName = newSelection.getActiveThematicGrid().getName();
-
+			final String newName = newSelection.getActiveThematicGrid().getName();
 			if ((sourceControl == null) || !sourceControl.equals(txtName))
 			{
 				txtName.setText(newName);
 			}
 
-			String newDescription = newSelection.getActiveThematicGrid().getDescription();
-
+			final String newDescription = newSelection.getActiveThematicGrid().getDescription();
 			if ((sourceControl == null) || !sourceControl.equals(txtDescription))
 			{
 				txtDescription.setText(newDescription);
 			}
 
-			Set<String> newVerbs = newSelection.getActiveThematicGrid().getVerbs();
-
+			// Changes due to Issue #127 
+			final Set<String> newVerbs = new TreeSet<String>(newSelection.getActiveThematicGrid().getVerbs());
+			// End changes due to Issue #127
 			if ((sourceControl == null) || !sourceControl.equals(txtVerbs))
 			{
 				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newVerbs));
 			}
 
-			List<ThematicRole> newRoles = newSelection.getRoles();
-			List<ThematicRole> oldRoles = (oldSelection != null) ? oldSelection
+			final List<ThematicRole> newRoles = newSelection.getRoles();
+			final List<ThematicRole> oldRoles = (oldSelection != null) ? oldSelection
 					.getRoles() : null;
 
 			// rebuild table if role list differs or the table is not initialized
@@ -266,7 +266,7 @@ public class EditThematicGridComposite
 
 				for (int i = 0; i < newRoles.size(); i++)
 				{
-					ThematicRole role = newRoles.get(i);
+					final ThematicRole role = newRoles.get(i);
 					items[i] = new TableItem(tabRoles, SWT.NONE);
 					items[i].setText(ROLE_TABLE_COL_ROLE_NAME, role.getName());
 
@@ -290,13 +290,13 @@ public class EditThematicGridComposite
 			}
 			// End changes due to Issue #27
 
-			Map<ThematicRole, Boolean> newSelectedRoles = newSelection
+			final Map<ThematicRole, Boolean> newSelectedRoles = newSelection
 					.getActiveThematicGrid().getRoles();
-			List<ThematicRole> roles = newSelection.getRoles();
+			final List<ThematicRole> roles = newSelection.getRoles();
 
 			int i = 0;
 			Boolean isMandatory = true;
-			for (ThematicRole role : roles)
+			for (final ThematicRole role : roles)
 			{
 				if ((isMandatory = newSelectedRoles.get(role)) != null)
 				{
@@ -308,16 +308,16 @@ public class EditThematicGridComposite
 					}
 				}
 
-				ThematicGrid activeGrid = newSelection.getActiveThematicGrid();
+				final ThematicGrid activeGrid = newSelection.getActiveThematicGrid();
 				if (activeGrid != null)
 				{
-					Map<String, String> gridBasedRules = activeGrid.getGridBasedRules();
-					Map<ThematicRole, Boolean> checkedThematicRoles = activeGrid
+					final Map<String, String> gridBasedRules = activeGrid.getGridBasedRules();
+					final Map<ThematicRole, Boolean> checkedThematicRoles = activeGrid
 							.getRoles();
 
 					if (gridBasedRules != null)
 					{
-						String rule = gridBasedRules.get(role.getName());
+						final String rule = gridBasedRules.get(role.getName());
 
 						if ((rule != null) && checkedThematicRoles.containsKey(role))
 						{
@@ -334,7 +334,7 @@ public class EditThematicGridComposite
 				i++;
 			}
 
-			ThematicRole activeRole = newSelection.getActiveRole();
+			final ThematicRole activeRole = newSelection.getActiveRole();
 			if (activeRole != null)
 			{
 				int selectionIndex = roles.indexOf(activeRole);
