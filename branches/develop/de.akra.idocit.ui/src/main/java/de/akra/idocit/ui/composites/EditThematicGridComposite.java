@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -146,7 +145,8 @@ public class EditThematicGridComposite
 
 		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(100, 50).grab(true, true).applyTo(txtDescription);
+		GridDataFactory.fillDefaults().hint(100, 50).grab(true, true)
+				.applyTo(txtDescription);
 
 		Label lblVerbs = new Label(this, SWT.NONE);
 		lblVerbs.setText("Verbs (seperate verbs with commas):");
@@ -232,18 +232,17 @@ public class EditThematicGridComposite
 				txtName.setText(newName);
 			}
 
-			final String newDescription = newSelection.getActiveThematicGrid().getDescription();
+			final String newDescription = newSelection.getActiveThematicGrid()
+					.getDescription();
 			if ((sourceControl == null) || !sourceControl.equals(txtDescription))
 			{
 				txtDescription.setText(newDescription);
 			}
 
-			// Changes due to Issue #127 
-			final Set<String> newVerbs = new TreeSet<String>(newSelection.getActiveThematicGrid().getVerbs());
-			// End changes due to Issue #127
 			if ((sourceControl == null) || !sourceControl.equals(txtVerbs))
 			{
-				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newVerbs));
+				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newSelection
+						.getActiveThematicGrid().getVerbs()));
 			}
 
 			final List<ThematicRole> newRoles = newSelection.getRoles();
@@ -311,7 +310,8 @@ public class EditThematicGridComposite
 				final ThematicGrid activeGrid = newSelection.getActiveThematicGrid();
 				if (activeGrid != null)
 				{
-					final Map<String, String> gridBasedRules = activeGrid.getGridBasedRules();
+					final Map<String, String> gridBasedRules = activeGrid
+							.getGridBasedRules();
 					final Map<ThematicRole, Boolean> checkedThematicRoles = activeGrid
 							.getRoles();
 

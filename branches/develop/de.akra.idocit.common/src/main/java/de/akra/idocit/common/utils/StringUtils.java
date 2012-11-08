@@ -41,8 +41,10 @@ import de.akra.idocit.common.constants.Misc;
  */
 public class StringUtils
 {
+	private static final String PATTERN_NEW_LINE = "\r\n|\n\r|\n|\r";
+
 	private static final Logger LOGGER = Logger.getLogger(StringUtils.class.getName());
-	
+
 	/**
 	 * An empty String ({@code ""}).
 	 * 
@@ -101,10 +103,10 @@ public class StringUtils
 	}
 
 	/**
-	 * 
-	 * The <code>string</code> is split by the <code>splitChar</code> into words. After a
-	 * word comes over to the <code>maxLineLength</code>, a new line sign is added. The
-	 * new line sign is depending on the operating system.
+	 * The <code>string</code> is split by line breaks and then by the
+	 * <code>splitChar</code> into words. After a word comes over to the
+	 * <code>maxLineLength</code>, a new line sign is added. The new line sign is
+	 * depending on the operating system.
 	 * 
 	 * @param string
 	 *            String to be add new lines.
@@ -118,26 +120,41 @@ public class StringUtils
 			final char splitChar)
 	{
 		final StringBuffer buffer = new StringBuffer();
-		final String[] splitString = string.split(String.valueOf(splitChar));
-		int currentLineLength = 0;
 
-		for (final String token : splitString)
+		final String[] lines = string.split(PATTERN_NEW_LINE);
+		final String[][] wordsPerLine = new String[lines.length][];
+
+		for (int i = 0; i < lines.length; ++i)
 		{
-			if (currentLineLength > maxLineLength)
-			{
-				buffer.append(NEW_LINE);
-				currentLineLength = 0;
-			}
-			else if (currentLineLength > 0)
-			{
-				buffer.append(SPACE);
-				currentLineLength++;
-			}
-
-			buffer.append(token);
-			currentLineLength += token.length();
+			wordsPerLine[i] = lines[i].split(String.valueOf(splitChar));
 		}
 
+		for (int i = 0; i < wordsPerLine.length; ++i)
+		{
+			if (i > 0)
+			{
+				// add line break if not the first line
+				buffer.append(NEW_LINE);
+			}
+
+			int currentLineLength = 0;
+			for (final String word : wordsPerLine[i])
+			{
+				if (currentLineLength > maxLineLength)
+				{
+					buffer.append(NEW_LINE);
+					currentLineLength = 0;
+				}
+				else if (currentLineLength > 0)
+				{
+					buffer.append(splitChar);
+					currentLineLength++;
+				}
+
+				buffer.append(word);
+				currentLineLength += word.length();
+			}
+		}
 		return buffer.toString();
 	}
 
@@ -358,8 +375,7 @@ public class StringUtils
 		InputStreamReader isr;
 		if (stream instanceof BufferedInputStream)
 		{
-			isr = new InputStreamReader(stream, 
-					Charset.forName(Misc.DEFAULT_CHARSET));
+			isr = new InputStreamReader(stream, Charset.forName(Misc.DEFAULT_CHARSET));
 		}
 		else
 		{
