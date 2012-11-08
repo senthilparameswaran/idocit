@@ -70,6 +70,14 @@
     <roles>
       <entry>
         <thematicRole>
+          <name>OBJECT</name>
+          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
           <name>SOURCE</name>
           <description>The origin of an object associated to the component</description>
           <roleScope>BOTH</roleScope>
@@ -78,8 +86,8 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>OBJECT</name>
-          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
+          <name>REPORT</name>
+          <description>Additional detailed information on the ACTION</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
@@ -102,8 +110,8 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>REPORT</name>
-          <description>Additional detailed information on the ACTION</description>
+          <name>RULE</name>
+          <description>Defines how decisions were made by the ACTION</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
@@ -115,22 +123,6 @@
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>RULE</name>
-          <description>Defines how decisions were made by the ACTION</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>ALGORITHM</name>
-          <description>Set of instructions to perform the ACTION</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
       </entry>
     </roles>
     <gridBasedRules>
@@ -153,10 +145,6 @@
       <entry>
         <string>PRIMARY_KEY</string>
         <string>!exists(&quot;COMPARISON&quot;)</string>
-      </entry>
-      <entry>
-        <string>ALGORITHM</string>
-        <string>!exists(&quot;RULE&quot;)</string>
       </entry>
       <entry>
         <string>COMPARISON</string>
@@ -202,16 +190,24 @@
     <roles>
       <entry>
         <thematicRole>
-          <name>INSTRUMENT</name>
-          <description>The entity with which or through which an action is performed</description>
+          <name>OBJECT</name>
+          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
-        <boolean>false</boolean>
+        <boolean>true</boolean>
       </entry>
       <entry>
         <thematicRole>
-          <name>OBJECT</name>
-          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
+          <name>SOURCE_FORMAT</name>
+          <description>The FORMAT of the input(s) of an ACTION</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>DESTINATION_FORMAT</name>
+          <description>The FORMAT of the output(s) of an ACTION</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
@@ -226,16 +222,16 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>SOURCE_FORMAT</name>
-          <description>The FORMAT of the input(s) of an ACTION</description>
+          <name>RULE</name>
+          <description>Defines how decisions were made by the ACTION</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
-        <boolean>true</boolean>
+        <boolean>false</boolean>
       </entry>
       <entry>
         <thematicRole>
-          <name>RULE</name>
-          <description>Defines how decisions were made by the ACTION</description>
+          <name>INSTRUMENT</name>
+          <description>The entity with which or through which an action is performed</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
@@ -247,14 +243,6 @@
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>DESTINATION_FORMAT</name>
-          <description>The FORMAT of the output(s) of an ACTION</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
       </entry>
     </roles>
     <gridBasedRules>
@@ -358,8 +346,8 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>OWNER</name>
-          <description>The entity the OBJECT belongs to.</description>
+          <name>NAME</name>
+          <description>Non-numerical identifier of the OBJECT</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
@@ -390,8 +378,8 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>NAME</name>
-          <description>Non-numerical identifier of the OBJECT</description>
+          <name>OWNER</name>
+          <description>The entity the OBJECT belongs to.</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
@@ -466,19 +454,19 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>ACTION</name>
-          <description>A function performed by the component</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
           <name>OPERAND</name>
           <description>Argument of the ACTION</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>ACTION</name>
+          <description>A function performed by the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>false</boolean>
       </entry>
       <entry>
         <thematicRole>
@@ -490,19 +478,19 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>ALGORITHM</name>
-          <description>Set of instructions to perform the ACTION</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
           <name>ORDERING</name>
           <description>The ordering of the returned OBJECTs</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>ALGORITHM</name>
+          <description>Set of instructions to perform the ACTION</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
       </entry>
     </roles>
     <gridBasedRules>
@@ -573,12 +561,28 @@
     </verbs>
     <roles>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry/thematicRole"/>
+        <thematicRole>
+          <name>OBJECT</name>
+          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>SOURCE</name>
+          <description>The origin of an object associated to the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>false</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[2]/thematicRole"/>
-        <boolean>true</boolean>
+        <thematicRole>
+          <name>NAME</name>
+          <description>Non-numerical identifier of the OBJECT</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>false</boolean>
       </entry>
       <entry>
         <thematicRole>
@@ -589,20 +593,20 @@
         <boolean>false</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[5]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[6]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
         <thematicRole>
-          <name>NAME</name>
-          <description>Non-numerical identifier of the OBJECT</description>
+          <name>ACTION</name>
+          <description>A function performed by the component</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>DESTINATION</name>
+          <description>A destination for an object associated with the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
       </entry>
     </roles>
     <gridBasedRules>
@@ -703,33 +707,57 @@
     </verbs>
     <roles>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[2]/thematicRole"/>
+        <thematicRole>
+          <name>OBJECT</name>
+          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>true</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[4]/thematicRole"/>
+        <thematicRole>
+          <name>LIMIT</name>
+          <description>The entity used to limit the ACTION space (e.g. maximum number of OBJECTs to return)</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>false</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[7]/roles/entry[3]/thematicRole"/>
+        <thematicRole>
+          <name>PRIMARY_KEY</name>
+          <description>The entity that uniquely identifies the OBJECT</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>true</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[5]/thematicRole"/>
+        <thematicRole>
+          <name>ACTION</name>
+          <description>A function performed by the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>false</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[6]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[7]/thematicRole"/>
+        <thematicRole>
+          <name>DESTINATION</name>
+          <description>A destination for an object associated with the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>true</boolean>
       </entry>
       <entry>
         <thematicRole>
           <name>RULE</name>
           <description>Defines how decisions were made by the ACTION</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>COMPARISON</name>
+          <description>The entity compared with the main OBJECT</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
@@ -818,31 +846,43 @@
     </verbs>
     <roles>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry/thematicRole"/>
+        <thematicRole>
+          <name>OBJECT</name>
+          <description>The object, target or result of an action. It can also reference the system implementing a described functionality</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>true</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[2]/thematicRole"/>
+        <thematicRole>
+          <name>SOURCE</name>
+          <description>The origin of an object associated to the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>true</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[4]/thematicRole"/>
+        <thematicRole>
+          <name>LIMIT</name>
+          <description>The entity used to limit the ACTION space (e.g. maximum number of OBJECTs to return)</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>false</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[7]/roles/entry[3]/thematicRole"/>
+        <thematicRole>
+          <name>PRIMARY_KEY</name>
+          <description>The entity that uniquely identifies the OBJECT</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>true</boolean>
       </entry>
       <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[5]/thematicRole"/>
-        <boolean>false</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[7]/thematicRole"/>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole reference="../../../../thematicGrid[5]/roles/entry[8]/thematicRole"/>
+        <thematicRole>
+          <name>ACTION</name>
+          <description>A function performed by the component</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
         <boolean>false</boolean>
       </entry>
       <entry>
@@ -852,6 +892,22 @@
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>false</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>ALGORITHM</name>
+          <description>Set of instructions to perform the ACTION</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>false</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>COMPARISON</name>
+          <description>The entity compared with the main OBJECT</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
       </entry>
     </roles>
     <gridBasedRules>
@@ -932,30 +988,6 @@
     <roles>
       <entry>
         <thematicRole>
-          <name>INSTRUMENT</name>
-          <description>The entity with which or through which an action is performed</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>FORMAT</name>
-          <description>Data format of the OBJECT, ATTRIBUTE, METADATA, etc.</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
-          <name>MESSAGE</name>
-          <description>Feedback information given by the ACTION in (structured) natural language</description>
-          <roleScope>BOTH</roleScope>
-        </thematicRole>
-        <boolean>true</boolean>
-      </entry>
-      <entry>
-        <thematicRole>
           <name>PRIMARY_KEY</name>
           <description>The entity that uniquely identifies the OBJECT</description>
           <roleScope>BOTH</roleScope>
@@ -980,8 +1012,8 @@
       </entry>
       <entry>
         <thematicRole>
-          <name>COMPARISON</name>
-          <description>The entity compared with the main OBJECT</description>
+          <name>MESSAGE</name>
+          <description>Feedback information given by the ACTION in (structured) natural language</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
@@ -990,6 +1022,30 @@
         <thematicRole>
           <name>RULE</name>
           <description>Defines how decisions were made by the ACTION</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>INSTRUMENT</name>
+          <description>The entity with which or through which an action is performed</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>COMPARISON</name>
+          <description>The entity compared with the main OBJECT</description>
+          <roleScope>BOTH</roleScope>
+        </thematicRole>
+        <boolean>true</boolean>
+      </entry>
+      <entry>
+        <thematicRole>
+          <name>FORMAT</name>
+          <description>Data format of the OBJECT, ATTRIBUTE, METADATA, etc.</description>
           <roleScope>BOTH</roleScope>
         </thematicRole>
         <boolean>true</boolean>
