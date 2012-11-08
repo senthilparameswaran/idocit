@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="de.akra.idocit.ui.components.IDocItPreferencePage"
+            class="de.akra.idocit.java.ui.components.JavadocGeneratorPreferencePage"
+            id="de.akra.idocit.java.ui.components.JavadocGeneratorPreferencePage"
+            name="Javadoc Settings">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="de.akra.idocit.java.ui.Activator">
+      </startup>
+   </extension>
+
+</plugin>
