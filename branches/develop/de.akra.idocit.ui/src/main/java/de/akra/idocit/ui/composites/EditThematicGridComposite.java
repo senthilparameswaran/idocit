@@ -408,8 +408,8 @@ public class EditThematicGridComposite
 			@Override
 			public void menuDetected(MenuDetectEvent e)
 			{
-				// TODO hide popup menu if user clicks on the column headers!
-
+				updateMenuItemStatus();
+				
 				// show popup menu if the context menu key on the keyboard is pressed and
 				// an item is selected
 				tablePopUpMenu.setVisible(tabRoles.getSelectionIndex() > -1);
@@ -426,6 +426,7 @@ public class EditThematicGridComposite
 			{
 				if (e.button == MOUSE_BUTTON_RIGHT)
 				{
+					updateMenuItemStatus();
 					tablePopUpMenu.setVisible(isInTableItemRange(e.x, e.y));
 				}
 			}
@@ -609,6 +610,21 @@ public class EditThematicGridComposite
 		if ((row = tabRoles.getSelectionIndex()) > -1)
 		{
 			tabRoles.getItem(row).setText(ROLE_TABLE_COL_STATUS, status);
+		}
+	}
+
+	/**
+	 * Update the table's menu items depending on the selected item.
+	 */
+	private void updateMenuItemStatus()
+	{
+		int row = -1;
+		if ((row = tabRoles.getSelectionIndex()) > -1)
+		{
+			final boolean enabled = tabRoles.getItem(row).getChecked();
+			menuItemEditRule.setEnabled(enabled);
+			menuItemSetMandatory.setEnabled(enabled);
+			menuItemSetOptional.setEnabled(enabled);
 		}
 	}
 
