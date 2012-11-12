@@ -46,6 +46,11 @@ public class RecommendedGridsView extends ViewPart
 	private RecommendRolesComposite recommendRolesComposite;
 
 	/**
+	 * The current state of this view.
+	 */
+	private RecommendedGridsViewSelection selection;
+
+	/**
 	 * The constructor.
 	 */
 	public RecommendedGridsView()
@@ -61,11 +66,13 @@ public class RecommendedGridsView extends ViewPart
 	 */
 	public void setSelection(final RecommendedGridsViewSelection viewSelection)
 	{
-		RecommendRolesCompositeSelection selection = null;
+		this.selection = viewSelection;
+
+		RecommendRolesCompositeSelection compSelection = null;
 		if (viewSelection != null)
 		{
 			// FIXME Do not init with new set here!
-			selection = new RecommendRolesCompositeSelection(
+			compSelection = new RecommendRolesCompositeSelection(
 					viewSelection.getOperationIdentifier(),
 					viewSelection.getAssignedThematicRoles(),
 					viewSelection.getReferenceThematicGridName(),
@@ -73,10 +80,18 @@ public class RecommendedGridsView extends ViewPart
 		}
 		else
 		{
-			selection = new RecommendRolesCompositeSelection();
+			compSelection = new RecommendRolesCompositeSelection();
 		}
+		this.recommendRolesComposite.setSelection(compSelection);
+	}
 
-		this.recommendRolesComposite.setSelection(selection);
+	/**
+	 * 
+	 * @return The current state of this view.
+	 */
+	public RecommendedGridsViewSelection getSelection()
+	{
+		return selection;
 	}
 
 	/**
@@ -84,11 +99,11 @@ public class RecommendedGridsView extends ViewPart
 	 */
 	public void createPartControl(Composite parent)
 	{
-		
-		RecommendRolesCompositeRC resConf = new RecommendRolesCompositeRC();
+		final RecommendRolesCompositeRC resConf = new RecommendRolesCompositeRC();
 		resConf.setRoleWithoutErrorDocsWarningIcon(ImageConstants.WARNING_ICON);
-		
-		this.recommendRolesComposite = new RecommendRolesComposite(parent, SWT.NONE, resConf);
+
+		this.recommendRolesComposite = new RecommendRolesComposite(parent, SWT.NONE,
+				resConf);
 		this.recommendRolesComposite.setSelection(new RecommendRolesCompositeSelection());
 	}
 

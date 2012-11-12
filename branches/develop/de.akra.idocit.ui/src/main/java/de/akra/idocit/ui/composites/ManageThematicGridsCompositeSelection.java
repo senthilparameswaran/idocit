@@ -60,12 +60,6 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 	private boolean nameExists = false;
 
 	/**
-	 * The timestamp of the last save action. If the roles were not saved during this
-	 * session the value is -1.
-	 */
-	private long lastSaveTimeThematicRoles = -1;
-
-	/**
 	 * The selected thematic role in the list of roles.
 	 */
 	private ThematicRole activeRole;
@@ -164,8 +158,6 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		result = prime * result
 				+ ((activeThematicGrid == null) ? 0 : activeThematicGrid.hashCode());
 		result = prime * result + indexOfActiveThematicGrid;
-		result = prime * result
-				+ (int) (lastSaveTimeThematicRoles ^ (lastSaveTimeThematicRoles >>> 32));
 		result = prime * result + (nameExists ? 1231 : 1237);
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result
@@ -198,8 +190,6 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		else if (!activeThematicGrid.equals(other.activeThematicGrid))
 			return false;
 		if (indexOfActiveThematicGrid != other.indexOfActiveThematicGrid)
-			return false;
-		if (lastSaveTimeThematicRoles != other.lastSaveTimeThematicRoles)
 			return false;
 		if (nameExists != other.nameExists)
 			return false;
@@ -234,22 +224,10 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 		builder.append(roles);
 		builder.append(", nameExists=");
 		builder.append(nameExists);
-		builder.append(", lastSaveTimeThematicRoles=");
-		builder.append(lastSaveTimeThematicRoles);
 		builder.append(", activeRole=");
 		builder.append(activeRole);
 		builder.append("]");
 		return builder.toString();
-	}
-
-	public void setLastSaveTimeThematicRoles(long lastSaveTimeThematicRoles)
-	{
-		this.lastSaveTimeThematicRoles = lastSaveTimeThematicRoles;
-	}
-
-	public long getLastSaveTimeThematicRoles()
-	{
-		return lastSaveTimeThematicRoles;
 	}
 
 	public void setIndexOfActiveThematicGrid(int indexOfActiveThematicGrid)
@@ -260,5 +238,22 @@ public class ManageThematicGridsCompositeSelection implements ISelection
 	public int getIndexOfActiveThematicGrid()
 	{
 		return indexOfActiveThematicGrid;
+	}
+
+	/**
+	 * Clone this instance of {@link ManageThematicGridsCompositeSelection}. Collections
+	 * are not deep copied.
+	 */
+	@Override
+	public ManageThematicGridsCompositeSelection clone()
+	{
+		final ManageThematicGridsCompositeSelection s = new ManageThematicGridsCompositeSelection();
+		s.setActiveRole(this.activeRole);
+		s.setActiveThematicGrid(this.activeThematicGrid);
+		s.setIndexOfActiveThematicGrid(this.indexOfActiveThematicGrid);
+		s.setNameExists(this.nameExists);
+		s.setRoles(this.roles);
+		s.setThematicGrids(this.thematicGrids);
+		return s;
 	}
 }

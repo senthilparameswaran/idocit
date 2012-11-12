@@ -35,7 +35,7 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 	 * The selected ThematicRole to edit.
 	 */
 	private ThematicRole activeThematicRole = null;
-	
+
 	/**
 	 * The modified role (copy of the active role with changes).
 	 */
@@ -47,17 +47,11 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 	private List<ThematicRole> thematicRoles = null;
 
 	/**
-	 * The timestamp of the last save action. If the roles were not saved during this
-	 * session the value is -1.
-	 */
-	private long lastSaveTimeThematicRoles = -1;
-
-	/**
 	 * True, if a ThematicRole with same name exists. If same name exists, changes can not
 	 * be applied.
 	 */
 	private boolean nameExists = false;
-	
+
 	/**
 	 * The last cursor position in the name text field at the edit composite.
 	 */
@@ -101,7 +95,9 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		this.thematicRoles = roles;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -113,8 +109,6 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 				+ ((activeThematicRole == null) ? 0 : activeThematicRole.hashCode());
 		result = prime * result + lastCurserPosition;
 		result = prime * result
-				+ (int) (lastSaveTimeThematicRoles ^ (lastSaveTimeThematicRoles >>> 32));
-		result = prime * result
 				+ ((modifiedThematicRole == null) ? 0 : modifiedThematicRole.hashCode());
 		result = prime * result + (nameExists ? 1231 : 1237);
 		result = prime * result
@@ -122,7 +116,9 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -144,8 +140,6 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 			return false;
 		if (lastCurserPosition != other.lastCurserPosition)
 			return false;
-		if (lastSaveTimeThematicRoles != other.lastSaveTimeThematicRoles)
-			return false;
 		if (modifiedThematicRole == null)
 		{
 			if (other.modifiedThematicRole != null)
@@ -165,7 +159,9 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -178,24 +174,12 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		builder.append(modifiedThematicRole);
 		builder.append(", thematicRoles=");
 		builder.append(thematicRoles);
-		builder.append(", lastSaveTimeThematicRoles=");
-		builder.append(lastSaveTimeThematicRoles);
 		builder.append(", nameExists=");
 		builder.append(nameExists);
 		builder.append(", lastCurserPosition=");
 		builder.append(lastCurserPosition);
 		builder.append("]");
 		return builder.toString();
-	}
-
-	public void setLastSaveTimeThematicRoles(long lastSaveTimeThematicRoles)
-	{
-		this.lastSaveTimeThematicRoles = lastSaveTimeThematicRoles;
-	}
-
-	public long getLastSaveTimeThematicRoles()
-	{
-		return lastSaveTimeThematicRoles;
 	}
 
 	public void setNameExists(boolean nameExists)
@@ -226,5 +210,21 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 	public ThematicRole getModifiedThematicRole()
 	{
 		return modifiedThematicRole;
+	}
+
+	/**
+	 * Clone this instance of {@link ManageThematicRoleCompositeSelection}. Collections
+	 * are not deep copied.
+	 */
+	@Override
+	public ManageThematicRoleCompositeSelection clone()
+	{
+		final ManageThematicRoleCompositeSelection s = new ManageThematicRoleCompositeSelection();
+		s.setActiveThematicRole(activeThematicRole);
+		s.setLastCurserPosition(lastCurserPosition);
+		s.setModifiedThematicRole(modifiedThematicRole);
+		s.setNameExists(nameExists);
+		s.setThematicRoles(thematicRoles);
+		return s;
 	}
 }

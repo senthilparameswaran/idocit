@@ -174,18 +174,23 @@ public class DisplayRecommendedRolesComposite
 				if (roleClass.getValue() != null)
 				{
 					final ThematicGrid grid = roleClass.getValue();
-					final StringBuilder tooltip = new StringBuilder(grid.getDescription()
-							.length() * 2);
-					tooltip.append(grid.getDescription())
-							.append(StringUtils.NEW_LINE)
-							.append(StringUtils.NEW_LINE)
-							.append("Verbs:")
-							.append(StringUtils.NEW_LINE)
-							.append(StringUtils.convertIntoCommaSeperatedTokens(grid
-									.getVerbs()));
-					verbClassRoot.setData(ToolTipHandler.KEY_TIP_TEXT, StringUtils
-							.addLineBreaks(tooltip.toString(), TOOLTIP_MAX_LINE_LENGTH,
-									StringUtils.SPACE.charAt(0)));
+
+					if (!StringUtils.isBlank(grid.getDescription()))
+					{
+						final StringBuilder tooltip = new StringBuilder(grid
+								.getDescription().length() * 2);
+						tooltip.append(grid.getDescription())
+								.append(StringUtils.NEW_LINE)
+								.append(StringUtils.NEW_LINE)
+								.append("Verbs:")
+								.append(StringUtils.NEW_LINE)
+								.append(StringUtils.convertIntoCommaSeperatedTokens(grid
+										.getVerbs()));
+						verbClassRoot.setData(ToolTipHandler.KEY_TIP_TEXT, StringUtils
+								.addLineBreaks(tooltip.toString(),
+										TOOLTIP_MAX_LINE_LENGTH,
+										StringUtils.SPACE.charAt(0)));
+					}
 
 					final Set<ThematicRole> displayNotAssignedRoles = new TreeSet<ThematicRole>();
 					final Set<ThematicRole> displayAssignedRoles = new TreeSet<ThematicRole>();

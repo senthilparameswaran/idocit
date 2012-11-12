@@ -32,6 +32,7 @@ import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
+import de.akra.idocit.core.listeners.IConfigurationChangeListener;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageThematicGridsComposite;
 import de.akra.idocit.ui.composites.ManageThematicGridsCompositeSelection;
@@ -48,23 +49,51 @@ public class ThematicGridPreferencePage
 		extends
 		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicGridsCompositeSelection>
 {
+	private IConfigurationChangeListener thematicRoleConfigChangeListener;
 
 	@Override
 	protected void initListener() throws CompositeInitializationException
 	{
-		// Nothing to do!
+		// nothing to do
 	}
 
 	@Override
 	protected void addAllListener()
 	{
-		// Nothing to do!
+		// nothing to do
 	}
 
 	@Override
 	protected void removeAllListener()
 	{
-		// Nothing to do!
+		// nothing to do
+	}
+
+	private void setupListener()
+	{
+		this.thematicRoleConfigChangeListener = new IConfigurationChangeListener() {
+
+			@Override
+			public void configurationChange()
+			{
+				final ManageThematicGridsCompositeSelection newSelection = getSelection()
+						.clone();
+				newSelection.setRoles(ServiceManager.getInstance()
+						.getPersistenceService().loadThematicRoles());
+
+				setSelection(newSelection);
+			}
+		};
+		ServiceManager.getInstance().getPersistenceService()
+				.addThematicRoleChangeListener(thematicRoleConfigChangeListener);
+	}
+
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		ServiceManager.getInstance().getPersistenceService()
+				.removeThematicRoleChangeListener(thematicRoleConfigChangeListener);
 	}
 
 	@Override
@@ -83,8 +112,9 @@ public class ThematicGridPreferencePage
 		{
 			setPreferenceStore(PlatformUI.getPreferenceStore());
 		}
-
 		loadPreferences();
+
+		setupListener();
 	}
 
 	private void loadPreferences()
@@ -92,7 +122,7 @@ public class ThematicGridPreferencePage
 		try
 		{
 			IDocItActivator.initGridBasedRules();
-			
+
 			List<ThematicGrid> grids = ServiceManager.getInstance()
 					.getPersistenceService().loadThematicGrids();
 			List<ThematicRole> roles = ServiceManager.getInstance()
@@ -107,8 +137,6 @@ public class ThematicGridPreferencePage
 
 			selection.setThematicGrids(grids);
 			selection.setRoles(roles);
-			selection.setLastSaveTimeThematicRoles(ServiceManager.getInstance()
-					.getPersistenceService().getLastSaveTimeOfThematicRoles());
 
 			setSelection(selection);
 		}
@@ -172,11 +200,11 @@ public class ThematicGridPreferencePage
 	{
 		if (checkState())
 		{
-			List<ThematicGrid> grids = getSelection().getThematicGrids();
+			final List<ThematicGrid> grids = getSelection().getThematicGrids();
 			ServiceManager.getInstance().getPersistenceService()
 					.persistThematicGrids(grids);
 
-			List<ThematicRole> roles = getSelection().getRoles();
+			final List<ThematicRole> roles = getSelection().getRoles();
 			ServiceManager.getInstance().getPersistenceService()
 					.persistThematicRoles(roles);
 		}

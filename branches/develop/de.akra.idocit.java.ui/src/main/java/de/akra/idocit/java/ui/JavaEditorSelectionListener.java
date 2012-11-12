@@ -96,17 +96,13 @@ public class JavaEditorSelectionListener implements ISelectionListener
 				{
 					final RecommendedGridsView view = (RecommendedGridsView) findView;
 					final ITextSelection textSel = (ITextSelection) sel;
-					IJavaElement elt = null;
+					RecommendedGridsViewSelection newViewSelection = null;
 					try
 					{
-						elt = root.getElementAt(textSel.getOffset());
+						final IJavaElement elt = root.getElementAt(textSel.getOffset());
 						if (elt != null && elt.getElementType() == IJavaElement.METHOD)
 						{
-							view.setSelection(prepareViewSelection((IMethod) elt));
-						}
-						else
-						{
-							view.setSelection(null);
+							newViewSelection = prepareViewSelection((IMethod) elt);
 						}
 					}
 					catch (final JavaModelException e)
@@ -114,14 +110,13 @@ public class JavaEditorSelectionListener implements ISelectionListener
 						LOG.log(Level.WARNING,
 								"Java method not found for \"{0}\" (file offset={1}).",
 								new Object[] { textSel.getText(), textSel.getOffset() });
-						view.setSelection(null);
 					}
 					catch (final Exception e)
 					{
 						LOG.log(Level.WARNING,
 								"Failed to collect assigned ThematicRoles.", e);
-						view.setSelection(null);
 					}
+					view.setSelection(newViewSelection);
 				}
 				else
 				{

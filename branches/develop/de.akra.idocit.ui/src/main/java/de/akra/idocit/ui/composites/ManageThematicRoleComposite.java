@@ -18,6 +18,7 @@ package de.akra.idocit.ui.composites;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -35,7 +36,6 @@ import org.pocui.swt.composites.AbsComposite;
 
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.DescribedItemNameComparator;
-import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.constants.DialogConstants;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 
@@ -50,6 +50,9 @@ public class ManageThematicRoleComposite
 		extends
 		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection>
 {
+	private static Logger LOG = Logger.getLogger(ManageThematicRoleComposite.class
+			.getName());
+
 	// Widgets
 	private EditThematicRoleListComposite editThematicRoleListComposite;
 
@@ -96,68 +99,63 @@ public class ManageThematicRoleComposite
 	protected void doSetSelection(ManageThematicRoleCompositeSelection oldSelection,
 			ManageThematicRoleCompositeSelection newSelection, Object sourceControl)
 	{
-		updateRoleList(newSelection);
+		// updateRoleList(newSelection);
 
-		errorLabel.setVisible(newSelection.isNameExists());
-
-		// Update the EditItemListComposite.
-		EditThematicRoleListCompositeSelection editItemListSelection = new EditThematicRoleListCompositeSelection();
-		editItemListSelection.setItems(newSelection.getThematicRoles());
-		editItemListSelection.setMinNumberOfItems(1);
-
-		ThematicRole activeRole = newSelection.getActiveThematicRole();
-		List<ThematicRole> activeRoles = new ArrayList<ThematicRole>();
-
-		if (activeRole != null)
+		if (!isDisposed())
 		{
-			activeRoles.add(activeRole);
-		}
+			errorLabel.setVisible(newSelection.isNameExists());
 
-		editItemListSelection.setActiveItems(activeRoles);
+			final ThematicRole activeRole = newSelection.getActiveThematicRole();
 
-		editThematicRoleListComposite.setSelection(editItemListSelection);
-
-		// Update the EditDescribedItemComposite.
-		EditThematicRoleCompositeSelection editThematicRoleCompositeSelection = new EditThematicRoleCompositeSelection();
-		editThematicRoleCompositeSelection.setItem(activeRole);
-
-		if (newSelection.isNameExists())
-		{
-			editThematicRoleCompositeSelection.setModifiedItem(newSelection
-					.getModifiedThematicRole());
-		}
-		else
-		{
-			if (activeRole != null)
+			// Update the EditItemListComposite.
+			if (editThematicRoleListComposite.getSelection() == null
+					|| !editThematicRoleListComposite.getSelection().getItems()
+							.equals(newSelection.getThematicRoles()))
 			{
-				ThematicRole modifiedItem = DescribedItemUtils.copy(activeRole);
-				editThematicRoleCompositeSelection.setModifiedItem(modifiedItem);
+				final EditThematicRoleListCompositeSelection editItemListSelection = new EditThematicRoleListCompositeSelection();
+				editItemListSelection.setItems(newSelection.getThematicRoles());
+				editItemListSelection.setMinNumberOfItems(1);
+
+				final List<ThematicRole> activeRoles = new ArrayList<ThematicRole>();
+
+				if (activeRole != null)
+				{
+					activeRoles.add(activeRole);
+				}
+
+				editItemListSelection.setActiveItems(activeRoles);
+
+				editThematicRoleListComposite.setSelection(editItemListSelection);
+			}
+
+			// Update the EditDescribedItemComposite.
+			final EditThematicRoleCompositeSelection editThematicRoleCompositeSelection = new EditThematicRoleCompositeSelection();
+			editThematicRoleCompositeSelection.setItem(activeRole);
+
+			if (newSelection.isNameExists())
+			{
+				editThematicRoleCompositeSelection.setModifiedItem(newSelection
+						.getModifiedThematicRole());
 			}
 			else
 			{
-				editThematicRoleCompositeSelection.setModifiedItem(null);
+				if (activeRole != null)
+				{
+					final ThematicRole modifiedItem = DescribedItemUtils.copy(activeRole);
+					editThematicRoleCompositeSelection.setModifiedItem(modifiedItem);
+				}
+				else
+				{
+					editThematicRoleCompositeSelection.setModifiedItem(null);
+				}
 			}
+			editThematicRoleCompositeSelection.setLastCurserPosition(newSelection
+					.getLastCurserPosition());
+			editThematicRoleComposite.setSelection(editThematicRoleCompositeSelection);
 		}
-		editThematicRoleCompositeSelection.setLastCurserPosition(newSelection
-				.getLastCurserPosition());
-		editThematicRoleComposite.setSelection(editThematicRoleCompositeSelection);
-	}
-
-	/**
-	 * If the global {@link ThematicRole} list is changed, load them again.
-	 * 
-	 * @param newSelection
-	 *            The new selection object to update.
-	 */
-	private void updateRoleList(ManageThematicRoleCompositeSelection newSelection)
-	{
-		if (newSelection.getLastSaveTimeThematicRoles() < ServiceManager.getInstance()
-				.getPersistenceService().getLastSaveTimeOfThematicRoles())
+		else
 		{
-			newSelection.setLastSaveTimeThematicRoles(ServiceManager.getInstance()
-					.getPersistenceService().getLastSaveTimeOfThematicRoles());
-			newSelection.setThematicRoles(ServiceManager.getInstance()
-					.getPersistenceService().loadThematicRoles());
+			LOG.info("already disposed ! ! ! ! ! ! ! ! ");
 		}
 	}
 
@@ -258,8 +256,7 @@ public class ManageThematicRoleComposite
 					Object sourceControl)
 			{
 				// If this composite fires a change event, a new active role has
-				// been
-				// chosen.
+				// been chosen.
 				ManageThematicRoleCompositeSelection mySelection = getSelection();
 				mySelection.setNameExists(false);
 				mySelection.setModifiedThematicRole(null);
