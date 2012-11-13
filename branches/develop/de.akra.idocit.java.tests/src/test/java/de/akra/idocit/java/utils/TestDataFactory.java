@@ -1519,7 +1519,7 @@ public class TestDataFactory
 						"Reads the java- and javadoc code from the given <b>file and"
 								+ JavaTestUtils.NEW_LINE
 								+ "creates</b> the returned {@link JavaInterfaceArtifact} from it."
-								+ JavaTestUtils.NEW_LINE + "Escape Test: Ã–");
+								+ JavaTestUtils.NEW_LINE + "Escape Test: Ö");
 		Documentation docAction = new Documentation();
 		docAction.setAddresseeSequence(addresseeSequence);
 		docAction.setDocumentation(docTextAction);
