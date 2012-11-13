@@ -30,7 +30,7 @@ import de.akra.idocit.common.structure.ThematicRole;
  * @version 0.0.1
  * 
  */
-public class ManageThematicGridsCompositeSelection implements ISelection
+public class ManageThematicGridsCompositeSelection implements ISelection, Cloneable
 {
 	/**
 	 * All available thematic grids.

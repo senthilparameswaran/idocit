@@ -29,7 +29,7 @@ import de.akra.idocit.common.structure.ThematicRole;
  * @version 0.0.1
  * 
  */
-public class ManageThematicRoleCompositeSelection implements ISelection
+public class ManageThematicRoleCompositeSelection implements ISelection, Cloneable
 {
 	/**
 	 * The selected ThematicRole to edit.

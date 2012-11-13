@@ -45,7 +45,7 @@ import de.akra.idocit.common.structure.ThematicRole;
  * @version 0.0.2
  * 
  */
-public class EditArtifactDocumentationCompositeSelection implements ISelection
+public class EditArtifactDocumentationCompositeSelection implements ISelection, Cloneable
 {
 	private static final int DEFAULT_NUMBER_OF_DOCS_PER_SIGNATURE_ELEMENT = 2;
 

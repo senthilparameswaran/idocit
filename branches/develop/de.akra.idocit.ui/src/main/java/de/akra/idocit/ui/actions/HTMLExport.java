@@ -47,6 +47,7 @@ import de.akra.idocit.common.utils.StringUtils;
 import de.akra.idocit.core.services.impl.HTMLDocGenerator;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.core.utils.ResourceUtils;
+import de.akra.idocit.ui.UIGlobals;
 import de.akra.idocit.ui.components.DocumentationEditor;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -67,8 +68,6 @@ public class HTMLExport implements IObjectActionDelegate
 	private static Logger logger = Logger.getLogger(HTMLExport.class.getName());
 
 	private Shell shell;
-
-	private static String lastSelectedPath;
 
 	/**
 	 * Constructor for Action1.
@@ -146,7 +145,8 @@ public class HTMLExport implements IObjectActionDelegate
 					while ((selectedFileName != null) && !stored)
 					{
 						final File destFile = new File(selectedFileName);
-						lastSelectedPath = destFile.getParentFile().getAbsolutePath();
+						UIGlobals.setLastSelectedPathInFileDialog(destFile
+								.getParentFile().getAbsolutePath());
 
 						final boolean exists = destFile.exists();
 						final boolean overwrite = exists
@@ -233,7 +233,7 @@ public class HTMLExport implements IObjectActionDelegate
 
 	private String buildPreselectedPath(final IFile file)
 	{
-		String preselectPath = lastSelectedPath;
+		String preselectPath = UIGlobals.getLastSelectedPathInFileDialog();
 		if (StringUtils.isBlank(preselectPath))
 		{
 			preselectPath = file.getLocation().toFile().getParentFile().getAbsolutePath();

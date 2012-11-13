@@ -13,19 +13,43 @@
  * See the License for the specific language governing permissions and     
  * limitations under the License.
  *******************************************************************************/
-package de.akra.idocit.common.constants;
+package de.akra.idocit.ui;
 
 /**
- * Contains various constants which could not be grouped with others in a
- * specific constant class.
+ * Global information for the iDocIt! UI.
  * 
- * @author Jan Christian Krause
+ * @author Dirk Meier-Eickhoff
  * 
  */
-public final class Misc {
-	
+public final class UIGlobals
+{
+
+	private static String lastSelectedPathInFileDialog;
+
 	/**
-	 * iDocIt!'s default characterset for e.g. streams.
+	 * Get the path (without file name) that the user has selected in the last file dialog
+	 * (e.g. save dialog).
+	 * 
+	 * @return [OBJECT] can be <code>null</code>
+	 * @thematicgrid Getting Operations / Getter
 	 */
-	public static final String DEFAULT_CHARSET = "UTF-8";
+	public static synchronized String getLastSelectedPathInFileDialog()
+	{
+		return lastSelectedPathInFileDialog;
+	}
+
+	/**
+	 * Set the path (without file name) that the user has selected in the last file dialog
+	 * (e.g. save dialog).
+	 * 
+	 * @param lastSelectedPathInFileDialog
+	 *            [OBJECT]
+	 * 
+	 * @thematicgrid Setting Operation / Setter
+	 */
+	public static synchronized void setLastSelectedPathInFileDialog(
+			final String lastSelectedPathInFileDialog)
+	{
+		UIGlobals.lastSelectedPathInFileDialog = lastSelectedPathInFileDialog;
+	}
 }
