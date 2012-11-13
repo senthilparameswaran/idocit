@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -813,8 +814,11 @@ public class EclipsePersistenceService implements PersistenceService
 	 * 
 	 */
 	private static class ConfigurationChangeListenerComparator implements
-			Comparator<IConfigurationChangeListener>
+			Comparator<IConfigurationChangeListener>, Serializable
 	{
+
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Compare only the object references for equality.
 		 */
