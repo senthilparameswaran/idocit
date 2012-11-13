@@ -15,10 +15,12 @@
  *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.pocui.core.composites.ISelection;
 
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 
 /**
@@ -56,6 +58,12 @@ public class ManageThematicRoleCompositeSelection implements ISelection, Cloneab
 	 * The last cursor position in the name text field at the edit composite.
 	 */
 	private int lastCurserPosition = 0;
+
+	/**
+	 * All from the list removed {@link ThematicRole}s. When the changes shall be
+	 * persisted, delete these roles from all configured {@link ThematicGrid}s.
+	 */
+	private Collection<ThematicRole> removedThematicRoles = null;
 
 	/**
 	 * 
@@ -112,6 +120,8 @@ public class ManageThematicRoleCompositeSelection implements ISelection, Cloneab
 				+ ((modifiedThematicRole == null) ? 0 : modifiedThematicRole.hashCode());
 		result = prime * result + (nameExists ? 1231 : 1237);
 		result = prime * result
+				+ ((removedThematicRoles == null) ? 0 : removedThematicRoles.hashCode());
+		result = prime * result
 				+ ((thematicRoles == null) ? 0 : thematicRoles.hashCode());
 		return result;
 	}
@@ -149,6 +159,13 @@ public class ManageThematicRoleCompositeSelection implements ISelection, Cloneab
 			return false;
 		if (nameExists != other.nameExists)
 			return false;
+		if (removedThematicRoles == null)
+		{
+			if (other.removedThematicRoles != null)
+				return false;
+		}
+		else if (!removedThematicRoles.equals(other.removedThematicRoles))
+			return false;
 		if (thematicRoles == null)
 		{
 			if (other.thematicRoles != null)
@@ -168,17 +185,13 @@ public class ManageThematicRoleCompositeSelection implements ISelection, Cloneab
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("ManageThematicRoleCompositeSelection [activeThematicRole=");
-		builder.append(activeThematicRole);
-		builder.append(", modifiedThematicRole=");
-		builder.append(modifiedThematicRole);
-		builder.append(", thematicRoles=");
-		builder.append(thematicRoles);
-		builder.append(", nameExists=");
-		builder.append(nameExists);
-		builder.append(", lastCurserPosition=");
-		builder.append(lastCurserPosition);
-		builder.append("]");
+		builder.append("ManageThematicRoleCompositeSelection [activeThematicRole=")
+				.append(activeThematicRole).append(", modifiedThematicRole=")
+				.append(modifiedThematicRole).append(", thematicRoles=")
+				.append(thematicRoles).append(", nameExists=").append(nameExists)
+				.append(", lastCurserPosition=").append(lastCurserPosition)
+				.append(", removedThematicRoles=").append(removedThematicRoles)
+				.append("]");
 		return builder.toString();
 	}
 
@@ -225,6 +238,17 @@ public class ManageThematicRoleCompositeSelection implements ISelection, Cloneab
 		s.setModifiedThematicRole(modifiedThematicRole);
 		s.setNameExists(nameExists);
 		s.setThematicRoles(thematicRoles);
+		s.setRemovedThematicRoles(removedThematicRoles);
 		return s;
+	}
+
+	public Collection<ThematicRole> getRemovedThematicRoles()
+	{
+		return removedThematicRoles;
+	}
+
+	public void setRemovedThematicRoles(Collection<ThematicRole> removedThematicRoles)
+	{
+		this.removedThematicRoles = removedThematicRoles;
 	}
 }

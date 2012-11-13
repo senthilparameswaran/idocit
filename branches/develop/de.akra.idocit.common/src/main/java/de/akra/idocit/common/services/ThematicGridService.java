@@ -16,6 +16,7 @@
 package de.akra.idocit.common.services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,13 +133,16 @@ public class ThematicGridService
 	 * Please note: two roles are treated as equal, if they have the same name.
 	 * 
 	 * @param roles
-	 *            The list to look into
+	 *            [SOURCE] The list to look into
 	 * @param role
-	 *            The role to look for
-	 * @return <code>true</code>, if the role is included in the list, else
+	 *            [COMPARISON] The role to look for
+	 * @subparam name
+	 *            [PRIMARY_KEY]
+	 * @return [REPORT] <code>true</code>, if the role is included in the list, else
 	 *         <code>false</code>
+	 * @thematicgrid Checking Operations
 	 */
-	public static boolean containsRole(final List<ThematicRole> roles,
+	public static boolean containsRole(final Collection<ThematicRole> roles,
 			final ThematicRole role)
 	{
 		for (final ThematicRole referenceRole : roles)

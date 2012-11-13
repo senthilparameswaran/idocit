@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.pocui.core.composites.ISelection;
 
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 
 /**
@@ -31,12 +32,12 @@ import de.akra.idocit.common.structure.ThematicRole;
 public class EditThematicRoleListCompositeSelection implements ISelection
 {
 	/**
-	 * List of active {@link ThematicRole}s.
+	 * The active {@link ThematicRole}.
 	 */
-	private List<ThematicRole> activeThematicRoles = null;
+	private ThematicRole activeThematicRole = null;
 
 	/**
-	 * List of all {@link ThematicRole}s.
+	 * List of all configured {@link ThematicRole}s.
 	 */
 	private List<ThematicRole> thematicRoles = null;
 
@@ -46,41 +47,60 @@ public class EditThematicRoleListCompositeSelection implements ISelection
 	private int minNumberOfItems = 0;
 
 	/**
-	 * 
-	 * @return the List of active {@link ThematicRole}s.
+	 * A {@link ThematicRole} that is removed from the list. When the changes shall be
+	 * persisted, delete this roles from all configured {@link ThematicGrid}s.
 	 */
-	public List<ThematicRole> getActiveItems()
+	private ThematicRole removedThematicRole = null;
+
+	/**
+	 * @return the removedThematicRole
+	 */
+	public ThematicRole getRemovedThematicRole()
 	{
-		return activeThematicRoles;
+		return removedThematicRole;
 	}
 
 	/**
-	 * 
-	 * @param activeItems
-	 *            List of active {@link ThematicRole}s.
+	 * @param removedThematicRole
+	 *            the removedThematicRole to set
 	 */
-	public void setActiveItems(List<ThematicRole> activeItems)
+	public void setRemovedThematicRole(ThematicRole removedThematicRole)
 	{
-		this.activeThematicRoles = activeItems;
+		this.removedThematicRole = removedThematicRole;
 	}
 
 	/**
-	 * 
-	 * @return the List of all {@link ThematicRole}s.
+	 * @return the activeThematicRole
 	 */
-	public List<ThematicRole> getItems()
+	public ThematicRole getActiveThematicRole()
+	{
+		return activeThematicRole;
+	}
+
+	/**
+	 * @param activeThematicRole
+	 *            the activeThematicRole to set
+	 */
+	public void setActiveThematicRole(ThematicRole activeThematicRole)
+	{
+		this.activeThematicRole = activeThematicRole;
+	}
+
+	/**
+	 * @return the list of all configured {@link ThematicRole}s
+	 */
+	public List<ThematicRole> getThematicRoles()
 	{
 		return thematicRoles;
 	}
 
 	/**
-	 * 
-	 * @param items
-	 *            List of all {@link ThematicRole}s.
+	 * @param thematicRoles
+	 *            the list of all configured {@link ThematicRole}s
 	 */
-	public void setItems(List<ThematicRole> items)
+	public void setThematicRoles(List<ThematicRole> thematicRoles)
 	{
-		this.thematicRoles = items;
+		this.thematicRoles = thematicRoles;
 	}
 
 	/**
@@ -102,19 +122,31 @@ public class EditThematicRoleListCompositeSelection implements ISelection
 		this.minNumberOfItems = minNumberOfItems;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((activeThematicRoles == null) ? 0 : activeThematicRoles.hashCode());
+				+ ((activeThematicRole == null) ? 0 : activeThematicRole.hashCode());
+		result = prime * result + minNumberOfItems;
+		result = prime * result
+				+ ((removedThematicRole == null) ? 0 : removedThematicRole.hashCode());
 		result = prime * result
 				+ ((thematicRoles == null) ? 0 : thematicRoles.hashCode());
-		result = prime * result + minNumberOfItems;
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -125,12 +157,21 @@ public class EditThematicRoleListCompositeSelection implements ISelection
 		if (getClass() != obj.getClass())
 			return false;
 		EditThematicRoleListCompositeSelection other = (EditThematicRoleListCompositeSelection) obj;
-		if (activeThematicRoles == null)
+		if (activeThematicRole == null)
 		{
-			if (other.activeThematicRoles != null)
+			if (other.activeThematicRole != null)
 				return false;
 		}
-		else if (!activeThematicRoles.equals(other.activeThematicRoles))
+		else if (!activeThematicRole.equals(other.activeThematicRole))
+			return false;
+		if (minNumberOfItems != other.minNumberOfItems)
+			return false;
+		if (removedThematicRole == null)
+		{
+			if (other.removedThematicRole != null)
+				return false;
+		}
+		else if (!removedThematicRole.equals(other.removedThematicRole))
 			return false;
 		if (thematicRoles == null)
 		{
@@ -139,22 +180,24 @@ public class EditThematicRoleListCompositeSelection implements ISelection
 		}
 		else if (!thematicRoles.equals(other.thematicRoles))
 			return false;
-		if (minNumberOfItems != other.minNumberOfItems)
-			return false;
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("EditItemListCompositeSelection [activeItems=");
-		builder.append(activeThematicRoles);
-		builder.append(", items=");
-		builder.append(thematicRoles);
-		builder.append(", minNumberOfItems=");
-		builder.append(minNumberOfItems);
-		builder.append("]");
+		builder.append("EditThematicRoleListCompositeSelection [activeThematicRole=")
+				.append(activeThematicRole).append(", thematicRoles=")
+				.append(thematicRoles).append(", minNumberOfItems=")
+				.append(minNumberOfItems).append(", removedThematicRole=")
+				.append(removedThematicRole).append("]");
 		return builder.toString();
 	}
+
 }

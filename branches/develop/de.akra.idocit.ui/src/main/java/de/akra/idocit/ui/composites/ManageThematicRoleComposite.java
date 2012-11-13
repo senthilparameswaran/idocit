@@ -99,8 +99,6 @@ public class ManageThematicRoleComposite
 	protected void doSetSelection(ManageThematicRoleCompositeSelection oldSelection,
 			ManageThematicRoleCompositeSelection newSelection, Object sourceControl)
 	{
-		// updateRoleList(newSelection);
-
 		if (!isDisposed())
 		{
 			errorLabel.setVisible(newSelection.isNameExists());
@@ -108,25 +106,12 @@ public class ManageThematicRoleComposite
 			final ThematicRole activeRole = newSelection.getActiveThematicRole();
 
 			// Update the EditItemListComposite.
-			if (editThematicRoleListComposite.getSelection() == null
-					|| !editThematicRoleListComposite.getSelection().getItems()
-							.equals(newSelection.getThematicRoles()))
-			{
-				final EditThematicRoleListCompositeSelection editItemListSelection = new EditThematicRoleListCompositeSelection();
-				editItemListSelection.setItems(newSelection.getThematicRoles());
-				editItemListSelection.setMinNumberOfItems(1);
-
-				final List<ThematicRole> activeRoles = new ArrayList<ThematicRole>();
-
-				if (activeRole != null)
-				{
-					activeRoles.add(activeRole);
-				}
-
-				editItemListSelection.setActiveItems(activeRoles);
-
-				editThematicRoleListComposite.setSelection(editItemListSelection);
-			}
+			final EditThematicRoleListCompositeSelection editItemListSelection = new EditThematicRoleListCompositeSelection();
+			editItemListSelection.setThematicRoles(new ArrayList<ThematicRole>(
+					newSelection.getThematicRoles()));
+			editItemListSelection.setMinNumberOfItems(1);
+			editItemListSelection.setActiveThematicRole(activeRole);
+			editThematicRoleListComposite.setSelection(editItemListSelection);
 
 			// Update the EditDescribedItemComposite.
 			final EditThematicRoleCompositeSelection editThematicRoleCompositeSelection = new EditThematicRoleCompositeSelection();
@@ -155,7 +140,7 @@ public class ManageThematicRoleComposite
 		}
 		else
 		{
-			LOG.info("already disposed ! ! ! ! ! ! ! ! ");
+			LOG.info("already disposed ! !");
 		}
 	}
 
@@ -202,12 +187,11 @@ public class ManageThematicRoleComposite
 					Object sourceControl)
 			{
 				// If this composite fires a change event, the active
-				// ThematicRole
-				// has been modified. We have to update this composite.
+				// ThematicRole has been modified. We have to update this composite.
 
-				ManageThematicRoleCompositeSelection editSelection = getSelection();
+				final ManageThematicRoleCompositeSelection editSelection = getSelection();
 
-				boolean foundSameName = (!selection.getItem().getName()
+				final boolean foundSameName = (!selection.getItem().getName()
 						.equals(selection.getModifiedItem().getName()) && DescribedItemUtils
 						.containsName(selection.getModifiedItem(),
 								editSelection.getThematicRoles()));
@@ -222,9 +206,10 @@ public class ManageThematicRoleComposite
 				else
 				{
 					// Get the role to change.
-					ThematicRole activeThematicRole = editSelection
+					final ThematicRole activeThematicRole = editSelection
 							.getActiveThematicRole();
-					List<ThematicRole> thematicRoles = editSelection.getThematicRoles();
+					final List<ThematicRole> thematicRoles = editSelection
+							.getThematicRoles();
 
 					// Remove the old ThematicRole.
 					int roleIndex = thematicRoles.indexOf(activeThematicRole);
@@ -232,7 +217,7 @@ public class ManageThematicRoleComposite
 
 					// Add the changed ThematicRole at the same position as the
 					// old one.
-					ThematicRole changedRole = selection.getModifiedItem();
+					final ThematicRole changedRole = selection.getModifiedItem();
 					thematicRoles.add(roleIndex, changedRole);
 
 					Collections.sort(editSelection.getThematicRoles(),
@@ -256,15 +241,26 @@ public class ManageThematicRoleComposite
 					Object sourceControl)
 			{
 				// If this composite fires a change event, a new active role has
-				// been chosen.
-				ManageThematicRoleCompositeSelection mySelection = getSelection();
+				// been chosen or a role was removed or added.
+				final ManageThematicRoleCompositeSelection mySelection = getSelection();
 				mySelection.setNameExists(false);
 				mySelection.setModifiedThematicRole(null);
+				mySelection.setThematicRoles(selection.getThematicRoles());
 
-				if (selection.getActiveItems() != null
-						&& !selection.getActiveItems().isEmpty())
+				if (selection.getRemovedThematicRole() != null)
 				{
-					mySelection.setActiveThematicRole(selection.getActiveItems().get(0));
+					if (mySelection.getRemovedThematicRoles() == null)
+					{
+						mySelection
+								.setRemovedThematicRoles(new ArrayList<ThematicRole>());
+					}
+					mySelection.getRemovedThematicRoles().add(
+							selection.getRemovedThematicRole());
+				}
+
+				if (selection.getActiveThematicRole() != null)
+				{
+					mySelection.setActiveThematicRole(selection.getActiveThematicRole());
 				}
 				else
 				{
