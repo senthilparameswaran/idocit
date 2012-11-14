@@ -36,6 +36,7 @@ import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * Selection for {@link EditArtifactDocumentationComposite}.
@@ -688,19 +689,28 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection, 
 	@Override
 	public EditArtifactDocumentationCompositeSelection clone()
 	{
-		final EditArtifactDocumentationCompositeSelection newSelection = new EditArtifactDocumentationCompositeSelection();
-
-		newSelection.setActiveAddresseesMap(activeAddresseesMap);
-		newSelection.setAddresseeList(addresseeList);
-		newSelection.setArtifactFile(artifactFile);
-		newSelection.setInterfaceArtifact(interfaceArtifact);
-		newSelection.setSelectedSignatureElement(selectedSignatureElement);
-		newSelection.setThematicRoleList(thematicRoleList);
-		newSelection.setCollapsedThematicGrids(collapsedThematicGrids);
-		newSelection
-				.setDisplayedAddresseesForSigElemsDocumentations(displayedAddresseesForSigElemsDocumentations);
-		newSelection.setOriginalDocumentations(originalDocumentations);
-		newSelection.setRefreshRecommendations(refreshRecommendations);
+		EditArtifactDocumentationCompositeSelection newSelection = null;
+		try
+		{
+			newSelection = (EditArtifactDocumentationCompositeSelection) super.clone();
+			newSelection.setActiveAddresseesMap(activeAddresseesMap);
+			newSelection.setAddresseeList(addresseeList);
+			newSelection.setArtifactFile(artifactFile);
+			newSelection.setInterfaceArtifact(interfaceArtifact);
+			newSelection.setSelectedSignatureElement(selectedSignatureElement);
+			newSelection.setThematicRoleList(thematicRoleList);
+			newSelection.setCollapsedThematicGrids(collapsedThematicGrids);
+			newSelection
+			.setDisplayedAddresseesForSigElemsDocumentations(displayedAddresseesForSigElemsDocumentations);
+			newSelection.setOriginalDocumentations(originalDocumentations);
+			newSelection.setRefreshRecommendations(refreshRecommendations);
+		}
+		catch (final CloneNotSupportedException e)
+		{
+			logger.log(Level.SEVERE, "Failed to clone object.", e);
+			MessageBoxUtils.openErrorBox(null,
+					"Failed to clone object." + ":\n" + e.getMessage(), e);
+		}
 		return newSelection;
 	}
 }

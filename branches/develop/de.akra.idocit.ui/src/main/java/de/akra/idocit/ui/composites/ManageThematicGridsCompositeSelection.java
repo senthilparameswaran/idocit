@@ -16,11 +16,14 @@
 package de.akra.idocit.ui.composites;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.pocui.core.composites.ISelection;
 
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * The selection / state for a {@link ManageThematicGridsComposite}.
@@ -32,6 +35,9 @@ import de.akra.idocit.common.structure.ThematicRole;
  */
 public class ManageThematicGridsCompositeSelection implements ISelection, Cloneable
 {
+	private static final Logger LOG = Logger
+			.getLogger(ManageThematicGridsCompositeSelection.class.getName());
+
 	/**
 	 * All available thematic grids.
 	 */
@@ -247,13 +253,23 @@ public class ManageThematicGridsCompositeSelection implements ISelection, Clonea
 	@Override
 	public ManageThematicGridsCompositeSelection clone()
 	{
-		final ManageThematicGridsCompositeSelection s = new ManageThematicGridsCompositeSelection();
-		s.setActiveRole(this.activeRole);
-		s.setActiveThematicGrid(this.activeThematicGrid);
-		s.setIndexOfActiveThematicGrid(this.indexOfActiveThematicGrid);
-		s.setNameExists(this.nameExists);
-		s.setRoles(this.roles);
-		s.setThematicGrids(this.thematicGrids);
+		ManageThematicGridsCompositeSelection s = null;
+		try
+		{
+			s = (ManageThematicGridsCompositeSelection) super.clone();
+			s.setActiveRole(this.activeRole);
+			s.setActiveThematicGrid(this.activeThematicGrid);
+			s.setIndexOfActiveThematicGrid(this.indexOfActiveThematicGrid);
+			s.setNameExists(this.nameExists);
+			s.setRoles(this.roles);
+			s.setThematicGrids(this.thematicGrids);
+		}
+		catch (final CloneNotSupportedException e)
+		{
+			LOG.log(Level.SEVERE, "Failed to clone object.", e);
+			MessageBoxUtils.openErrorBox(null,
+					"Failed to clone object." + ":\n" + e.getMessage(), e);
+		}
 		return s;
 	}
 }

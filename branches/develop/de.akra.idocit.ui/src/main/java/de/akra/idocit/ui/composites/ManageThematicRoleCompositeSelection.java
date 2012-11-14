@@ -17,11 +17,14 @@ package de.akra.idocit.ui.composites;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.pocui.core.composites.ISelection;
 
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * The selection / state for a {@link ManageThematicRoleComposite}.
@@ -33,6 +36,9 @@ import de.akra.idocit.common.structure.ThematicRole;
  */
 public class ManageThematicRoleCompositeSelection implements ISelection, Cloneable
 {
+	private static final Logger LOG = Logger
+			.getLogger(ManageThematicRoleCompositeSelection.class.getName());
+
 	/**
 	 * The selected ThematicRole to edit.
 	 */
@@ -232,13 +238,23 @@ public class ManageThematicRoleCompositeSelection implements ISelection, Cloneab
 	@Override
 	public ManageThematicRoleCompositeSelection clone()
 	{
-		final ManageThematicRoleCompositeSelection s = new ManageThematicRoleCompositeSelection();
-		s.setActiveThematicRole(activeThematicRole);
-		s.setLastCurserPosition(lastCurserPosition);
-		s.setModifiedThematicRole(modifiedThematicRole);
-		s.setNameExists(nameExists);
-		s.setThematicRoles(thematicRoles);
-		s.setRemovedThematicRoles(removedThematicRoles);
+		ManageThematicRoleCompositeSelection s = null;
+		try
+		{
+			s = (ManageThematicRoleCompositeSelection) super.clone();
+			s.setActiveThematicRole(activeThematicRole);
+			s.setLastCurserPosition(lastCurserPosition);
+			s.setModifiedThematicRole(modifiedThematicRole);
+			s.setNameExists(nameExists);
+			s.setThematicRoles(thematicRoles);
+			s.setRemovedThematicRoles(removedThematicRoles);
+		}
+		catch (final CloneNotSupportedException e)
+		{
+			LOG.log(Level.SEVERE, "Failed to clone object.", e);
+			MessageBoxUtils.openErrorBox(null,
+					"Failed to clone object." + ":\n" + e.getMessage(), e);
+		}
 		return s;
 	}
 
