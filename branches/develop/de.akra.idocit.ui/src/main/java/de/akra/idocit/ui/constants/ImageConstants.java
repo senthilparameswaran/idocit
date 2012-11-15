@@ -22,6 +22,6 @@ import org.eclipse.ui.PlatformUI;
 public final class ImageConstants
 {
 	public static final Image WARNING_ICON = PlatformUI.getWorkbench().getSharedImages()
-			.getImage(ISharedImages.IMG_DEC_FIELD_WARNING);
+			.getImage(ISharedImages.IMG_OBJS_WARN_TSK);
 
 }
