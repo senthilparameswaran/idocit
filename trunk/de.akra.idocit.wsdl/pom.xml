@@ -11,11 +11,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>de.akra.idocit.wsdl</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>0.0.5.qualifier</version>
+	<version>0.0.11.qualifier</version>
 	<name>iDocIt! WSDL Support</name>
 
 	<parent>
-		<version>0.0.1</version>
+		<version>0.0.11</version>
 		<groupId>de.akra.idocit</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath>../parent-pom/pom.xml</relativePath>
