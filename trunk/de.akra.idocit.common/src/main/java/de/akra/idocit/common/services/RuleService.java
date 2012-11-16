@@ -716,15 +716,18 @@ public final class RuleService
 	 *         </table>
 	 * @thematicgrid Checking Operations
 	 */
-	public static boolean isRuleValid(String ruleExpression)
+	public static boolean isRuleValid(final String ruleExpression)
 	{
-		final ScriptEngine engine = getScriptEngine();
 		boolean valid = false;
 
 		try
 		{
-			((Compilable) engine).compile(ruleExpression);
-			valid = true;
+			if (!StringUtils.isBlank(ruleExpression))
+			{
+				final ScriptEngine engine = getScriptEngine();
+				((Compilable) engine).compile(ruleExpression);
+				valid = true;
+			}
 		}
 		catch (final ScriptException e)
 		{
