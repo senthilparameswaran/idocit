@@ -16,7 +16,7 @@
 	<name>iDocIt! Update Site</name>
 
 	<parent>
-		<version>0.0.1</version>
+		<version>0.0.11</version>
 		<groupId>de.akra.idocit</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath>../parent-pom/pom.xml</relativePath>
