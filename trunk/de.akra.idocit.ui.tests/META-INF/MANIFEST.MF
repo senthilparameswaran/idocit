@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: iDocIt! UI Tests
 Bundle-SymbolicName: de.akra.idocit.ui.tests
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.0.11.qualifier
 Bundle-Vendor: AKRA GmbH
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
@@ -20,6 +20,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.launching;bundle-version="3.6.1",
  de.akra.idocit.common.tests;bundle-version="0.0.1",
  org.eclipse.jdt;bundle-version="3.6.0",
- de.akra.idocit.ui;bundle-version="0.0.7",
- de.akra.idocit.java;bundle-version="0.0.5",
- de.akra.idocit.java.ui;bundle-version="0.0.1"
+ de.akra.idocit.ui;bundle-version="0.0.11",
+ de.akra.idocit.java;bundle-version="0.0.11",
+ de.akra.idocit.java.ui;bundle-version="0.0.11"
