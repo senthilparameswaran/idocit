@@ -107,23 +107,24 @@ public class JavaEditorSelectionListenerTest
 	@Test
 	public void testSelectionChangedWithNullSelection() throws Exception
 	{
-		PrintStream out = System.out;
-		File tmpFileOutput = File.createTempFile("test", "out");
-		System.setOut(new PrintStream(tmpFileOutput, Misc.DEFAULT_CHARSET));
+		final PrintStream out = System.out;
+		final File tmpFileOutput = File.createTempFile("test", ".out");
+		final PrintStream tmpFileStream = new PrintStream(tmpFileOutput,
+				Misc.DEFAULT_CHARSET);
+		System.setOut(tmpFileStream);
 		boolean npeOccured = false;
 
 		try
 		{
-
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage();
+			final IWorkbenchPage page = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage();
 			page.closeAllEditors(true);
 
-			IProject project = ResourcesPlugin.getWorkspace().getRoot()
+			final IProject project = ResourcesPlugin.getWorkspace().getRoot()
 					.getProject(PROJECT_NAME);
-			IFolder srcFolder = project.getFolder("src");
-			IFolder packageFolder = srcFolder.getFolder("source");
-			IFile customerWorkspaceFile = packageFolder.getFile("Customer.java");
+			final IFolder srcFolder = project.getFolder("src");
+			final IFolder packageFolder = srcFolder.getFolder("source");
+			final IFile customerWorkspaceFile = packageFolder.getFile("Customer.java");
 
 			final JavaEditorSelectionListener listener = new JavaEditorSelectionListener();
 
@@ -157,13 +158,13 @@ public class JavaEditorSelectionListenerTest
 				}
 			});
 
-			for (IWorkbenchWindow window : PlatformUI.getWorkbench()
+			for (final IWorkbenchWindow window : PlatformUI.getWorkbench()
 					.getWorkbenchWindows())
 			{
 
-				for (IWorkbenchPage wbPage : window.getPages())
+				for (final IWorkbenchPage wbPage : window.getPages())
 				{
-					for (IViewReference reference : wbPage.getViewReferences())
+					for (final IViewReference reference : wbPage.getViewReferences())
 					{
 						page.hideView(reference);
 					}
@@ -176,26 +177,26 @@ public class JavaEditorSelectionListenerTest
 		}
 		finally
 		{
+			tmpFileStream.close();
 			System.setOut(out);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(
 					new FileInputStream(tmpFileOutput),
 					Charset.forName(Misc.DEFAULT_CHARSET)));
-			String line = reader.readLine();
-
-			while (line != null)
+			
+			String line = null;
+			while ((line = reader.readLine()) != null)
 			{
 				if (line.toLowerCase().contains("nullpointerexception"))
 				{
 					npeOccured = true;
 				}
-
-				line = reader.readLine();
 			}
-
 			reader.close();
+			
 			if (!tmpFileOutput.delete())
 			{
-				throw new RuntimeException("Tmp test file could not be deleted!");
+				throw new RuntimeException("Tmp test file \""
+						+ tmpFileOutput.getAbsolutePath() + "\" could not be deleted!");
 			}
 		}
 
