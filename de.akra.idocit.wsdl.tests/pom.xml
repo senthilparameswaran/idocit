@@ -11,13 +11,13 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>de.akra.idocit</groupId>
-    <version>0.0.1</version>
+    <version>0.0.11</version>
     <relativePath>../parent-pom/pom.xml</relativePath>
   </parent>
   
   <groupId>de.akra.idocit.wsdl</groupId>
   <artifactId>de.akra.idocit.wsdl.tests</artifactId>
-  <version>0.0.5.qualifier</version>
+  <version>0.0.11.qualifier</version>
   <packaging>eclipse-test-plugin</packaging>
   <name>iDocIt! WSDL Tests</name>
   
