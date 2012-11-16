@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Representation of an thematic grid.
@@ -100,6 +101,7 @@ public class ThematicGrid implements DescribedItem, Cloneable
 
 	/**
 	 * @return the set of verbs
+	 * @returninfo [ORDERING] alphabetic ({@link TreeSet} is used).
 	 */
 	public Set<String> getVerbs()
 	{
@@ -108,11 +110,11 @@ public class ThematicGrid implements DescribedItem, Cloneable
 
 	/**
 	 * @param verbs
-	 *            Set of verbs.
+	 *            Set of verbs. The items are copied to a {@link TreeSet}.
 	 */
-	public void setVerbs(Set<String> verbs)
+	public void setVerbs(final Set<String> verbs)
 	{
-		this.verbs = verbs;
+		this.verbs = new TreeSet<String>(verbs);
 	}
 
 	public String getRefernceVerb()
