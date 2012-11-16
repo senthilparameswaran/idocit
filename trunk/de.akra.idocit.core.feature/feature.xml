@@ -2,7 +2,7 @@
 <feature
       id="de.akra.idocit.core.feature"
       label="iDocIt! Core"
-      version="0.0.8.qualifier"
+      version="0.0.11.qualifier"
       provider-name="AKRA GmbH">
 
    <description url="http://code.google.com/p/idocit/">
