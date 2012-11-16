@@ -24,32 +24,34 @@ import de.akra.idocit.common.structure.Interface;
 import de.akra.idocit.common.structure.InterfaceArtifact;
 import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.Parameter;
+import de.akra.idocit.common.structure.Parameters;
 
 /**
  * 
  * @author Ann-Cathrin Pape
- *
+ * 
  */
-public class HTMLDocGenerator {
-	
+public class HTMLDocGenerator
+{
+
 	/**
 	 * The artifact to convert to HTML.
 	 */
 	private InterfaceArtifact artifact;
 
-	public HTMLDocGenerator(InterfaceArtifact artifact)
+	public HTMLDocGenerator(final InterfaceArtifact artifact)
 	{
 		this.artifact = artifact;
 	}
-	
+
 	/**
 	 * Generates the whole HTML document.
+	 * 
 	 * @return HTML document as string
 	 */
 	public String generateHTML()
-	{		
-		StringBuffer html = new StringBuffer(
-				"<!DOCTYPE>\n");
+	{
+		final StringBuffer html = new StringBuffer("<!DOCTYPE>\n");
 		html.append("<html>\n");
 		generateHTMLHead(html);
 		generateHTMLBody(html);
@@ -59,9 +61,11 @@ public class HTMLDocGenerator {
 
 	/**
 	 * Generate HTML head
-	 * @param htmlDoc StringBuffer to that the head should be appended.
+	 * 
+	 * @param htmlDoc
+	 *            StringBuffer to that the head should be appended.
 	 */
-	private void generateHTMLHead(StringBuffer htmlDoc)
+	private void generateHTMLHead(final StringBuffer htmlDoc)
 	{
 		htmlDoc.append("<head>\n");
 		htmlDoc.append("<title>");
@@ -76,42 +80,57 @@ public class HTMLDocGenerator {
 
 	/**
 	 * Triggers the generating of the HTML body.
-	 * @param htmlDoc String which contains the HTML body
+	 * 
+	 * @param htmlDoc
+	 *            String which contains the HTML body
 	 */
-	private void generateHTMLBody(StringBuffer htmlDoc)
+	private void generateHTMLBody(final StringBuffer htmlDoc)
 	{
 		htmlDoc.append("<body>\n");
-		htmlDoc.append("<div id=\"header\">\n" +
-				"<h1 id=\"docTitle\">"+ artifact.getDisplayName() + "</h1>\n" +
-				"<h2 id=\"interfaceTitle\">Interface "+ artifact.getInterfaces().get(0).getDisplayName() + "</h2>\n" +
-				"</div>\n");
+		htmlDoc.append("<div id=\"header\">\n" + "<h1 id=\"docTitle\">"
+				+ artifact.getDisplayName() + "</h1>\n"
+				+ "<h2 id=\"interfaceTitle\">Interface "
+				+ artifact.getInterfaces().get(0).getDisplayName() + "</h2>\n"
+				+ "</div>\n");
 		htmlDoc.append(generateHTMLNavigation());
-		htmlDoc.append(generateHTMLContent());		
+		htmlDoc.append(generateHTMLContent());
 		htmlDoc.append("</body>\n");
 	}
-	
+
 	/**
 	 * Generates the navigation bar at the right side of the HTML page.
+	 * 
 	 * @return String which contains the HTML for navigation bar
 	 */
-	private String generateHTMLNavigation() 
+	private String generateHTMLNavigation()
 	{
 		StringBuffer navigation = new StringBuffer();
 		navigation.append("<div id=\"nav\">\n");
 		navigation.append("<ul id=\"navElements\">\n");
-		// add operations and inner interfaces with operations for each interface to navigation bar
-		for(Interface interf : artifact.getInterfaces()) {
-			//navigation.append("<li><a href=\"#"+ interf.getDisplayName() + "\">"+ interf.getDisplayName() + "</a></li>\n");
-			navigation.append("<label class=\"navTitle\" for=\"operations\">Operations</label>\n");
-			for (Operation operation : interf.getOperations())
-				navigation.append("<li><a href=\"#"+ operation.getDisplayName() + "\">"+ operation.getDisplayName() + "</a></li>\n");
-			if(!interf.getInnerInterfaces().isEmpty()) {
-				navigation.append("<label class=\"navTitle\" for=\"innerInterfaces\">Inner Interfaces</label>\n");
-				for(Interface innerInterf : interf.getInnerInterfaces()) {
-					navigation.append("<li><a href=\"#"+ innerInterf.getDisplayName() + "\">"+ innerInterf.getDisplayName() + "</a></li>\n");
-					navigation.append("<label class=\"navTitle\" for=\"operations\">Operations</label>\n");
+		// add operations and inner interfaces with operations for each interface to
+		// navigation bar
+		for (final Interface interf : artifact.getInterfaces())
+		{
+			// navigation.append("<li><a href=\"#"+ interf.getDisplayName() + "\">"+
+			// interf.getDisplayName() + "</a></li>\n");
+			navigation
+					.append("<label class=\"navTitle\" for=\"operations\">Operations</label>\n");
+			for (final Operation operation : interf.getOperations())
+				navigation.append("<li><a href=\"#" + operation.getDisplayName() + "\">"
+						+ operation.getDisplayName() + "</a></li>\n");
+			if (!interf.getInnerInterfaces().isEmpty())
+			{
+				navigation
+						.append("<label class=\"navTitle\" for=\"innerInterfaces\">Inner Interfaces</label>\n");
+				for (Interface innerInterf : interf.getInnerInterfaces())
+				{
+					navigation.append("<li><a href=\"#" + innerInterf.getDisplayName()
+							+ "\">" + innerInterf.getDisplayName() + "</a></li>\n");
+					navigation
+							.append("<label class=\"navTitle\" for=\"operations\">Operations</label>\n");
 					for (Operation operation : interf.getOperations())
-						navigation.append("<li><a href=\"#"+ operation.getDisplayName() + "\">"+ operation.getDisplayName() + "</a></li>\n");
+						navigation.append("<li><a href=\"#" + operation.getDisplayName()
+								+ "\">" + operation.getDisplayName() + "</a></li>\n");
 				}
 			}
 		}
@@ -119,94 +138,161 @@ public class HTMLDocGenerator {
 		navigation.append("</div>\n");
 		return navigation.toString();
 	}
-	
+
 	/**
 	 * Generates the actual content of the HTML page.
+	 * 
 	 * @return String which contains the HTML for the actual content
 	 */
-	private String generateHTMLContent() 
+	private String generateHTMLContent()
 	{
-		StringBuffer content = new StringBuffer();
+		final StringBuffer content = new StringBuffer();
 		content.append("<div id=\"content\">\n");
 		content.append("<ul class=\"interfaceList\">\n");
-		
+
 		// add for each interface title, operations and inner interfaces
-		for(Interface interf : artifact.getInterfaces())
-			content.append(generateInterfaceDocHTML(interf));			
+		for (final Interface interf : artifact.getInterfaces())
+			content.append(generateInterfaceDocHTML(interf));
 
 		content.append("</ul>\n"); // end interface list
 		content.append("</div>\n");
 		return content.toString();
 	}
-	
+
 	/**
 	 * Generates the HTML for an interface.
-	 * @param interf 
+	 * 
+	 * @param interf
 	 * @return String which contains the HTML for the documentation of an interface.
 	 */
-	private String generateInterfaceDocHTML(Interface interf)
+	private String generateInterfaceDocHTML(final Interface interf)
 	{
-		StringBuffer interfaceDoc = new StringBuffer();
+		final StringBuffer interfaceDoc = new StringBuffer();
 		interfaceDoc.append("<li>\n"); // start single interface
-		interfaceDoc.append("<h3 class=\"interfaceTitle\">Interface " + interf.getDisplayName() + "</h3>\n");
+		interfaceDoc.append("<h3 class=\"interfaceTitle\">Interface "
+				+ interf.getDisplayName() + "</h3>\n");
 		interfaceDoc.append(generateDocumentationHTML(interf.getDocumentations()));
-		
-		if(!interf.getOperations().isEmpty())
+
+		if (!interf.getOperations().isEmpty())
 		{
 			interfaceDoc.append("<ul class=\"operationList\">\n"); // start operation list
-					
-			for (Operation operation : interf.getOperations()) 
+
+			for (final Operation operation : interf.getOperations())
 			{
 				interfaceDoc.append("<li>\n"); // start single operation
-				interfaceDoc.append("<h4 id=\"" + operation.getDisplayName() + "\">" + operation.getDisplayName() + "</h4>\n");
-				
+				interfaceDoc.append("<h4 id=\"" + operation.getDisplayName() + "\">"
+						+ operation.getDisplayName() + "</h4>\n");
+
 				interfaceDoc.append("<div class=\"opDescription\">\n");
-				interfaceDoc.append(generateDocumentationHTML(operation.getDocumentations()));
+				interfaceDoc.append(generateDocumentationHTML(operation
+						.getDocumentations()));
 				interfaceDoc.append("</div>\n");
-				
+
 				// Input
-				if (!operation.getInputParameters().getDocumentations().isEmpty()
-						|| !operation.getInputParameters().getParameters().isEmpty())
+				if (operation.getInputParameters() != null
+						&& operation.getInputParameters().getDocumentations() != null
+						&& (!operation.getInputParameters().getDocumentations().isEmpty() || !operation
+								.getInputParameters().getParameters().isEmpty()))
 				{
-					interfaceDoc.append("<div class=\"input\">\n<h5>Input</h5>\n");	
-					interfaceDoc.append(generateDocumentationHTML(operation.getInputParameters().getDocumentations()));
-					interfaceDoc.append("<ul class=\"paramDescription\">\n"); // start parameter description				
-					
-					for (Parameter param : operation.getInputParameters().getParameters()) {
-						interfaceDoc.append("<li>\n<p>\n" + param.getDisplayName() + "<br />\n");
+					interfaceDoc.append("<div class=\"input\">\n<h5>Input</h5>\n");
+					interfaceDoc.append(generateDocumentationHTML(operation
+							.getInputParameters().getDocumentations()));
+					// start parameter description
+					interfaceDoc.append("<ul class=\"paramDescription\">\n");
+
+					for (final Parameter param : operation.getInputParameters()
+							.getParameters())
+					{
+						interfaceDoc.append("<li>\n<p>\n" + param.getDisplayName()
+								+ "<br />\n");
 						interfaceDoc.append(generateParametersDocHTML(param));
 						interfaceDoc.append("</p>\n</li>\n");
 					}
 					interfaceDoc.append("</ul>\n"); // end parameter description
 					interfaceDoc.append("</div>\n"); // end input parameters
 				}
-				
+
 				// Output
-				if (!operation.getOutputParameters().getDocumentations().isEmpty()
-						|| !operation.getOutputParameters().getParameters().isEmpty())
+				if (operation.getOutputParameters() != null
+						&& operation.getOutputParameters().getDocumentations() != null
+						&& (!operation.getOutputParameters().getDocumentations()
+								.isEmpty() || !operation.getOutputParameters()
+								.getParameters().isEmpty()))
 				{
 					interfaceDoc.append("<div class=\"output\">\n<h5>Output</h5>\n");
-					interfaceDoc.append(generateDocumentationHTML(operation.getOutputParameters().getDocumentations()));
-					interfaceDoc.append("<ul class=\"paramDescription\">\n"); // start parameter description
-					
-					for (Parameter param : operation.getOutputParameters().getParameters()) {
-						interfaceDoc.append("<li>\n<p>\n" + param.getDisplayName() + "<br />\n");
+					interfaceDoc.append(generateDocumentationHTML(operation
+							.getOutputParameters().getDocumentations()));
+					// start parameter description
+					interfaceDoc.append("<ul class=\"paramDescription\">\n");
+
+					for (final Parameter param : operation.getOutputParameters()
+							.getParameters())
+					{
+						interfaceDoc.append("<li>\n<p>\n" + param.getDisplayName()
+								+ "<br />\n");
 						interfaceDoc.append(generateParametersDocHTML(param));
 						interfaceDoc.append("</p>\n</li>\n");
 					}
 					interfaceDoc.append("</ul>\n"); // end parameter description
-					interfaceDoc.append("</div>\n"); // end input parameters
+					interfaceDoc.append("</div>\n"); // end output parameters
+				}
+
+				// Exceptions
+				if (operation.getExceptions() != null
+						&& !operation.getExceptions().isEmpty())
+				{
+					interfaceDoc
+							.append("<div class=\"exception\">\n<h5>Exceptions</h5>\n");
+
+					// start exception description
+					interfaceDoc.append("<ul class=\"paramDescription\">\n");
+
+					for (final Parameters exception : operation.getExceptions())
+					{
+
+						if (exception.isDocumentationAllowed())
+						{
+							interfaceDoc.append("<li>\n<p>\n")
+									.append(exception.getDisplayName())
+									.append("<br />\n");
+							interfaceDoc.append(generateDocumentationHTML(exception
+									.getDocumentations()));
+
+							// start parameter description
+							interfaceDoc.append("<ul class=\"paramDescription\">\n");
+						}
+
+						for (final Parameter param : exception.getParameters())
+						{
+							interfaceDoc.append("<li>\n<p>\n")
+									.append(param.getDisplayName()).append("<br />\n");
+							interfaceDoc.append(generateParametersDocHTML(param));
+							interfaceDoc.append("</p>\n</li>\n");
+						}
+
+						if (exception.isDocumentationAllowed())
+						{
+							interfaceDoc.append("</ul>\n"); // end parameter description
+							interfaceDoc.append("</p>\n</li>\n");
+						}
+					}
+
+					interfaceDoc.append("</ul>\n"); // end exception description
+					interfaceDoc.append("</div>\n"); // end exceptions
 				}
 				interfaceDoc.append("</li>\n"); // end single operation
 			}
 			interfaceDoc.append("</ul>\n"); // end operation list
-			
+
 			// Inner Interfaces
-			if(!interf.getInnerInterfaces().isEmpty()) 
+			if (interf.getInnerInterfaces() != null
+					&& !interf.getInnerInterfaces().isEmpty())
 			{
 				interfaceDoc.append("<h3>Embedded Interfaces</h3>");
-				interfaceDoc.append("<ul class=\"innerInterfaceList\">\n"); // start inner interfaces list
-				for(Interface i : interf.getInnerInterfaces()) 
+				// start inner interfaces list
+				interfaceDoc.append("<ul class=\"innerInterfaceList\">\n");
+
+				for (final Interface i : interf.getInnerInterfaces())
 				{
 					generateInterfaceDocHTML(i);
 				}
@@ -214,19 +300,19 @@ public class HTMLDocGenerator {
 			}
 		}
 		interfaceDoc.append("</li>\n"); // end single interface
-		
+
 		return interfaceDoc.toString();
 	}
-	
+
 	/**
 	 * 
 	 * @param parameters
 	 * @return
 	 */
-	private String generateParametersDocHTML(List<Parameter> parameters)
+	private String generateParametersDocHTML(final List<Parameter> parameters)
 	{
-		StringBuffer parameterDoc = new StringBuffer();
-		for(Parameter param : parameters)
+		final StringBuffer parameterDoc = new StringBuffer();
+		for (final Parameter param : parameters)
 			parameterDoc.append(generateParametersDocHTML(param));
 		return parameterDoc.toString();
 	}
@@ -236,58 +322,62 @@ public class HTMLDocGenerator {
 	 * @param param
 	 * @return
 	 */
-	private String generateParametersDocHTML(Parameter param)
+	private String generateParametersDocHTML(final Parameter param)
 	{
-		StringBuffer parameterDoc = new StringBuffer();
-		if(!param.getDocumentations().isEmpty())
+		final StringBuffer parameterDoc = new StringBuffer();
+		if (param.getDocumentations() != null && !param.getDocumentations().isEmpty())
 			parameterDoc.append(generateDocumentationHTML(param.getDocumentations()));
-		if(!param.getComplexType().isEmpty())
+		if (param.getComplexType() != null && !param.getComplexType().isEmpty())
 			parameterDoc.append(generateParametersDocHTML(param.getComplexType()));
 		return parameterDoc.toString();
 	}
-	
+
 	/**
 	 * General method to generate the actual documentation in HTML.
+	 * 
 	 * @param documentations
 	 * @return String which contains the HTML documentation of the given element.
 	 */
-	private String generateDocumentationHTML(List<Documentation> documentations)
+	private String generateDocumentationHTML(final List<Documentation> documentations)
 	{
-		StringBuffer htmlDoc = new StringBuffer();
-		
-		for (Documentation doc : documentations)
+		final StringBuffer htmlDoc = new StringBuffer();
+
+		if (documentations != null && !documentations.isEmpty())
 		{
-			// write only if there is something to write
-			if (doc.getThematicRole() != null || !doc.getDocumentation().isEmpty())
+			for (final Documentation doc : documentations)
 			{
-				htmlDoc.append("<p>\n");
-				if (doc.getSignatureElementIdentifier() != null)
+				// write only if there is something to write
+				if (doc.getThematicRole() != null || !doc.getDocumentation().isEmpty())
 				{
-					htmlDoc.append("Element: ");
-					htmlDoc.append(doc.getSignatureElementIdentifier());
-					htmlDoc.append("<br />\n");
-				}
-
-				if (doc.getThematicRole() != null)
-				{
-					htmlDoc.append("<label class=\"title\">Role: </label>");
-					htmlDoc.append(doc.getThematicRole().getName());
-					htmlDoc.append("<br />\n");
-				}
-
-				Map<Addressee, String> docMap = doc.getDocumentation();
-				for (Addressee addressee : doc.getAddresseeSequence())
-				{
-					String text = docMap.get(addressee);
-					if (!text.isEmpty())
+					htmlDoc.append("<p>\n");
+					if (doc.getSignatureElementIdentifier() != null)
 					{
-						htmlDoc.append(addressee.getName());
-						htmlDoc.append(": ");
-						htmlDoc.append(docMap.get(addressee));
+						htmlDoc.append("Element: ");
+						htmlDoc.append(doc.getSignatureElementIdentifier());
 						htmlDoc.append("<br />\n");
 					}
+
+					if (doc.getThematicRole() != null)
+					{
+						htmlDoc.append("<label class=\"title\">Role: </label>");
+						htmlDoc.append(doc.getThematicRole().getName());
+						htmlDoc.append("<br />\n");
+					}
+
+					final Map<Addressee, String> docMap = doc.getDocumentation();
+					for (final Addressee addressee : doc.getAddresseeSequence())
+					{
+						final String text = docMap.get(addressee);
+						if (!text.isEmpty())
+						{
+							htmlDoc.append(addressee.getName());
+							htmlDoc.append(": ");
+							htmlDoc.append(docMap.get(addressee));
+							htmlDoc.append("<br />\n");
+						}
+					}
+					htmlDoc.append("</p>\n");
 				}
-				htmlDoc.append("</p>\n");
 			}
 		}
 		return htmlDoc.toString();

@@ -25,11 +25,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +40,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,6 +65,7 @@ import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.Parser;
 import de.akra.idocit.core.extensions.ValidationReport;
+import de.akra.idocit.core.listeners.IConfigurationChangeListener;
 import de.akra.idocit.core.services.PersistenceService;
 import de.akra.idocit.core.utils.ResourceUtils;
 
@@ -74,6 +79,8 @@ import de.akra.idocit.core.utils.ResourceUtils;
  */
 public class EclipsePersistenceService implements PersistenceService
 {
+	private static final String ERR_MSG_LISTENER_NULL = "Listener must not be null";
+
 	/*
 	 * Constants
 	 */
@@ -87,15 +94,13 @@ public class EclipsePersistenceService implements PersistenceService
 
 	private boolean isInitialized = false;
 
-	private long lastSaveTimeOfThematicGrids = -1;
-	private long lastSaveTimeOfThematicRoles = -1;
-	private long lastSaveTimeOfAddressees = -1;
+	private Set<IConfigurationChangeListener> addresseChangeListeners = new ConcurrentSkipListSet<IConfigurationChangeListener>(
+			new ConfigurationChangeListenerComparator());
+	private Set<IConfigurationChangeListener> thematicGridChangeListeners = new ConcurrentSkipListSet<IConfigurationChangeListener>(
+			new ConfigurationChangeListenerComparator());
+	private Set<IConfigurationChangeListener> thematicRoleChangeListeners = new ConcurrentSkipListSet<IConfigurationChangeListener>(
+			new ConfigurationChangeListenerComparator());
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.akra.idocit.core.services.impl.PersistenceService#init(java.io.InputStream)
-	 */
 	@Override
 	public void init()
 	{
@@ -103,13 +108,6 @@ public class EclipsePersistenceService implements PersistenceService
 		logger.info("The PersistenceService is now initialized.");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#loadInterface(org.eclipse.
-	 * core.resources.IFile)
-	 */
 	@Override
 	public InterfaceArtifact loadInterface(IFile iFile) throws Exception
 	{
@@ -139,13 +137,6 @@ public class EclipsePersistenceService implements PersistenceService
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#writeInterface(de.akra.idocit
-	 * .common.structure.InterfaceArtifact, org.eclipse.core.resources.IFile)
-	 */
 	@Override
 	public void writeInterface(InterfaceArtifact interfaceArtifact, IFile iFile)
 			throws Exception
@@ -244,47 +235,36 @@ public class EclipsePersistenceService implements PersistenceService
 				.getThematicRoleResourceBundle());
 	}
 
-	/**
-	 * Stores the List of {@link Addressee}s into the {@link IPreferenceStore}.
-	 * 
-	 * @param addressees
-	 *            {@link Addressee}s to store.
-	 */
 	@Override
 	public void persistAddressees(List<Addressee> addressees)
 	{
 		logger.fine("persist Addresses");
 		// TODO delete old entries from preference store
-		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = configureXStreamForAddressee();
+		final IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
+		final XStream stream = configureXStreamForAddressee();
 
-		for (Addressee a : addressees)
+		for (final Addressee a : addressees)
 		{
 			a.setDescription(StringUtils.removeLineBreaks(a.getDescription()));
 		}
 
-		String addresseeXML = stream.toXML(addressees);
+		final String addresseeXML = stream.toXML(addressees);
 		prefStore.putValue(PreferenceStoreConstants.ADDRESSEES, addresseeXML);
-		lastSaveTimeOfAddressees = System.currentTimeMillis();
+
+		logger.fine("notify addressee change listeners");
+		notifyListeners(this.addresseChangeListeners);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#persistThematicRoles(java.
-	 * util.List)
-	 */
 	@Override
 	public void persistThematicRoles(List<ThematicRole> roles)
 	{
 		logger.fine("persist ThematicRoles");
 		// TODO delete old entries from preference store
-		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
-		XStream stream = XStreamFactory.configureXStreamForThematicRoles();
+		final IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
+		final XStream stream = XStreamFactory.configureXStreamForThematicRoles();
 		Collections.sort(roles, DescribedItemNameComparator.getInstance());
 
-		for (ThematicRole role : roles)
+		for (final ThematicRole role : roles)
 		{
 			if (role.getDescription() != null)
 			{
@@ -292,17 +272,13 @@ public class EclipsePersistenceService implements PersistenceService
 			}
 		}
 
-		String rolesXML = stream.toXML(roles);
+		final String rolesXML = stream.toXML(roles);
 		prefStore.putValue(PreferenceStoreConstants.THEMATIC_ROLES, rolesXML);
-		lastSaveTimeOfThematicRoles = System.currentTimeMillis();
+
+		logger.fine("notify thematic role change listeners");
+		notifyListeners(this.thematicRoleChangeListeners);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#readInitialThematicRoles()
-	 */
 	@Override
 	public List<ThematicRole> readInitialThematicRoles()
 	{
@@ -322,11 +298,6 @@ public class EclipsePersistenceService implements PersistenceService
 		return roles;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.akra.idocit.core.services.impl.PersistenceService#readInitialAddressees()
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Addressee> readInitialAddressees()
@@ -546,37 +517,25 @@ public class EclipsePersistenceService implements PersistenceService
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#persistThematicGrids(java.
-	 * util.List)
-	 */
 	@Override
 	public void persistThematicGrids(List<ThematicGrid> verbClassRoleAssociations)
 	{
 		logger.fine("persist ThematicGrids");
-		IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
+		final IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
 
-		XStream xs = XStreamFactory.configureXStreamForThematicGrid();
-		StringWriter sw = new StringWriter();
+		final XStream xs = XStreamFactory.configureXStreamForThematicGrid();
+		final StringWriter sw = new StringWriter();
 		xs.marshal(verbClassRoleAssociations, new CompactWriter(sw));
 
-		String verbClassRoleAssocsXML = sw.toString();
+		final String verbClassRoleAssocsXML = sw.toString();
 
 		prefStore.putValue(PreferenceStoreConstants.VERBCLASS_ROLE_MAPPING,
 				verbClassRoleAssocsXML);
-		lastSaveTimeOfThematicGrids = System.currentTimeMillis();
+
+		logger.fine("notify thematic grid change listeners");
+		notifyListeners(this.thematicGridChangeListeners);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#exportThematicGridsAsXml(java
-	 * .io.File, java.util.List)
-	 */
 	@Override
 	public void exportThematicGridsAsXml(final File destination, List<ThematicGrid> grids)
 			throws IOException
@@ -599,13 +558,6 @@ public class EclipsePersistenceService implements PersistenceService
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#importThematicGrids(java.io
-	 * .File)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ThematicGrid> importThematicGrids(final File source) throws IOException
@@ -691,13 +643,6 @@ public class EclipsePersistenceService implements PersistenceService
 		return buffer.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#exportThematicGridsAsHtml(
-	 * java.io.File, java.util.List)
-	 */
 	@Override
 	public void exportThematicGridsAsHtml(File destination, List<ThematicGrid> grids)
 			throws IOException
@@ -737,44 +682,6 @@ public class EclipsePersistenceService implements PersistenceService
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#getLastSaveTimeOfThematicGrids
-	 * ()
-	 */
-	@Override
-	public long getLastSaveTimeOfThematicGrids()
-	{
-		return lastSaveTimeOfThematicGrids;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#getLastSaveTimeOfThematicRoles
-	 * ()
-	 */
-	@Override
-	public long getLastSaveTimeOfThematicRoles()
-	{
-		return lastSaveTimeOfThematicRoles;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.akra.idocit.core.services.impl.PersistenceService#getLastSaveTimeOfAddressees()
-	 */
-	@Override
-	public long getLastSaveTimeOfAddressees()
-	{
-		return lastSaveTimeOfAddressees;
-	}
-
 	@Override
 	public ValidationReport validateInterfaceArtifact(InterfaceArtifact artifact,
 			IFile iFile) throws Exception
@@ -804,6 +711,129 @@ public class EclipsePersistenceService implements PersistenceService
 							+ String.valueOf(artifact) + "; iFile="
 							+ String.valueOf(iFile));
 			throw new IllegalArgumentException("The input parameters must be initalized.");
+		}
+	}
+
+	@Override
+	public void addAddresseChangeListener(final IConfigurationChangeListener listener)
+	{
+		if (listener == null)
+		{
+			throw new NullPointerException(ERR_MSG_LISTENER_NULL);
+		}
+		this.addresseChangeListeners.add(listener);
+	}
+
+	@Override
+	public void removeAddresseChangeListener(final IConfigurationChangeListener listener)
+	{
+		if (listener != null)
+		{
+			this.addresseChangeListeners.remove(listener);
+		}
+	}
+
+	@Override
+	public void addThematicRoleChangeListener(final IConfigurationChangeListener listener)
+	{
+		if (listener == null)
+		{
+			throw new NullPointerException(ERR_MSG_LISTENER_NULL);
+		}
+		this.thematicRoleChangeListeners.add(listener);
+	}
+
+	@Override
+	public void removeThematicRoleChangeListener(
+			final IConfigurationChangeListener listener)
+	{
+		if (listener != null)
+		{
+			this.thematicRoleChangeListeners.remove(listener);
+		}
+	}
+
+	@Override
+	public void addThematicGridChangeListener(final IConfigurationChangeListener listener)
+	{
+		if (listener == null)
+		{
+			throw new NullPointerException(ERR_MSG_LISTENER_NULL);
+		}
+		this.thematicGridChangeListeners.add(listener);
+	}
+
+	@Override
+	public void removeThematicGridChangeListener(
+			final IConfigurationChangeListener listener)
+	{
+		if (listener != null)
+		{
+			this.thematicGridChangeListeners.remove(listener);
+		}
+	}
+
+	@Override
+	public void removeAllAddresseChangeListener()
+	{
+		this.addresseChangeListeners.clear();
+	}
+
+	@Override
+	public void removeAllThematicRoleChangeListener()
+	{
+		this.thematicRoleChangeListeners.clear();
+	}
+
+	@Override
+	public void removeAllThematicGridChangeListener()
+	{
+		this.thematicGridChangeListeners.clear();
+	}
+
+	/**
+	 * Fires for all <code>listeners</code> the configuration change event.
+	 * 
+	 * @param listeners
+	 *            [DESTINATION]
+	 * @thematicgrid Sending Operations
+	 */
+	private void notifyListeners(final Collection<IConfigurationChangeListener> listeners)
+	{
+		for (final IConfigurationChangeListener l : listeners)
+		{
+			l.configurationChange();
+		}
+	}
+
+	/**
+	 * Comparator for {@link IConfigurationChangeListener}s. It implements a rudimentary
+	 * compare method, so the listener can be used within {@link Set}.
+	 * 
+	 * @author Dirk Meier-Eickhoff
+	 * 
+	 */
+	private static class ConfigurationChangeListenerComparator implements
+			Comparator<IConfigurationChangeListener>, Serializable
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Compare only the object references for equality.
+		 */
+		@Override
+		public int compare(IConfigurationChangeListener o1,
+				IConfigurationChangeListener o2)
+		{
+			if (o1 == o2)
+			{
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
 		}
 	}
 }

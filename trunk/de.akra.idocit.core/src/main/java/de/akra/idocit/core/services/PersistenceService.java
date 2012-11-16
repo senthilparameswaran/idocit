@@ -28,6 +28,7 @@ import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.ValidationReport;
+import de.akra.idocit.core.listeners.IConfigurationChangeListener;
 
 /**
  * Provides services to load and to write an {@link InterfaceArtifact}.
@@ -86,7 +87,8 @@ public interface PersistenceService
 	public abstract boolean areThematicRolesInitialized();
 
 	/**
-	 * Stores the List of {@link Addressee}s into the storage of this service.
+	 * Stores the List of {@link Addressee}s into the storage of this service and notifies
+	 * all registered addressee configuration change listeners.
 	 * 
 	 * @param addressees
 	 *            {@link Addressee}s to store.
@@ -94,7 +96,8 @@ public interface PersistenceService
 	public abstract void persistAddressees(List<Addressee> addressees);
 
 	/**
-	 * Stores the List of {@link ThematicRole}s.
+	 * Stores the List of {@link ThematicRole}s and notifies all registered thematic role
+	 * configuration change listeners.
 	 * 
 	 * @param roles
 	 *            {@link ThematicRole}s to store.
@@ -141,7 +144,8 @@ public interface PersistenceService
 			throws UnitializedIDocItException;
 
 	/**
-	 * Stores the {@link ThematicGrid}s to the Eclipse {@link IPreferenceStore}.
+	 * Stores the {@link ThematicGrid}s to the Eclipse {@link IPreferenceStore} and
+	 * notifies all registered thematic grid configuration change listeners.
 	 * 
 	 * @param verbClassRoleAssociations
 	 *            {@link ThematicGrid}s to store.
@@ -187,28 +191,27 @@ public interface PersistenceService
 	public abstract void exportThematicGridsAsHtml(File destination,
 			List<ThematicGrid> grids) throws IOException;
 
-	/**
-	 * @return the lAST_SAVE_TIME_OF_THEMATIC_GRIDS
-	 * 
-	 * @Deprecated
-	 */
-	public abstract long getLastSaveTimeOfThematicGrids();
-
-	/**
-	 * @return the lAST_SAVE_TIME_OF_THEMATIC_ROLES
-	 * 
-	 * @Deprecated
-	 */
-	public abstract long getLastSaveTimeOfThematicRoles();
-
-	/**
-	 * @return the lAST_SAVE_TIME_OF_ADDRESSEES
-	 * 
-	 * @Deprecated
-	 */
-	public abstract long getLastSaveTimeOfAddressees();
-
 	public ValidationReport validateInterfaceArtifact(InterfaceArtifact artifact,
 			IFile ifile) throws Exception;
 
+	void addAddresseChangeListener(final IConfigurationChangeListener listener)
+			throws NullPointerException;
+
+	void removeAddresseChangeListener(final IConfigurationChangeListener listener);
+
+	void removeAllAddresseChangeListener();
+
+	void addThematicRoleChangeListener(final IConfigurationChangeListener listener)
+			throws NullPointerException;
+
+	void removeThematicRoleChangeListener(final IConfigurationChangeListener listener);
+
+	void removeAllThematicRoleChangeListener();
+
+	void addThematicGridChangeListener(final IConfigurationChangeListener listener)
+			throws NullPointerException;
+
+	void removeThematicGridChangeListener(final IConfigurationChangeListener listener);
+
+	void removeAllThematicGridChangeListener();
 }
