@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import de.akra.idocit.common.structure.Addressee;
@@ -48,13 +50,16 @@ import de.akra.idocit.core.services.impl.HTMLDocGenerator;
  */
 public class HTMLDocGeneratorTest
 {
+	private static final String REFERENCE_HTML = "<!DOCTYPE>\n<html>\n<head>\n<title>Documentation of test.wsdl [Artifact]</title>\n<meta name=\"author\" content=\"AKRA GmbH\"/>\n<meta name=\"generator\" content=\"iDocIt!\"/>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"/>\n<link rel=\"stylesheet\" media=\"screen\" href=\"stylesheet.css\"/>\n</head>\n<body>\n<div id=\"header\">\n<h1 id=\"docTitle\">test.wsdl [Artifact]</h1>\n<h2 id=\"interfaceTitle\">Interface CustomerService [PortType]</h2>\n</div>\n<div id=\"nav\">\n<ul id=\"navElements\">\n<label class=\"navTitle\" for=\"operations\">Operations</label>\n<li><a href=\"#find [Operation]\">find [Operation]</a></li>\n</ul>\n</div>\n<div id=\"content\">\n<ul class=\"interfaceList\">\n<li>\n<h3 class=\"interfaceTitle\">Interface CustomerService [PortType]</h3>\n<p>\nElement: test.wsdl.CustomerService.find.input(Customer).Customer<br />\n<label class=\"title\">Role: </label>OBJECT<br />\nDEVELOPER: Documenation for developers.<br />\nMANAGER: Documenation for managers.<br />\n</p>\n<ul class=\"operationList\">\n<li>\n<h4 id=\"find [Operation]\">find [Operation]</h4>\n<div class=\"opDescription\">\n<p>\nElement: test.wsdl.CustomerService.find.input(Customer).Customer<br />\n<label class=\"title\">Role: </label>OBJECT<br />\nDEVELOPER: Documenation for developers.<br />\nMANAGER: Documenation for managers.<br />\n</p>\n</div>\n<div class=\"input\">\n<h5>Input</h5>\n<p>\nElement: test.wsdl.CustomerService.find.input(Customer).Customer<br />\n<label class=\"title\">Role: </label>OBJECT<br />\nDEVELOPER: Documenation for developers.<br />\nMANAGER: Documenation for managers.<br />\n</p>\n<ul class=\"paramDescription\">\n<li>\n<p>\nCust (Type: Customer) [Part]<br />\n</p>\n</li>\n</ul>\n</div>\n<div class=\"output\">\n<h5>Output</h5>\n<ul class=\"paramDescription\">\n<li>\n<p>\nCust (Type: Customer) [Part]<br />\n</p>\n</li>\n</ul>\n</div>\n</li>\n</ul>\n</li>\n</ul>\n</div>\n</body>\n</html>\n";
 	
 	@Test
 	public void testGenerateHTML()
 	{
-		InterfaceArtifact artifact= createInterfaceArtifact();
-		HTMLDocGenerator docGen = new HTMLDocGenerator(artifact);
-		System.out.println(docGen.generateHTML());
+		final InterfaceArtifact artifact= createInterfaceArtifact();
+		final HTMLDocGenerator docGen = new HTMLDocGenerator(artifact);
+		final String actualHTML = docGen.generateHTML();
+		
+		Assert.assertEquals(REFERENCE_HTML, actualHTML);
 	}
 
 	
