@@ -145,7 +145,8 @@ public class EditThematicGridComposite
 
 		txtDescription = new Text(this, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().hint(100, 50).grab(true, true).applyTo(txtDescription);
+		GridDataFactory.fillDefaults().hint(100, 50).grab(true, true)
+				.applyTo(txtDescription);
 
 		Label lblVerbs = new Label(this, SWT.NONE);
 		lblVerbs.setText("Verbs (seperate verbs with commas):");
@@ -225,29 +226,27 @@ public class EditThematicGridComposite
 		if (!newSelection.equals(oldSelection)
 				&& newSelection.getActiveThematicGrid() != null)
 		{
-			String newName = newSelection.getActiveThematicGrid().getName();
-
+			final String newName = newSelection.getActiveThematicGrid().getName();
 			if ((sourceControl == null) || !sourceControl.equals(txtName))
 			{
 				txtName.setText(newName);
 			}
 
-			String newDescription = newSelection.getActiveThematicGrid().getDescription();
-
+			final String newDescription = newSelection.getActiveThematicGrid()
+					.getDescription();
 			if ((sourceControl == null) || !sourceControl.equals(txtDescription))
 			{
 				txtDescription.setText(newDescription);
 			}
 
-			Set<String> newVerbs = newSelection.getActiveThematicGrid().getVerbs();
-
 			if ((sourceControl == null) || !sourceControl.equals(txtVerbs))
 			{
-				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newVerbs));
+				txtVerbs.setText(StringUtils.convertIntoCommaSeperatedTokens(newSelection
+						.getActiveThematicGrid().getVerbs()));
 			}
 
-			List<ThematicRole> newRoles = newSelection.getRoles();
-			List<ThematicRole> oldRoles = (oldSelection != null) ? oldSelection
+			final List<ThematicRole> newRoles = newSelection.getRoles();
+			final List<ThematicRole> oldRoles = (oldSelection != null) ? oldSelection
 					.getRoles() : null;
 
 			// rebuild table if role list differs or the table is not initialized
@@ -266,7 +265,7 @@ public class EditThematicGridComposite
 
 				for (int i = 0; i < newRoles.size(); i++)
 				{
-					ThematicRole role = newRoles.get(i);
+					final ThematicRole role = newRoles.get(i);
 					items[i] = new TableItem(tabRoles, SWT.NONE);
 					items[i].setText(ROLE_TABLE_COL_ROLE_NAME, role.getName());
 
@@ -290,13 +289,13 @@ public class EditThematicGridComposite
 			}
 			// End changes due to Issue #27
 
-			Map<ThematicRole, Boolean> newSelectedRoles = newSelection
+			final Map<ThematicRole, Boolean> newSelectedRoles = newSelection
 					.getActiveThematicGrid().getRoles();
-			List<ThematicRole> roles = newSelection.getRoles();
+			final List<ThematicRole> roles = newSelection.getRoles();
 
 			int i = 0;
 			Boolean isMandatory = true;
-			for (ThematicRole role : roles)
+			for (final ThematicRole role : roles)
 			{
 				if ((isMandatory = newSelectedRoles.get(role)) != null)
 				{
@@ -308,16 +307,17 @@ public class EditThematicGridComposite
 					}
 				}
 
-				ThematicGrid activeGrid = newSelection.getActiveThematicGrid();
+				final ThematicGrid activeGrid = newSelection.getActiveThematicGrid();
 				if (activeGrid != null)
 				{
-					Map<String, String> gridBasedRules = activeGrid.getGridBasedRules();
-					Map<ThematicRole, Boolean> checkedThematicRoles = activeGrid
+					final Map<String, String> gridBasedRules = activeGrid
+							.getGridBasedRules();
+					final Map<ThematicRole, Boolean> checkedThematicRoles = activeGrid
 							.getRoles();
 
 					if (gridBasedRules != null)
 					{
-						String rule = gridBasedRules.get(role.getName());
+						final String rule = gridBasedRules.get(role.getName());
 
 						if ((rule != null) && checkedThematicRoles.containsKey(role))
 						{
@@ -334,7 +334,7 @@ public class EditThematicGridComposite
 				i++;
 			}
 
-			ThematicRole activeRole = newSelection.getActiveRole();
+			final ThematicRole activeRole = newSelection.getActiveRole();
 			if (activeRole != null)
 			{
 				int selectionIndex = roles.indexOf(activeRole);
@@ -408,8 +408,8 @@ public class EditThematicGridComposite
 			@Override
 			public void menuDetected(MenuDetectEvent e)
 			{
-				// TODO hide popup menu if user clicks on the column headers!
-
+				updateMenuItemStatus();
+				
 				// show popup menu if the context menu key on the keyboard is pressed and
 				// an item is selected
 				tablePopUpMenu.setVisible(tabRoles.getSelectionIndex() > -1);
@@ -426,6 +426,7 @@ public class EditThematicGridComposite
 			{
 				if (e.button == MOUSE_BUTTON_RIGHT)
 				{
+					updateMenuItemStatus();
 					tablePopUpMenu.setVisible(isInTableItemRange(e.x, e.y));
 				}
 			}
@@ -609,6 +610,21 @@ public class EditThematicGridComposite
 		if ((row = tabRoles.getSelectionIndex()) > -1)
 		{
 			tabRoles.getItem(row).setText(ROLE_TABLE_COL_STATUS, status);
+		}
+	}
+
+	/**
+	 * Update the table's menu items depending on the selected item.
+	 */
+	private void updateMenuItemStatus()
+	{
+		int row = -1;
+		if ((row = tabRoles.getSelectionIndex()) > -1)
+		{
+			final boolean enabled = tabRoles.getItem(row).getChecked();
+			menuItemEditRule.setEnabled(enabled);
+			menuItemSetMandatory.setEnabled(enabled);
+			menuItemSetOptional.setEnabled(enabled);
 		}
 	}
 

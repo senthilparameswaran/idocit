@@ -249,30 +249,33 @@ public class EditThematicGridListComposite
 	protected void doSetSelection(EditThematicGridListCompositeSelection oldInSelection,
 			EditThematicGridListCompositeSelection newInSelection, Object sourceControl)
 	{
-		itemList.removeAll();
-
-		if (newInSelection.getItems() != null)
+		if (!itemList.isDisposed())
 		{
-			for (DescribedItem item : newInSelection.getItems())
-			{
-				itemList.add(item.getName());
-			}
-		}
+			itemList.removeAll();
 
-		if (newInSelection.getActiveItems() != null)
-		{
-			int[] selectedItemIndices = new int[newInSelection.getActiveItems().size()];
-
-			for (int i = 0; i < newInSelection.getActiveItems().size(); i++)
+			if (newInSelection.getItems() != null)
 			{
-				DescribedItem item = newInSelection.getActiveItems().get(i);
-				int index = newInSelection.getItems().indexOf(item);
-				selectedItemIndices[i] = index;
+				for (DescribedItem item : newInSelection.getItems())
+				{
+					itemList.add(item.getName());
+				}
 			}
 
-			itemList.select(selectedItemIndices);
-		}
+			if (newInSelection.getActiveItems() != null)
+			{
+				int[] selectedItemIndices = new int[newInSelection.getActiveItems()
+						.size()];
 
+				for (int i = 0; i < newInSelection.getActiveItems().size(); i++)
+				{
+					DescribedItem item = newInSelection.getActiveItems().get(i);
+					int index = newInSelection.getItems().indexOf(item);
+					selectedItemIndices[i] = index;
+				}
+
+				itemList.select(selectedItemIndices);
+			}
+		}
 		btnRemove.setEnabled((newInSelection.getActiveItems() != null)
 				&& (newInSelection.getActiveItems().size() > 0));
 	}

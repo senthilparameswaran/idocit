@@ -16,7 +16,10 @@
 package de.akra.idocit.ui.components;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,6 +57,7 @@ import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.constants.PreferenceStoreConstants;
 import de.akra.idocit.core.extensions.ValidationReport;
+import de.akra.idocit.core.listeners.IConfigurationChangeListener;
 import de.akra.idocit.core.listeners.IDocItInitializationListener;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.EditArtifactDocumentationComposite;
@@ -158,6 +162,9 @@ public class DocumentationEditor
 
 	// Listeners
 	private ISelectionListener<EditArtifactDocumentationCompositeSelection> rootCompositeSelectionListener = null;
+	private IConfigurationChangeListener thematicRoleConfigChangeListener;
+	private IConfigurationChangeListener thematicGridConfigChangeListener;
+	private IConfigurationChangeListener adresseeConfigChangeListener;
 
 	/**
 	 * {@inheritDoc}
@@ -236,6 +243,8 @@ public class DocumentationEditor
 
 		if (IDocItActivator.isInitializedAtStartup())
 		{
+			setupConfigChangeListener();
+
 			List<Addressee> addressees = ServiceManager.getInstance()
 					.getPersistenceService().loadConfiguredAddressees();
 			List<ThematicRole> thematicRoles = ServiceManager.getInstance()
@@ -362,7 +371,6 @@ public class DocumentationEditor
 	public void setFocus()
 	{
 		// Nothing to do!
-
 	}
 
 	/**
@@ -472,6 +480,78 @@ public class DocumentationEditor
 	}
 
 	/**
+	 * Create and register {@link IConfigurationChangeListener}s.
+	 */
+	private void setupConfigChangeListener()
+	{
+		thematicRoleConfigChangeListener = new IConfigurationChangeListener() {
+
+			@Override
+			public void configurationChange()
+			{
+				final EditArtifactDocumentationCompositeSelection editArtSelection = getSelection()
+						.clone();
+
+				editArtSelection.setThematicRoleList(ServiceManager.getInstance()
+						.getPersistenceService().loadThematicRoles());
+
+				setSelection(editArtSelection);
+			}
+		};
+		ServiceManager.getInstance().getPersistenceService()
+				.addThematicRoleChangeListener(thematicRoleConfigChangeListener);
+
+		adresseeConfigChangeListener = new IConfigurationChangeListener() {
+
+			@Override
+			public void configurationChange()
+			{
+				final EditArtifactDocumentationCompositeSelection editArtSelection = getSelection()
+						.clone();
+
+				editArtSelection.setAddresseeList(ServiceManager.getInstance()
+						.getPersistenceService().loadConfiguredAddressees());
+
+				// reset all states belonging to addressees
+				if (editArtSelection.getActiveAddresseesMap() != null)
+				{
+					for (final Entry<Integer, List<Integer>> e : editArtSelection
+							.getActiveAddresseesMap().entrySet())
+					{
+						e.setValue(new ArrayList<Integer>(e.getValue().size()));
+					}
+				}
+				if (editArtSelection.getDisplayedAddresseesForSigElemsDocumentations() != Collections.EMPTY_MAP)
+				{
+					editArtSelection
+							.setDisplayedAddresseesForSigElemsDocumentations(Collections
+									.<Integer, List<List<Addressee>>> emptyMap());
+				}
+
+				setSelection(editArtSelection);
+			}
+		};
+		ServiceManager.getInstance().getPersistenceService()
+				.addAddresseChangeListener(adresseeConfigChangeListener);
+
+		thematicGridConfigChangeListener = new IConfigurationChangeListener() {
+
+			@Override
+			public void configurationChange()
+			{
+				final EditArtifactDocumentationCompositeSelection editArtSelection = getSelection()
+						.clone();
+
+				// refresh derived thematic grids
+				editArtSelection.setRefreshRecommendations(true);
+				setSelection(editArtSelection);
+			}
+		};
+		ServiceManager.getInstance().getPersistenceService()
+				.addThematicGridChangeListener(thematicGridConfigChangeListener);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -501,5 +581,12 @@ public class DocumentationEditor
 		}
 
 		IDocItActivator.removeConfigurationListener(listener);
+
+		ServiceManager.getInstance().getPersistenceService()
+				.removeAddresseChangeListener(adresseeConfigChangeListener);
+		ServiceManager.getInstance().getPersistenceService()
+				.removeThematicRoleChangeListener(thematicRoleConfigChangeListener);
+		ServiceManager.getInstance().getPersistenceService()
+				.removeThematicGridChangeListener(thematicGridConfigChangeListener);
 	}
 }

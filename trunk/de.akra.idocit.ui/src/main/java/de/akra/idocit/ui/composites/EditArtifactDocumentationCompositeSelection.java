@@ -36,6 +36,7 @@ import de.akra.idocit.common.structure.Operation;
 import de.akra.idocit.common.structure.SignatureElement;
 import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * Selection for {@link EditArtifactDocumentationComposite}.
@@ -45,7 +46,7 @@ import de.akra.idocit.common.structure.ThematicRole;
  * @version 0.0.2
  * 
  */
-public class EditArtifactDocumentationCompositeSelection implements ISelection
+public class EditArtifactDocumentationCompositeSelection implements ISelection, Cloneable
 {
 	private static final int DEFAULT_NUMBER_OF_DOCS_PER_SIGNATURE_ELEMENT = 2;
 
@@ -129,6 +130,11 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 	private IFile artifactFile = null;
 
 	/**
+	 * Set it to <code>true</code> so that the recommended thematic grids are new derived.
+	 */
+	private boolean refreshRecommendations = false;
+
+	/**
 	 * @return the displayedAddresseesForSigElemsDocumentations
 	 */
 	public Map<Integer, List<List<Addressee>>> getDisplayedAddresseesForSigElemsDocumentations()
@@ -177,8 +183,7 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 				if (interfaceArtifact != null)
 				{
 					// initialize the map with little more space than needed, so
-					// that the
-					// map need not to grow
+					// that the map need not to grow
 					initSize = (int) (interfaceArtifact.size() * MAP_LOAD_FACTOR);
 				}
 				this.activeAddresseesMap = new ConcurrentHashMap<Integer, List<Integer>>(
@@ -212,8 +217,7 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 				|| (result = activeAddresseesMap.get(signatureElementId)) == null)
 		{
 			// ... create a new list of active addressee-tabs for an
-			// SignatureElement and
-			// put them to the map
+			// SignatureElement and put them to the map
 			result = new ArrayList<Integer>(DEFAULT_NUMBER_OF_DOCS_PER_SIGNATURE_ELEMENT);
 
 			putActiveAddressees(signatureElementId, result);
@@ -533,44 +537,27 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 
 	// End changes due to Issue #62
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("EditArtifactDocumentationCompositeSelection [interfaceArtifact=");
-		builder.append(interfaceArtifact);
-		builder.append(", activeAddresseesMap=");
-		builder.append(activeAddresseesMap);
-		builder.append(", addresseeList=");
-		builder.append(addresseeList);
-		builder.append(", thematicRoleList=");
-		builder.append(thematicRoleList);
-		builder.append(", selectedSignatureElement=");
-		builder.append(selectedSignatureElement);
-		builder.append(", originalDocumentations=");
-		builder.append(originalDocumentations);
-		builder.append(", currentDocumentations=");
-		builder.append(currentDocumentations);
-		builder.append(", collapsedThematicGrids=");
-		builder.append(collapsedThematicGrids);
-		builder.append(", displayedAddresseesForSigElemsDocumentations=");
-		builder.append(displayedAddresseesForSigElemsDocumentations);
-		builder.append(", artifactFile=");
-		builder.append(artifactFile);
-		builder.append("]");
+		builder.append("EditArtifactDocumentationCompositeSelection [interfaceArtifact=")
+				.append(interfaceArtifact).append(", activeAddresseesMap=")
+				.append(activeAddresseesMap).append(", addresseeList=")
+				.append(addresseeList).append(", thematicRoleList=")
+				.append(thematicRoleList).append(", selectedSignatureElement=")
+				.append(selectedSignatureElement).append(", originalDocumentations=")
+				.append(originalDocumentations).append(", currentDocumentations=")
+				.append(currentDocumentations).append(", collapsedThematicGrids=")
+				.append(collapsedThematicGrids)
+				.append(", displayedAddresseesForSigElemsDocumentations=")
+				.append(displayedAddresseesForSigElemsDocumentations)
+				.append(", artifactFile=").append(artifactFile)
+				.append(", refreshRecommendations=").append(refreshRecommendations)
+				.append("]");
 		return builder.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
@@ -597,6 +584,7 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 				* result
 				+ ((originalDocumentations == null) ? 0 : originalDocumentations
 						.hashCode());
+		result = prime * result + (refreshRecommendations ? 1231 : 1237);
 		result = prime
 				* result
 				+ ((selectedSignatureElement == null) ? 0 : selectedSignatureElement
@@ -606,11 +594,6 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -671,6 +654,8 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 		}
 		else if (!originalDocumentations.equals(other.originalDocumentations))
 			return false;
+		if (refreshRecommendations != other.refreshRecommendations)
+			return false;
 		if (selectedSignatureElement == null)
 		{
 			if (other.selectedSignatureElement != null)
@@ -686,5 +671,46 @@ public class EditArtifactDocumentationCompositeSelection implements ISelection
 		else if (!thematicRoleList.equals(other.thematicRoleList))
 			return false;
 		return true;
+	}
+
+	public boolean isRefreshRecommendations()
+	{
+		return refreshRecommendations;
+	}
+
+	public void setRefreshRecommendations(boolean refreshRecommendations)
+	{
+		this.refreshRecommendations = refreshRecommendations;
+	}
+
+	/**
+	 * Clone the flat structure of this selection.
+	 */
+	@Override
+	public EditArtifactDocumentationCompositeSelection clone()
+	{
+		EditArtifactDocumentationCompositeSelection newSelection = null;
+		try
+		{
+			newSelection = (EditArtifactDocumentationCompositeSelection) super.clone();
+			newSelection.setActiveAddresseesMap(activeAddresseesMap);
+			newSelection.setAddresseeList(addresseeList);
+			newSelection.setArtifactFile(artifactFile);
+			newSelection.setInterfaceArtifact(interfaceArtifact);
+			newSelection.setSelectedSignatureElement(selectedSignatureElement);
+			newSelection.setThematicRoleList(thematicRoleList);
+			newSelection.setCollapsedThematicGrids(collapsedThematicGrids);
+			newSelection
+			.setDisplayedAddresseesForSigElemsDocumentations(displayedAddresseesForSigElemsDocumentations);
+			newSelection.setOriginalDocumentations(originalDocumentations);
+			newSelection.setRefreshRecommendations(refreshRecommendations);
+		}
+		catch (final CloneNotSupportedException e)
+		{
+			logger.log(Level.SEVERE, "Failed to clone object.", e);
+			MessageBoxUtils.openErrorBox(null,
+					"Failed to clone object." + ":\n" + e.getMessage(), e);
+		}
+		return newSelection;
 	}
 }
