@@ -18,7 +18,6 @@ package de.akra.idocit.ui.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +32,7 @@ import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
 import de.akra.idocit.core.extensions.ValidationReport;
+import de.akra.idocit.core.listeners.IConfigurationChangeListener;
 import de.akra.idocit.core.services.PersistenceService;
 
 public class CompositeTestPersistenceService implements PersistenceService
@@ -204,26 +204,65 @@ public class CompositeTestPersistenceService implements PersistenceService
 	}
 
 	@Override
-	public long getLastSaveTimeOfThematicGrids()
-	{
-		throw new RuntimeException("Not implemented!");
-	}
-
-	@Override
-	public long getLastSaveTimeOfThematicRoles()
-	{
-		return new Date().getTime();
-	}
-
-	@Override
-	public long getLastSaveTimeOfAddressees()
-	{
-		throw new RuntimeException("Not implemented!");
-	}
-
-	@Override
 	public ValidationReport validateInterfaceArtifact(InterfaceArtifact artifact,
 			IFile ifile) throws Exception
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void addAddresseChangeListener(IConfigurationChangeListener listener)
+			throws NullPointerException
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void removeAddresseChangeListener(IConfigurationChangeListener listener)
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void removeAllAddresseChangeListener()
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void addThematicRoleChangeListener(IConfigurationChangeListener listener)
+			throws NullPointerException
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void removeThematicRoleChangeListener(IConfigurationChangeListener listener)
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void removeAllThematicRoleChangeListener()
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void addThematicGridChangeListener(IConfigurationChangeListener listener)
+			throws NullPointerException
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void removeThematicGridChangeListener(IConfigurationChangeListener listener)
+	{
+		throw new RuntimeException("Not implemented!");
+	}
+
+	@Override
+	public void removeAllThematicGridChangeListener()
 	{
 		throw new RuntimeException("Not implemented!");
 	}
