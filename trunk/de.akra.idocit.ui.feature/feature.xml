@@ -2,7 +2,7 @@
 <feature
       id="de.akra.idocit.ui.feature"
       label="iDocIt! UI"
-      version="0.0.6.qualifier"
+      version="0.0.11.qualifier"
       provider-name="AKRA GmbH">
 
    <description url="http://code.google.com/p/idocit/">
@@ -244,13 +244,6 @@ limitations under the License.
 
    <plugin
          id="de.akra.idocit.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.akra.idocit.common.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
