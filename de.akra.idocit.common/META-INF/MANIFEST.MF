@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: iDocIt! Common Sources
 Bundle-SymbolicName: de.akra.idocit.common;singleton:=true
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.0.11.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;bundle-version="3.6.0",
  org.eclipse.core.resources;bundle-version="3.6.0",
