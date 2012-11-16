@@ -209,11 +209,11 @@ public class EditArtifactDocumentationComposite
 					Object sourceControl)
 			{
 				// Changes due to Issue #58.
-				logger.log(Level.FINEST,
-						comp != null ? comp.toString() : "null");
+				logger.log(Level.FINEST, comp != null ? comp.toString() : "null");
 				// End changes due to Issue #58.
 
-				EditArtifactDocumentationCompositeSelection editArtSelection = makeEditArtifactDocumentationCompositeSelectionFrom(getSelection());
+				EditArtifactDocumentationCompositeSelection editArtSelection = getSelection()
+						.clone();
 
 				SignatureElement selectedSigElem = selection
 						.getSelectedSignatureElement();
@@ -253,11 +253,11 @@ public class EditArtifactDocumentationComposite
 					Object sourceControl)
 			{
 				// Changes due to Issue #58.
-				logger.log(Level.FINEST,
-						comp != null ? comp.toString() : "null");
+				logger.log(Level.FINEST, comp != null ? comp.toString() : "null");
 				// End changes due to Issue #58.
 
-				EditArtifactDocumentationCompositeSelection editArtSelection = makeEditArtifactDocumentationCompositeSelectionFrom(getSelection());
+				EditArtifactDocumentationCompositeSelection editArtSelection = getSelection()
+						.clone();
 				SignatureElement selectedSigElem = editArtSelection
 						.getSelectedSignatureElement();
 
@@ -328,33 +328,6 @@ public class EditArtifactDocumentationComposite
 	}
 
 	/**
-	 * Create a new {@link EditArtifactDocumentationCompositeSelection} with the values
-	 * from <code>selection</code>.
-	 * 
-	 * @param selection
-	 *            The selection whose values should be copied.
-	 * @return a new {@link EditArtifactDocumentationCompositeSelection} with the values
-	 *         from <code>selection</code>.
-	 */
-	private EditArtifactDocumentationCompositeSelection makeEditArtifactDocumentationCompositeSelectionFrom(
-			EditArtifactDocumentationCompositeSelection selection)
-	{
-		EditArtifactDocumentationCompositeSelection newSelection = new EditArtifactDocumentationCompositeSelection();
-
-		newSelection.setActiveAddresseesMap(selection.getActiveAddresseesMap());
-		newSelection.setAddresseeList(selection.getAddresseeList());
-		newSelection.setArtifactFile(selection.getArtifactFile());
-		newSelection.setInterfaceArtifact(selection.getInterfaceArtifact());
-		newSelection.setSelectedSignatureElement(selection.getSelectedSignatureElement());
-		newSelection.setThematicRoleList(selection.getThematicRoleList());
-		newSelection.setCollapsedThematicGrids(selection.getCollapsedThematicGrids());
-		newSelection.setDisplayedAddresseesForSigElemsDocumentations(selection
-				.getDisplayedAddresseesForSigElemsDocumentations());
-		newSelection.setOriginalDocumentations(selection.getOriginalDocumentations());
-		return newSelection;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -380,6 +353,7 @@ public class EditArtifactDocumentationComposite
 						sigElemOperation.getIdentifier(), allThematicGrids);
 				matchingGrids = reduceGrids(matchingGrids.keySet(), allThematicGrids,
 						selectedSigElem);
+				newInSelection.setRefreshRecommendations(false);
 
 				updateDocumentItemListComposite(newInSelection, matchingGrids);
 			}
@@ -533,7 +507,7 @@ public class EditArtifactDocumentationComposite
 			associatedThematicRoles = new TreeSet<ThematicRole>();
 			SignatureElementUtils.collectAssociatedThematicRoles(associatedThematicRoles,
 					selectedSigElem, false);
-			
+
 			associatedThematicRolesWithErrorDocs = new TreeSet<ThematicRole>();
 			SignatureElementUtils.collectAssociatedThematicRoles(
 					associatedThematicRolesWithErrorDocs, selectedSigElem, true);

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -70,8 +71,10 @@ public class ManageThematicGridsComposite
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(ManageThematicGridsComposite.class
+	private static Logger LOG = Logger.getLogger(ManageThematicGridsComposite.class
 			.getName());
+
+	private static final String MSG_OVERWRITE_EXISTING_GRIDS = "There exists thematic grids with same names. New imported grids with same names will overwrite the existing grids.\n\nYes:\tOverwrite existing thematic grids.\nNo:\tInsert only new thematic grids.";
 
 	// Widgets
 	private EditThematicGridListComposite editThematicGridListComposite;
@@ -121,14 +124,18 @@ public class ManageThematicGridsComposite
 		editThematicGridListComposite
 				.addSelectionListener(editThematicGridListSelectionListener);
 
-		btnImportGrids.addSelectionListener(btnImportListener);
-		btnExportGridsXml.addSelectionListener(btnExportListenerXml);
-		btnExportGridsHtml.addSelectionListener(btnExportListenerHtml);
+		if (!btnImportGrids.isDisposed())
+			btnImportGrids.addSelectionListener(btnImportListener);
+		if (!btnExportGridsXml.isDisposed())
+			btnExportGridsXml.addSelectionListener(btnExportListenerXml);
+		if (!btnExportGridsHtml.isDisposed())
+			btnExportGridsHtml.addSelectionListener(btnExportListenerHtml);
 	}
 
 	@Override
 	protected void doCleanUp()
 	{
+		LOG.info("doCleanUp");
 		RED.dispose();
 	}
 
@@ -136,51 +143,43 @@ public class ManageThematicGridsComposite
 	protected void doSetSelection(ManageThematicGridsCompositeSelection oldSelection,
 			ManageThematicGridsCompositeSelection newSelection, Object sourceControl)
 	{
-		updateRoleList(newSelection);
+		// updateRoleList(newSelection);
 
-		errorLabel.setVisible(newSelection.isNameExists());
+		LOG.info("doSetSelection() " + new Date());
 
-		/**********************************************************************/
-
-		EditThematicGridListCompositeSelection editItemListCompositeSelection = new EditThematicGridListCompositeSelection();
-		editItemListCompositeSelection.setMinNumberOfItems(1);
-
-		editItemListCompositeSelection.setItems(newSelection.getThematicGrids());
-
-		List<ThematicGrid> activeItems = new ArrayList<ThematicGrid>();
-		activeItems.add(newSelection.getActiveThematicGrid());
-		editItemListCompositeSelection.setActiveItems(activeItems);
-
-		editThematicGridListComposite.setSelection(editItemListCompositeSelection);
-
-		/**********************************************************************/
-
-		EditThematicGridCompositeSelection editThematicGridCompositeSelection = new EditThematicGridCompositeSelection();
-		editThematicGridCompositeSelection = editThematicGridCompositeSelection
-				.setRoles(newSelection.getRoles());
-		editThematicGridCompositeSelection = editThematicGridCompositeSelection
-				.setActiveThematicGrid(newSelection.getActiveThematicGrid());
-		editThematicGridCompositeSelection = editThematicGridCompositeSelection
-				.setActiveRole(newSelection.getActiveRole());
-
-		editThematicGridComposite.setSelection(editThematicGridCompositeSelection);
-	}
-
-	/**
-	 * If the global {@link ThematicRole} list is changed, load them again.
-	 * 
-	 * @param selection
-	 *            The selection object to update.
-	 */
-	private void updateRoleList(ManageThematicGridsCompositeSelection selection)
-	{
-		if (selection.getLastSaveTimeThematicRoles() < ServiceManager.getInstance()
-				.getPersistenceService().getLastSaveTimeOfThematicRoles())
+		if (!isDisposed())
 		{
-			selection.setLastSaveTimeThematicRoles(ServiceManager.getInstance()
-					.getPersistenceService().getLastSaveTimeOfThematicRoles());
-			selection.setRoles(ServiceManager.getInstance().getPersistenceService()
-					.loadThematicRoles());
+
+			errorLabel.setVisible(newSelection.isNameExists());
+
+			/**********************************************************************/
+
+			EditThematicGridListCompositeSelection editItemListCompositeSelection = new EditThematicGridListCompositeSelection();
+			editItemListCompositeSelection.setMinNumberOfItems(1);
+
+			editItemListCompositeSelection.setItems(newSelection.getThematicGrids());
+
+			List<ThematicGrid> activeItems = new ArrayList<ThematicGrid>();
+			activeItems.add(newSelection.getActiveThematicGrid());
+			editItemListCompositeSelection.setActiveItems(activeItems);
+
+			editThematicGridListComposite.setSelection(editItemListCompositeSelection);
+
+			/**********************************************************************/
+
+			EditThematicGridCompositeSelection editThematicGridCompositeSelection = new EditThematicGridCompositeSelection();
+			editThematicGridCompositeSelection = editThematicGridCompositeSelection
+					.setRoles(newSelection.getRoles());
+			editThematicGridCompositeSelection = editThematicGridCompositeSelection
+					.setActiveThematicGrid(newSelection.getActiveThematicGrid());
+			editThematicGridCompositeSelection = editThematicGridCompositeSelection
+					.setActiveRole(newSelection.getActiveRole());
+
+			editThematicGridComposite.setSelection(editThematicGridCompositeSelection);
+		}
+		else
+		{
+			LOG.info("already disposed ! ! ! ! !! ! ! ");
 		}
 	}
 
@@ -247,10 +246,10 @@ public class ManageThematicGridsComposite
 					PocUIComposite<EditThematicGridCompositeSelection> composite,
 					Object sourceControl)
 			{
-				ManageThematicGridsCompositeSelection mySelection = getSelection();
+				final ManageThematicGridsCompositeSelection mySelection = getSelection();
 
-				List<ThematicGrid> grids = mySelection.getThematicGrids();
-				boolean foundSameName = DescribedItemUtils
+				final List<ThematicGrid> grids = mySelection.getThematicGrids();
+				final boolean foundSameName = DescribedItemUtils
 						.containsName(selection.getActiveThematicGrid(),
 								mySelection.getThematicGrids())
 						&& mySelection.getIndexOfActiveThematicGrid() != DescribedItemUtils
@@ -263,8 +262,8 @@ public class ManageThematicGridsComposite
 
 				if (activeGrid != null)
 				{
-					ThematicGrid copiedGrid = activeGrid.clone();
-					int gridIndex = mySelection.getIndexOfActiveThematicGrid();
+					final ThematicGrid copiedGrid = activeGrid.clone();
+					final int gridIndex = mySelection.getIndexOfActiveThematicGrid();
 					grids.remove(gridIndex);
 					grids.add(copiedGrid);
 					Collections.sort(grids, DescribedItemNameComparator.getInstance());
@@ -274,7 +273,7 @@ public class ManageThematicGridsComposite
 					// keep the copy of the selected grid
 					mySelection.setActiveThematicGrid(copiedGrid);
 				}
-				
+
 				mySelection.setActiveRole(selection.getActiveRole());
 
 				setSelection(mySelection);
@@ -335,11 +334,11 @@ public class ManageThematicGridsComposite
 				{
 					try
 					{
-						List<ThematicGrid> importedGrids = ServiceManager.getInstance()
-								.getPersistenceService()
+						final List<ThematicGrid> importedGrids = ServiceManager
+								.getInstance().getPersistenceService()
 								.importThematicGrids(new File(selectedFileName));
 
-						ManageThematicGridsCompositeSelection selection = getSelection();
+						final ManageThematicGridsCompositeSelection selection = getSelection();
 						List<ThematicGrid> grids = selection.getThematicGrids();
 
 						// Changes due to Issue #32
@@ -358,19 +357,19 @@ public class ManageThematicGridsComposite
 								: null);
 						// End changes due to Issue #10
 
-						List<ThematicRole> roles = ThematicGridService
+						final List<ThematicRole> roles = ThematicGridService
 								.collectThematicRoles(grids, selection.getRoles());
 						selection.setRoles(roles);
 
 						setSelection(selection);
 					}
-					catch (IOException ioEx)
+					catch (final IOException ioEx)
 					{
-						log.log(Level.SEVERE,
+						LOG.log(Level.SEVERE,
 								"An error occured while importing thematic grids from the selected resource.",
 								ioEx);
-						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
-								ioEx.getLocalizedMessage(), null);
+						final Status status = new Status(IStatus.ERROR,
+								Activator.PLUGIN_ID, 0, ioEx.getLocalizedMessage(), null);
 						ErrorDialog
 								.openError(
 										Display.getCurrent().getActiveShell(),
@@ -429,7 +428,7 @@ public class ManageThematicGridsComposite
 					}
 					catch (IOException ioEx)
 					{
-						log.log(Level.SEVERE,
+						LOG.log(Level.SEVERE,
 								"An error occured while importing thematic grids from the selected resource.",
 								ioEx);
 						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
@@ -493,7 +492,7 @@ public class ManageThematicGridsComposite
 					}
 					catch (IOException ioEx)
 					{
-						log.log(Level.SEVERE,
+						LOG.log(Level.SEVERE,
 								"An error occured while importing thematic grids from the selected resource.",
 								ioEx);
 						Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
@@ -544,10 +543,8 @@ public class ManageThematicGridsComposite
 				if (!asked)
 				{
 					asked = true;
-					overwriteGrids = MessageBoxUtils
-							.openQuestionDialogBox(
-									getShell(),
-									"There exists thematic grids with same names. New imported grids with same names will overwrite the existing grids.");
+					overwriteGrids = MessageBoxUtils.openQuestionDialogBox(getShell(),
+							MSG_OVERWRITE_EXISTING_GRIDS);
 				}
 				if (overwriteGrids)
 				{
@@ -571,8 +568,12 @@ public class ManageThematicGridsComposite
 		editThematicGridListComposite
 				.removeSelectionListener(editThematicGridListSelectionListener);
 
-		btnImportGrids.removeSelectionListener(btnImportListener);
-		btnExportGridsXml.removeSelectionListener(btnExportListenerXml);
-		btnExportGridsHtml.removeSelectionListener(btnExportListenerHtml);
+		if (!btnImportGrids.isDisposed())
+			btnImportGrids.removeSelectionListener(btnImportListener);
+		if (!btnExportGridsXml.isDisposed())
+			btnExportGridsXml.removeSelectionListener(btnExportListenerXml);
+		if (!btnExportGridsHtml.isDisposed())
+			btnExportGridsHtml.removeSelectionListener(btnExportListenerHtml);
 	}
+
 }

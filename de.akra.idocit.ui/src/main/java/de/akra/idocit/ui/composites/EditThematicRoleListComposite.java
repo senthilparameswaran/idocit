@@ -15,7 +15,9 @@
  *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -31,9 +33,13 @@ import org.pocui.core.composites.CompositeInitializationException;
 import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 
+import de.akra.idocit.common.services.ThematicGridService;
 import de.akra.idocit.common.structure.DescribedItem;
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.common.utils.StringUtils;
+import de.akra.idocit.core.exceptions.UnitializedIDocItException;
+import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.utils.DescribedItemUtils;
 import de.akra.idocit.ui.utils.MessageBoxUtils;
 
@@ -48,6 +54,8 @@ public class EditThematicRoleListComposite
 		extends
 		AbsComposite<EmptyActionConfiguration, EmptyResourceConfiguration, EditThematicRoleListCompositeSelection>
 {
+	private static Logger LOG = Logger.getLogger(EditThematicRoleListComposite.class
+			.getName());
 
 	// Widgets
 	private List itemList;
@@ -108,25 +116,16 @@ public class EditThematicRoleListComposite
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				ThematicRole newItem = DescribedItemUtils.createNewThematicRole();
+				final ThematicRole newItem = DescribedItemUtils.createNewThematicRole();
 
-				EditThematicRoleListCompositeSelection selection = getSelection();
+				final EditThematicRoleListCompositeSelection selection = getSelection();
 
-				if (!DescribedItemUtils.containsName(newItem, selection.getItems()))
+				if (!DescribedItemUtils.containsName(newItem,
+						selection.getThematicRoles()))
 				{
-					java.util.List<ThematicRole> items = selection.getItems();
+					selection.getThematicRoles().add(newItem);
+					selection.setActiveThematicRole(newItem);
 
-					items.add(newItem);
-					selection.setItems(items);
-
-					// Changes due to Issue #32
-					java.util.List<ThematicRole> activeThematicRole = new ArrayList<ThematicRole>(
-							1);
-					activeThematicRole.add(newItem);
-					selection.setActiveItems(activeThematicRole);
-					// End changes due to Issue #32
-
-					setSelection(selection);
 					fireChangeEvent(btnAdd);
 				}
 				else
@@ -149,44 +148,47 @@ public class EditThematicRoleListComposite
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				EditThematicRoleListCompositeSelection selection = getSelection();
+				final EditThematicRoleListCompositeSelection selection = getSelection();
 
-				if (selection.getActiveItems() != null)
+				if (selection.getActiveThematicRole() != null)
 				{
-					int numberOfItems = selection.getItems().size()
-							- selection.getActiveItems().size();
+					int numberOfItems = selection.getThematicRoles().size() - 1;
 
 					// Check if this remove-operation violates the minimum number of
 					// items.
 					if (numberOfItems >= selection.getMinNumberOfItems())
 					{
-						// Remove the selected item.
-						java.util.List<ThematicRole> items = selection.getItems();
+						final ThematicRole roleToDelete = selection
+								.getActiveThematicRole();
 
-						// Changes due to Issue #10
-						int nextSelIndex = -1;
-						if (!selection.getActiveItems().isEmpty())
+						boolean deleteRole = true;
+						if (isThematicRoleUsedInGrids(roleToDelete))
 						{
-							nextSelIndex = items.indexOf(selection.getActiveItems()
-									.get(0));
-							if (nextSelIndex >= items.size() - 1)
-							{
-								nextSelIndex = items.size() - 2;
-							}
+							deleteRole = MessageBoxUtils
+									.openQuestionDialogBox(
+											getShell(),
+											"The thematic role is used in at least one thematic grid. If the role is deleted it is also deleted from all thematic grids.\n\nDo you really want to delete the role?");
 						}
-						// End changes due to Issue #10
 
-						items.removeAll(selection.getActiveItems());
-						selection.setItems(items);
-						// Changes due to Issue #10
-						selection
-								.setActiveItems(nextSelIndex > -1 ? new ArrayList<ThematicRole>(
-										items.subList(nextSelIndex, nextSelIndex + 1))
-										: null);
-						// End changes due to Issue #10
+						if (deleteRole)
+						{
+							selection.setRemovedThematicRole(roleToDelete);
 
-						setSelection(selection);
-						fireChangeEvent(btnRemove);
+							final java.util.List<ThematicRole> allRoles = selection
+									.getThematicRoles();
+
+							// calculate next selected item
+							int nextSelIndex = allRoles.indexOf(roleToDelete);
+							if (nextSelIndex >= allRoles.size() - 1)
+							{
+								nextSelIndex = allRoles.size() - 2;
+							}
+
+							allRoles.remove(roleToDelete);
+							selection.setActiveThematicRole(allRoles.get(nextSelIndex));
+
+							fireChangeEvent(btnRemove);
+						}
 					}
 					else
 					{
@@ -211,27 +213,18 @@ public class EditThematicRoleListComposite
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				String[] selectedItems = itemList.getSelection();
-				EditThematicRoleListCompositeSelection selection = getSelection();
+				final EditThematicRoleListCompositeSelection selection = getSelection();
 
-				if (selectedItems.length >= 1)
+				if (itemList.getSelectionCount() >= 1)
 				{
-					java.util.List<ThematicRole> activeItems = new ArrayList<ThematicRole>();
-					int[] selectedItemIndices = itemList.getSelectionIndices();
-
-					for (int selectedIndex : selectedItemIndices)
-					{
-						activeItems.add(selection.getItems().get(selectedIndex));
-					}
-
-					selection.setActiveItems(activeItems);
+					selection.setActiveThematicRole(selection.getThematicRoles().get(
+							itemList.getSelectionIndex()));
 				}
 				else
 				{
-					selection.setActiveItems(new ArrayList<ThematicRole>());
+					selection.setActiveThematicRole(null);
 				}
 
-				setSelection(selection);
 				fireChangeEvent(itemList);
 			}
 
@@ -243,37 +236,64 @@ public class EditThematicRoleListComposite
 		};
 	}
 
+	/**
+	 * Check if there the thematic role is configured in at least one ThematicGrid.
+	 * 
+	 * @source All configured {@link ThematicGrid}s.
+	 * @param thematicRole
+	 * @return [REPORT] <code>true</code> if the role is used in at least one
+	 *         ThematicGrid.
+	 * @thematicgrid Checking Operations
+	 */
+	private boolean isThematicRoleUsedInGrids(final ThematicRole thematicRole)
+	{
+		boolean isUsed = false;
+		try
+		{
+			final java.util.List<ThematicGrid> grids = ServiceManager.getInstance()
+					.getPersistenceService().loadThematicGrids();
+
+			final Iterator<ThematicGrid> gridIter = grids.iterator();
+			while (gridIter.hasNext() && !isUsed)
+			{
+				final ThematicGrid grid = gridIter.next();
+				isUsed = ThematicGridService.containsRole(grid.getRoles().keySet(),
+						thematicRole);
+			}
+		}
+		catch (final UnitializedIDocItException e)
+		{
+			final String msg = "Searching for a thematic role within all configured thematic grids failed. Reopen the preferences.";
+			LOG.log(Level.SEVERE, msg, e);
+			MessageBoxUtils.openErrorBox(getShell(), msg + "\n\nError:\n" + e.toString(),
+					e);
+		}
+		return isUsed;
+	}
+
 	@Override
 	protected void doSetSelection(EditThematicRoleListCompositeSelection oldInSelection,
 			EditThematicRoleListCompositeSelection newInSelection, Object sourceControl)
 	{
 		itemList.removeAll();
 
-		if (newInSelection.getItems() != null)
+		if (newInSelection.getThematicRoles() != null)
 		{
-			for (DescribedItem item : newInSelection.getItems())
+			for (final DescribedItem item : newInSelection.getThematicRoles())
 			{
 				itemList.add(item.getName());
 			}
 		}
 
-		if (newInSelection.getActiveItems() != null)
+		if (newInSelection.getActiveThematicRole() != null)
 		{
-			int[] selectedItemIndices = new int[newInSelection.getActiveItems().size()];
-
-			for (int i = 0; i < newInSelection.getActiveItems().size(); i++)
-			{
-				DescribedItem item = newInSelection.getActiveItems().get(i);
-				int index = newInSelection.getItems().indexOf(item);
-				selectedItemIndices[i] = index;
-			}
-
-			itemList.select(selectedItemIndices);
+			final int index = newInSelection.getThematicRoles().indexOf(
+					newInSelection.getActiveThematicRole());
+			itemList.select(index);
 			itemList.showSelection();
 		}
 
-		btnRemove.setEnabled((newInSelection.getActiveItems() != null)
-				&& (newInSelection.getActiveItems().size() > 0));
+		btnRemove.setEnabled(itemList.getSelectionCount() > 0);
 	}
 
 	@Override

@@ -173,17 +173,30 @@ public class DisplayRecommendedRolesComposite
 
 				if (roleClass.getValue() != null)
 				{
-					verbClassRoot
-							.setData(ToolTipHandler.KEY_TIP_TEXT, StringUtils
-									.addLineBreaks(roleClass.getValue().getDescription(),
-											TOOLTIP_MAX_LINE_LENGTH,
-											StringUtils.SPACE.charAt(0)));
+					final ThematicGrid grid = roleClass.getValue();
+
+					if (!StringUtils.isBlank(grid.getDescription()))
+					{
+						final StringBuilder tooltip = new StringBuilder(grid
+								.getDescription().length() * 2);
+						tooltip.append(grid.getDescription())
+								.append(StringUtils.NEW_LINE)
+								.append(StringUtils.NEW_LINE)
+								.append("Verbs:")
+								.append(StringUtils.NEW_LINE)
+								.append(StringUtils.convertIntoCommaSeperatedTokens(grid
+										.getVerbs()));
+						verbClassRoot.setData(ToolTipHandler.KEY_TIP_TEXT, StringUtils
+								.addLineBreaks(tooltip.toString(),
+										TOOLTIP_MAX_LINE_LENGTH,
+										StringUtils.SPACE.charAt(0)));
+					}
 
 					final Set<ThematicRole> displayNotAssignedRoles = new TreeSet<ThematicRole>();
 					final Set<ThematicRole> displayAssignedRoles = new TreeSet<ThematicRole>();
 
-					final Iterator<ThematicRole> iter = roleClass.getValue().getRoles()
-							.keySet().iterator();
+					final Iterator<ThematicRole> iter = grid.getRoles().keySet()
+							.iterator();
 					while (iter.hasNext())
 					{
 						final ThematicRole recRole = iter.next();
@@ -210,7 +223,7 @@ public class DisplayRecommendedRolesComposite
 										TOOLTIP_MAX_LINE_LENGTH,
 										StringUtils.SPACE.charAt(0)));
 
-						if (roleClass.getValue().getRoles().get(role))
+						if (grid.getRoles().get(role))
 						{
 							// role is mandatory and associated
 							roleItem.setFont(boldFont);
@@ -228,7 +241,7 @@ public class DisplayRecommendedRolesComposite
 										TOOLTIP_MAX_LINE_LENGTH,
 										StringUtils.SPACE.charAt(0)));
 
-						if (roleClass.getValue().getRoles().get(role))
+						if (grid.getRoles().get(role))
 						{
 							// role is mandatory and not associated
 							roleItem.setForeground(RED);

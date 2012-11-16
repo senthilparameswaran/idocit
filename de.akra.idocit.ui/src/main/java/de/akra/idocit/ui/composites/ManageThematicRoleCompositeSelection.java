@@ -15,11 +15,16 @@
  *******************************************************************************/
 package de.akra.idocit.ui.composites;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.pocui.core.composites.ISelection;
 
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
+import de.akra.idocit.ui.utils.MessageBoxUtils;
 
 /**
  * The selection / state for a {@link ManageThematicRoleComposite}.
@@ -29,13 +34,16 @@ import de.akra.idocit.common.structure.ThematicRole;
  * @version 0.0.1
  * 
  */
-public class ManageThematicRoleCompositeSelection implements ISelection
+public class ManageThematicRoleCompositeSelection implements ISelection, Cloneable
 {
+	private static final Logger LOG = Logger
+			.getLogger(ManageThematicRoleCompositeSelection.class.getName());
+
 	/**
 	 * The selected ThematicRole to edit.
 	 */
 	private ThematicRole activeThematicRole = null;
-	
+
 	/**
 	 * The modified role (copy of the active role with changes).
 	 */
@@ -47,21 +55,21 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 	private List<ThematicRole> thematicRoles = null;
 
 	/**
-	 * The timestamp of the last save action. If the roles were not saved during this
-	 * session the value is -1.
-	 */
-	private long lastSaveTimeThematicRoles = -1;
-
-	/**
 	 * True, if a ThematicRole with same name exists. If same name exists, changes can not
 	 * be applied.
 	 */
 	private boolean nameExists = false;
-	
+
 	/**
 	 * The last cursor position in the name text field at the edit composite.
 	 */
 	private int lastCurserPosition = 0;
+
+	/**
+	 * All from the list removed {@link ThematicRole}s. When the changes shall be
+	 * persisted, delete these roles from all configured {@link ThematicGrid}s.
+	 */
+	private Collection<ThematicRole> removedThematicRoles = null;
 
 	/**
 	 * 
@@ -101,7 +109,9 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		this.thematicRoles = roles;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -113,16 +123,18 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 				+ ((activeThematicRole == null) ? 0 : activeThematicRole.hashCode());
 		result = prime * result + lastCurserPosition;
 		result = prime * result
-				+ (int) (lastSaveTimeThematicRoles ^ (lastSaveTimeThematicRoles >>> 32));
-		result = prime * result
 				+ ((modifiedThematicRole == null) ? 0 : modifiedThematicRole.hashCode());
 		result = prime * result + (nameExists ? 1231 : 1237);
+		result = prime * result
+				+ ((removedThematicRoles == null) ? 0 : removedThematicRoles.hashCode());
 		result = prime * result
 				+ ((thematicRoles == null) ? 0 : thematicRoles.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -144,8 +156,6 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 			return false;
 		if (lastCurserPosition != other.lastCurserPosition)
 			return false;
-		if (lastSaveTimeThematicRoles != other.lastSaveTimeThematicRoles)
-			return false;
 		if (modifiedThematicRole == null)
 		{
 			if (other.modifiedThematicRole != null)
@@ -154,6 +164,13 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		else if (!modifiedThematicRole.equals(other.modifiedThematicRole))
 			return false;
 		if (nameExists != other.nameExists)
+			return false;
+		if (removedThematicRoles == null)
+		{
+			if (other.removedThematicRoles != null)
+				return false;
+		}
+		else if (!removedThematicRoles.equals(other.removedThematicRoles))
 			return false;
 		if (thematicRoles == null)
 		{
@@ -165,37 +182,23 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("ManageThematicRoleCompositeSelection [activeThematicRole=");
-		builder.append(activeThematicRole);
-		builder.append(", modifiedThematicRole=");
-		builder.append(modifiedThematicRole);
-		builder.append(", thematicRoles=");
-		builder.append(thematicRoles);
-		builder.append(", lastSaveTimeThematicRoles=");
-		builder.append(lastSaveTimeThematicRoles);
-		builder.append(", nameExists=");
-		builder.append(nameExists);
-		builder.append(", lastCurserPosition=");
-		builder.append(lastCurserPosition);
-		builder.append("]");
+		builder.append("ManageThematicRoleCompositeSelection [activeThematicRole=")
+				.append(activeThematicRole).append(", modifiedThematicRole=")
+				.append(modifiedThematicRole).append(", thematicRoles=")
+				.append(thematicRoles).append(", nameExists=").append(nameExists)
+				.append(", lastCurserPosition=").append(lastCurserPosition)
+				.append(", removedThematicRoles=").append(removedThematicRoles)
+				.append("]");
 		return builder.toString();
-	}
-
-	public void setLastSaveTimeThematicRoles(long lastSaveTimeThematicRoles)
-	{
-		this.lastSaveTimeThematicRoles = lastSaveTimeThematicRoles;
-	}
-
-	public long getLastSaveTimeThematicRoles()
-	{
-		return lastSaveTimeThematicRoles;
 	}
 
 	public void setNameExists(boolean nameExists)
@@ -226,5 +229,42 @@ public class ManageThematicRoleCompositeSelection implements ISelection
 	public ThematicRole getModifiedThematicRole()
 	{
 		return modifiedThematicRole;
+	}
+
+	/**
+	 * Clone this instance of {@link ManageThematicRoleCompositeSelection}. Collections
+	 * are not deep copied.
+	 */
+	@Override
+	public ManageThematicRoleCompositeSelection clone()
+	{
+		ManageThematicRoleCompositeSelection s = null;
+		try
+		{
+			s = (ManageThematicRoleCompositeSelection) super.clone();
+			s.setActiveThematicRole(activeThematicRole);
+			s.setLastCurserPosition(lastCurserPosition);
+			s.setModifiedThematicRole(modifiedThematicRole);
+			s.setNameExists(nameExists);
+			s.setThematicRoles(thematicRoles);
+			s.setRemovedThematicRoles(removedThematicRoles);
+		}
+		catch (final CloneNotSupportedException e)
+		{
+			LOG.log(Level.SEVERE, "Failed to clone object.", e);
+			MessageBoxUtils.openErrorBox(null,
+					"Failed to clone object." + ":\n" + e.getMessage(), e);
+		}
+		return s;
+	}
+
+	public Collection<ThematicRole> getRemovedThematicRoles()
+	{
+		return removedThematicRoles;
+	}
+
+	public void setRemovedThematicRoles(Collection<ThematicRole> removedThematicRoles)
+	{
+		this.removedThematicRoles = removedThematicRoles;
 	}
 }

@@ -16,6 +16,7 @@
 package de.akra.idocit.ui.components;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -28,9 +29,11 @@ import org.pocui.core.resources.EmptyResourceConfiguration;
 import org.pocui.swt.composites.AbsComposite;
 import org.pocui.swt.containers.workbench.AbsPreferencePage;
 
+import de.akra.idocit.common.structure.ThematicGrid;
 import de.akra.idocit.common.structure.ThematicRole;
 import de.akra.idocit.core.IDocItActivator;
 import de.akra.idocit.core.exceptions.UnitializedIDocItException;
+import de.akra.idocit.core.listeners.IConfigurationChangeListener;
 import de.akra.idocit.core.services.impl.ServiceManager;
 import de.akra.idocit.ui.composites.ManageThematicRoleComposite;
 import de.akra.idocit.ui.composites.ManageThematicRoleCompositeSelection;
@@ -46,22 +49,63 @@ public class ThematicRolePreferencePage
 		extends
 		AbsPreferencePage<EmptyActionConfiguration, EmptyResourceConfiguration, ManageThematicRoleCompositeSelection>
 {
+	private static final String ERR_MSG_UNINITIALIZED = "iDocIt! has not been initialized completly yet. Please close this preference page and try again in a few seconds.";
+
+	private IConfigurationChangeListener thematicRoleConfigChangeListener;
+
+	private void initConfigListener() throws CompositeInitializationException
+	{
+		this.thematicRoleConfigChangeListener = new IConfigurationChangeListener() {
+
+			@Override
+			public void configurationChange()
+			{
+				final ManageThematicRoleCompositeSelection newSelection = getSelection()
+						.clone();
+				newSelection.setThematicRoles(ServiceManager.getInstance()
+						.getPersistenceService().loadThematicRoles());
+
+				setSelection(newSelection);
+			}
+		};
+	}
+
+	private void addConfigListener()
+	{
+		ServiceManager.getInstance().getPersistenceService()
+				.addThematicRoleChangeListener(thematicRoleConfigChangeListener);
+	}
+
+	private void removeConfigListener()
+	{
+		ServiceManager.getInstance().getPersistenceService()
+				.removeThematicRoleChangeListener(thematicRoleConfigChangeListener);
+
+	}
+
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		removeConfigListener();
+	}
+
 	@Override
 	protected void initListener() throws CompositeInitializationException
 	{
-		// Nothing to do!
+		// nothing to do
 	}
 
 	@Override
 	protected void addAllListener()
 	{
-		// Nothing to do!
+		// nothing to do
 	}
 
 	@Override
 	protected void removeAllListener()
 	{
-		// Nothing to do!
+		// nothing to do
 	}
 
 	@Override
@@ -83,15 +127,16 @@ public class ThematicRolePreferencePage
 
 		loadPreferences(ServiceManager.getInstance().getPersistenceService()
 				.loadThematicRoles());
+
+		initConfigListener();
+		addConfigListener();
 	}
 
 	private void loadPreferences(List<ThematicRole> roles)
 	{
-		ManageThematicRoleCompositeSelection selection = new ManageThematicRoleCompositeSelection();
+		final ManageThematicRoleCompositeSelection selection = new ManageThematicRoleCompositeSelection();
 		selection.setActiveThematicRole(!roles.isEmpty() ? roles.get(0) : null);
 		selection.setThematicRoles(roles);
-		selection.setLastSaveTimeThematicRoles(ServiceManager.getInstance()
-				.getPersistenceService().getLastSaveTimeOfThematicRoles());
 
 		setSelection(selection);
 	}
@@ -103,41 +148,78 @@ public class ThematicRolePreferencePage
 		{
 			IDocItActivator.initRoleBasedRules();
 
-			List<ThematicRole> initialRoles = ServiceManager.getInstance()
+			final List<ThematicRole> initialRoles = ServiceManager.getInstance()
 					.getPersistenceService().readInitialThematicRoles();
 
 			loadPreferences(initialRoles);
 		}
-		catch (UnitializedIDocItException unInitEx)
+		catch (final UnitializedIDocItException unInitEx)
 		{
-			setErrorMessage("iDocIt! has not been initialized completly yet. Please close this preference page and try again in a few seconds.");
+			setErrorMessage(ERR_MSG_UNINITIALIZED);
 		}
+	}
+
+	@Override
+	public boolean performOk()
+	{
+		final boolean saveState = super.performOk();
+		performApply();
+		return saveState;
 	}
 
 	@Override
 	protected void performApply()
 	{
-		List<ThematicRole> roles = new ArrayList<ThematicRole>();
+		final List<ThematicRole> roles = new ArrayList<ThematicRole>();
 
-		for (ThematicRole role : getSelection().getThematicRoles())
+		final ManageThematicRoleCompositeSelection selection = getSelection();
+		for (final ThematicRole role : selection.getThematicRoles())
 		{
 			roles.add(role);
 		}
 
-		ServiceManager.getInstance().getPersistenceService().persistThematicRoles(roles);
+		// we need not to be informed about changes, because we have already the latest
+		// state.
+		removeConfigListener();
+		try
+		{
+			ServiceManager.getInstance().getPersistenceService()
+					.persistThematicRoles(roles);
+			deleteThematicRolesFromGrids(selection.getRemovedThematicRoles());
+			selection.setRemovedThematicRoles(null);
+		}
+		catch (final UnitializedIDocItException e)
+		{
+			setErrorMessage(ERR_MSG_UNINITIALIZED);
+		}
+		addConfigListener();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	/**
+	 * @source The global configured {@link ThematicGrid}s.
+	 * @param rolesToDelete
+	 *            [OBJECT]
+	 * @throws UnitializedIDocItException
 	 */
-	@Override
-	public boolean performOk()
+	private void deleteThematicRolesFromGrids(final Collection<ThematicRole> rolesToDelete)
+			throws UnitializedIDocItException
 	{
-		boolean saveState = super.performOk();
-		performApply();
-		return saveState;
+		if (rolesToDelete != null && !rolesToDelete.isEmpty())
+		{
+			final java.util.List<ThematicGrid> grids = ServiceManager.getInstance()
+					.getPersistenceService().loadThematicGrids();
+
+			for (final ThematicGrid grid : grids)
+			{
+				for (final ThematicRole role : rolesToDelete)
+				{
+					grid.getRoles().remove(role);
+				}
+			}
+
+			ServiceManager.getInstance().getPersistenceService()
+					.persistThematicGrids(grids);
+		}
 	}
 
 	@Override
