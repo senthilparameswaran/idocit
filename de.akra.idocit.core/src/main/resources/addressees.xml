@@ -1,0 +1,42 @@
+<list>
+	<addressee>
+		<name>Builder</name>
+		<description>Builder of an element, who needs the most comprehensive documentation of an interface. The builder needs to see any assertions about the interface that other stakeholders will see and perhaps depend on, so that he or she can make them true. A special kind of builder is the maintainer, who makes assigned changes to the element.</description>
+		<isDefault>false</isDefault>
+	</addressee>
+	<addressee>
+		<name>Tester</name>
+		<description>Tester of an element, who needs detailed information about all the resources and functionality provided by an interface; this is what is usually tested. The tester can test only to the degree of knowledge embodied in the element's semantic description. If required behavior for a resource is not specified, the tester will not know to test for it, and the element may fail to do its job. A tester also needs information about what is required by an interface, so that a test harness can be built, if necessary, to mimic the resources required.</description>
+		<isDefault>false</isDefault>
+	</addressee>
+	<addressee>
+		<name>Developer</name>
+		<description>Developer using an element, who needs detailed information about the resources provided by the element, including semantic information. Information about what the element requires is needed only if the requirements are pertinent to resources the developer uses.</description>
+		<isDefault>true</isDefault>
+	</addressee>
+	<addressee>
+		<name>Analyst</name>
+		<description>Analyst, whose information needs depend on the types of analyses conducted. For a performance analyst, for example, the interface document should give information that can feed a performance model, such as computation time required by resources. The analyst is a prime consumer of any quality attribute information contained in an interface document.</description>
+		<isDefault>false</isDefault>
+	</addressee>
+	<addressee>
+		<name>System Builder</name>
+		<description>System builder, who focuses on finding provides for each requires in the interfaces of elements going together to build a system. Often, the focus is more on syntactic satisfaction of requirements. Does it build? This role often uses information that is not of interest to most other stakeholders of an interface document, such as what version of the Java String class an element uses.</description>
+		<isDefault>false</isDefault>
+	</addressee>
+	<addressee>
+		<name>Integrator</name>
+		<description>Integrator, who also puts the system together from its constituent elements but has a stronger interest in the behavior of the resulting assemblage. Hence, the integrator is more likely to be concerned with semantic rather than syntactic matching of requires and provides among the elements' interfaces. A special kind of integrator is a product builder, who exploits the variability available in the elements to produce different instantiations of them, which can then be assembled into a suite of similar but differing products. Ease of integration is also a key factor for the customer, who takes on aspects of the integrator's role when comparing vendors' products.</description>
+		<isDefault>false</isDefault>
+	</addressee>
+	<addressee>
+		<name>Manager</name>
+		<description>Manager, who is likely to use interface documents for planning purposes. Managers can apply metrics to gauge the complexity and then infer estimates for how long it will take to develop an element that realizes the interface. Depending on the metrics, information might be required about the size of the interface and the contained functionality but not on further details. Managers can also spot special expertise that may be required, and this will assist them in assigning the work to qualified personnel.</description>
+		<isDefault>false</isDefault>
+	</addressee>
+	<addressee>
+		<name>Architect</name>
+		<description>Architect looking for assets to reuse in a new system, who often starts by examining the interfaces of elements from a previous system. The architect may also look in the commercial marketplace to find off-the-shelf elements that can be purchased and do the job. To see whether an element is a candidate, the architect is first interested in the general nature and capabilities of the resources it provides to determine what aspects of the interface are pertinent to the design. The architect is also interested in a basic understanding of what resources are required. As the architect continues to qualify the element, he or she becomes more interested in the precise semantics of the resources, their quality attributes, and any variability that the element provides.</description>
+		<isDefault>false</isDefault>
+	</addressee>
+</list>

@@ -1,0 +1,262 @@
+<class-diagram version="0.9.86" automaticImage="PNG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.Addressee" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/Addressee.java" binary="false">    
+    <position x="81" y="402" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.Interface" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/Interface.java" binary="false">    
+    <position x="469" y="316" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.InterfaceArtifact" 
+    project="de.akra.idocit" file="/de.akra.idocit/src/de/akra/idocit/structure/InterfaceArtifact.java" binary="false">    
+    <position x="445" y="224" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.Operation" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/Operation.java" binary="false">    
+    <position x="470" y="403" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <enumeration corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.Scope" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/Scope.java" binary="false">    
+    <position x="223" y="224" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </enumeration>  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.SignatureElement" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/SignatureElement.java" binary="false">    
+    <position x="302" y="316" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.Documentation" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/Documentation.java" binary="false">    
+    <position x="82" y="317" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.Parameters" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/Parameters.java" binary="false">    
+    <position x="311" y="500" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_LEFT" language="java" name="de.akra.idocit.structure.Parameter" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/Parameter.java" binary="false">    
+    <position x="138" y="469" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="de.akra.idocit.structure.ThematicRole" project="de.akra.idocit" 
+    file="/de.akra.idocit/src/de/akra/idocit/structure/ThematicRole.java" binary="false">    
+    <position x="82" y="226" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.SignatureElement" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/SignatureElement.java" binary="false" navigable="false">      
+      <attribute name="documentations"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Documentation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Documentation.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Interface" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Interface.java" binary="false" navigable="false">      
+      <attribute name="innerInterfaces">        
+        <position x="500" y="352" width="77" height="14"/>      
+      </attribute>      
+      <multiplicity minimum="0" maximum="2147483647">        
+        <position x="535" y="331" width="20" height="13"/>      
+      </multiplicity>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Interface" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Interface.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Documentation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Documentation.java" binary="false" navigable="false">      
+      <attribute name="scope">        
+        <position x="157" y="272" width="34" height="14"/>      
+      </attribute>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Scope" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Scope.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.InterfaceArtifact" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/InterfaceArtifact.java" binary="false"/>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.SignatureElement" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/SignatureElement.java" binary="false"/>  
+  </generalization>  
+  <association>    
+    <bendpoint x="340" y="430"/>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Operation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Operation.java" binary="false" navigable="false">      
+      <attribute name="outputParameters">        
+        <position x="343" y="433" width="89" height="14"/>      
+      </attribute>      
+      <multiplicity minimum="0" maximum="1">        
+        <position x="339" y="451" width="20" height="13"/>      
+      </multiplicity>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Parameters" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameters.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Parameter" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameter.java" binary="false" navigable="false">      
+      <attribute name="complexType"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Parameter" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameter.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Interface" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Interface.java" binary="false"/>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.SignatureElement" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/SignatureElement.java" binary="false"/>  
+  </generalization>  
+  <association>    
+    <bendpoint x="466" y="500"/>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Operation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Operation.java" binary="false" navigable="false">      
+      <attribute name="exceptions">        
+        <position x="405" y="484" width="57" height="14"/>      
+      </attribute>      
+      <multiplicity minimum="0" maximum="2147483647">        
+        <position x="373" y="485" width="20" height="13"/>      
+      </multiplicity>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Parameters" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameters.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.InterfaceArtifact" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/InterfaceArtifact.java" binary="false" navigable="false">      
+      <attribute name="interfaces"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Interface" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Interface.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <bendpoint x="470" y="511"/>    
+    <bendpoint x="384" y="511"/>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Operation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Operation.java" binary="false" navigable="false">      
+      <attribute name="inputParameters">        
+        <position x="401" y="516" width="82" height="14"/>      
+      </attribute>      
+      <multiplicity minimum="0" maximum="1">        
+        <position x="373" y="517" width="20" height="13"/>      
+      </multiplicity>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Parameters" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameters.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Parameters" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameters.java" binary="false" navigable="false">      
+      <attribute name="parameters"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Parameter" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameter.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Documentation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Documentation.java" binary="false" navigable="false">      
+      <attribute name="thematicRole"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.ThematicRole" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/ThematicRole.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Operation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Operation.java" binary="false"/>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.SignatureElement" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/SignatureElement.java" binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Interface" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Interface.java" binary="false" navigable="false">      
+      <attribute name="operations"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Operation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Operation.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Parameter" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameter.java" binary="false"/>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.SignatureElement" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/SignatureElement.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Parameters" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Parameters.java" binary="false"/>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.SignatureElement" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/SignatureElement.java" binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="de.akra.idocit" name="de.akra.idocit.structure.Documentation" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Documentation.java" binary="false" navigable="false">      
+      <attribute name="addresseeSequence">        
+        <position x="84" y="344" width="105" height="14"/>      
+      </attribute>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="de.akra.idocit" name="de.akra.idocit.structure.Addressee" 
+      file="/de.akra.idocit/src/de/akra/idocit/structure/Addressee.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
