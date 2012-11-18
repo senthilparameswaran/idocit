@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+    Copyright 2011 AKRA GmbH
+   
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+   
+    http://www.apache.org/licenses/LICENSE-2.0
+   
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+ -->
+
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" classpath="C:\Programme\eclipse-rcp\plugins\org.eclipse.core.contenttype_3.4.100.v20100505-1235.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.ui_3.6.1.M20100826-1330.jar;../de.akra.idocit/bin;C:\Programme\eclipse-rcp\plugins\org.eclipse.ui.workbench_3.6.1.M20100826-1330.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.swt.win32.win32.x86_3.6.1.v3655c.jar;../de.akra.idocit/libs/log4j-1.2.16.jar;C:\Programme\eclipse-rcp\plugins\org.hamcrest.core_1.1.0.v20090501071000.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.swt_3.6.1.v3655c.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.core.runtime_3.6.0.v20100505.jar;../wsdl4j-idocit/bin;C:\Programme\eclipse-rcp\plugins\org.junit_4.8.1.v4_8_1_v20100427-1100\junit.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.core.commands_3.6.0.I20100512-1500.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.jface_3.6.1.M20100825-0800.jar;libs/log4j-1.2.16.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.equinox.common_3.6.0.v20100503.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.core.jobs_3.5.1.R36x_v20100824.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.equinox.registry_3.5.0.v20100503.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.equinox.app_1.3.1.R36x_v20100803.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.equinox.preferences_3.3.0.v20100503.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.osgi_3.6.1.R36x_v20100806.jar;C:\Programme\eclipse-rcp\plugins\org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520\runtime_registry_compatibility.jar" packagenames="com.ibm.wsdl.util,de.akra.idocit.structure,javax.wsdl.xml,de.akra.idocit.wsdl.services,javax.wsdl.extensions.schema,com.ibm.wsdl.extensions.mime,javax.wsdl.extensions.soap,com.ibm.wsdl.extensions.schema,com.ibm.wsdl.extensions.http,javax.xml.namespace,de.akra.idocit.ui,de.akra.idocit.services,com.ibm.wsdl.util.xml,javax.wsdl.factory,com.ibm.wsdl.extensions.soap12,javax.wsdl.extensions.mime,com.ibm.wsdl,de.akra.idocit.extensions,javax.wsdl.extensions.http,javax.wsdl.extensions.soap12,com.ibm.wsdl.extensions,javax.wsdl.extensions,javax.wsdl,com.ibm.wsdl.factory,de.akra.idocit.wsdl.structure,com.ibm.wsdl.extensions.soap,com.ibm.wsdl.xml" sourcefiles="src/de/akra/idocit/wsdl/Activator.java,../de.akra.idocit/src/de/akra/idocit/Activator.java" sourcepath="../de.akra.idocit.ui/src;../wsdl4j-idocit/src;test;src;../de.akra.idocit/src">
+            <doclet name="org.umlgraph.doclet.UmlGraph" path="L:\Projekte\workspaceIDocIt\de.akra.idocit.wsdl\libs\UmlGraph.jar"/>
+        </javadoc>
+    </target>
+</project>
