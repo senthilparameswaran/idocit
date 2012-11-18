@@ -1,0 +1,10 @@
+Definition	->	InterfaceArtifact
+PortType	->	Interface
+Operation	->	Operation
+Input		->	Variablenname in Operation (Parameters)
+Output		->	Variablenname in Operation (Parameters)
+Fault		->	Variablenname in Operation (Liste von Parameters)
+Message		->	Parameters
+Part		->	Parameter
+SimpleType	->	Parameter
+ComplexType	->	Parameter
